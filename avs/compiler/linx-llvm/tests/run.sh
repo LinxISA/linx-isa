@@ -281,42 +281,27 @@ if [[ -d "$ASM_DIR" ]]; then
     wc -c "$OUT/$BASE.bin" >"$OUT/$BASE.bin.size"
 
     case "$BASE" in
-      41_v057_isa_forms)
+      41_v0581_isa_forms)
         python3 "$ROOT/check_required_mnemonics.py" \
           --objdump "$OUT/$BASE.objdump" \
           --label "$BASE" \
+          --require B.CATR \
           --require B.DATR \
-          --require B.DIM \
-          --require B.IOR \
-          --require BSTART.ACCCVT \
-          --require BSTART.TLOAD \
-          --require BSTART.TMATMUL \
-          --require BSTART.TMATMUL.ACC \
-          --require BSTART.TMOV \
-          --require BSTART.TSTORE \
-          --require BSTART.VPAR \
-          --require BSTART.VSEQ \
-          --require C.BSTART.MPAR \
-          --require C.BSTART.MSEQ \
-          --require C.BSTART.SYS \
-          --require C.BSTART.VPAR \
-          --require C.BSTART.VSEQ \
-          --require C.SSRGET \
-          --require ERCOV \
-          --require ESAVE \
+          --require B.FPATR \
+          --require B.IOT \
+          --require BSTART.VEC \
+          --require BSTART.SFU \
+          --require BSTART.CALL \
+          --require BSTART.ICALL \
           --require FENTRY \
           --require FRET.STK \
-          --require HL.CASW.AQRLF \
-          --require HL.CASD.AQRLF
-        python3 "$ROOT/check_l_bstart64_forms.py" \
-          --objdump "$OUT/$BASE.objdump" \
-          --label "$BASE"
+          --require L.BSTOP
         ;;
     esac
   done
 fi
 
-SPEC="${SPEC:-$ROOT/../../../../isa/v0.57/linxisa-v0.57.json}"
+SPEC="${SPEC:-$ROOT/../../../../isa/v0.58/linxisa-v0.58.json}"
 GEN_VECTORS="$ROOT/gen_disasm_vectors.py"
 ROUNDTRIP_CHECK="$ROOT/check_disasm_roundtrip.py"
 SPEC_ROUNDTRIP_POLICY="${SPEC_ROUNDTRIP_POLICY:-audit}" # audit|strict
@@ -362,17 +347,6 @@ NEG_DIR="$ROOT/neg"
 if [[ -d "$NEG_DIR" ]]; then
   NEG_OUT="$OUT_DIR/_neg"
   mkdir -p "$NEG_OUT"
-
-  echo "[neg] legacy L.BSTOP rejection"
-  if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/legacy_alias_l_bstop.s" -o "$NEG_OUT/legacy_alias_l_bstop.o" 2>"$NEG_OUT/legacy_alias_l_bstop.err"; then
-    echo "error: legacy L.BSTOP spelling unexpectedly assembled" >&2
-    exit 1
-  fi
-  if ! grep -Eq "legacy alias 'L\\.BSTOP' is not allowed in canonical v0\\.57; use 'C\\.BSTOP'" "$NEG_OUT/legacy_alias_l_bstop.err"; then
-    echo "error: legacy L.BSTOP rejection did not report the canonical spelling guidance" >&2
-    cat "$NEG_OUT/legacy_alias_l_bstop.err" >&2
-    exit 1
-  fi
 
   echo "[neg] L.BSTART.SYS non-FALL rejection"
   if "$LLVMMC" -triple="$TARGET" -filetype=obj "$NEG_DIR/l_bstart64_invalid_sys_kind.s" -o "$NEG_OUT/l_bstart64_invalid_sys_kind.o" 2>"$NEG_OUT/l_bstart64_invalid_sys_kind.err"; then
