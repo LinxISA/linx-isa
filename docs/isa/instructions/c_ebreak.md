@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/c_tinst.md">C.TINST</a> &nbsp;|&nbsp;
+<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/sys.md">SYS</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-19">Ch 19</span>
 &nbsp; <strong>SYS — System Operations</strong> &nbsp;|&nbsp;
 **Length:** <code>16</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,7 +26,7 @@
 
 ## Description
 
-C.EBREAK - Raise the software breakpoint exception.
+C.EBREAK raises software-breakpoint trap 50 with its 5-bit immediate as cause.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Trap(EBREAK);
 
 ## Encoding Notes
 
-- `C.EBREAK - Raise the software breakpoint exception.`
+- `C.EBREAK raises software-breakpoint trap 50 with its 5-bit immediate as cause.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Trap(EBREAK);
 
 <div class="insn-nav">
 
-← [C.TINST](../groups/c_tinst.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [SYS](../groups/sys.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

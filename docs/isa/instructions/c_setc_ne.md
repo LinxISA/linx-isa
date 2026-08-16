@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/set_commit_argument.md">Set Commit Argument</a> &nbsp;|&nbsp;
+<span class="badge-16">16-bit C.</span> **Group:** <a href="../groups/bru.md">BRU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-16">Ch 16</span>
 &nbsp; <strong>BRU — Branch and Compare</strong> &nbsp;|&nbsp;
 **Length:** <code>16</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -46,6 +46,6 @@ SetCommitArgument(/* condition */);
 
 <div class="insn-nav">
 
-← [Set Commit Argument](../groups/set_commit_argument.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [BRU](../groups/bru.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

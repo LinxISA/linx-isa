@@ -57,17 +57,13 @@
 
 ### 3. Call（调用）
 
-- 特点：保存返回地址到专用寄存器
-- 指令格式：`BSTART.BType CALL, <label>`
+- 特点：原子地退役当前 block，安装 direct-call BARG，并将显式返回目标写入 `ra`。
+- 指令格式：`BSTART.CALL <br_label>, <rt_label>, ->ra`
 
 使用场景：
 ```asm
 .block0: 
-    BSTART.STD CALL, .block2   # 调用执行block2处程序
-    setret .block1, ->ra       # 保存返回地址
-    inst1
-    ...
-    instx
+    BSTART.CALL .block2, .block1, ->ra
 .block1: 
     BSTART.SYS FALL
     ...
@@ -76,10 +72,7 @@
     ...
 ```
 
-该类型跳转方式的块有如下约束：
-
-- 不能是空块，**块内必须包含一条setret指令**。
-- **setret必须放在bstart的后面**。
+`br_label` 与 `rt_label` 是两个相互独立的 PC-relative 操作数。该操作不需要，也不允许再用独立的 `SETRET` 提供返回目标。
 
 ### 4. Cond（条件跳转）
 
@@ -126,18 +119,17 @@
 
 ### 6. Icall（间接调用）
 
-- 特点：动态函数调用
-- 约束：不能是空块，**块内必须包含一条setc.tgt指令和一条setret指令**。
+- 特点：原子地退役活动的 STD 或 FP block，将该 block 的 `BARG.BPCN` 快照为间接调用目标，并将显式返回标签写入 `ra`。
+- 指令格式：`BSTART.ICALL <rt_label>, ->ra`
+- 约束：退役 block 必须具有有效的 STD/FP BARG，且 `BPCN` 必须对齐。该指令不读取 `SETC.TGT`，也不需要独立的 `SETRET`。
 
 使用场景：
 ```asm
 .block0: 
-    BSTART.STD ICALL
-    setret .block1, ->ra   # 保存返回地址
-    add a0, t#1, ->t
-    setc.tgt t#1           # 设置跳转目标地址
+    BSTART.STD DIRECT, .block2  # 建立将要退役的 BARG.BPCN
     ...
     instx
+    BSTART.ICALL .block1, ->ra  # 快照 BPCN 并写入返回目标
 .block1:
     BSTART.SYS FALL
     ...

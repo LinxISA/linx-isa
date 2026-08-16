@@ -7,7 +7,7 @@
 
 *Syntax:* xori SrcL, simm, ->{t, u, Rd}
 
-*Description:* XORI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* XORI sign-extends simm12 to PTO_XLEN, XORs it with the snapshotted XLEN source, and publishes the complete result through RegDst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* srli SrcL, shamt, ->{t, u, Rd}
 
-*Description:* SRLI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* SRLI logically shifts the snapshotted XLEN source right by the encoded six-bit amount and publishes the XLEN result through RegDst.
 
 *Encoding:*
 

@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `C.BSTART.STD BrType`
+- `C.BSTART.STD {FALL, IND, RET}`
 
 ## Encoding
 
@@ -36,13 +36,13 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.`
+- `Starts a compressed STD block with fallthrough, indirect, or return transfer; every other BrType rejects before effects.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `C.BSTART.STD BrType` | 16 | — |
+| `C.BSTART.STD {FALL, IND, RET}` | 16 | — |
 
 <div class="insn-nav">
 

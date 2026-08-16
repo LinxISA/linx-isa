@@ -7,7 +7,7 @@
 
 *Syntax:* c.addi srcL, simm, ->t
 
-*Description:* C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* C.ADDI snapshots one complete Reg5 source, sign-extends simm5, adds modulo 2^XLEN, and pushes the result to T.
 
 *Encoding:*
 

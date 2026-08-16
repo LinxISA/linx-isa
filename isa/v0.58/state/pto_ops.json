@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_ops.v1.json",
   "profile": "v0.58",
-  "version": "0.58.0",
+  "version": "0.58.1",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
   "operation_count": 109,
   "family_counts": {
@@ -11,9 +11,9 @@
   },
   "engine_counts": {
     "CUBE": 12,
-    "SFU": 52,
+    "SFU": 56,
     "TLSU": 10,
-    "VEC": 35
+    "VEC": 31
   },
   "classification_counts": {
     "elementwise-tile-tile": 25,
@@ -145,8 +145,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -199,8 +201,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -253,8 +257,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -307,8 +313,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -325,11 +333,11 @@
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "numerator"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "denominator"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -337,11 +345,11 @@
       "semantic_handler": "ExecuteTileBinary",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:source0:numerator",
+        "operand:source1:denominator"
       ],
       "classification": "elementwise-tile-tile",
-      "engine": "VEC"
+      "engine": "SFU"
     },
     {
       "arguments": [
@@ -361,8 +369,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -379,11 +389,11 @@
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "dividend"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "divisor"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -391,11 +401,11 @@
       "semantic_handler": "ExecuteTileBinary",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:source0:dividend",
+        "operand:source1:divisor"
       ],
       "classification": "elementwise-tile-tile",
-      "engine": "VEC"
+      "engine": "SFU"
     },
     {
       "arguments": [
@@ -415,8 +425,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -469,8 +481,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -523,8 +537,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -577,8 +593,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -595,11 +613,11 @@
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "value-source"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "shift-count-source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -607,8 +625,8 @@
       "semantic_handler": "ExecuteTileBinary",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:source0:value-source",
+        "operand:source1:shift-count-source"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "VEC"
@@ -631,8 +649,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -649,11 +669,11 @@
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "value-source"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "shift-count-source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -661,8 +681,8 @@
       "semantic_handler": "ExecuteTileBinary",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:source0:value-source",
+        "operand:source1:shift-count-source"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "VEC"
@@ -685,8 +705,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -739,8 +761,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileBinary",
@@ -794,9 +818,10 @@
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
-          "CMode"
+          "CMode",
+          "PadValueOrByteId"
         ],
-        "pad_union": "must-zero"
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileCompare",
@@ -809,7 +834,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "predicate destination"
         },
         {
           "field": "source0",
@@ -828,10 +853,11 @@
       "selector": "0x00D",
       "semantic_handler": "ExecuteTileCompare",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right",
-        "operand:comparison:comparison"
+        "operand:destination0:packed-predicate-destination",
+        "operand:source0:persistent-source-left",
+        "operand:source1:persistent-source-right",
+        "operand:comparison:six-mode-comparison",
+        "runtime:CurrentBundlePadValue:predicate-padding"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "VEC"
@@ -851,8 +877,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -897,8 +925,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -943,8 +973,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -989,8 +1021,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -1003,19 +1037,21 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local floating destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local floating source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x012",
       "semantic_handler": "ExecuteTileUnary",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-floating-destination",
+        "operand:source0:persistent-local-floating-source",
+        "runtime:CurrentBundlePadValue:numeric-padding",
+        "runtime:NumericStatusFlags:profile-status"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "SFU"
@@ -1035,8 +1071,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -1049,19 +1087,21 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local floating destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local floating source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x013",
       "semantic_handler": "ExecuteTileUnary",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-floating-destination",
+        "operand:source0:persistent-local-floating-source",
+        "runtime:CurrentBundlePadValue:numeric-padding",
+        "runtime:NumericStatusFlags:profile-status"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "SFU"
@@ -1081,8 +1121,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -1095,19 +1137,21 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local floating destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local floating source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x014",
       "semantic_handler": "ExecuteTileUnary",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-floating-destination",
+        "operand:source0:persistent-local-floating-source",
+        "runtime:CurrentBundlePadValue:numeric-padding",
+        "runtime:NumericStatusFlags:profile-status"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "SFU"
@@ -1127,8 +1171,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -1141,19 +1187,21 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local floating destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local floating source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x015",
       "semantic_handler": "ExecuteTileUnary",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-floating-destination",
+        "operand:source0:persistent-local-floating-source",
+        "runtime:CurrentBundlePadValue:numeric-padding",
+        "runtime:NumericStatusFlags:profile-status"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "SFU"
@@ -1173,8 +1221,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -1187,19 +1237,21 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local floating destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local floating source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x016",
       "semantic_handler": "ExecuteTileUnary",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-floating-destination",
+        "operand:source0:persistent-local-floating-source",
+        "runtime:CurrentBundlePadValue:numeric-padding",
+        "runtime:NumericStatusFlags:profile-status"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "SFU"
@@ -1219,8 +1271,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileUnary",
@@ -1268,8 +1322,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileSelect",
@@ -1282,11 +1338,11 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "numeric destination"
         },
         {
           "field": "source0",
-          "role": "mask"
+          "role": "packed predicate mask"
         },
         {
           "field": "source1",
@@ -1301,10 +1357,11 @@
       "selector": "0x01A",
       "semantic_handler": "ExecuteTileSelect",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:mask",
-        "operand:source1:source-true",
-        "operand:source2:source-false"
+        "operand:destination0:numeric-destination",
+        "operand:source0:packed-predicate-mask",
+        "operand:source1:persistent-source-true",
+        "operand:source2:persistent-source-false",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "VEC"
@@ -1325,13 +1382,14 @@
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
+          "PadValueOrByteId",
           "Sat",
           "Canonicalize",
           "DataType",
           "RMode",
           "Layout"
         ],
-        "pad_union": "must-zero"
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "TCVT",
@@ -1359,9 +1417,10 @@
       "selector": "0x01B",
       "semantic_handler": "TCVT",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:numeric_control:rounding-and-saturation"
+        "operand:destination0:typed-layout-transformed-destination",
+        "operand:source0:persistent-source",
+        "operand:numeric_control:rounding-and-saturation",
+        "runtime:CurrentBundlePadValue:physical-padding"
       ],
       "classification": "elementwise-tile-tile",
       "engine": "VEC"
@@ -1384,8 +1443,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "TFMA",
@@ -1443,8 +1504,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1457,24 +1520,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x020",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1497,8 +1561,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1511,24 +1577,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x021",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1551,8 +1618,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1565,24 +1634,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x022",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1605,8 +1675,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1619,27 +1691,28 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x023",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
-      "engine": "VEC"
+      "engine": "SFU"
     },
     {
       "arguments": [
@@ -1659,8 +1732,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1673,27 +1748,28 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x024",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
-      "engine": "VEC"
+      "engine": "SFU"
     },
     {
       "arguments": [
@@ -1713,8 +1789,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1727,24 +1805,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x026",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1767,8 +1846,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1781,24 +1862,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x027",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1821,8 +1903,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1835,24 +1919,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x028",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1875,8 +1960,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1889,24 +1976,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x029",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1929,8 +2017,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1943,24 +2033,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x02A",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -1983,8 +2074,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -1997,24 +2090,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x02B",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -2037,8 +2131,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileScalar",
@@ -2051,24 +2147,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x02C",
       "semantic_handler": "ExecuteTileScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -2092,9 +2189,10 @@
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
-          "CMode"
+          "CMode",
+          "PadValueOrByteId"
         ],
-        "pad_union": "must-zero"
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileCompareScalar",
@@ -2107,29 +2205,30 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new packed Local predicate destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         },
         {
           "field": "comparison",
-          "role": "comparison"
+          "role": "six-mode comparison"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x02D",
       "semantic_handler": "ExecuteTileCompareScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scalar",
-        "operand:comparison:comparison"
+        "operand:destination0:packed-predicate-destination",
+        "operand:source0:persistent-local-source",
+        "operand:scalar0:private-gpr-raw-element",
+        "operand:comparison:six-mode-comparison",
+        "runtime:CurrentBundlePadValue:predicate-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -2152,8 +2251,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileSelectScalar",
@@ -2166,29 +2267,30 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "source0",
-          "role": "mask"
+          "role": "packed Local predicate mask"
         },
         {
           "field": "source1",
-          "role": "source-true"
+          "role": "persistent Local source selected by one"
         },
         {
           "field": "scalar0",
-          "role": "scalar-false"
+          "role": "per-participating-PE scalar selected by zero"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x03A",
       "semantic_handler": "ExecuteTileSelectScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:mask",
-        "operand:source1:source-true",
-        "operand:scalar0:scalar-false"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:source0:packed-predicate-mask",
+        "operand:source1:persistent-local-source-true",
+        "operand:scalar0:private-gpr-scalar-false",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -2205,8 +2307,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileFillScalar",
@@ -2219,19 +2323,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local numeric destination"
         },
         {
           "field": "scalar0",
-          "role": "scalar"
+          "role": "per-participating-PE private-GPR scalar"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x03B",
       "semantic_handler": "ExecuteTileFillScalar",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:scalar0:scalar"
+        "operand:destination0:new-local-numeric-destination",
+        "operand:scalar0:private-gpr-raw-element",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "tile-scalar-and-immediate",
       "engine": "VEC"
@@ -2254,8 +2359,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -2268,19 +2375,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x040",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2303,8 +2411,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -2317,19 +2427,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x041",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2352,8 +2463,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -2366,19 +2479,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x042",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2401,8 +2515,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -2415,19 +2531,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x043",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2447,14 +2564,16 @@
           "operand": "source0"
         },
         {
-          "operand": "source1"
+          "operand": "source0"
         }
       ],
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2467,24 +2586,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
-        },
-        {
-          "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x044",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2510,8 +2625,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2524,24 +2641,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x045",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2567,8 +2685,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2581,24 +2701,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x046",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2624,8 +2745,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2638,24 +2761,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x047",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2681,8 +2805,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2695,24 +2821,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x048",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2738,8 +2865,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2752,24 +2881,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x049",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2795,8 +2925,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2809,24 +2941,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x04A",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2852,8 +2985,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2866,24 +3001,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-column broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x04B",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-column-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2906,8 +3042,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -2920,19 +3058,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local U32 index destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x04C",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-u32-index-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -2955,8 +3094,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -2969,19 +3110,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local U32 index destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x04D",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-u32-index-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3004,8 +3146,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -3018,19 +3162,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x050",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3053,8 +3198,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -3067,19 +3214,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x051",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3102,8 +3250,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -3116,19 +3266,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x052",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3151,8 +3302,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -3165,19 +3318,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x053",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3197,14 +3351,16 @@
           "operand": "source0"
         },
         {
-          "operand": "source1"
+          "operand": "source0"
         }
       ],
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3217,24 +3373,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
-        },
-        {
-          "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x054",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3260,8 +3412,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3274,24 +3428,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x055",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3317,8 +3472,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3331,24 +3488,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x056",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3374,8 +3532,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3388,24 +3548,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x057",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3431,8 +3592,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3445,24 +3608,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x058",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3488,8 +3652,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3502,24 +3668,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x059",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3545,8 +3712,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3559,24 +3728,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x05A",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3602,8 +3772,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3616,24 +3788,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local same-type numeric destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local full-shape numeric source"
         },
         {
           "field": "source1",
-          "role": "broadcast-source"
+          "role": "persistent Local one-row broadcast source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x05B",
       "semantic_handler": "ExecuteTileExpand",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:broadcast-source"
+        "operand:destination0:new-local-same-type-destination",
+        "operand:source0:persistent-local-full-shape-source",
+        "operand:source1:persistent-local-one-row-broadcast-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3656,8 +3829,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -3670,19 +3845,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local U32 index destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x05C",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-u32-index-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3705,8 +3881,10 @@
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
-        "pad_union": "must-zero"
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId"
+        ],
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileReduction",
@@ -3719,19 +3897,20 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local U32 index destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local numeric source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x05D",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source"
+        "operand:destination0:new-local-u32-index-destination",
+        "operand:source0:persistent-local-numeric-source",
+        "runtime:CurrentBundlePadValue:numeric-padding"
       ],
       "classification": "reduce-and-expand",
       "engine": "SFU"
@@ -3746,9 +3925,6 @@
         },
         {
           "operand": "source1"
-        },
-        {
-          "operand": "axis"
         }
       ],
       "command_mnemonic": "BSTART.TEPL",
@@ -3779,10 +3955,6 @@
         {
           "field": "source1",
           "role": "source-right"
-        },
-        {
-          "field": "axis",
-          "role": "axis"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -3791,8 +3963,7 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:source0:source-left",
-        "operand:source1:source-right",
-        "operand:axis:axis"
+        "operand:source1:source-right"
       ],
       "classification": "layout-and-rearrangement",
       "engine": "SFU"
@@ -3867,6 +4038,9 @@
           "operand": "source0"
         },
         {
+          "operand": "source1"
+        },
+        {
           "operand": "natural0"
         },
         {
@@ -3896,7 +4070,11 @@
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent old destination"
+        },
+        {
+          "field": "source1",
+          "role": "persistent insertion source"
         },
         {
           "field": "natural0",
@@ -3912,7 +4090,8 @@
       "semantic_handler": "TINSERT",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:source",
+        "operand:source0:persistent-old-destination",
+        "operand:source1:persistent-insertion-source",
         "operand:natural0:row-offset",
         "operand:natural1:column-offset"
       ],
@@ -3928,33 +4107,16 @@
           "operand": "source0"
         },
         {
-          "operand": "positive0"
-        },
-        {
-          "operand": "positive1"
-        },
-        {
-          "operand": "positive2"
-        },
-        {
-          "operand": "positive3"
-        },
-        {
           "operand": "natural0"
         },
         {
           "operand": "natural1"
-        },
-        {
-          "operand": "scalar0"
         }
       ],
       "command_mnemonic": "BSTART.TEPL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [
-          "Layout"
-        ],
+        "allowed_nonzero_fields": [],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -3968,54 +4130,30 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local Matrix destination"
         },
         {
           "field": "source0",
-          "role": "source"
-        },
-        {
-          "field": "positive0",
-          "role": "kernel-rows"
-        },
-        {
-          "field": "positive1",
-          "role": "kernel-columns"
-        },
-        {
-          "field": "positive2",
-          "role": "stride-rows"
-        },
-        {
-          "field": "positive3",
-          "role": "stride-columns"
+          "role": "persistent Local Matrix feature-map source"
         },
         {
           "field": "natural0",
-          "role": "pad-rows"
+          "role": "unsigned low-sixteen-bit posM"
         },
         {
           "field": "natural1",
-          "role": "pad-columns"
-        },
-        {
-          "field": "scalar0",
-          "role": "padding"
+          "role": "unsigned low-sixteen-bit posK"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x064",
       "semantic_handler": "TIMG2COL",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:positive0:kernel-rows",
-        "operand:positive1:kernel-columns",
-        "operand:positive2:stride-rows",
-        "operand:positive3:stride-columns",
-        "operand:natural0:pad-rows",
-        "operand:natural1:pad-columns",
-        "operand:scalar0:padding"
+        "operand:destination0:new-local-matrix-destination",
+        "operand:source0:persistent-feature-map-source",
+        "operand:natural0:position-m",
+        "operand:natural1:position-k",
+        "state:source-feature-map-descriptor:read-only"
       ],
       "classification": "layout-and-rearrangement",
       "engine": "SFU"
@@ -4036,10 +4174,9 @@
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
-          "PadValueOrByteId",
           "Layout"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "TFILLPAD",
@@ -4103,24 +4240,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local S32, S16, U32, or U16 destination"
         },
         {
           "field": "scalar0",
-          "role": "start"
+          "role": "typed sequence start"
         },
         {
           "field": "flag0",
-          "role": "descending"
+          "role": "ascending or descending direction"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x066",
       "semantic_handler": "TCI",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:scalar0:start",
-        "operand:flag0:descending"
+        "operand:destination0:new-local-integer-destination",
+        "operand:scalar0:typed-sequence-start",
+        "operand:flag0:ascending-or-descending",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4154,24 +4292,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local triangular destination"
         },
         {
           "field": "flag0",
-          "role": "upper"
+          "role": "lower or upper orientation"
         },
         {
           "field": "diagonal",
-          "role": "diagonal"
+          "role": "signed diagonal displacement"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x067",
       "semantic_handler": "TTRI",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:flag0:upper",
-        "operand:diagonal:diagonal"
+        "operand:destination0:new-local-triangular-destination",
+        "operand:flag0:lower-or-upper-orientation",
+        "operand:diagonal:signed-diagonal-displacement",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4211,29 +4350,30 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local U32 prefix-histogram destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local U16 or U32 source"
         },
         {
           "field": "source1",
-          "role": "indices"
+          "role": "persistent Local U8 prefix filter"
         },
         {
           "field": "selected_byte",
-          "role": "selected-byte"
+          "role": "B.DATR ByteId zero through three"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x068",
       "semantic_handler": "THISTOGRAM",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:indices",
-        "operand:selected_byte:selected-byte"
+        "operand:destination0:new-local-u32-prefix-histogram-destination",
+        "operand:source0:persistent-local-u16-or-u32-source",
+        "operand:source1:persistent-local-u8-prefix-filter",
+        "operand:selected_byte:histogram-byte-id",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4261,10 +4401,8 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Sat",
-          "Canonicalize",
           "DataType",
-          "RMode",
-          "Layout"
+          "RMode"
         ],
         "pad_union": "must-zero"
       },
@@ -4279,34 +4417,35 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new S8 or U8 destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent FP32 source"
         },
         {
           "field": "scalar0",
-          "role": "scale"
+          "role": "positive finite FP32 multiplier"
         },
         {
           "field": "scalar1",
-          "role": "zero-point"
+          "role": "destination-typed integer zero point"
         },
         {
           "field": "numeric_control",
-          "role": "rounding-and-saturation"
+          "role": "rounding and saturation"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x06A",
       "semantic_handler": "TQUANT",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scale",
-        "operand:scalar1:zero-point",
-        "operand:numeric_control:rounding-and-saturation"
+        "operand:destination0:new-s8-or-u8-destination",
+        "operand:source0:persistent-fp32-source",
+        "operand:scalar0:positive-finite-fp32-multiplier",
+        "operand:scalar1:destination-typed-zero-point",
+        "operand:numeric_control:rounding-and-saturation",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4333,11 +4472,8 @@
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
-          "Sat",
-          "Canonicalize",
           "DataType",
-          "RMode",
-          "Layout"
+          "RMode"
         ],
         "pad_union": "must-zero"
       },
@@ -4352,34 +4488,35 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new FP32 destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent S8 or U8 source"
         },
         {
           "field": "scalar0",
-          "role": "scale"
+          "role": "positive finite FP32 multiplier"
         },
         {
           "field": "scalar1",
-          "role": "zero-point"
+          "role": "source-typed integer zero point"
         },
         {
           "field": "numeric_control",
-          "role": "rounding-and-saturation"
+          "role": "rounding"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x06B",
       "semantic_handler": "TDEQUANT",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:scalar0:scale",
-        "operand:scalar1:zero-point",
-        "operand:numeric_control:rounding-and-saturation"
+        "operand:destination0:new-fp32-destination",
+        "operand:source0:persistent-s8-or-u8-source",
+        "operand:scalar0:positive-finite-fp32-multiplier",
+        "operand:scalar1:source-typed-zero-point",
+        "operand:numeric_control:rounding",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4419,34 +4556,35 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local sorted-value destination"
         },
         {
           "field": "destination1",
-          "role": "original-indices-u32"
+          "role": "new Local U32 original-index destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local source"
         },
         {
           "field": "sort_width",
-          "role": "sort-width"
+          "role": "LB0 row-group width"
         },
         {
           "field": "flag0",
-          "role": "descending"
+          "role": "ascending or descending selection"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x06C",
       "semantic_handler": "TSORT",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:destination1:original-indices-u32",
-        "operand:source0:source",
-        "operand:sort_width:sort-width",
-        "operand:flag0:descending"
+        "operand:destination0:new-local-sorted-value-destination",
+        "operand:destination1:new-local-u32-original-index-destination",
+        "operand:source0:persistent-local-source",
+        "operand:sort_width:row-group-width",
+        "operand:flag0:ascending-or-descending",
+        "runtime:NumericStatusFlags:signaling-nan-invalid-status"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4483,29 +4621,30 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local merged destination"
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "persistent sorted Local left source"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "persistent sorted Local right source"
         },
         {
           "field": "flag0",
-          "role": "descending"
+          "role": "ascending or descending selection"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x06D",
       "semantic_handler": "TMRGSORT",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right",
-        "operand:flag0:descending"
+        "operand:destination0:new-local-merged-destination",
+        "operand:source0:persistent-sorted-local-left-source",
+        "operand:source1:persistent-sorted-local-right-source",
+        "operand:flag0:ascending-or-descending",
+        "runtime:NumericStatusFlags:signaling-nan-invalid-status"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4586,24 +4725,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local value destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local value source"
         },
         {
           "field": "source1",
-          "role": "indices"
+          "role": "persistent Local S32 or U32 row-index source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x06F",
       "semantic_handler": "TGATHER",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:indices"
+        "operand:destination0:new-local-value-destination",
+        "operand:source0:persistent-value-source",
+        "operand:source1:persistent-row-index-source",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4639,24 +4779,25 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new zero-initialized Local value destination"
         },
         {
           "field": "source0",
-          "role": "source"
+          "role": "persistent Local value source"
         },
         {
           "field": "source1",
-          "role": "indices"
+          "role": "persistent Local width-matched row-index source"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x070",
       "semantic_handler": "TSCATTER",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source",
-        "operand:source1:indices"
+        "operand:destination0:new-zero-initialized-local-destination",
+        "operand:source0:persistent-value-source",
+        "operand:source1:persistent-row-index-source",
+        "runtime:typed-zero:unselected-valid-and-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4693,24 +4834,26 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local union destination"
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "persistent Local left source anchored at origin"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "persistent Local right source anchored at origin"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x071",
       "semantic_handler": "ExecuteTilePartial",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:destination0:new-local-union-destination",
+        "operand:source0:persistent-origin-anchored-left-source",
+        "operand:source1:persistent-origin-anchored-right-source",
+        "runtime:NumericStatusFlags:overlap-operation-status",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4747,24 +4890,26 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local union destination"
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "persistent Local left source anchored at origin"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "persistent Local right source anchored at origin"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x072",
       "semantic_handler": "ExecuteTilePartial",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:destination0:new-local-union-destination",
+        "operand:source0:persistent-origin-anchored-left-source",
+        "operand:source1:persistent-origin-anchored-right-source",
+        "runtime:NumericStatusFlags:overlap-operation-status",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4801,24 +4946,26 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local union destination"
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "persistent Local left source anchored at origin"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "persistent Local right source anchored at origin"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x073",
       "semantic_handler": "ExecuteTilePartial",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:destination0:new-local-union-destination",
+        "operand:source0:persistent-origin-anchored-left-source",
+        "operand:source1:persistent-origin-anchored-right-source",
+        "runtime:NumericStatusFlags:overlap-operation-status",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -4855,24 +5002,26 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "destination"
+          "role": "new Local union destination"
         },
         {
           "field": "source0",
-          "role": "source-left"
+          "role": "persistent Local left source anchored at origin"
         },
         {
           "field": "source1",
-          "role": "source-right"
+          "role": "persistent Local right source anchored at origin"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "selector": "0x074",
       "semantic_handler": "ExecuteTilePartial",
       "state_effects": [
-        "operand:destination0:destination",
-        "operand:source0:source-left",
-        "operand:source1:source-right"
+        "operand:destination0:new-local-union-destination",
+        "operand:source0:persistent-origin-anchored-left-source",
+        "operand:source1:persistent-origin-anchored-right-source",
+        "runtime:NumericStatusFlags:overlap-operation-status",
+        "runtime:TilePad_Null:physical-padding"
       ],
       "classification": "irregular-and-complex",
       "engine": "SFU"
@@ -5028,13 +5177,24 @@
           "operand": "address"
         },
         {
-          "operand": "byte_count"
+          "operand": "scalar0"
+        },
+        {
+          "operand": "positive0"
+        },
+        {
+          "operand": "positive1"
+        },
+        {
+          "operand": "positive2"
         }
       ],
       "command_mnemonic": "BSTART.TPREFETCH",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "Layout"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5050,15 +5210,30 @@
           "role": "base-address"
         },
         {
-          "field": "byte_count",
-          "role": "byte-count"
+          "field": "scalar0",
+          "role": "row-stride-elements"
+        },
+        {
+          "field": "positive0",
+          "role": "valid-columns"
+        },
+        {
+          "field": "positive1",
+          "role": "valid-rows"
+        },
+        {
+          "field": "positive2",
+          "role": "physical-columns"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "semantic_handler": "TPREFETCH",
       "state_effects": [
         "operand:address:base-address",
-        "operand:byte_count:byte-count"
+        "operand:scalar0:row-stride-elements",
+        "operand:positive0:valid-columns",
+        "operand:positive1:valid-rows",
+        "operand:positive2:physical-columns"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5073,15 +5248,19 @@
         },
         {
           "operand": "source0"
+        },
+        {
+          "runtime": "CurrentBundlePadValue"
         }
       ],
       "command_mnemonic": "BSTART.MGATHER",
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
+          "PadValueOrByteId",
           "Layout"
         ],
-        "pad_union": "must-zero"
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "MGATHER",
@@ -5109,7 +5288,8 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:address:base-address",
-        "operand:source0:indices"
+        "operand:source0:byte-displacement-indices",
+        "runtime:CurrentBundlePadValue:physical-padding"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5152,7 +5332,7 @@
         },
         {
           "field": "source1",
-          "role": "indices"
+          "role": "byte-displacement-indices"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -5160,7 +5340,7 @@
       "state_effects": [
         "operand:address:base-address",
         "operand:source0:source",
-        "operand:source1:indices"
+        "operand:source1:byte-displacement-indices"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5222,8 +5402,9 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:address:base-address",
-        "operand:source0:indices",
-        "operand:source1:mask"
+        "operand:source0:byte-displacement-indices",
+        "operand:source1:exact-predicate-mask",
+        "runtime:CurrentBundlePadValue:inactive-and-physical-padding"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5269,11 +5450,11 @@
         },
         {
           "field": "source1",
-          "role": "indices"
+          "role": "byte-displacement-indices"
         },
         {
           "field": "source2",
-          "role": "mask"
+          "role": "exact-predicate-mask"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -5281,8 +5462,8 @@
       "state_effects": [
         "operand:address:base-address",
         "operand:source0:source",
-        "operand:source1:indices",
-        "operand:source2:mask"
+        "operand:source1:byte-displacement-indices",
+        "operand:source2:exact-predicate-mask"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5303,15 +5484,19 @@
         },
         {
           "operand": "source2"
+        },
+        {
+          "runtime": "CurrentBundlePadValue"
         }
       ],
       "command_mnemonic": "BSTART.MGATHER.CAS",
       "contract_status": "reviewed-complete",
       "datr_contract": {
         "allowed_nonzero_fields": [
+          "PadValueOrByteId",
           "Layout"
         ],
-        "pad_union": "must-zero"
+        "pad_union": "pad-value"
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "MGATHER_CAS",
@@ -5345,11 +5530,12 @@
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "semantic_handler": "MGATHER_CAS",
       "state_effects": [
-        "operand:destination0:destination",
+        "operand:destination0:observed-old-values",
         "operand:address:base-address",
-        "operand:source0:indices",
-        "operand:source1:expected",
-        "operand:source2:replacement"
+        "operand:source0:byte-displacement-indices",
+        "operand:source1:expected-values",
+        "operand:source2:replacement-values",
+        "runtime:CurrentBundlePadValue:physical-padding"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5420,7 +5606,11 @@
       "command_mnemonic": "BSTART.TMATMUL",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5472,7 +5662,11 @@
       "command_mnemonic": "BSTART.TMATMUL.BIAS",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5529,7 +5723,11 @@
       "command_mnemonic": "BSTART.TMATMUL.ACC",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5589,7 +5787,11 @@
       "command_mnemonic": "BSTART.TMATMULMX",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5657,7 +5859,11 @@
       "command_mnemonic": "BSTART.TMATMULMX.BIAS",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5730,7 +5936,11 @@
       "command_mnemonic": "BSTART.TMATMULMX.ACC",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5794,7 +6004,11 @@
       "command_mnemonic": "BSTART.TGEMV",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5811,19 +6025,19 @@
         },
         {
           "field": "source0",
-          "role": "matrix"
+          "role": "left-vector"
         },
         {
           "field": "source1",
-          "role": "vector"
+          "role": "right-matrix"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "semantic_handler": "TGEMV",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:matrix",
-        "operand:source1:vector"
+        "operand:source0:left-vector",
+        "operand:source1:right-matrix"
       ],
       "classification": "matrix-and-matrix-vector",
       "engine": "CUBE"
@@ -5846,7 +6060,11 @@
       "command_mnemonic": "BSTART.TGEMV.BIAS",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5863,11 +6081,11 @@
         },
         {
           "field": "source0",
-          "role": "matrix"
+          "role": "left-vector"
         },
         {
           "field": "source1",
-          "role": "vector"
+          "role": "right-matrix"
         },
         {
           "field": "source2",
@@ -5878,8 +6096,8 @@
       "semantic_handler": "TGEMV_BIAS",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:matrix",
-        "operand:source1:vector",
+        "operand:source0:left-vector",
+        "operand:source1:right-matrix",
         "operand:source2:bias"
       ],
       "classification": "matrix-and-matrix-vector",
@@ -5903,7 +6121,11 @@
       "command_mnemonic": "BSTART.TGEMV.ACC",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5924,11 +6146,11 @@
         },
         {
           "field": "source1",
-          "role": "matrix"
+          "role": "left-vector"
         },
         {
           "field": "source2",
-          "role": "vector"
+          "role": "right-matrix"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -5936,8 +6158,8 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:source0:accumulator",
-        "operand:source1:matrix",
-        "operand:source2:vector"
+        "operand:source1:left-vector",
+        "operand:source2:right-matrix"
       ],
       "classification": "matrix-and-matrix-vector",
       "engine": "CUBE"
@@ -5963,7 +6185,11 @@
       "command_mnemonic": "BSTART.TGEMVMX",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -5980,7 +6206,7 @@
         },
         {
           "field": "source0",
-          "role": "matrix"
+          "role": "left-vector"
         },
         {
           "field": "source1",
@@ -5988,7 +6214,7 @@
         },
         {
           "field": "source2",
-          "role": "vector"
+          "role": "right-matrix"
         },
         {
           "field": "source3",
@@ -5999,9 +6225,9 @@
       "semantic_handler": "TGEMV_MX",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:matrix",
+        "operand:source0:left-vector",
         "operand:source1:row-scale",
-        "operand:source2:vector",
+        "operand:source2:right-matrix",
         "operand:source3:column-scale"
       ],
       "classification": "matrix-and-matrix-vector",
@@ -6031,7 +6257,11 @@
       "command_mnemonic": "BSTART.TGEMVMX.BIAS",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -6048,7 +6278,7 @@
         },
         {
           "field": "source0",
-          "role": "matrix"
+          "role": "left-vector"
         },
         {
           "field": "source1",
@@ -6056,7 +6286,7 @@
         },
         {
           "field": "source2",
-          "role": "vector"
+          "role": "right-matrix"
         },
         {
           "field": "source3",
@@ -6071,9 +6301,9 @@
       "semantic_handler": "TGEMV_MX_BIAS",
       "state_effects": [
         "operand:destination0:destination",
-        "operand:source0:matrix",
+        "operand:source0:left-vector",
         "operand:source1:row-scale",
-        "operand:source2:vector",
+        "operand:source2:right-matrix",
         "operand:source3:column-scale",
         "operand:source4:bias"
       ],
@@ -6104,7 +6334,11 @@
       "command_mnemonic": "BSTART.TGEMVMX.ACC",
       "contract_status": "reviewed-complete",
       "datr_contract": {
-        "allowed_nonzero_fields": [],
+        "allowed_nonzero_fields": [
+          "DataType",
+          "RMode",
+          "Sat"
+        ],
         "pad_union": "must-zero"
       },
       "disposition": "accepted-direct-operation",
@@ -6125,7 +6359,7 @@
         },
         {
           "field": "source1",
-          "role": "matrix"
+          "role": "left-vector"
         },
         {
           "field": "source2",
@@ -6133,7 +6367,7 @@
         },
         {
           "field": "source3",
-          "role": "vector"
+          "role": "right-matrix"
         },
         {
           "field": "source4",
@@ -6145,9 +6379,9 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:source0:accumulator",
-        "operand:source1:matrix",
+        "operand:source1:left-vector",
         "operand:source2:row-scale",
-        "operand:source3:vector",
+        "operand:source3:right-matrix",
         "operand:source4:column-scale"
       ],
       "classification": "matrix-and-matrix-vector",

@@ -67,10 +67,17 @@
 - [x] ID：LLVM-006 保持固定工具构建足够完整，以便 Linux/libc 关闭。
   命令：`ninja -C compiler/llvm/build-linxisa-clang llvm-ar llvm-nm llvm-strip llvm-readelf`
   完成意味着：内核/libc 集成所需的辅助 LLVM binutils 出现在固定的 `clang` 和 `ld.lld` 旁边。
-  状态： ✅ 通过 (2026-03-08) - 针对固定 LLVM `e6ce4b78faaa` 就地重建辅助工具，生成 `compiler/llvm/build-linxisa-clang/bin/llvm-ar`、`llvm-nm`、`llvm-readelf` 和 `llvm-strip`。- [ ] ID：LLVM-007 在融合的 `BSTART ... , ra=...` 上保留 标量 直接调用源关闭。
+  状态： ✅ 通过 (2026-03-08) - 针对固定 LLVM `e6ce4b78faaa` 就地重建辅助工具，生成 `compiler/llvm/build-linxisa-clang/bin/llvm-ar`、`llvm-nm`、`llvm-readelf` 和 `llvm-strip`。
+
+- [ ] ID：LLVM-007 保持标量直接调用源对融合 `BSTART.CALL` 的闭包。
   命令：`cd avs/compiler/linx-llvm/tests && CLANG=compiler/llvm/build-linxisa-clang/bin/clang TARGET=linx64-linx-none-elf OUT_DIR=avs/compiler/linx-llvm/tests/out-linx64 ./run.sh`
-  完成意味着：标量 直接调用源和手写启动 asm 使用融合的 `ra=` 调用 块头，而对象级重定位检查仍然接受降低的相邻 `setret` 对。
-  状态： ✅ 通过 (2026-05-15) - `run.sh` 在将 标量 手写直接调用转换为融合的 `BSTART.STD CALL, ..., ra=...` 源语法后通过。重定位/模板门仍然通过呼叫/返回 AVS 通道，包括 `18_setret_relax`、`33`-`40` 和 `41_v057_isa_forms`。
+  完成意味着：标量直接调用源和手写启动 asm 使用
+  `BSTART.CALL <br_label>, <rt_label>, ->ra`，且对象级重定位检查保持
+  该单一原子架构操作。
+  仅为 v0.57 历史证据，不向当前 v0.58.1 语法或语义转移批准。状态：
+  ✅ 通过 (2026-05-15) - `run.sh` 在将当时的标量手写直接调用转换为
+  `BSTART.STD CALL, ..., ra=...` 后通过。当前 PTO 公共形式为
+  `BSTART.CALL <br_label>, <rt_label>, ->ra`，需要重新取得 v0.58.1 证据。
 
 - [ ] ID：LLVM-009 基于正式 LinxISA v0.58 目录升级 LLVM。
   完成意味着：从 `isa/v0.58/linxisa-v0.58.json` 重新生成汇编、反汇编、重定位、规范拼写和编译 AVS 证据；不得转移 v0.57 的 PASS 记录。

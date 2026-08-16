@@ -323,9 +323,9 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         for operation in state.get("legal_aliases", []):
             engine_counts[str(operation.get("engine"))] += 1
             classification_counts[str(operation.get("classification"))] += 1
-    expected_engine_counts = {"CUBE": 12, "SFU": 52, "TLSU": 10, "VEC": 35}
+    expected_engine_counts = {"CUBE": 12, "SFU": 56, "TLSU": 10, "VEC": 31}
     if dict(sorted(engine_counts.items())) != expected_engine_counts:
-        errors.append("state.engine_ops semantic engines must be exactly 35 VEC / 52 SFU / 10 TLSU / 12 CUBE")
+        errors.append("state.engine_ops semantic engines must be exactly 31 VEC / 56 SFU / 10 TLSU / 12 CUBE")
     if engine_ops.get("semantic_engine_counts") != expected_engine_counts:
         errors.append("state.engine_ops.semantic_engine_counts differs from the PTO 0.58 projection")
     expected_classification_counts = {
@@ -371,7 +371,7 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     if str(spec.get("version") or "") == "0.57.1":
         _validate_engine_ops_v0571(spec, engine_ops, errors)
         return
-    if str(spec.get("version") or "") == "0.58.0":
+    if str(spec.get("version") or "") in {"0.58.0", "0.58.1"}:
         _validate_engine_ops_v058(spec, engine_ops, errors)
         return
 
@@ -1138,7 +1138,7 @@ def validate(path: str) -> List[str]:
         errors.append("missing compiled retired_encodings.entries")
     else:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
-        expected_retired = set() if str(spec.get("version") or "") == "0.58.0" else {"B.IOD", "BSTART.PAR"}
+        expected_retired = set() if str(spec.get("version") or "") in {"0.58.0", "0.58.1"} else {"B.IOD", "BSTART.PAR"}
         if retired_names != expected_retired:
             errors.append(
                 f"retired encoding identities must be exactly {sorted(expected_retired)}, got {retired_names}"

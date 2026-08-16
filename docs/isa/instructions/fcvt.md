@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/format_convert.md">Format Convert</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-13">Ch 13</span>
 &nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,12 +31,12 @@ Floating-point format conversion.
 ## Pseudocode (informative)
 
 ```c
-// Execute FCVT as defined by the Format Convert semantics.
+// Execute FCVT as defined by the FSU semantics.
 ```
 
 ## Encoding Notes
 
-- `FCVT - Convert between the encoded scalar numeric formats.`
+- `FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Floating-point format conversion.
 
 <div class="insn-nav">
 
-← [Format Convert](../groups/format_convert.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

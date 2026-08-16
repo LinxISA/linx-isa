@@ -7,7 +7,7 @@
 
 *Syntax:* hl.remu SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.REMU - Compute quotient and remainder as a scalar result pair.
+*Description:* HL.REMU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
 
 *Encoding:*
 

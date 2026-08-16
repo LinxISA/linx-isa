@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
 
-*Description:* HL.LBUP - Load a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.LBUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values.
 
 *Encoding:*
 

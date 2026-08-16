@@ -5,9 +5,9 @@
 [[inst_fret_stk]]
 ==== FRET.STK
 
-*Syntax:* FRET.STK [RegDst0 ~ RegDstn], sp!, uimm
+*Syntax:* FRET.STK [ra ~ RegDstn], sp!, uimm
 
-*Description:* Restores a frame and returns through the validated stack target.
+*Description:* Restores a restartable stack frame whose first stack slot supplies the validated return target.
 
 *Encoding:*
 

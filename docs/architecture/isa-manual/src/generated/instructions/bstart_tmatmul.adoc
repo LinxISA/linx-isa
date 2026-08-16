@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TMATMUL DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts CUBE Function 0 for the TMATMUL Matrix-matrix complete-bundle operation.
 
 *Encoding:*
 

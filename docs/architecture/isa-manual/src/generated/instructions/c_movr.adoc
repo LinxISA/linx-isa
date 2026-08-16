@@ -7,7 +7,7 @@
 
 *Syntax:* c.movr SrcL, ->{t, u, Rd}
 
-*Description:* C.MOVR - Move the scalar source to the selected destination.
+*Description:* C.MOVR snapshots a Reg5 source and publishes the complete XLEN value unchanged through RegDst.
 
 *Encoding:*
 

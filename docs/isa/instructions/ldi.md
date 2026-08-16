@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/load_immediate_offset.md">Load Immediate Offset</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/lda_base_imm.md">LDA/BASE_IMM</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Loads a value from memory into a register.
+LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-rd = Load(/* addr */);
+// Execute LDI as defined by the LDA/BASE_IMM semantics.
 ```
 
 ## Encoding Notes
 
-- `LDI - Load scalar data using this mnemonic's width, signedness, and address-update form.`
+- `LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = Load(/* addr */);
 
 <div class="insn-nav">
 
-← [Load Immediate Offset](../groups/load_immediate_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [LDA/BASE_IMM](../groups/lda_base_imm.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

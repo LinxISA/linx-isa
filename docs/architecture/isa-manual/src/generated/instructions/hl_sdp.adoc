@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]
 
-*Description:* HL.SDP - Store a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.SDP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values.
 
 *Encoding:*
 

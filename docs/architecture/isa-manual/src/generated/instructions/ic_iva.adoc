@@ -7,7 +7,7 @@
 
 *Syntax:* ic.iva SrcL
 
-*Description:* IC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* IC.IVA completes the instruction-cache virtual-address scope token maintenance operation synchronously.
 
 *Encoding:*
 

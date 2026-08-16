@@ -7,7 +7,7 @@
 
 *Syntax:* hl.divu SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.DIVU - Compute quotient and remainder as a scalar result pair.
+*Description:* HL.DIVU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
 
 *Encoding:*
 

@@ -47,6 +47,65 @@ class ComponentLockTests(unittest.TestCase):
         errors = checker.validate(lock, modules, {"workloads/SuperNPUBench": "1" * 40})
         self.assertTrue(any("SuperNPUBench" in error for error in errors), errors)
 
+    def test_linxcoremodel_topic_pin_must_be_explicitly_review_only(self) -> None:
+        checker = load_checker()
+        path = "tools/LinxCoreModel"
+        lock = {
+            "schema_version": 1,
+            "profile": "v0.58",
+            "components": [
+                {
+                    "path": path,
+                    "url": "https://github.com/LinxISA/LinxCoreModel.git",
+                    "branch": "main",
+                    "commit": "2" * 40,
+                }
+            ],
+        }
+        modules = {
+            path: {
+                "url": "https://github.com/LinxISA/LinxCoreModel.git",
+                "branch": "main",
+                "update": "checkout",
+            }
+        }
+
+        errors = checker.validate(lock, modules, {path: "2" * 40})
+
+        self.assertTrue(
+            any("review-only open PR" in error for error in errors), errors
+        )
+
+    def test_linxcoremodel_review_only_pin_rejects_release_metadata(self) -> None:
+        checker = load_checker()
+        path = "tools/LinxCoreModel"
+        lock = {
+            "schema_version": 1,
+            "profile": "v0.58",
+            "components": [
+                {
+                    "path": path,
+                    "url": "https://github.com/LinxISA/LinxCoreModel.git",
+                    "branch": "main",
+                    "commit": "3" * 40,
+                    "integration_status": "review_only_open_pr",
+                    "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/36",
+                    "release_tag": "linxisa-v0.58.0",
+                }
+            ],
+        }
+        modules = {
+            path: {
+                "url": "https://github.com/LinxISA/LinxCoreModel.git",
+                "branch": "main",
+                "update": "checkout",
+            }
+        }
+
+        errors = checker.validate(lock, modules, {path: "3" * 40})
+
+        self.assertTrue(any("must not have release metadata" in e for e in errors), errors)
+
 
 if __name__ == "__main__":
     unittest.main()

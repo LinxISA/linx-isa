@@ -32,32 +32,35 @@
 %uimm12 52:12
 
 # Instruction forms
-# L.BSTART.FP | L.BSTART.FP DIRECT, <label> | opcodes/lx_64_prefix.opc:199
+# L.BSTART.FP | L.BSTART.FP DIRECT, <label> | opcodes/lx_64_prefix.opc:198
 l_bstart_fp_64_52a1fd45d908 .... .... .... .... .010 0000 1000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.FP | L.BSTART.FP FALL<, fixup_label> | opcodes/lx_64_prefix.opc:201
+# L.BSTART.FP | L.BSTART.FP FALL<, fixup_label> | opcodes/lx_64_prefix.opc:200
 l_bstart_fp_64_59792b6f0002 .... .... .... .... .001 0000 1000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.FP | L.BSTART.FP CALL, <label> | opcodes/lx_64_prefix.opc:200
+# L.BSTART.FP | L.BSTART.FP CALL, <label> | opcodes/lx_64_prefix.opc:199
 l_bstart_fp_64_9673fedb498b .... .... .... .... .100 0000 1000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.FP | L.BSTART.FP COND, <label> | opcodes/lx_64_prefix.opc:198
+# L.BSTART.FP | L.BSTART.FP COND, <label> | opcodes/lx_64_prefix.opc:197
 l_bstart_fp_64_b27a4726298b .... .... .... .... .011 0000 1000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.STD | L.BSTART.STD COND, <label> | opcodes/lx_64_prefix.opc:204
+# L.BSTART.STD | L.BSTART.STD COND, <label> | opcodes/lx_64_prefix.opc:203
 l_bstart_std_64_40bf385dbbff .... .... .... .... .011 0000 0000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.STD | L.BSTART.STD DIRECT, <label> | opcodes/lx_64_prefix.opc:202
+# L.BSTART.STD | L.BSTART.STD DIRECT, <label> | opcodes/lx_64_prefix.opc:201
 l_bstart_std_64_49b7cf990e62 .... .... .... .... .010 0000 0000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.STD | L.BSTART.STD CALL, <label> | opcodes/lx_64_prefix.opc:203
+# L.BSTART.STD | L.BSTART.STD CALL, <label> | opcodes/lx_64_prefix.opc:202
 l_bstart_std_64_9a6081ab8f08 .... .... .... .... .100 0000 0000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.STD | L.BSTART.STD FALL<, fixup_label> | opcodes/lx_64_prefix.opc:205
+# L.BSTART.STD | L.BSTART.STD FALL<, fixup_label> | opcodes/lx_64_prefix.opc:204
 l_bstart_std_64_ed61315d3418 .... .... .... .... .001 0000 0000 0001 .... .... .... .... .... .... .000 1111 %simm
 
-# L.BSTART.SYS | L.BSTART.SYS FALL<, fixup_label> | opcodes/lx_64_prefix.opc:206
+# L.BSTART.SYS | L.BSTART.SYS FALL<, fixup_label> | opcodes/lx_64_prefix.opc:205
 l_bstart_sys_64_3e3b45c148bc .... .... .... .... .001 0000 0001 0001 .... .... .... .... .... .... .000 1111 %simm
+
+# L.BSTOP | L.BSTOP | opcodes/lx_64_prefix.opc:208
+l_bstop_64_94c7f0a5e8b3 0000 0000 0000 0000 0000 0000 0000 0001 0000 0000 0000 0000 0000 0000 0000 1111
 
 # V.ADD | v.add SrcL, SrcR<.neg><<<shamt>, ->Dst | opcodes/lx_64_prefix.opc:12
 v_add_64_394294cc5946 .... .... .... .... .000 .... .000 0101 0000 000. .... .... .000 .... .111 1111 %RegDst %SrcL %SrcR %SrcRType shamt=%shamt_59_5

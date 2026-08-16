@@ -7,7 +7,7 @@
 
 *Syntax:* bcnt srcL,  M, N, ->{t, u, Rd}
 
-*Description:* BCNT - Count the selected bit property of the scalar source.
+*Description:* BCNT counts set bits in an independently selected wrapping scalar field and publishes the XLEN population count.
 
 *Encoding:*
 

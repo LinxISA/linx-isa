@@ -7,7 +7,7 @@
 
 *Syntax:* B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}
 
-*Description:* Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
+*Description:* Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
 
 *Encoding:*
 

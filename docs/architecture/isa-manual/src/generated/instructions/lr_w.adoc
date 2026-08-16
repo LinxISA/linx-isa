@@ -7,7 +7,7 @@
 
 *Syntax:* lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}
 
-*Description:* LR.W - Load the scalar memory value and establish a matching reservation.
+*Description:* LR.W loads one word, establishes a 64-byte-line reservation, and publishes the prior value.
 
 *Encoding:*
 

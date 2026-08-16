@@ -7,7 +7,7 @@
 
 *Syntax:* acrc rst_type
 
-*Description:* ACRC - Request architecture context close.
+*Description:* ACRC requests context close and marks the final scalar position of the active SYS block.
 
 *Encoding:*
 

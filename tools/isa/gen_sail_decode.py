@@ -637,6 +637,13 @@ def param_expr(inst: dict, param: str, raw_fields: dict[str, tuple[str, int]]) -
     alias = PARAM_ALIASES.get(param)
     if alias and alias in raw_fields:
         return raw_fields[alias][0]
+    fixed_fields = {
+        str(field["name"]): field
+        for field in inst.get("pto_source_fixed_fields", [])
+    }
+    if param in fixed_fields:
+        field = fixed_fields[param]
+        return bit_const(int(field["width"]), int(field["value"]))
 
     if param in {"SrcL_k", "SrcR_k", "SrcA_k", "SrcD_k", "Dst_k", "RegDst_k", "SrcP_k"}:
         source = {

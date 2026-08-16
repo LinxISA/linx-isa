@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Group:** Load UnScaled &nbsp;|&nbsp;
-**Forms:** 16 &nbsp;|&nbsp;
-**Unique mnemonics:** 16
+**Forms:** 10 &nbsp;|&nbsp;
+**Unique mnemonics:** 10
 
 </div>
 
@@ -16,12 +16,6 @@ Load instructions with unscaled immediate offsets.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [LDI.U](../instructions/ldi_u.md) | `ldi.u [SrcL, simm], ->{t, u, Rd}` | 32 | — | Loads a value from memory into a register. |
-| [LHI.U](../instructions/lhi_u.md) | `lhi.u [SrcL, simm], ->{t, u, Rd}` | 32 | — | Loads a value from memory into a register. |
-| [LHUI.U](../instructions/lhui_u.md) | `lhui.u [SrcL, simm], ->{t, u, Rd}` | 32 | — | Loads a value from memory into a register. |
-| [LWI.U](../instructions/lwi_u.md) | `lwi.u [SrcL, simm], ->{t, u, Rd}` | 32 | — | Loads a value from memory into a register. |
-| [LWUI.U](../instructions/lwui_u.md) | `lwui.u [SrcL, simm], ->{t, u, Rd}` | 32 | — | Loads a value from memory into a register. |
-| [PRFI.U](../instructions/prfi_u.md) | `prfi.u [SrcL, simm]` | 32 | — | Loads a value from memory into a register. |
 | [V.LDI.U](../instructions/v_ldi_u.md) | `v.ldi.u<.local> [SrcL, <lc0<<3>, simm], ->Dst` | 64 | — | [64-bit V.] Loads a value from memory into a register. |
 | [V.LDI.U.BRG](../instructions/v_ldi_u_brg.md) | `v.ldi.u.brg<.local> [SrcL, <lc0<<3>, simm], ->Dst` | 64 | — | [64-bit V.] Loads a value from memory into a register. |
 | [V.LHI.U](../instructions/v_lhi_u.md) | `v.lhi.u<.local> [SrcL, <lc0<<1>, simm], ->Dst` | 64 | — | [64-bit V.] Loads a value from memory into a register. |

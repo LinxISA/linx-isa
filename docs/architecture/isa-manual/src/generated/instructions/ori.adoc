@@ -7,7 +7,7 @@
 
 *Syntax:* ori SrcL, simm, ->{t, u, Rd}
 
-*Description:* ORI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* ORI sign-extends simm12 to PTO_XLEN, ORs it with the snapshotted XLEN source, and publishes the complete result through RegDst.
 
 *Encoding:*
 

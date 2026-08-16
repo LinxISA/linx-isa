@@ -7,7 +7,7 @@
 
 *Syntax:* lhi.u [SrcL, simm], ->{t, u, Rd}
 
-*Description:* LHI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* LHI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
 
 *Encoding:*
 

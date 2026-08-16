@@ -7,7 +7,7 @@
 
 *Syntax:* scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}
 
-*Description:* SCVTF - Convert between the encoded scalar numeric formats.
+*Description:* SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
 
 *Encoding:*
 

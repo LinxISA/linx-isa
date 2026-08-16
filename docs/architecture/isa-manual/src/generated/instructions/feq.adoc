@@ -7,7 +7,7 @@
 
 *Syntax:* feq.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FEQ - Compare floating-point operands and produce the encoded result.
+*Description:* FEQ performs ordered quiet equality and returns canonical XLEN zero or one.
 
 *Encoding:*
 

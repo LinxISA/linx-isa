@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/floating_point_arithmetic.md">Floating-point Arithmetic</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-13">Ch 13</span>
 &nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,12 +31,12 @@ Floating-point subtraction.
 ## Pseudocode (informative)
 
 ```c
-// Execute FSUB as defined by the Floating-point Arithmetic semantics.
+// Execute FSUB as defined by the FSU semantics.
 ```
 
 ## Encoding Notes
 
-- `FSUB - Compute this mnemonic's binary floating-point operation.`
+- `FSUB subtracts the right selected carrier from the left through the active numeric profile and publishes its sticky flags.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Floating-point subtraction.
 
 <div class="insn-nav">
 
-← [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

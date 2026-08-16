@@ -7,7 +7,7 @@
 
 *Syntax:* fdiv.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FDIV - Compute this mnemonic's binary floating-point operation.
+*Description:* FDIV divides the left selected carrier by the right through the active numeric profile and publishes its sticky flags.
 
 *Encoding:*
 

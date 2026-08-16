@@ -6,6 +6,7 @@
     "BLOCK_IO",
     "BLOCK_SPLIT",
     "DESC_B_DATR",
+    "DESC_B_FPATR",
     "DESC_B_HINT",
     "DESC_B_TEXT",
     "Q_MANAGE",

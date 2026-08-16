@@ -7,7 +7,7 @@
 
 *Syntax:* c.and srcL, srcR, ->t
 
-*Description:* C.AND - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* C.AND snapshots two complete Reg5 sources, computes the bitwise conjunction of SrcL and SrcR, and pushes the wrapping XLEN result to T.
 
 *Encoding:*
 

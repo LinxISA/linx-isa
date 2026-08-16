@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/store_pair.md">Store Pair</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/sta_pair.md">STA/PAIR</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[48-bit HL.] Stores a register value to memory.
+HL.SHIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
 
 ## Pseudocode (informative)
 
 ```c
-Store(/* addr */, rs2);
+// Execute HL.SHIP as defined by the STA/PAIR semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.SHIP - Store a scalar register pair using this mnemonic's address-update form.`
+- `HL.SHIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Store(/* addr */, rs2);
 
 <div class="insn-nav">
 
-← [Store Pair](../groups/store_pair.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [STA/PAIR](../groups/sta_pair.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

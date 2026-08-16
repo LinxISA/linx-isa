@@ -5,9 +5,9 @@
 [[inst_hl_qpush]]
 ==== HL.QPUSH
 
-*Syntax:* hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}
+*Syntax:* hl.qpush[.{h,e,r,he,hr,er,her}] SrcL, SrcR, ->RegDst
 
-*Description:* Pushes the encoded scalar values to the selected temporary queue.
+*Description:* Atomically pushes one 64-bit entry at the tail or head of a General Queue Management queue.
 
 *Encoding:*
 

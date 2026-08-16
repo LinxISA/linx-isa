@@ -134,6 +134,7 @@ def prepare_env(root: Path, profile: str, tier: str) -> dict[str, str]:
         env.setdefault("QEMU_ISA_COVERAGE_REQUIRE_FULL", "0")
     if profile == "release-strict":
         env.setdefault("RUN_LINUX_DEFCONFIG_AUDIT", "1")
+        env.setdefault("RUN_LINUX_BOOT_GATES", "1")
         env.setdefault("RUN_PTO_PARITY_GATE", "1")
     else:
         env.setdefault("RUN_LINUX_DEFCONFIG_AUDIT", "0")
@@ -146,6 +147,11 @@ def gate_enabled(gate: dict[str, Any], profile: str, tier: str, include_optional
         return False
     env_flag = str(gate.get("enabled_if_env", "")).strip()
     if env_flag and not truthy_env(env_flag):
+        if profile == "release-strict" and bool(gate["required"]):
+            raise SystemExit(
+                f"error: release-strict required gate disabled by {env_flag}: "
+                f"{gate['gate_key']}"
+            )
         return False
     if not bool(gate["required"]) and not include_optional:
         return False

@@ -57,17 +57,14 @@ Usage scenarios:
 
 ### 3. Call
 
-- Feature: Save return address to special register
-- Instruction format: `BSTART.BType CALL, <label>`
+- Feature: atomically retire the current block, install a direct-call BARG,
+  and write the explicit return target to `ra`.
+- Instruction format: `BSTART.CALL <br_label>, <rt_label>, ->ra`
 
 Usage scenarios:
 ```asm
 .block0: 
-    BSTART.STD CALL, .block2   # 调用执行block2处程序
-    setret .block1, ->ra       # 保存返回地址
-    inst1
-    ...
-    instx
+    BSTART.CALL .block2, .block1, ->ra
 .block1: 
     BSTART.SYS FALL
     ...
@@ -76,10 +73,8 @@ Usage scenarios:
     ...
 ```
 
-Blocks with this type of jump mode have the following constraints:
-
-- It cannot be an empty block. **The block must contain a setret instruction**.
-- **setret must be placed after bstart**.
+`br_label` and `rt_label` are independent PC-relative operands. The operation
+does not require or permit a separate `SETRET` to supply its return target.
 
 ### 4. Cond (conditional jump)
 
@@ -126,18 +121,21 @@ Usage scenarios:
 
 ### 6. Icall (indirect call)
 
-- Features: Dynamic function call
-- Constraints: It cannot be an empty block. The block must contain a setc.tgt instruction and a setret instruction**.
+- Features: atomically retire an active STD or FP block, snapshot that block's
+  `BARG.BPCN` as the indirect call target, and write the explicit return label
+  to `ra`.
+- Instruction format: `BSTART.ICALL <rt_label>, ->ra`
+- Constraints: the retiring block must have a valid STD/FP BARG and an aligned
+  `BPCN`. The instruction does not read `SETC.TGT` and does not require a
+  separate `SETRET`.
 
 Usage scenarios:
 ```asm
 .block0: 
-    BSTART.STD ICALL
-    setret .block1, ->ra   # 保存返回地址
-    add a0, t#1, ->t
-    setc.tgt t#1           # 设置跳转目标地址
+    BSTART.STD DIRECT, .block2  # establishes the retiring BARG.BPCN
     ...
     instx
+    BSTART.ICALL .block1, ->ra  # snapshots BPCN and writes the return target
 .block1:
     BSTART.SYS FALL
     ...

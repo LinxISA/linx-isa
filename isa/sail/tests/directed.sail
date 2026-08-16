@@ -258,6 +258,7 @@ function main() : unit -> unit = {
   bdesc_mark_dim();
   decoded_tile_datatype_shadow = 0b00001; // FP32 header/ACC for MX
   tile_effect_begin(0b10, 0b10101);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0810_4013);
   tile_effect_append_iot(0x0000_0000_1030_4013);
   tile_effect_append_iot(0x0000_0000_0058_5013);
@@ -280,6 +281,7 @@ function main() : unit -> unit = {
   bdesc_mark_dim();
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b10, 0b10010);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0818_4013);
   assert(not_bool(tile_effect_finalize()));
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0000);
@@ -288,11 +290,13 @@ function main() : unit -> unit = {
   tile_effect_restart_pending = false;
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10000);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0818_4013);
   assert(tile_effect_finalize());
   assert(tile_acc_valid);
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10010);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0818_4013);
   assert(tile_effect_finalize());
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0002);

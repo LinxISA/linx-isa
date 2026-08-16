@@ -1,8 +1,8 @@
 # Instruction Encoding Formats
 
-> **ISA Version:** v0.58.0 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
+> **ISA Version:** v0.58.1 &nbsp;|&nbsp; **Chapter 03** of the ISA Manual
 
-LinxISA v0.58.0 supports four instruction lengths in a little-endian
+LinxISA v0.58.1 supports four instruction lengths in a little-endian
 halfword-oriented model. Bit positions are shown as `[msb:0]`
 (MSB leftmost, LSB rightmost), matching ARM and RISC-V conventions.
 
@@ -11,7 +11,7 @@ halfword-oriented model. Bit positions are shown as `[msb:0]`
 | Namespace | Format | Bits | Composition | Example |
 |-----------|--------|------|-------------|---------|
 | **C.** | C16 | 16 | Single 16-bit part | `C.ADD`, `C.LD`, `C.BSTART.FP` |
-| *(base)* | LX32 | 32 | Single 32-bit part | `ADD`, `LD`, `BSTART CALL` |
+| *(base)* | LX32 | 32 | Single 32-bit part | `ADD`, `LD`, `BSTART.CALL` |
 | **HL.** | HL48 | 48 | 16-bit prefix + 32-bit main | `HL.LDI`, `HL.CASB`, `HL.SETRET` |
 | **V.** | V64 | 64 | 32-bit prefix + 32-bit main | `V.ADD`, `V.FMADD`, `V.DIV` |
 

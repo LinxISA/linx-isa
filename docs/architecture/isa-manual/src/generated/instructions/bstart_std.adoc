@@ -7,6 +7,17 @@
 
 *Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
+[[inst_bstart_std_32_185f13d8e302]]
+===== Form `bstart_std_32_185f13d8e302`
+
+*Syntax:* BSTART.STD FALL
+
+*Encoding:*
+
+image::encodings/enc_bstart_std_32_185f13d8e302.svg[BSTART.STD encoding form bstart_std_32_185f13d8e302,width=800]
+
+*Compression:* L32 (len=32)
+
 [[inst_bstart_std_32_49f2c6a8906f]]
 ===== Form `bstart_std_32_49f2c6a8906f`
 
@@ -37,39 +48,6 @@ image::encodings/enc_bstart_std_32_696f98ac4bf1.svg[BSTART.STD encoding form bst
 *Encoding:*
 
 image::encodings/enc_bstart_std_32_7876537dce06.svg[BSTART.STD encoding form bstart_std_32_7876537dce06,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_97d38b7be05e]]
-===== Form `bstart_std_32_97d38b7be05e`
-
-*Syntax:* BSTART.STD CALL, <label>
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_97d38b7be05e.svg[BSTART.STD encoding form bstart_std_32_97d38b7be05e,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_a5103b49e336]]
-===== Form `bstart_std_32_a5103b49e336`
-
-*Syntax:* BSTART.STD FALL<, fixup_label>
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_a5103b49e336.svg[BSTART.STD encoding form bstart_std_32_a5103b49e336,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_std_32_c386430b732a]]
-===== Form `bstart_std_32_c386430b732a`
-
-*Syntax:* BSTART.STD ICALL
-
-*Encoding:*
-
-image::encodings/enc_bstart_std_32_c386430b732a.svg[BSTART.STD encoding form bstart_std_32_c386430b732a,width=800]
 
 *Compression:* L32 (len=32)
 

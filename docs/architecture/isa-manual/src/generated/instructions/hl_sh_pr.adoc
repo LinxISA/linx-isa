@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}
 
-*Description:* HL.SH.PR - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SH.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

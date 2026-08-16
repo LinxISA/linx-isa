@@ -5,7 +5,7 @@
 [[inst_c_bstart]]
 ==== C.BSTART
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts a compressed standard block with a PC-relative direct or conditional candidate target.
 
 [[inst_c_bstart_16_78ebf9b37d2d]]
 ===== Form `c_bstart_16_78ebf9b37d2d`

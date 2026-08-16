@@ -7,7 +7,7 @@
 
 *Syntax:* sw.xor<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* SW.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.
 
 *Encoding:*
 

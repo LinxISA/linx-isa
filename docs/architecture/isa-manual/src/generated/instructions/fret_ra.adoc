@@ -7,7 +7,7 @@
 
 *Syntax:* FRET.RA [RegDst0 ~ RegDstn], sp!, uimm
 
-*Description:* Restores a frame and returns through the retained return-address target.
+*Description:* Restores a restartable stack frame and returns through the pre-restore architectural return address.
 
 *Encoding:*
 

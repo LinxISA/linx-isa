@@ -33,17 +33,18 @@
 
 ### 标量- 指令集：
   - 标量 块/调用/ret 语义是当前的第一个关闭通道
-  - 直接调用源示例应使用融合的 `BSTART CALL, <target>, ra=<label>`
+  - 直接调用源示例必须使用融合形式
+    `BSTART.CALL <br_label>, <rt_label>, ->ra`
 - 编译器：
   - 通用独立 C 覆盖范围较强，活动 LLVM AVS 通道为绿色
   - 直接调用源关闭现在预计将保持在 asm 级别融合，
-    而目标代码可能仍低于相邻的 `setret`
+    且目标代码必须保持同一个原子架构操作
 -QEMU：
   - 标量 运行时/系统基线大大领先于 SIMT/tile 宽度
   - call/ret 正确性是 标量 关闭通道的一部分
 - 剩余 标量 间隙：
-  - 间接调用融合 `ra=` 源语法在当前版本上尚不可移植
-    编译器分支，所以手写的`ICALL`仍然依赖显式相邻
+  - 编译器对 `BSTART.ICALL <rt_label>, ->ra` 的支持必须保留正在退役的
+    STD/FP block 的 `BARG.BPCN` 目标，且不得合成相邻的
     `setret/c.setret`
 
 ### SIMT

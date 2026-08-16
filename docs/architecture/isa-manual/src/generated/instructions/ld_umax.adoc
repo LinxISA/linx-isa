@@ -7,7 +7,7 @@
 
 *Syntax:* ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* LD.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* LD.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.
 
 *Encoding:*
 

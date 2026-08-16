@@ -7,7 +7,7 @@
 
 *Syntax:* ssrswap SrcL, SSR_ID, ->{t, u, Rd}
 
-*Description:* SSRSWAP - Atomically exchange the addressed system register and scalar value.
+*Description:* SSRSWAP atomically swaps the complete encoded system-register address.
 
 *Encoding:*
 

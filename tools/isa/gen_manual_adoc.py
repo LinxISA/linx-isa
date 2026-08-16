@@ -1312,7 +1312,7 @@ def _write_instruction_reference(groups: "OrderedDict[str, List[Dict[str, Any]]]
         lines.append(f"[[insnref-{anchor}]]")
         lines.append(f"=== {group}")
         lines.append("")
-        lines.append('[cols="1,1,2,4,6",options="header"]')
+        lines.append('[cols="3,1,2,5,5",options="header"]')
         lines.append("|===")
         lines.append("|Mnemonic |Len |Decode |Assembly |Notes")
 

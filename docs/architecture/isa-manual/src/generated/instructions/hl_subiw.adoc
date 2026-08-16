@@ -7,7 +7,7 @@
 
 *Syntax:* hl.subiw SrcL, uimm, ->{t, u, Rd}
 
-*Description:* HL.SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* HL.SUBIW applies word subtraction to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result.
 
 *Encoding:*
 

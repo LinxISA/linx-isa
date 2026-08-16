@@ -7,7 +7,7 @@
 
 *Syntax:* hl.addi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* HL.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* HL.ADDI applies XLEN addition to SrcL and a zero-extended 24-bit immediate.
 
 *Encoding:*
 

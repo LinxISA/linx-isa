@@ -7,7 +7,7 @@
 
 *Syntax:* fmin.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FMIN - Compute this mnemonic's binary floating-point operation.
+*Description:* FMIN applies the architecture-owned ordered minimum, NaN, and signed-zero rules to selected FP64 or FP32 carriers.
 
 *Encoding:*
 

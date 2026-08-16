@@ -7,7 +7,7 @@
 
 *Syntax:* c.ssrget SSR-ID, ->t
 
-*Description:* C.SSRGET - Read the compressed-form system register.
+*Description:* C.SSRGET reads the complete encoded system-register address.
 
 *Encoding:*
 

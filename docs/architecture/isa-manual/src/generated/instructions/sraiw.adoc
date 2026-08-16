@@ -7,7 +7,7 @@
 
 *Syntax:* sraiw SrcL, shamt, ->{t, u, Rd}
 
-*Description:* SRAIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* SRAIW arithmetically shifts SrcL[31:0] right by the encoded five-bit amount, sign-extends the word result to XLEN, and publishes it.
 
 *Encoding:*
 

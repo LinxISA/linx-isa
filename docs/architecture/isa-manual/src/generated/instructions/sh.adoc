@@ -7,7 +7,7 @@
 
 *Syntax:* sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]
 
-*Description:* SH - Store scalar data using this mnemonic's width and address-update form.
+*Description:* SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

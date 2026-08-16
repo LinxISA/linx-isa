@@ -7,7 +7,7 @@
 
 *Syntax:* ctz SrcL,  M, N, ->{t, u, Rd}
 
-*Description:* CTZ - Count the selected bit property of the scalar source.
+*Description:* CTZ counts trailing zero bits in an independently selected wrapping scalar field and publishes the XLEN count.
 
 *Encoding:*
 

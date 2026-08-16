@@ -7,7 +7,7 @@
 
 *Syntax:* hl.andi SrcL, simm, ->{t, u, Rd}
 
-*Description:* HL.ANDI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* HL.ANDI applies XLEN bitwise conjunction to SrcL and a sign-extended 24-bit immediate.
 
 *Encoding:*
 

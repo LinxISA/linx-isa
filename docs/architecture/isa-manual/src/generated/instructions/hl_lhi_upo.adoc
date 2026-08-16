@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lhi.upo [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LHI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LHI.UPO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
 
 *Encoding:*
 

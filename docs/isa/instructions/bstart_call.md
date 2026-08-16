@@ -1,4 +1,4 @@
-# BSTART CALL
+# BSTART.CALL
 
 <div class="insn-header">
 
@@ -18,7 +18,7 @@
 <div class="enc-diagram">
 
 <figure>
-<img src="../wavedrom/enc_bstart_call.svg" alt="BSTART CALL encoding" width="100%" />
+<img src="../wavedrom/enc_bstart_call.svg" alt="BSTART.CALL encoding" width="100%" />
 <figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
 </figure>
 
@@ -39,7 +39,7 @@ AtomicCallTransfer(call_target, ra);
 
 ## Encoding Notes
 
-- `Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.`
+- `Atomically retires the old block, installs a direct-call BARG, and writes the independent return target to ra.`
 
 ## Full Catalog Forms
 

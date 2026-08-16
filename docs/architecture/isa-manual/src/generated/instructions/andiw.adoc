@@ -7,7 +7,7 @@
 
 *Syntax:* andiw SrcL, simm, ->{t, u, Rd}
 
-*Description:* ANDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* ANDIW ANDs SrcL[31:0] with the low 32 bits of sign-extended simm12, sign-extends the result to XLEN, and publishes it through RegDst.
 
 *Encoding:*
 

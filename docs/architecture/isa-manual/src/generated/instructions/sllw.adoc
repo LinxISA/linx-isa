@@ -7,7 +7,7 @@
 
 *Syntax:* sllw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* SLLW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* SLLW performs a logical left shift of the low 32-bit source by the low five bits of the snapshotted SrcR; the 32-bit result is sign-extended to XLEN.
 
 *Encoding:*
 

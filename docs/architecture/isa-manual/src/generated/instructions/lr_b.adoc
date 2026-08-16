@@ -7,7 +7,7 @@
 
 *Syntax:* lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}
 
-*Description:* LR.B - Load the scalar memory value and establish a matching reservation.
+*Description:* LR.B loads one byte, establishes a 64-byte-line reservation, and publishes the prior value.
 
 *Encoding:*
 

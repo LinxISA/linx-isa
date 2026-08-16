@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.iv SrcL
 
-*Description:* TLB.IV - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* TLB.IV completes the canonical 48-bit virtual address maintenance operation synchronously.
 
 *Encoding:*
 

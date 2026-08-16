@@ -7,7 +7,7 @@
 
 *Syntax:* c.sdi t#1, [srcL, simm]
 
-*Description:* C.SDI - Store scalar data using this mnemonic's width and address-update form.
+*Description:* C.SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
 
 *Encoding:*
 

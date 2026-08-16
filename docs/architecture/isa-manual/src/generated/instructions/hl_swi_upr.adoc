@@ -7,7 +7,7 @@
 
 *Syntax:* hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd}
 
-*Description:* HL.SWI.UPR - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SWI.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 *Encoding:*
 

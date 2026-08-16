@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/arithmetic_operation_64bit.md">Arithmetic Operation 64bit</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -36,7 +36,7 @@ rd = rs1 >> shamt (arith);
 
 ## Encoding Notes
 
-- `SRAI - Compute this mnemonic's binary scalar operation and write the selected destination.`
+- `SRAI arithmetically shifts the snapshotted XLEN source right by the encoded six-bit amount and publishes the XLEN result through RegDst.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = rs1 >> shamt (arith);
 
 <div class="insn-nav">
 
-← [Arithmetic Operation 64bit](../groups/arithmetic_operation_64bit.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

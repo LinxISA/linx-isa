@@ -7,7 +7,7 @@
 
 *Syntax:* dc.csw SrcL
 
-*Description:* DC.CSW - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* DC.CSW completes the data-cache clean-by-set/way scope token maintenance operation synchronously.
 
 *Encoding:*
 

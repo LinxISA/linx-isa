@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/multi_cycle_alu.md">Multi-Cycle ALU</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair.
+HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.REMUW as defined by the Multi-Cycle ALU semantics.
+// Execute HL.REMUW as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair.`
+- `HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair.
 
 <div class="insn-nav">
 
-← [Multi-Cycle ALU](../groups/multi_cycle_alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

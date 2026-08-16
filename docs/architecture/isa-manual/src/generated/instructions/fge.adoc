@@ -7,7 +7,7 @@
 
 *Syntax:* fge.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FGE - Compare floating-point operands and produce the encoded result.
+*Description:* FGE performs ordered quiet greater-than-or-equal comparison and returns canonical XLEN zero or one.
 
 *Encoding:*
 

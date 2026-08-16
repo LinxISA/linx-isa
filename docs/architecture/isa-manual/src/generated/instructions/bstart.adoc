@@ -5,12 +5,12 @@
 [[inst_bstart]]
 ==== BSTART
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Initializes the single BARG continuation record after any retiring block commits successfully.
 
 [[inst_bstart_32_416bc417fc20]]
 ===== Form `bstart_32_416bc417fc20`
 
-*Syntax:* BSTART {DIRECT, CALL}, <label>
+*Syntax:* BSTART DIRECT, <label>
 
 *Encoding:*
 

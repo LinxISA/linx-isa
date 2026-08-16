@@ -7,7 +7,7 @@
 
 *Syntax:* hl.rem SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.REM - Compute quotient and remainder as a scalar result pair.
+*Description:* HL.REM computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
 
 *Encoding:*
 

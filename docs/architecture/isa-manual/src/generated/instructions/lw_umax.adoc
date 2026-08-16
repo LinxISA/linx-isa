@@ -7,7 +7,7 @@
 
 *Syntax:* lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* LW.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.
 
 *Encoding:*
 

@@ -1,0 +1,1051 @@
+{
+  "isa": "PTO Instruction Set Architecture",
+  "release": "0.58.1",
+  "reservation_count": 32,
+  "reservations": [
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf9ffffff",
+          "match": "0x00021181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "width": 2
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.VPAR",
+      "owner": "PTO reserved two-level vector extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf9ffffff",
+          "match": "0x00029181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "width": 2
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.VSEQ",
+      "owner": "PTO reserved two-level vector extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000ffff",
+          "match": "0x000088c0",
+          "width_bits": 16
+        }
+      ],
+      "fields": [],
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.VPAR",
+      "owner": "PTO reserved two-level vector extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000ffff",
+          "match": "0x0000c8c0",
+          "width_bits": 16
+        }
+      ],
+      "fields": [],
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.VSEQ",
+      "owner": "PTO reserved two-level vector extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x00000003",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "B.TEXT",
+      "owner": "PTO reserved two-level out-of-line block extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "constraints": [
+        {
+          "field": "simm17",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00001101",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.FP.FIXUP",
+      "owner": "PTO reserved two-level Fixup extension payload",
+      "status": "reserved-in-pto"
+    },
+    {
+      "constraints": [
+        {
+          "field": "simm17",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00001001",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.STD.FIXUP",
+      "owner": "PTO reserved two-level Fixup extension payload",
+      "status": "reserved-in-pto"
+    },
+    {
+      "constraints": [
+        {
+          "field": "simm17",
+          "operator": "not-equal",
+          "value": 0
+        }
+      ],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff",
+          "match": "0x00001081",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm17",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 17
+            }
+          ],
+          "signedness": "signed",
+          "width": 17
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.SYS.FIXUP",
+      "owner": "PTO reserved two-level Fixup extension payload",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000007f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00000000",
+          "match": "0x00000000",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 64,
+      "mnemonic": "V.*",
+      "owner": "PTO reserved two-level vector extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf9ffffff",
+          "match": "0x00001181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "width": 2
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.MPAR",
+      "owner": "PTO reserved two-level machine-block extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf9ffffff",
+          "match": "0x00009181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "Mode",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "part_index": 0,
+              "value_lsb": 0,
+              "width": 2
+            }
+          ],
+          "width": 2
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "BSTART.MSEQ",
+      "owner": "PTO reserved two-level machine-block extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000ffff",
+          "match": "0x000008c0",
+          "width_bits": 16
+        }
+      ],
+      "fields": [],
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.MPAR",
+      "owner": "PTO reserved two-level machine-block extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000ffff",
+          "match": "0x000048c0",
+          "width_bits": 16
+        }
+      ],
+      "fields": [],
+      "length_bits": 16,
+      "mnemonic": "C.BSTART.MSEQ",
+      "owner": "PTO reserved two-level machine-block extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xf83f0000007f",
+          "match": "0x501600000011",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm25",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 25
+        },
+        {
+          "name": "uimm5",
+          "pieces": [
+            {
+              "instruction_lsb": 38,
+              "value_lsb": 0,
+              "width": 5,
+              "part_index": 1
+            }
+          ],
+          "signedness": "unsigned",
+          "width": 5
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.CALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00003101000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP.COND",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00001101000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP.FALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00004101000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP.CALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00002101000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP.DIRECT",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00004001000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD.CALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00001001000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD.FALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00003001000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD.COND",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00002001000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD.DIRECT",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x00007fff000f",
+          "match": "0x00001081000e",
+          "width_bits": 48
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 1,
+              "width": 17,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 4,
+              "value_lsb": 18,
+              "width": 12,
+              "part_index": 0
+            }
+          ],
+          "signedness": "signed",
+          "width": 30
+        }
+      ],
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.SYS.FALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00003081",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP.COND",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00002081",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP.DIRECT",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00004081",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP.CALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00001081",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP.FALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00002001",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD.DIRECT",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00004001",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD.CALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00003001",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD.COND",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00001001",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD.FALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000007f",
+          "match": "0x0000000f",
+          "width_bits": 32
+        },
+        {
+          "index": 1,
+          "mask": "0x00007fff",
+          "match": "0x00001011",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 25,
+              "part_index": 0
+            },
+            {
+              "instruction_lsb": 47,
+              "value_lsb": 25,
+              "width": 17,
+              "part_index": 1
+            }
+          ],
+          "signedness": "signed",
+          "width": 42
+        }
+      ],
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.SYS.FALL",
+      "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    }
+  ],
+  "schema_version": 1,
+  "source_lock": "isa/v0.58/pto-spec.lock.json"
+}

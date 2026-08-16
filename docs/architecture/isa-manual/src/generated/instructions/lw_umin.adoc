@@ -7,7 +7,7 @@
 
 *Syntax:* lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* LW.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.
 
 *Encoding:*
 

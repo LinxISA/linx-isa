@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lwi.pr [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LWI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LWI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
 
 *Encoding:*
 

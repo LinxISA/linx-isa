@@ -7,7 +7,7 @@
 
 *Syntax:* hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}
 
-*Description:* HL.SHI.UPO - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SHI.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 
 *Encoding:*
 

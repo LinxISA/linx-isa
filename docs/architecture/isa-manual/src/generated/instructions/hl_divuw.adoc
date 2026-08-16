@@ -7,7 +7,7 @@
 
 *Syntax:* hl.divuw SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.DIVUW - Compute 32-bit quotient and remainder as a sign-extended result pair.
+*Description:* HL.DIVUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
 
 *Encoding:*
 

@@ -1,6 +1,6 @@
 {
   "big_kind": "CMD",
-  "count": 43,
+  "count": 44,
   "instructions": [
     {
       "class": {
@@ -417,6 +417,19 @@
         32
       ],
       "mnemonic": "BSTOP"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO long-form block stop",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Bundle Split",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "L.BSTOP"
     },
     {
       "class": {

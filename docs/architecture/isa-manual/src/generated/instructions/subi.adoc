@@ -7,7 +7,7 @@
 
 *Syntax:* subi SrcL, uimm, ->{t, u, Rd}
 
-*Description:* SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* SUBI subtracts the zero-extended unsigned 12-bit immediate from the snapshotted XLEN source modulo 2^PTO_XLEN and publishes the result through RegDst.
 
 *Encoding:*
 

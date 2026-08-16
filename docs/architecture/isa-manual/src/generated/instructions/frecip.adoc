@@ -7,7 +7,7 @@
 
 *Syntax:* frecip.{T} SrcL, ->{t, u, Rd}
 
-*Description:* FRECIP - Compute this mnemonic's unary floating-point operation.
+*Description:* FRECIP applies the active numeric profile reciprocal operation to the selected FP64 or FP32 carrier.
 
 *Encoding:*
 

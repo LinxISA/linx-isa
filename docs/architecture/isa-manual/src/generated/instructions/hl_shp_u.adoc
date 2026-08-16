@@ -7,7 +7,7 @@
 
 *Syntax:* hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]
 
-*Description:* HL.SHP.U - Store a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.SHP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
 
 *Encoding:*
 

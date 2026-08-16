@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import the canonical PTO ISA 0.58.0 release into the Linx v0.58 profile."""
+"""Import the canonical PTO ISA 0.58.1 release into the Linx v0.58 profile."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = ROOT / "isa" / "v0.58"
 LOCK_PATH = PROFILE / "pto-spec.lock.json"
-RELEASE = "0.58.0"
-EXPECTED_ABI = "pto-isa-0.58.0-mode-function-v1"
+RELEASE = "0.58.1"
+EXPECTED_ABI = "pto-isa-0.58.1-mode-function-v1"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -42,9 +42,9 @@ def source_paths(source_root: Path) -> dict[str, Path]:
         "tiles": source_root / "spec/catalog/tile-operations.json",
         "commands": source_root / "spec/catalog/command-forms.json",
         "scalars": source_root / "spec/catalog/scalar-forms.json",
-        "reservations": source_root / "spec/catalog/linx-vector-reservations.json",
+        "reservations": source_root / "spec/catalog/extension-encoding-reservations.json",
         "hardware": source_root / "spec/hardware-conformance-profile.json",
-        "vectors": source_root / "spec/evidence/pto-isa-0580-hardware-numeric-vectors.json",
+        "vectors": source_root / "spec/evidence/pto-isa-0581-hardware-numeric-vectors.json",
     }
 
 
@@ -56,13 +56,13 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     docs = {name: load_json(path) for name, path in paths.items()}
     manifest = docs["manifest"]
     if manifest.get("release") != RELEASE or manifest.get("encoding_abi") != EXPECTED_ABI:
-        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.0 contract")
+        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.1 contract")
     counts = manifest.get("catalog_counts") or {}
     expected = {
         "tile_operations_total": 109,
-        "command_forms": 99,
+        "command_forms": 74,
         "scalar_forms": 474,
-        "linx_vector_reservations": 5,
+        "extension_encoding_reservations": 32,
     }
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
@@ -71,7 +71,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
     if Counter(item["engine"] for item in docs["tiles"]["operations"]) != Counter(
-        {"VEC": 35, "SFU": 52, "TLSU": 10, "CUBE": 12}
+        {"VEC": 31, "SFU": 56, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 semantic engine counts")
     if Counter(item["classification"] for item in docs["tiles"]["operations"]) != Counter(
@@ -87,10 +87,10 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     ):
         raise ValueError("unexpected PTO 0.58 tile classification counts")
     if Counter(item["semantic_family"] for item in docs["commands"]["forms"]) != Counter(
-        {"CMD": 74, "BBD": 25}
+        {"CMD": 69, "BBD": 5}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
-    if docs["scalars"].get("form_count") != 474 or docs["reservations"].get("reservation_count") != 5:
+    if docs["scalars"].get("form_count") != 474 or docs["reservations"].get("reservation_count") != 32:
         raise ValueError("unexpected PTO 0.58 scalar/reservation cardinality")
 
     canonical = {entry["path"]: entry["sha256"] for entry in manifest["canonical_inputs"]}
@@ -98,12 +98,12 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         "tiles": "spec/catalog/tile-operations.json",
         "commands": "spec/catalog/command-forms.json",
         "scalars": "spec/catalog/scalar-forms.json",
-        "reservations": "spec/catalog/linx-vector-reservations.json",
+        "reservations": "spec/catalog/extension-encoding-reservations.json",
     }.items():
         if canonical.get(relative) != sha256(paths[name]):
             raise ValueError(f"{relative} does not match the release manifest")
     hardware = manifest["hardware_conformance_profile"]
-    if hardware.get("evidence") != "spec/evidence/pto-isa-0580-hardware-numeric-vectors.json":
+    if hardware.get("evidence") != "spec/evidence/pto-isa-0581-hardware-numeric-vectors.json":
         raise ValueError("release manifest names the wrong numeric evidence")
     if hardware.get("sha256") != sha256(paths["hardware"]):
         raise ValueError("hardware profile does not match the release manifest")
@@ -122,12 +122,12 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
     manifest = docs["manifest"]
     catalogs = {}
     for name, relative, count in (
-        ("command_forms", "spec/catalog/command-forms.json", 99),
+        ("command_forms", "spec/catalog/command-forms.json", 74),
         ("scalar_forms", "spec/catalog/scalar-forms.json", 474),
         ("tile_operations", "spec/catalog/tile-operations.json", 109),
-        ("linx_vector_reservations", "spec/catalog/linx-vector-reservations.json", 5),
+        ("extension_encoding_reservations", "spec/catalog/extension-encoding-reservations.json", 32),
     ):
-        key = "reservations" if name == "linx_vector_reservations" else name.split("_")[0] + "s"
+        key = "reservations" if name == "extension_encoding_reservations" else name.split("_")[0] + "s"
         catalogs[name] = {"path": relative, "sha256": sha256(paths[key]), "count": count}
     return {
         "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_spec_lock.v1.json",
@@ -141,7 +141,7 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
             "sha256": sha256(paths["hardware"]),
         },
         "numeric_conformance_vectors": {
-            "path": "spec/evidence/pto-isa-0580-hardware-numeric-vectors.json",
+            "path": "spec/evidence/pto-isa-0581-hardware-numeric-vectors.json",
             "sha256": sha256(paths["vectors"]),
         },
         "release": RELEASE,
@@ -233,7 +233,7 @@ def project_release_manifest(docs: dict[str, dict[str, Any]]) -> dict[str, Any]:
             "command_forms": len(commands["forms"]),
             "command_form_families": manifest["catalog_counts"]["command_form_families"],
             "scalar_forms": len(scalars["forms"]),
-            "linx_vector_reservations": 5,
+            "extension_encoding_reservations": 32,
         },
         "migration_aliases": {},
         "deleted_names": tiles["deleted_names"],
@@ -411,7 +411,7 @@ def projections(docs: dict[str, dict[str, Any]]) -> dict[Path, dict[str, Any]]:
         state / "pto_encoding_map.json": project_encoding_map(docs["tiles"]),
         state / "pto_command_forms.json": locked_projection(docs["commands"]),
         state / "pto_scalar_forms.json": locked_projection(docs["scalars"]),
-        state / "linx_vector_reservations.json": locked_projection(docs["reservations"]),
+        state / "extension_encoding_reservations.json": locked_projection(docs["reservations"]),
         state / "shared_tile_registers.json": shared_register_state(),
         state / "engine_ops.json": project_engine_ops(docs["tiles"]),
         PROFILE / "encoding/retired_encodings.json": retired_encoding_state(docs["tiles"]),

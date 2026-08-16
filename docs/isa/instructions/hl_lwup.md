@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/load_pair.md">Load Pair</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/lda_pair.md">LDA/PAIR</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[48-bit HL.] Loads a value from memory into a register.
+HL.LWUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
 
 ## Pseudocode (informative)
 
 ```c
-rd = Load(/* addr */);
+// Execute HL.LWUP as defined by the LDA/PAIR semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.LWUP - Load a scalar register pair using this mnemonic's address-update form.`
+- `HL.LWUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = Load(/* addr */);
 
 <div class="insn-nav">
 
-← [Load Pair](../groups/load_pair.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [LDA/PAIR](../groups/lda_pair.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

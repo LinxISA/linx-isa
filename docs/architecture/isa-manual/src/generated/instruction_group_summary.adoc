@@ -6,72 +6,58 @@
 [cols="3,1,1",options="header"]
 |===
 |Group |Forms |Unique mnemonics
-|Execution Control |10 |10
-|Arithmetic Operation 64bit |21 |21
-|Arithmetic Operation 32bit |21 |21
-|PC-Relative |4 |4
+|SYS |35 |35
+|ALU |107 |107
+|BRU |66 |66
 |Bundle Control Attribute |1 |1
 |Bundle Data Attribute |1 |1
 |Bundle Argument |3 |1
-|Branch |10 |10
+|Bundle Fixed-Point PostProcess Attribute |1 |1
 |Bundle Hint |2 |1
 |Bundle Input & Output |7 |3
 |Bundle Offset |1 |1
-|Cache Maintain |16 |16
-|Bit Operation |8 |8
-|Bundle Split |60 |41
-|BSTART |20 |8
+|Bundle Split |57 |42
+|BSTART |21 |9
 |Block Split |2 |2
-|Arithmetic Operation |20 |20
-|Arithmetic |1 |1
 |Bundle Dimension |1 |1
 |C.BSTART |7 |7
-|C.TINST |6 |6
-|Load Immediate Offset |23 |23
-|Move |3 |3
-|Store Immediate Offset |9 |9
-|Set Commit Argument |26 |26
-|C.UNARY |7 |7
-|Atomic Operation |72 |72
-|Compare Instruction |40 |40
-|Compound Operation |1 |1
-|Multi-Cycle ALU |28 |28
-|DMA Operation |1 |1
-|Floating-point Arithmetic |12 |12
-|Format Convert |12 |12
-|Floating-point Compare |8 |8
-|Max-Min |6 |6
-|RESERVE |3 |3
-|Atomic |4 |4
-|Concat |2 |2
-|Load PC-Relative |7 |7
-|Load Post-Index |19 |19
-|Load Pre-Index |19 |19
-|Load Long Offset |12 |12
-|Load Pair |19 |19
-|Long Immediate |2 |2
-|Immediate |2 |2
-|Prefetch |4 |4
+|LDA/BASE_IMM |9 |9
+|STA/BASE_IMM |9 |9
+|AMO |53 |53
+|FSU |30 |30
+|LDA/PC_REL |7 |7
+|LDA/POST_INDEX |19 |19
+|LDA/PRE_INDEX |19 |19
+|LDA/LONG |12 |12
+|LDA/PAIR |19 |19
+|LDA |11 |11
 |General |3 |3
-|Store PC-Relative |4 |4
-|Store Post-Index |14 |14
-|Store Pre-Index |14 |14
-|Store Long Offset |7 |7
-|Store Pair |14 |14
-|SSR Access |7 |7
-|Load Register Offset |22 |22
-|Load Symbol |7 |7
-|Load UnScaled |16 |16
-|Store Register Offset |21 |21
-|Store Symbol |4 |4
+|STA/PC_REL |4 |4
+|STA/POST_INDEX |14 |14
+|STA/PRE_INDEX |14 |14
+|STA/LONG |7 |7
+|STA/PAIR |14 |14
+|LDA/BASE_REG |8 |8
+|LDA/UNSCALED |6 |6
+|STA/BASE_REG |7 |7
+|STA |4 |4
+|Arithmetic Operation |16 |16
 |Bit Manipulation |8 |8
+|Compare Instruction |16 |16
 |Three Source Integer |2 |2
 |Division |2 |2
 |Floating Point Arithmetic |5 |5
 |Three-Source Floating Point |8 |8
+|Format Convert |4 |4
 |Two-Source Floating Point |12 |12
+|Load Register Offset |14 |14
+|Load Immediate Offset |14 |14
+|Atomic Operation |24 |24
+|Load UnScaled |10 |10
+|Multi-Cycle ALU |2 |2
 |General Manager |2 |2
 |Reduce Operation with Register |9 |9
+|Store Register Offset |14 |14
 |Store Offset |14 |14
 |Shuffle |8 |8
 |===

@@ -7,7 +7,7 @@
 
 *Syntax:* and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* AND - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* AND applies the selected right-source transformation before its encoded logical left shift, performs bitwise conjunction, and publishes the PTO_XLEN result.
 
 *Encoding:*
 

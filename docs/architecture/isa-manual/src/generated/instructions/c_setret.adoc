@@ -5,9 +5,9 @@
 [[inst_c_setret]]
 ==== C.SETRET
 
-*Syntax:* c.setret uimm, - >Ra
+*Syntax:* c.setret uimm, ->ra
 
-*Description:* C.SETRET - Write the architectural return address.
+*Description:* Materialize an unsigned halfword-scaled TPC-relative return address in ra and captured return state.
 
 *Encoding:*
 

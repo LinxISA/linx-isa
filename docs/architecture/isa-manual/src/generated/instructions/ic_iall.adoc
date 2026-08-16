@@ -7,7 +7,7 @@
 
 *Syntax:* ic.iall
 
-*Description:* IC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* IC.IALL completes the instruction-cache all-entry scope maintenance operation synchronously.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* fges.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FGES - Compare floating-point operands and produce the encoded result.
+*Description:* FGES performs ordered signaling greater-than-or-equal comparison and returns canonical XLEN zero or one.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* sll SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* SLL - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* SLL performs a logical left shift of the PTO_XLEN source by the low six bits of the snapshotted SrcR; the XLEN result is published directly.
 
 *Encoding:*
 

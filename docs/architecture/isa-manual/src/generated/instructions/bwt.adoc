@@ -7,7 +7,7 @@
 
 *Syntax:* bwt SrcL
 
-*Description:* BWT - Issue this mnemonic's architecture control request.
+*Description:* BWT publishes the WaitTimeout nonblocking execution-control request.
 
 *Encoding:*
 

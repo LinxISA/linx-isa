@@ -7,7 +7,7 @@
 
 *Syntax:* ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* LD.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* LD.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.
 
 *Encoding:*
 

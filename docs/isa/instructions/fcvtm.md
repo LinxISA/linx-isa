@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/format_convert.md">Format Convert</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-13">Ch 13</span>
 &nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-FCVTM - Convert between the encoded scalar numeric formats.
+FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute FCVTM as defined by the Format Convert semantics.
+// Execute FCVTM as defined by the FSU semantics.
 ```
 
 ## Encoding Notes
 
-- `FCVTM - Convert between the encoded scalar numeric formats.`
+- `FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ FCVTM - Convert between the encoded scalar numeric formats.
 
 <div class="insn-nav">
 
-← [Format Convert](../groups/format_convert.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

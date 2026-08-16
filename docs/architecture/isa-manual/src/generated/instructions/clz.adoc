@@ -7,7 +7,7 @@
 
 *Syntax:* clz SrcL,  M, N, ->{t, u, Rd}
 
-*Description:* CLZ - Count the selected bit property of the scalar source.
+*Description:* CLZ counts leading zero bits in an independently selected wrapping scalar field and publishes the XLEN count.
 
 *Encoding:*
 

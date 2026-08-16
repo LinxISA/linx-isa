@@ -7,7 +7,7 @@
 
 *Syntax:* tlb.ia SrcL
 
-*Description:* TLB.IA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
+*Description:* TLB.IA completes the 16-bit ASID token in bits 15:0 maintenance operation synchronously.
 
 *Encoding:*
 

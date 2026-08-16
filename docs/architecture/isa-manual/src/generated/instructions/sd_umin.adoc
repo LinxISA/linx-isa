@@ -7,7 +7,7 @@
 
 *Syntax:* sd.umin<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* SD.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
 
 *Encoding:*
 

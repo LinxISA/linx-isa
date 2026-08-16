@@ -7,7 +7,7 @@
 
 *Syntax:* hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]
 
-*Description:* HL.SWP - Store a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.SWP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 4-byte values.
 
 *Encoding:*
 

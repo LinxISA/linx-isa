@@ -7,7 +7,7 @@
 
 *Syntax:* ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}
 
-*Description:* LD.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* LD.XOR atomically stores the width-sized bitwise XOR and publishes the prior memory value.
 
 *Encoding:*
 

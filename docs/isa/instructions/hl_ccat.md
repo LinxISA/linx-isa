@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/concat.md">Concat</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-18">Ch 18</span>
-&nbsp; <strong>RSV — Reserved and Indexed Operations</strong> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-12">Ch 12</span>
+&nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-HL.CCAT - Concatenate two scalar values into a result pair.
+HL.CCAT logically right-shifts {SrcL, SrcR}, writes the low 64-bit result to Dst0, then writes the high result to Dst1.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.CCAT as defined by the Concat semantics.
+// Execute HL.CCAT as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.CCAT - Concatenate two scalar values into a result pair.`
+- `HL.CCAT logically right-shifts {SrcL, SrcR}, writes the low 64-bit result to Dst0, then writes the high result to Dst1.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ HL.CCAT - Concatenate two scalar values into a result pair.
 
 <div class="insn-nav">
 
-← [Concat](../groups/concat.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

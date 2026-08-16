@@ -72,46 +72,39 @@ Tail-call form:
 - Use `FEXIT` for tail-transfer exit.
 - Canonical tail pair is `FENTRY + FEXIT`, then block-legal transfer to callee.
 
-`RET/IND/ICALL` target setup:
+`RET/IND` target setup:
 
 - `BSTART.RET` requires `setc.tgt` to define target source.
 - Canonical return block is:
   - `C.BSTART.RET`
   - `c.setc.tgt ra`
   - `C.BSTOP`
-- `IND` and `ICALL` blocks also require explicit `setc.tgt` in the same block.
+- `IND` blocks also require explicit `setc.tgt` in the same block.
 
-Fused call header (returning calls):
+Fused call headers:
 
-- Direct `CALL` source should use fused `BSTART.STD CALL, <callee>, ra=<label>`.
-- Object disassembly may still show lowered adjacent `SETRET/C.SETRET`.
-- No instruction may appear between `BSTART.CALL` and `SETRET/C.SETRET`.
-- `SETRET` defines an explicit return block label (`ra` target); do not assume return is lexical fall-through.
-- On the current compiler branch, handwritten `ICALL` still requires explicit
-  adjacent `SETRET/C.SETRET`; fused `ra=` source syntax is not yet portable
-  there.
+- Direct returning calls use exactly
+  `BSTART.CALL <br_label>, <rt_label>, ->ra`.
+- Indirect returning calls use exactly `BSTART.ICALL <rt_label>, ->ra`; the
+  target is the retiring STD/FP block's `BARG.BPCN`.
+- Neither fused form consumes `SETRET/C.SETRET`, and `BSTART.ICALL` does not
+  read `SETC.TGT`.
+- Linx-only long bare calls preserve `ra`. If paired with `SETRET/C.SETRET`,
+  that instruction must immediately precede the bare call.
 
 Non-fallthrough return example:
 
 ```asm
-BSTART.STD CALL, callee, ra=.Lresume
-... call block body ...
-C.BSTOP
+BSTART.CALL callee, .Lresume, ->ra
 
 ... other blocks ...
 
 .Lresume:
-C.BSTART.STD
+C.BSTART.STD FALL
 ```
 
-Setret width guidance:
-
-- For direct source-level calls, prefer fused `ra=` syntax and let MC choose the
-  lowered width.
-- The current compiler AVS lane validates fused `ra=` source syntax and the
-  paired object-level return-address relocation.
-- Treat explicit `hl.setret` as a wider optional form that requires dedicated
-  backend/MC proof before relying on it in portable bring-up code.
+Toolchains must preserve both relocations and the explicit `ra` destination of
+the fused forms; they must not synthesize a lexical-fallthrough return target.
 
 Non-returning call form:
 

@@ -7,7 +7,7 @@
 
 *Syntax:* hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* HL.CASW - Atomically compare the scalar memory value and conditionally store the replacement.
+*Description:* HL.CASW atomically compares and conditionally replaces one word, then publishes the prior value.
 
 *Encoding:*
 

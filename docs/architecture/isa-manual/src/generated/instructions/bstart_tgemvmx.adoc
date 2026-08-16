@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TGEMVMX DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts CUBE Function 20 for the TGEMV_MX M=1 Matrix-vector complete-bundle operation.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lb.pcr [<symbol>], ->{t, u, Rd}
 
-*Description:* HL.LB.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* HL.LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 
 *Encoding:*
 

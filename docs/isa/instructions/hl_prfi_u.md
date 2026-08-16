@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/prefetch.md">Prefetch</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/lda.md">LDA</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.
+HL.PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.PRFI.U as defined by the Prefetch semantics.
+// Execute HL.PRFI.U as defined by the LDA semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.`
+- `HL.PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.
 
 <div class="insn-nav">
 
-← [Prefetch](../groups/prefetch.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [LDA](../groups/lda.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

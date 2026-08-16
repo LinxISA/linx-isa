@@ -7,7 +7,7 @@
 
 *Syntax:* hl.mul SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.MUL - Compute the full-width scalar product as a result pair.
+*Description:* HL.MUL computes a signed 128-bit scalar product and publishes its low half followed by its high half.
 
 *Encoding:*
 

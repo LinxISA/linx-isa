@@ -7,7 +7,7 @@
 
 *Syntax:* fnmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
 
-*Description:* FNMADD - Compute this mnemonic's fused floating-point operation.
+*Description:* FNMADD computes the negation of one fused SrcL multiplied by SrcR plus SrcA operation through the active numeric profile.
 
 *Encoding:*
 

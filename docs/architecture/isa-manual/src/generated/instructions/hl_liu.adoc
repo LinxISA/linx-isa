@@ -7,7 +7,7 @@
 
 *Syntax:* hl.liu uimm, ->{t, u, Rd}
 
-*Description:* HL.LIU - Materialize the encoded unsigned long immediate.
+*Description:* HL.LIU zero-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
 
 *Encoding:*
 

@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/floating_point_arithmetic.md">Floating-point Arithmetic</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/fsu.md">FSU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-13">Ch 13</span>
 &nbsp; <strong>FSU — Floating-point / SIMD Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-FNMSUB - Compute this mnemonic's fused floating-point operation.
+FNMSUB computes the negation of one fused SrcL multiplied by SrcR minus SrcA operation through the active numeric profile.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute FNMSUB as defined by the Floating-point Arithmetic semantics.
+// Execute FNMSUB as defined by the FSU semantics.
 ```
 
 ## Encoding Notes
 
-- `FNMSUB - Compute this mnemonic's fused floating-point operation.`
+- `FNMSUB computes the negation of one fused SrcL multiplied by SrcR minus SrcA operation through the active numeric profile.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ FNMSUB - Compute this mnemonic's fused floating-point operation.
 
 <div class="insn-nav">
 
-← [Floating-point Arithmetic](../groups/floating_point_arithmetic.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [FSU](../groups/fsu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

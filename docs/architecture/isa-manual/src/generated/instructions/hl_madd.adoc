@@ -7,7 +7,7 @@
 
 *Syntax:* hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1
 
-*Description:* HL.MADD - Compute multiply-add and return the scalar result pair.
+*Description:* HL.MADD computes a signed 128-bit product plus a sign-extended XLEN addend and publishes low then high halves.
 
 *Encoding:*
 

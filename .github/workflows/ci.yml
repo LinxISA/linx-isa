@@ -170,3 +170,10 @@ jobs:
         run: cmake --build tools/model/build-ci
       - name: Run tools/model tests
         run: ctest --test-dir tools/model/build-ci --output-on-failure
+
+  guard:
+    needs: [guards, avs-contract, docs, lint, model]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm required release checks
+        run: echo "All required LinxISA release checks passed."

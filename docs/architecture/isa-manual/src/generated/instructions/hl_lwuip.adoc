@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lwuip [SrcL, simm], ->Dst0, Dst1
 
-*Description:* HL.LWUIP - Load a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.LWUIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* c.add srcL, srcR, ->t
 
-*Description:* C.ADD - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* C.ADD snapshots two complete Reg5 sources, adds SrcL and SrcR, and pushes the wrapping XLEN result to T.
 
 *Encoding:*
 

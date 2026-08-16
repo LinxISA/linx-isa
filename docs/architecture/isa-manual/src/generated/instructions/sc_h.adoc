@@ -7,7 +7,7 @@
 
 *Syntax:* sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}
 
-*Description:* SC.H - Conditionally store the scalar value when the matching reservation remains valid.
+*Description:* SC.H conditionally stores one halfword when the local 64-byte-line reservation matches.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* fne.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FNE - Compare floating-point operands and produce the encoded result.
+*Description:* FNE performs ordered quiet inequality and returns canonical XLEN zero or one.
 
 *Encoding:*
 

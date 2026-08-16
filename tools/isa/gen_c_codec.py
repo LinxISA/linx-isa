@@ -138,6 +138,7 @@ def _render_header(spec_label: str) -> str:
             "  const char *id;          /* stable identifier */",
             "  const char *mnemonic;    /* draft mnemonic (e.g. 'ADD', 'C.ADD', 'HL.ADDI') */",
             "  const char *asm_fmt;     /* assembly template from the ISA catalog (may be empty) */",
+            "  const char *source_variant; /* distinct source selector for shared encodings */",
             "  uint16_t length_bits;    /* 16/32/48/64 */",
             "  uint64_t mask;           /* fixed-bit mask over the packed instruction bitvector */",
             "  uint64_t match;          /* fixed-bit value over the packed instruction bitvector */",
@@ -233,6 +234,7 @@ def _emit_tables(spec: Dict[str, Any], spec_label: str) -> Tuple[str, str]:
                 "id": str(inst.get("id", "")),
                 "mnemonic": str(inst.get("mnemonic", "")),
                 "asm_fmt": str(inst.get("asm", "")) if inst.get("asm") is not None else "",
+                "source_variant": str(inst.get("pto_source_form_variant", "")),
                 "length_bits": length_bits,
                 "mask": mask,
                 "match": match,
@@ -290,6 +292,7 @@ def _emit_tables(spec: Dict[str, Any], spec_label: str) -> Tuple[str, str]:
             f" .id = {_c_string(form['id'])},"
             f" .mnemonic = {_c_string(form['mnemonic'])},"
             f" .asm_fmt = {_c_string(form['asm_fmt'])},"
+            f" .source_variant = {_c_string(form['source_variant'])},"
             f" .length_bits = {int(form['length_bits'])},"
             f" .mask = 0x{int(form['mask']):016x}ULL,"
             f" .match = 0x{int(form['match']):016x}ULL,"

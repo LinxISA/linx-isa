@@ -1,12 +1,12 @@
 # 指令编码格式
 
-> **ISA 版本：** v0.58.0 |  **ISA 手册第 03 章**
+> **ISA 版本：** v0.58.1 |  **ISA 手册第 03 章**
 
-灵犀指令集 v0.58 支持小端字节序的四种指令长度
+灵犀指令集 v0.58.1 支持小端字节序的四种指令长度
 面向半字的模型。位位置显示为 `[msb:0]`
 （MSB 最左边，LSB 最右边），匹配 ARM 和 RISC-V 约定。
 
-v0.58 的标量、块命令和 Tile 编码以 PTO ISA 0.58 为共同基线。TLSU
+v0.58.1 的标量、block command 和 Tile 编码以 PTO ISA 0.58.1 为共同基线。TLSU
 使用 `BSTART.TLOAD`、`BSTART.TSTORE`、`BSTART.TMOV`、
 `BSTART.MGATHER.MASK`、`BSTART.MGATHER.CAS` 等命名块头；Linx 的额外
 编码仅用于 V.* 与 VPAR/VSEQ 向量扩展，并避开 PTO 保留区间。
@@ -16,7 +16,7 @@ v0.58 的标量、块命令和 Tile 编码以 PTO ISA 0.58 为共同基线。TLS
 |命名空间 |格式|比特|成分|示例|
 |------------|--------|------|-------------|---------|
 | **C.** | C16 | C16 16 | 16单个 16 位部分 | `C.ADD`、`C.LD`、`C.BSTART.FP` |
-| *（基础）* | LX32 | 32 | 32单个 32 位部分 | `ADD`、`LD`、`BSTART CALL` |
+| *（基础）* | LX32 | 32 | 32单个 32 位部分 | `ADD`、`LD`、`BSTART.CALL` |
 | **HL.** | HL48 | 48 | 48 16位前缀+32位主| `HL.LDI`、`HL.CASB`、`HL.SETRET` |
 | **五.** | V64 | 64 | 64 32位前缀+32位主| `V.ADD`、`V.FMADD`、`V.DIV` |
 

@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/store_pc_relative.md">Store PC-Relative</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/sta_pc_rel.md">STA/PC_REL</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[48-bit HL.] Stores a register value to memory.
+HL.SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-Store(/* addr */, rs2);
+// Execute HL.SW.PCR as defined by the STA/PC_REL semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.SW.PCR - Store scalar data using this mnemonic's width and address-update form.`
+- `HL.SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Store(/* addr */, rs2);
 
 <div class="insn-nav">
 
-← [Store PC-Relative](../groups/store_pc_relative.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [STA/PC_REL](../groups/sta_pc_rel.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

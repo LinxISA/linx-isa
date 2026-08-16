@@ -7,7 +7,7 @@
 
 *Syntax:* fabs.{T} SrcL, ->{t, u, Rd}
 
-*Description:* FABS - Compute this mnemonic's unary floating-point operation.
+*Description:* FABS clears the sign bit of the selected FP64 or FP32 carrier, preserves every other carrier bit, and publishes no numeric flags.
 
 *Encoding:*
 

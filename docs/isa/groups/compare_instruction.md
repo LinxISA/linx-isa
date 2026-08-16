@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-16">Ch 16</span>
 &nbsp; <strong>BRU — Branch and Compare</strong> &nbsp;|&nbsp;
 **Group:** Compare Instruction &nbsp;|&nbsp;
-**Forms:** 40 &nbsp;|&nbsp;
-**Unique mnemonics:** 40
+**Forms:** 16 &nbsp;|&nbsp;
+**Unique mnemonics:** 16
 
 </div>
 
@@ -16,30 +16,6 @@ Integer comparison instructions that write a boolean result.
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [CMP.AND](../instructions/cmp_and.md) | `cmp.and SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` | 32 | — | CMP.AND - Combine scalar comparison results with the encoded logical operation. |
-| [CMP.ANDI](../instructions/cmp_andi.md) | `cmp.andi SrcL, simm, ->{t, u, Rd}` | 32 | — | CMP.ANDI - Combine scalar comparison results with the encoded logical operation. |
-| [CMP.EQ](../instructions/cmp_eq.md) | `cmp.eq SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` | 32 | — | Compare equal. Sets destination to 1 if operands are equal. |
-| [CMP.EQI](../instructions/cmp_eqi.md) | `cmp.eqi SrcL, simm, ->{t, u, Rd}` | 32 | — | CMP.EQI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.GE](../instructions/cmp_ge.md) | `cmp.ge SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` | 32 | — | Compare greater-or-equal (signed). |
-| [CMP.GEI](../instructions/cmp_gei.md) | `cmp.gei SrcL, simm, ->{t, u, Rd}` | 32 | — | CMP.GEI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.GEU](../instructions/cmp_geu.md) | `cmp.geu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` | 32 | — | Compare greater-or-equal (unsigned). |
-| [CMP.GEUI](../instructions/cmp_geui.md) | `cmp.geui SrcL, uimm, ->{t, u, Rd}` | 32 | — | CMP.GEUI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.LT](../instructions/cmp_lt.md) | `cmp.lt SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` | 32 | — | Compare less-than (signed). |
-| [CMP.LTI](../instructions/cmp_lti.md) | `cmp.lti SrcL, simm, ->{t, u, Rd}` | 32 | — | CMP.LTI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.LTU](../instructions/cmp_ltu.md) | `cmp.ltu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` | 32 | — | Compare less-than (unsigned). |
-| [CMP.LTUI](../instructions/cmp_ltui.md) | `cmp.ltui SrcL, uimm, ->{t, u, Rd}` | 32 | — | CMP.LTUI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.NE](../instructions/cmp_ne.md) | `cmp.ne SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` | 32 | — | Compare not-equal. |
-| [CMP.NEI](../instructions/cmp_nei.md) | `cmp.nei SrcL, simm, ->{t, u, Rd}` | 32 | — | CMP.NEI - Compare scalar operands and write the encoded boolean result. |
-| [CMP.OR](../instructions/cmp_or.md) | `cmp.or SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` | 32 | — | CMP.OR - Combine scalar comparison results with the encoded logical operation. |
-| [CMP.ORI](../instructions/cmp_ori.md) | `cmp.ori SrcL, simm, ->{t, u, Rd}` | 32 | — | CMP.ORI - Combine scalar comparison results with the encoded logical operation. |
-| [HL.CMP.ANDI](../instructions/hl_cmp_andi.md) | `hl.cmp.andi SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation. |
-| [HL.CMP.EQI](../instructions/hl_cmp_eqi.md) | `hl.cmp.eqi SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.CMP.EQI - Compare scalar operands and write the encoded boolean result. |
-| [HL.CMP.GEI](../instructions/hl_cmp_gei.md) | `hl.cmp.gei SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.CMP.GEI - Compare scalar operands and write the encoded boolean result. |
-| [HL.CMP.GEUI](../instructions/hl_cmp_geui.md) | `hl.cmp.geui SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.CMP.GEUI - Compare scalar operands and write the encoded boolean result. |
-| [HL.CMP.LTI](../instructions/hl_cmp_lti.md) | `hl.cmp.lti SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.CMP.LTI - Compare scalar operands and write the encoded boolean result. |
-| [HL.CMP.LTUI](../instructions/hl_cmp_ltui.md) | `hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.CMP.LTUI - Compare scalar operands and write the encoded boolean result. |
-| [HL.CMP.NEI](../instructions/hl_cmp_nei.md) | `hl.cmp.nei SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.CMP.NEI - Compare scalar operands and write the encoded boolean result. |
-| [HL.CMP.ORI](../instructions/hl_cmp_ori.md) | `hl.cmp.ori SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.CMP.ORI - Combine scalar comparison results with the encoded logical operation. |
 | [V.CMP.AND](../instructions/v_cmp_and.md) | `v.cmp.and SrcL, SrcR, ->Dst` | 64 | — | [64-bit V.] Instruction from the Compare Instruction group. |
 | [V.CMP.ANDI](../instructions/v_cmp_andi.md) | `v.cmp.andi SrcL, simm, ->Dst` | 64 | — | [64-bit V.] Instruction from the Compare Instruction group. |
 | [V.CMP.EQ](../instructions/v_cmp_eq.md) | `v.cmp.eq SrcL, SrcR, ->Dst` | 64 | — | [64-bit V.] Instruction from the Compare Instruction group. |

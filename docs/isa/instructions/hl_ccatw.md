@@ -2,9 +2,9 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/concat.md">Concat</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-18">Ch 18</span>
-&nbsp; <strong>RSV — Reserved and Indexed Operations</strong> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-12">Ch 12</span>
+&nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,17 +26,17 @@
 
 ## Description
 
-HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.
+HL.CCATW logically right-shifts {SrcL[31:0], SrcR[31:0]}, sign-extends the low then high 32-bit results, and writes them in order.
 
 ## Pseudocode (informative)
 
 ```c
-// Execute HL.CCATW as defined by the Concat semantics.
+// Execute HL.CCATW as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.`
+- `HL.CCATW logically right-shifts {SrcL[31:0], SrcR[31:0]}, sign-extends the low then high 32-bit results, and writes them in order.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.
 
 <div class="insn-nav">
 
-← [Concat](../groups/concat.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

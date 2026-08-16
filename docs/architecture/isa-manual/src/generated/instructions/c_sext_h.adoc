@@ -7,7 +7,7 @@
 
 *Syntax:* c.sext.h srcL, ->t
 
-*Description:* C.SEXT.H - Sign-extend or zero-extend the selected scalar subword.
+*Description:* C.SEXT.H sign-extends SrcL[15:0] to XLEN and pushes the result to T.
 
 *Encoding:*
 

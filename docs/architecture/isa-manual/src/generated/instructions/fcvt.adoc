@@ -7,7 +7,7 @@
 
 *Syntax:* fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}
 
-*Description:* FCVT - Convert between the encoded scalar numeric formats.
+*Description:* FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.
 
 *Encoding:*
 

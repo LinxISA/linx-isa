@@ -12,7 +12,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 FORMS = {
-    "bstart_call_32_d30ef065210c": {
+    "BSTART.CALL:32": {
+        "mnemonic": "BSTART.CALL",
+        "pto_source_form_id": "bstart_call_32_9404418d1ae5",
         "asm": "BSTART.CALL <br_label>, <rt_label>, ->ra",
         "call_field": "simm12",
         "call_lsb": 4,
@@ -23,7 +25,9 @@ FORMS = {
         "directed_cases": [(2, 3), (2, 29), ((1 << 12) - 1, 3)],
         "length": 32,
     },
-    "hl_bstart_call_48_d71cee46ab50": {
+    "HL.BSTART CALL:48": {
+        "mnemonic": "HL.BSTART CALL",
+        "pto_source_form_id": None,
         "asm": "HL.BSTART.CALL <br_label>, <rt_label>, ->ra",
         "call_field": "simm25",
         "call_lsb": 7,
@@ -66,7 +70,10 @@ def targets(raw: int, contract: dict, p: int) -> tuple[int, int]:
 
 def main() -> int:
     spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
-    by_id = {inst["id"]: inst for inst in spec["instructions"]}
+    by_semantic_key: dict[str, list[dict]] = {}
+    for inst in spec["instructions"]:
+        key = f"{inst['mnemonic']}:{inst['length_bits']}"
+        by_semantic_key.setdefault(key, []).append(inst)
     sail = (ROOT / "isa/sail/model/decode/decode.sail").read_text(encoding="utf-8")
     directed = (ROOT / "isa/sail/tests/directed.sail").read_text(encoding="utf-8")
     directed_raw_calls = {
@@ -79,16 +86,25 @@ def main() -> int:
         ROOT / "docs/architecture/isa-manual/src/generated/instruction_details.adoc"
     ).read_text(encoding="utf-8")
     mkdocs_pages = {
-        "bstart_call_32_d30ef065210c": (
+        "BSTART.CALL:32": (
             ROOT / "docs/isa/instructions/bstart_call.md"
         ).read_text(encoding="utf-8"),
-        "hl_bstart_call_48_d71cee46ab50": (
+        "HL.BSTART CALL:48": (
             ROOT / "docs/isa/instructions/hl_bstart_call.md"
         ).read_text(encoding="utf-8"),
     }
 
-    for form_id, contract in FORMS.items():
-        inst = by_id[form_id]
+    for semantic_key, contract in FORMS.items():
+        candidates = [
+            inst
+            for inst in by_semantic_key.get(semantic_key, [])
+            if inst["asm"] == contract["asm"]
+        ]
+        assert len(candidates) == 1, (semantic_key, [item["id"] for item in candidates])
+        inst = candidates[0]
+        form_id = inst["id"]
+        if contract["pto_source_form_id"] is not None:
+            assert inst["pto_source_form_id"] == contract["pto_source_form_id"]
         assert inst["asm"] == contract["asm"]
         assert inst["semantic_contract"]["atomic"] is True
         assert inst["semantic_contract"]["transfer"] == "CALL"
@@ -151,7 +167,7 @@ def main() -> int:
 
         assert form_id in manual
         assert contract["call_relocation"] in manual
-        page = mkdocs_pages[form_id]
+        page = mkdocs_pages[semantic_key]
         assert contract["asm"] in page
         assert f"SignExtend({contract['call_field']})" in page
         assert f"(P + {contract['embedded_base']})" in page

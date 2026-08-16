@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sdip.u SrcD, SrcD1, [SrcR, simm]
 
-*Description:* HL.SDIP.U - Store a scalar register pair using this mnemonic's address-update form.
+*Description:* HL.SDIP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values.
 
 *Encoding:*
 

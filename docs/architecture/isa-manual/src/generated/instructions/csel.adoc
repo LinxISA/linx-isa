@@ -7,7 +7,7 @@
 
 *Syntax:* csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}
 
-*Description:* CSEL - Select one of two scalar inputs under the encoded condition.
+*Description:* CSEL snapshots three Reg5 sources, selects SrcL for a nonzero predicate or its optionally negated SrcR for zero, and publishes through the common scalar destination map.
 
 *Encoding:*
 

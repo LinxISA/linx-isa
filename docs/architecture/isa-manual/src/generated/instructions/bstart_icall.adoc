@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_icall]]
+==== BSTART.ICALL
+
+*Syntax:* BSTART.ICALL <rt_label>, ->ra
+
+*Description:* Atomically retires the old block, snapshots its BARG.BPCN into a new indirect-call BARG, and writes the independent return target to ra.
+
+*Encoding:*
+
+image::encodings/enc_bstart_icall.svg[BSTART.ICALL encoding,width=800]
+
+*Uop-Class:* BBD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"bbd_kind": "BSTART", "note": "PTO fused indirect-call block boundary", "source": "group_rule", "uop_kind": "BBD"}`

@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/load_unscaled.md">Load UnScaled</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/lda_unscaled.md">LDA/UNSCALED</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-Loads a value from memory into a register.
+PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
 
 ## Pseudocode (informative)
 
 ```c
-rd = Load(/* addr */);
+// Execute PRFI.U as defined by the LDA/UNSCALED semantics.
 ```
 
 ## Encoding Notes
 
-- `PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.`
+- `PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = Load(/* addr */);
 
 <div class="insn-nav">
 
-← [Load UnScaled](../groups/load_unscaled.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [LDA/UNSCALED](../groups/lda_unscaled.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

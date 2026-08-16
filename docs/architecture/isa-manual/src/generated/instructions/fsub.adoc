@@ -7,7 +7,7 @@
 
 *Syntax:* fsub.{T} SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* FSUB - Compute this mnemonic's binary floating-point operation.
+*Description:* FSUB subtracts the right selected carrier from the left through the active numeric profile and publishes its sticky flags.
 
 *Encoding:*
 

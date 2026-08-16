@@ -7,7 +7,7 @@
 
 *Syntax:* rev SrcL,  M, N, ->{t, u, Rd}
 
-*Description:* REV - Reverse bytes within the selected scalar bitfield.
+*Description:* REV reverses the bytes of an independently selected wrapping scalar field, zero-fills high result bits, and returns zero for a non-byte width.
 
 *Encoding:*
 

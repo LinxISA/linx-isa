@@ -22,6 +22,8 @@ REQUIRED_COMPONENTS = {
     "workloads/pto_kernels",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
+REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
+GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
 
 
 def load_modules(path: Path) -> dict[str, dict[str, str]]:
@@ -106,6 +108,14 @@ def validate(
         commit = item.get("commit", "")
         if not SHA_RE.fullmatch(commit):
             errors.append(f"invalid locked commit for {path}: {commit!r}")
+        if path in REVIEW_ONLY_OPEN_PR_COMPONENTS:
+            if item.get("integration_status") != "review_only_open_pr":
+                errors.append(f"{path} must be recorded as a review-only open PR")
+            review_url = item.get("review_url", "")
+            if not GITHUB_PR_URL_RE.fullmatch(review_url):
+                errors.append(f"{path} must record its GitHub review PR URL")
+            if item.get("release_tag", "") or item.get("release_url", ""):
+                errors.append(f"{path} review-only pin must not have release metadata")
         module = modules.get(path)
         if module is None:
             continue

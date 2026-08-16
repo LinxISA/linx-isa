@@ -7,7 +7,7 @@
 
 *Syntax:* hl.ori SrcL, simm, ->{t, u, Rd}
 
-*Description:* HL.ORI - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* HL.ORI applies XLEN bitwise inclusive-or to SrcL and a sign-extended 24-bit immediate.
 
 *Encoding:*
 

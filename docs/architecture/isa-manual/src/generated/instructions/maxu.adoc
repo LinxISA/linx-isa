@@ -7,7 +7,7 @@
 
 *Syntax:* maxu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* MAXU - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* MAXU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the maximum operand.
 
 *Encoding:*
 

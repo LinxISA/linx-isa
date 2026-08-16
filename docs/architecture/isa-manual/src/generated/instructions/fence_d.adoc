@@ -7,7 +7,7 @@
 
 *Syntax:* fence.d pred_imm, succ_imm
 
-*Description:* FENCE.D - Order the selected predecessor and successor data-access classes.
+*Description:* FENCE.D records predecessor/successor ordering masks and invalidates the local reservation.
 
 *Encoding:*
 

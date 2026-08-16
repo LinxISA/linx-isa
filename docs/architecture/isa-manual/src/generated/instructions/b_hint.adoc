@@ -5,7 +5,7 @@
 [[inst_b_hint]]
 ==== B.HINT
 
-*Description:* Records non-functional branch, temperature, prefetch-size, or trace guidance.
+*Description:* Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results.
 
 [[inst_b_hint_32_67e2ad8dd981]]
 ===== Form `b_hint_32_67e2ad8dd981`

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSCATTER DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Begins a TLSU byte-displacement scatter block and selects its transfer DataType.
 
 *Encoding:*
 

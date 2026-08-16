@@ -7,7 +7,7 @@
 
 *Syntax:* lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
 
-*Description:* LHU - Load scalar data using this mnemonic's width, signedness, and address-update form.
+*Description:* LHU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
 
 *Encoding:*
 

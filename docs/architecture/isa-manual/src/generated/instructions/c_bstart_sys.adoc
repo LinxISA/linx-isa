@@ -7,7 +7,7 @@
 
 *Syntax:* C.BSTART.SYS FALL
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts the fixed compressed sequential System block without a selecting branch continuation.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* sraw SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* SRAW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* SRAW performs a arithmetic right shift of the low 32-bit source by the low five bits of the snapshotted SrcR; the 32-bit result is sign-extended to XLEN.
 
 *Encoding:*
 

@@ -15,10 +15,7 @@
   <text x="144.8" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">simm5</text>
   <rect x="283.500" y="25" width="277.500" height="26" fill="#1565C0" stroke="white" stroke-width="0.5"/>
   <text x="422.2" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">rs1</text>
-  <rect x="561.000" y="25" width="111.000" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
-  <text x="616.5" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">01</text>
-  <rect x="672.000" y="25" width="166.500" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
-  <text x="755.2" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">101</text>
-  <rect x="838.500" y="25" width="55.500" height="26" fill="#90A4AE" stroke="white" stroke-width="0.5"/>
+  <rect x="561.000" y="25" width="333.000" height="26" fill="#607D8B" stroke="white" stroke-width="0.5"/>
+  <text x="727.5" y="41.5" text-anchor="middle" dominant-baseline="middle" font-size="8.5" fill="white" pointer-events="none">0x1A</text>
   <text x="6" y="64" font-size="9" fill="#aaaaaa" font-family="Helvetica Neue,Arial,sans-serif">16-bit encoding</text>
 </svg>

@@ -7,7 +7,7 @@
 
 *Syntax:* fnmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}
 
-*Description:* FNMSUB - Compute this mnemonic's fused floating-point operation.
+*Description:* FNMSUB computes the negation of one fused SrcL multiplied by SrcR minus SrcA operation through the active numeric profile.
 
 *Encoding:*
 

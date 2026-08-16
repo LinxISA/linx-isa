@@ -7,7 +7,7 @@
 
 *Syntax:* hl.lis simm, ->{t, u, Rd}
 
-*Description:* HL.LIS - Materialize the encoded signed long immediate.
+*Description:* HL.LIS sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* hl.oriw SrcL, simm, ->{t, u, Rd}
 
-*Description:* HL.ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* HL.ORIW applies word bitwise inclusive-or to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result.
 
 *Encoding:*
 

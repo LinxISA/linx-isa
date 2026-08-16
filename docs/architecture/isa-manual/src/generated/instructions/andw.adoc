@@ -7,7 +7,7 @@
 
 *Syntax:* andw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}
 
-*Description:* ANDW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+*Description:* ANDW applies the selected right-source transformation before its encoded logical left shift, performs word bitwise conjunction, and publishes the low 32-bit result sign-extended to XLEN.
 
 *Encoding:*
 

@@ -7,7 +7,7 @@
 
 *Syntax:* casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 
-*Description:* CASB - Atomically compare the scalar memory value and conditionally store the replacement.
+*Description:* CASB atomically compares and conditionally replaces one byte, then publishes the prior value.
 
 *Encoding:*
 

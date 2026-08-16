@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_hint.md">Bundle Hint</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-17">Ch 17</span>
+&nbsp; <strong>CMD — Command and Control</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -32,7 +32,7 @@
 
 ## Description
 
-Records non-functional branch, temperature, prefetch-size, or trace guidance.
+Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results.
 
 ## Pseudocode (informative)
 
@@ -42,7 +42,7 @@ Records non-functional branch, temperature, prefetch-size, or trace guidance.
 
 ## Encoding Notes
 
-- `Records non-functional branch, temperature, prefetch-size, or trace guidance.`
+- `Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results.`
 
 ## Full Catalog Forms
 

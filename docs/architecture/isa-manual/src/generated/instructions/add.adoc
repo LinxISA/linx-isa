@@ -7,7 +7,7 @@
 
 *Syntax:* add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}
 
-*Description:* ADD - Compute this mnemonic's binary scalar operation and write the selected destination.
+*Description:* ADD applies the selected right-source transformation before its encoded logical left shift, performs fixed-width addition, and publishes the PTO_XLEN result.
 
 *Encoding:*
 

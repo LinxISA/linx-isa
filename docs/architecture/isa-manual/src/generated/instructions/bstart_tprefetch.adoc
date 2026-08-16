@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.TPREFETCH DataType
 
-*Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+*Description:* Starts a destination-free, four-PE TLSU prefetch block with an explicit element data type.
 
 *Encoding:*
 

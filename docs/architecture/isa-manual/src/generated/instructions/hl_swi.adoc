@@ -7,7 +7,7 @@
 
 *Syntax:* hl.swi SrcD, [SrcR, simm]
 
-*Description:* HL.SWI - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 *Encoding:*
 

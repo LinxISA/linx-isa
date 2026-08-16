@@ -3,8 +3,8 @@
 <div class="insn-header">
 
 <span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bundle_data_attribute.md">Bundle Data Attribute</a> &nbsp;|&nbsp;
-<span class="ch-tag ch-tag-00">Ch 00</span>
-&nbsp; <strong>ISA Manual</strong> &nbsp;|&nbsp;
+<span class="ch-tag ch-tag-17">Ch 17</span>
+&nbsp; <strong>CMD — Command and Control</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
 
 </div>
@@ -26,7 +26,7 @@
 
 ## Description
 
-Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
+Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Latches tile layout, data type, padding, conversion, rounding, and saturation at
 
 ## Encoding Notes
 
-- `Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.`
+- `Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.`
 
 ## Full Catalog Forms
 

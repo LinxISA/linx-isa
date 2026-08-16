@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1`
+- `hl.qpop[.{e,r,er}] SrcL, ->RegDst0, RegDst1`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Pops selected scalar queue values into encoded destinations.
+Atomically pops one 64-bit head entry from a General Queue Management queue.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Pops selected scalar queue values into encoded destinations.
 
 ## Encoding Notes
 
-- `Pops selected scalar queue values into encoded destinations.`
+- `Atomically pops one 64-bit head entry from a General Queue Management queue.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1` | 48 | — |
+| `hl.qpop[.{e,r,er}] SrcL, ->RegDst0, RegDst1` | 48 | — |
 
 <div class="insn-nav">
 

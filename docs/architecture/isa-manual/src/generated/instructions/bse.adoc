@@ -7,7 +7,7 @@
 
 *Syntax:* bse SrcL
 
-*Description:* BSE - Issue this mnemonic's architecture control request.
+*Description:* BSE publishes the SendEvent nonblocking execution-control request.
 
 *Encoding:*
 

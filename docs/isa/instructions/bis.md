@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/bit_operation.md">Bit Operation</a> &nbsp;|&nbsp;
+<span class="badge-32">32-bit Base</span> **Group:** <a href="../groups/alu.md">ALU</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-12">Ch 12</span>
 &nbsp; <strong>ALU — Arithmetic Logic Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>32</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -31,12 +31,12 @@ Bit set / OR.
 ## Pseudocode (informative)
 
 ```c
-// Execute BIS as defined by the Bit Operation semantics.
+// Execute BIS as defined by the ALU semantics.
 ```
 
 ## Encoding Notes
 
-- `BIS - Modify the selected scalar bitfield.`
+- `BIS sets every bit in an independently selected wrapping scalar field and publishes the modified XLEN value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ Bit set / OR.
 
 <div class="insn-nav">
 
-← [Bit Operation](../groups/bit_operation.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [ALU](../groups/alu.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

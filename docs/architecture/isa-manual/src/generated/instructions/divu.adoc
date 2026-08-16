@@ -7,7 +7,7 @@
 
 *Syntax:* divu SrcL, SrcR, ->{t, u, Rd}
 
-*Description:* DIVU - Compute unsigned scalar quotient.
+*Description:* DIVU computes the unsigned XLEN quotient using total fixed-width semantics and publishes the XLEN result.
 
 *Encoding:*
 

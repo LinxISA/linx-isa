@@ -70,44 +70,34 @@
 - 使用 `FEXIT` 进行尾部转移退出。
 - 规范尾部对是 `FENTRY + FEXIT`，然后块合法传输到被调用者。
 
-`RET/IND/ICALL` 目标设置：
+`RET/IND` 目标设置：
 
 - `BSTART.RET` 需要 `setc.tgt` 来定义目标源。
 - 规范返回块是：
   - `C.BSTART.RET`
   - `c.setc.tgt ra`
   - `C.BSTOP`
-- `IND` 和 `ICALL` 块还需要在同一块中显式 `setc.tgt`。
+- `IND` block 还需要在同一 block 中显式 `setc.tgt`。
 
-融合呼叫 块头（回拨）：- 直接 `CALL` 源应使用融合的 `BSTART.STD CALL, <callee>, ra=<label>`。
-- 物体拆卸可能仍会显示降低的相邻 `SETRET/C.SETRET`。
-- `BSTART.CALL` 和 `SETRET/C.SETRET` 之间不能出现任何指令。
-- `SETRET` 定义显式返回块标签（`ra` 目标）；不要假设 return 是词汇上的失败。
-- 在当前编译器分支上，手写`ICALL`仍然需要显式
-  相邻的`SETRET/C.SETRET`；融合的 `ra=` 源语法尚不可移植
-  那里。
+融合调用头：
+
+- 直接返回调用严格使用 `BSTART.CALL <br_label>, <rt_label>, ->ra`。
+- 间接返回调用严格使用 `BSTART.ICALL <rt_label>, ->ra`；目标取自正在退役的 STD/FP block 的 `BARG.BPCN`。
+- 两种融合形式都不消费 `SETRET/C.SETRET`；`BSTART.ICALL` 也不读取 `SETC.TGT`。
+- Linx-only 长格式 bare call 保持 `ra` 不变。若与 `SETRET/C.SETRET` 配对，该指令必须紧邻并位于 bare call 前面。
 
 非失败返回示例：
 
 ```asm
-BSTART.STD CALL, callee, ra=.Lresume
-... call block body ...
-C.BSTOP
+BSTART.CALL callee, .Lresume, ->ra
 
 ... other blocks ...
 
 .Lresume:
-C.BSTART.STD
+C.BSTART.STD FALL
 ```
 
-固定宽度指导：
-
-- 对于直接源代码级调用，更喜欢融合 `ra=` 语法并让 MC 选择
-  降低了宽度。
-- 当前编译器 AVS 通道验证融合的 `ra=` 源语法和
-  成对的对象级返回地址重定位。
-- 将显式 `hl.setret` 视为更广泛的可选形式，需要专用
-  在可移植启动代码中依赖后端/MC 证明之前。
+工具链必须保留融合形式的两个重定位和显式 `ra` 目的寄存器，不得合成词法 fall-through 返回目标。
 
 不回电形式：
 

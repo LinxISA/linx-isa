@@ -5,9 +5,9 @@
 [[inst_mset]]
 ==== MSET
 
-*Syntax:* MSET [RegSrc0, RegSrc1, RegSrc2]
+*Syntax:* MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]
 
-*Description:* Fills an encoded memory range after complete access preflight.
+*Description:* Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
 
 *Encoding:*
 

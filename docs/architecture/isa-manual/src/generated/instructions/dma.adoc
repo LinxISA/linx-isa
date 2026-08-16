@@ -7,7 +7,7 @@
 
 *Syntax:* dma [SrcL], SrcR
 
-*Description:* Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged.
+*Description:* DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue.
 
 *Encoding:*
 

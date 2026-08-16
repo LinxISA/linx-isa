@@ -7,7 +7,7 @@
 
 *Syntax:* sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]
 
-*Description:* SW - Store scalar data using this mnemonic's width and address-update form.
+*Description:* SW snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 
 *Encoding:*
 

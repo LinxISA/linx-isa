@@ -7,7 +7,7 @@
 
 *Syntax:* hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}
 
-*Description:* HL.MISUB - Multiply by the encoded immediate and add the scalar source.
+*Description:* HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result.
 
 *Encoding:*
 

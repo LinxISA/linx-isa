@@ -44,7 +44,7 @@
       "profiles": ["dev", "release-strict"],
       "tiers": ["pr", "nightly"],
       "required": true,
-      "artifacts": ["isa/v0.57/release_manifest.json", "isa/v0.58/state/pto_encoding_map.json"],
+      "artifacts": ["isa/v0.58/release_manifest.json", "isa/v0.58/state/pto_encoding_map.json"],
       "freshness_hours": 24
     },
     {

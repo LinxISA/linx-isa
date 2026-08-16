@@ -2,7 +2,7 @@
 
 <div class="insn-header">
 
-<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/load_long_offset.md">Load Long Offset</a> &nbsp;|&nbsp;
+<span class="badge-48">48-bit HL.</span> **Group:** <a href="../groups/lda_long.md">LDA/LONG</a> &nbsp;|&nbsp;
 <span class="ch-tag ch-tag-11">Ch 11</span>
 &nbsp; <strong>AGU — Address Generation Unit</strong> &nbsp;|&nbsp;
 **Length:** <code>48</code> &nbsp;|&nbsp; **Decode:** <code>—</code>
@@ -26,17 +26,17 @@
 
 ## Description
 
-[48-bit HL.] Loads a value from memory into a register.
+HL.LBI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 
 ## Pseudocode (informative)
 
 ```c
-rd = Load(/* addr */);
+// Execute HL.LBI as defined by the LDA/LONG semantics.
 ```
 
 ## Encoding Notes
 
-- `HL.LBI - Load scalar data using this mnemonic's width, signedness, and address-update form.`
+- `HL.LBI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.`
 
 ## Full Catalog Forms
 
@@ -46,6 +46,6 @@ rd = Load(/* addr */);
 
 <div class="insn-nav">
 
-← [Load Long Offset](../groups/load_long_offset.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
+← [LDA/LONG](../groups/lda_long.md) &nbsp;&nbsp; [Index](../index.md) &nbsp;&nbsp; [All instructions](index.md) →
 
 </div>

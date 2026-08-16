@@ -7,7 +7,7 @@
 
 *Syntax:* bwe SrcL
 
-*Description:* BWE - Issue this mnemonic's architecture control request.
+*Description:* BWE publishes the WaitEvent nonblocking execution-control request.
 
 *Encoding:*
 

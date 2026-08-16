@@ -7,7 +7,7 @@
 
 *Syntax:* sd.smax<.{rl, f, rlf}> [SrcL], SrcR
 
-*Description:* SD.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
+*Description:* SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value.
 
 *Encoding:*
 

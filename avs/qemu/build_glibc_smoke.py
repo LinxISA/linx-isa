@@ -185,7 +185,7 @@ def main(argv: list[str]) -> int:
         ]
     )
 
-    fallback_libs = REPO_ROOT / "out" / "libc" / "glibc" / "fallback-libs"
+    fallback_libs = glibc_build.parent / "fallback-libs"
     _run(
         [
             str(clang),

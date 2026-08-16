@@ -7,7 +7,7 @@
 
 *Syntax:* hl.sbi SrcD, [SrcR, simm]
 
-*Description:* HL.SBI - Store scalar data using this mnemonic's width and address-update form.
+*Description:* HL.SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
 
 *Encoding:*
 

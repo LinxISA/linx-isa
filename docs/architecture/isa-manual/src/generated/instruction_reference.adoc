@@ -1,128 +1,170 @@
 // Generated file; do not edit by hand.
 
-[[insnref-execution-control]]
-=== Execution Control
+[[insnref-sys]]
+=== SYS
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`ACRC` |32 |- |`acrc rst_type` |ACRC - Request architecture context close.
-|`ACRE` |32 |- |`acre rra_type` |ACRE - Request architecture context entry.
-|`ASSERT` |32 |- |`assert SrcL` |ASSERT - Raise the architecture assertion trap when its condition fails.
-|`BSE` |32 |- |`bse SrcL` |BSE - Issue this mnemonic's architecture control request.
-|`BWE` |32 |- |`bwe SrcL` |BWE - Issue this mnemonic's architecture control request.
-|`BWI` |32 |- |`bwi SrcL` |BWI - Issue this mnemonic's architecture control request.
-|`BWT` |32 |- |`bwt SrcL` |BWT - Issue this mnemonic's architecture control request.
-|`EBREAK` |32 |- |`ebreak imm` |EBREAK - Raise the software breakpoint exception.
-|`FENCE.D` |32 |- |`fence.d pred_imm, succ_imm` |FENCE.D - Order the selected predecessor and successor data-access classes.
-|`FENCE.I` |32 |- |`fence.i` |FENCE.I - Synchronize instruction visibility after prior writes.
+|`ACRC` |32 |- |`acrc rst_type` |ACRC requests context close and marks the final scalar position of the active SYS block.
+|`ACRE` |32 |- |`acre rra_type` |ACRE atomically commits the active SYS block and recovers one validated architecture context.
+|`ASSERT` |32 |- |`assert SrcL` |ASSERT raises the architecture assertion trap exactly when its snapshotted scalar condition is zero.
+|`BC.IALL` |32 |- |`bc.iall` |BC.IALL completes the bundle-cache all-entry scope maintenance operation synchronously.
+|`BC.IVA` |32 |- |`bc.iva SrcL` |BC.IVA completes the bundle-cache virtual-address scope token maintenance operation synchronously.
+|`BSE` |32 |- |`bse SrcL` |BSE publishes the SendEvent nonblocking execution-control request.
+|`BWE` |32 |- |`bwe SrcL` |BWE publishes the WaitEvent nonblocking execution-control request.
+|`BWI` |32 |- |`bwi SrcL` |BWI publishes the WaitInterrupt nonblocking execution-control request.
+|`BWT` |32 |- |`bwt SrcL` |BWT publishes the WaitTimeout nonblocking execution-control request.
+|`C.EBREAK` |16 |- |`c.break imm` |C.EBREAK raises software-breakpoint trap 50 with its 5-bit immediate as cause.
+|`C.SSRGET` |16 |- |`c.ssrget SSR-ID, ->t` |C.SSRGET reads the complete encoded system-register address.
+|`DC.CISW` |32 |- |`dc.cisw SrcL` |DC.CISW completes the data-cache clean-and-invalidate set/way token maintenance operation synchronously.
+|`DC.CIVA` |32 |- |`dc.civa SrcL` |DC.CIVA completes the data-cache clean-and-invalidate scope token maintenance operation synchronously.
+|`DC.CSW` |32 |- |`dc.csw SrcL` |DC.CSW completes the data-cache clean-by-set/way scope token maintenance operation synchronously.
+|`DC.CVA` |32 |- |`dc.cva SrcL` |DC.CVA completes the data-cache clean-by-address scope token maintenance operation synchronously.
+|`DC.IALL` |32 |- |`dc.iall` |DC.IALL completes the data-cache all-entry scope maintenance operation synchronously.
+|`DC.ISW` |32 |- |`dc.isw SrcL` |DC.ISW completes the data-cache set/way scope token maintenance operation synchronously.
+|`DC.IVA` |32 |- |`dc.iva SrcL` |DC.IVA completes the data-cache virtual-address scope token maintenance operation synchronously.
+|`DC.ZVA` |32 |- |`dc.zva SrcL` |DC.ZVA completes the data-cache zero-by-address scope token maintenance operation synchronously.
+|`EBREAK` |32 |- |`ebreak imm` |EBREAK raises software-breakpoint trap 50 with its 4-bit immediate as cause.
+|`FENCE.D` |32 |- |`fence.d pred_imm, succ_imm` |FENCE.D records predecessor/successor ordering masks and invalidates the local reservation.
+|`FENCE.I` |32 |- |`fence.i` |FENCE.I establishes instruction visibility, invalidates the reservation, and advances the instruction-cache epoch.
+|`HL.SSRGET` |48 |- |`hl.ssrget SSR_ID, ->{t, u, Rd}` |HL.SSRGET reads the complete encoded system-register address.
+|`HL.SSRSET` |48 |- |`hl.ssrset SrcL, SSR_ID` |HL.SSRSET writes the complete encoded system-register address.
+|`IC.IALL` |32 |- |`ic.iall` |IC.IALL completes the instruction-cache all-entry scope maintenance operation synchronously.
+|`IC.IVA` |32 |- |`ic.iva SrcL` |IC.IVA completes the instruction-cache virtual-address scope token maintenance operation synchronously.
+|`LSRGET` |32 |- |`lsrget LSR_ID, ->{t, u, Rd}` |LSRGET reads one assigned word from the active block BARG view.
+|`SETC.TGT` |32 |- |`setc.tgt SrcL` |SETC.TGT snapshots SrcL into BARG.BPCN for the active Standard or Floating block.
+|`SSRGET` |32 |- |`ssrget SSR_ID, ->{t, u, Rd}` |SSRGET reads the complete encoded system-register address.
+|`SSRSET` |32 |- |`ssrset SrcL, SSR_ID` |SSRSET writes the complete encoded system-register address.
+|`SSRSWAP` |32 |- |`ssrswap SrcL, SSR_ID, ->{t, u, Rd}` |SSRSWAP atomically swaps the complete encoded system-register address.
+|`TLB.IA` |32 |- |`tlb.ia SrcL` |TLB.IA completes the 16-bit ASID token in bits 15:0 maintenance operation synchronously.
+|`TLB.IALL` |32 |- |`tlb.iall` |TLB.IALL completes the all translation entries maintenance operation synchronously.
+|`TLB.IAV` |32 |- |`tlb.iav SrcL` |TLB.IAV completes the canonical 48-bit virtual address with ASID scope maintenance operation synchronously.
+|`TLB.IV` |32 |- |`tlb.iv SrcL` |TLB.IV completes the canonical 48-bit virtual address maintenance operation synchronously.
 |===
 
-[[insnref-arithmetic-operation-64bit]]
-=== Arithmetic Operation 64bit
+[[insnref-alu]]
+=== ALU
 
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`ADD` |32 |- |`add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |ADD - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`ADDI` |32 |- |`addi SrcL, uimm, ->{t, u, Rd}` |ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`AND` |32 |- |`and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |AND - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`ANDI` |32 |- |`andi SrcL, simm, ->{t, u, Rd}` |ANDI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`HL.ADDI` |48 |- |`hl.addi SrcL, uimm, ->{t, u, Rd}` |HL.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`HL.ANDI` |48 |- |`hl.andi SrcL, simm, ->{t, u, Rd}` |HL.ANDI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`HL.ORI` |48 |- |`hl.ori SrcL, simm, ->{t, u, Rd}` |HL.ORI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`HL.SUBI` |48 |- |`hl.subi SrcL, uimm, ->{t, u, Rd}` |HL.SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`HL.XORI` |48 |- |`hl.xori SrcL, simm, ->{t, u, Rd}` |HL.XORI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`OR` |32 |- |`or SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |OR - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`ORI` |32 |- |`ori SrcL, simm, ->{t, u, Rd}` |ORI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SLL` |32 |- |`sll SrcL, SrcR, ->{t, u, Rd}` |SLL - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SLLI` |32 |- |`slli SrcL, shamt, ->{t, u, Rd}` |SLLI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SRA` |32 |- |`sra SrcL, SrcR, ->{t, u, Rd}` |SRA - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SRAI` |32 |- |`srai SrcL, shamt, ->{t, u, Rd}` |SRAI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SRL` |32 |- |`srl SrcL, SrcR, ->{t, u, Rd}` |SRL - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SRLI` |32 |- |`srli SrcL, shamt, ->{t, u, Rd}` |SRLI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SUB` |32 |- |`sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |SUB - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`SUBI` |32 |- |`subi SrcL, uimm, ->{t, u, Rd}` |SUBI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`XOR` |32 |- |`xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |XOR - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`XORI` |32 |- |`xori SrcL, simm, ->{t, u, Rd}` |XORI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|===
-
-[[insnref-arithmetic-operation-32bit]]
-=== Arithmetic Operation 32bit
-
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`ADDIW` |32 |- |`addiw SrcL, uimm, ->{t, u, Rd}` |ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`ADDW` |32 |- |`addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |ADDW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`ANDIW` |32 |- |`andiw SrcL, simm, ->{t, u, Rd}` |ANDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`ANDW` |32 |- |`andw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |ANDW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`HL.ADDIW` |48 |- |`hl.addiw SrcL, uimm, ->{t, u, Rd}` |HL.ADDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`HL.ANDIW` |48 |- |`hl.andiw SrcL, simm, ->{t, u, Rd}` |HL.ANDIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`HL.ORIW` |48 |- |`hl.oriw SrcL, simm, ->{t, u, Rd}` |HL.ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`HL.SUBIW` |48 |- |`hl.subiw SrcL, uimm, ->{t, u, Rd}` |HL.SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`HL.XORIW` |48 |- |`hl.xoriw SrcL, simm, ->{t, u, Rd}` |HL.XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`ORIW` |32 |- |`oriw SrcL, simm, ->{t, u, Rd}` |ORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`ORW` |32 |- |`orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |ORW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SLLIW` |32 |- |`slliw SrcL, shamt, ->{t, u, Rd}` |SLLIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SLLW` |32 |- |`sllw SrcL, SrcR, ->{t, u, Rd}` |SLLW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SRAIW` |32 |- |`sraiw SrcL, shamt, ->{t, u, Rd}` |SRAIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SRAW` |32 |- |`sraw SrcL, SrcR, ->{t, u, Rd}` |SRAW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SRLIW` |32 |- |`srliw SrcL, shamt, ->{t, u, Rd}` |SRLIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SRLW` |32 |- |`srlw SrcL, SrcR, ->{t, u, Rd}` |SRLW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SUBIW` |32 |- |`subiw SrcL, uimm, ->{t, u, Rd}` |SUBIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`SUBW` |32 |- |`subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |SUBW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`XORIW` |32 |- |`xoriw SrcL, simm, ->{t, u, Rd}` |XORIW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
-|`XORW` |32 |- |`xorw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |XORW - Compute this mnemonic's 32-bit binary operation and sign-extend the result.
+|`ADD` |32 |- |`add SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |ADD applies the selected right-source transformation before its encoded logical left shift, performs fixed-width addition, and publishes the PTO_XLEN result.
+|`ADDI` |32 |- |`addi SrcL, uimm, ->{t, u, Rd}` |ADDI adds the zero-extended unsigned 12-bit immediate to the snapshotted XLEN source modulo 2^PTO_XLEN and publishes the result through the selected Reg5 destination.
+|`ADDIW` |32 |- |`addiw SrcL, uimm, ->{t, u, Rd}` |ADDIW adds the zero-extended unsigned 12-bit immediate to SrcL[31:0] modulo 2^32, sign-extends the word result to XLEN, and publishes it through RegDst.
+|`ADDW` |32 |- |`addw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |ADDW applies the selected right-source transformation before its encoded logical left shift, performs fixed-width word addition, and publishes the low 32-bit result sign-extended to XLEN.
+|`AND` |32 |- |`and SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |AND applies the selected right-source transformation before its encoded logical left shift, performs bitwise conjunction, and publishes the PTO_XLEN result.
+|`ANDI` |32 |- |`andi SrcL, simm, ->{t, u, Rd}` |ANDI sign-extends simm12 to PTO_XLEN, ANDs it with the snapshotted XLEN source, and publishes the complete result through RegDst.
+|`ANDIW` |32 |- |`andiw SrcL, simm, ->{t, u, Rd}` |ANDIW ANDs SrcL[31:0] with the low 32 bits of sign-extended simm12, sign-extends the result to XLEN, and publishes it through RegDst.
+|`ANDW` |32 |- |`andw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |ANDW applies the selected right-source transformation before its encoded logical left shift, performs word bitwise conjunction, and publishes the low 32-bit result sign-extended to XLEN.
+|`BCNT` |32 |- |`bcnt srcL, Nminus1, M, ->{t, u, Rd}` |BCNT counts set bits in an independently selected wrapping scalar field and publishes the XLEN population count.
+|`BIC` |32 |- |`bic SrcL, Nminus1, M, ->{t, u, Rd}` |BIC clears every bit in an independently selected wrapping scalar field and publishes the modified XLEN value.
+|`BIS` |32 |- |`bis SrcL, Nminus1, M, ->{t, u, Rd}` |BIS sets every bit in an independently selected wrapping scalar field and publishes the modified XLEN value.
+|`BXS` |32 |- |`bxs SrcL, Nminus1, M, ->{t, u, Rd}` |BXS extracts an independently selected wrapping scalar field, sign-extends it to XLEN, and publishes the result.
+|`BXU` |32 |- |`bxu SrcL, Nminus1, M, ->{t, u, Rd}` |BXU extracts an independently selected wrapping scalar field, zero-extends it to XLEN, and publishes the result.
+|`C.ADD` |16 |- |`c.add srcL, srcR, ->t` |C.ADD snapshots two complete Reg5 sources, adds SrcL and SrcR, and pushes the wrapping XLEN result to T.
+|`C.ADDI` |16 |- |`c.addi srcL, simm, ->t` |C.ADDI snapshots one complete Reg5 source, sign-extends simm5, adds modulo 2^XLEN, and pushes the result to T.
+|`C.AND` |16 |- |`c.and srcL, srcR, ->t` |C.AND snapshots two complete Reg5 sources, computes the bitwise conjunction of SrcL and SrcR, and pushes the wrapping XLEN result to T.
+|`C.MOVI` |16 |- |`c.movi simm, ->{t, u, Rd}` |C.MOVI sign-extends its encoded five-bit immediate to XLEN and publishes it through RegDst.
+|`C.MOVR` |16 |- |`c.movr SrcL, ->{t, u, Rd}` |C.MOVR snapshots a Reg5 source and publishes the complete XLEN value unchanged through RegDst.
+|`C.OR` |16 |- |`c.or srcL, srcR, ->t` |C.OR snapshots two complete Reg5 sources, computes the bitwise inclusive OR of SrcL and SrcR, and pushes the wrapping XLEN result to T.
+|`C.SETC.TGT` |16 |- |`c.setc.tgt srcL` |Snapshot one scalar source value into the active block BARG.BPCN.
+|`C.SETRET` |16 |- |`c.setret uimm, ->ra` |Materialize an unsigned halfword-scaled TPC-relative return address in ra and captured return state.
+|`C.SEXT.B` |16 |- |`c.sext.b srcL, ->t` |C.SEXT.B sign-extends SrcL[7:0] to XLEN and pushes the result to T.
+|`C.SEXT.H` |16 |- |`c.sext.h srcL, ->t` |C.SEXT.H sign-extends SrcL[15:0] to XLEN and pushes the result to T.
+|`C.SEXT.W` |16 |- |`c.sext.w srcL, ->t` |C.SEXT.W sign-extends SrcL[31:0] to XLEN and pushes the result to T.
+|`C.SLLI` |16 |- |`c.slli t#1, uimm, ->t` |C.SLLI snapshots the pre-instruction T#1 value, logically shifts it left by uimm5, and pushes the XLEN result to T.
+|`C.SRLI` |16 |- |`c.srli t#1, uimm, ->t` |C.SRLI snapshots the pre-instruction T#1 value, logically shifts it right by uimm5, and pushes the XLEN result to T.
+|`C.SUB` |16 |- |`c.sub srcL, srcR, ->t` |C.SUB snapshots two complete Reg5 sources, subtracts SrcR from SrcL modulo 2^XLEN, and pushes the result to T.
+|`C.ZEXT.B` |16 |- |`c.zext.b srcL, ->t` |C.ZEXT.B zero-extends SrcL[7:0] to XLEN and pushes the result to T.
+|`C.ZEXT.H` |16 |- |`c.zext.h srcL, ->t` |C.ZEXT.H zero-extends SrcL[15:0] to XLEN and pushes the result to T.
+|`C.ZEXT.W` |16 |- |`c.zext.w srcL, ->t` |C.ZEXT.W zero-extends SrcL[31:0] to XLEN and pushes the result to T.
+|`CLZ` |32 |- |`clz SrcL, Nminus1, M, ->{t, u, Rd}` |CLZ counts leading zero bits in an independently selected wrapping scalar field and publishes the XLEN count.
+|`CSEL` |32 |- |`csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}` |CSEL snapshots three Reg5 sources, selects SrcL for a nonzero predicate or its optionally negated SrcR for zero, and publishes through the common scalar destination map.
+|`CTZ` |32 |- |`ctz SrcL, Nminus1, M, ->{t, u, Rd}` |CTZ counts trailing zero bits in an independently selected wrapping scalar field and publishes the XLEN count.
+|`DIV` |32 |- |`div SrcL, SrcR, ->{t, u, Rd}` |DIV computes the signed XLEN quotient using total fixed-width semantics and publishes the XLEN result.
+|`DIVU` |32 |- |`divu SrcL, SrcR, ->{t, u, Rd}` |DIVU computes the unsigned XLEN quotient using total fixed-width semantics and publishes the XLEN result.
+|`DIVUW` |32 |- |`divuw SrcL, SrcR, ->{t, u, Rd}` |DIVUW computes the unsigned low-32-bit quotient using total fixed-width semantics and publishes the XLEN result.
+|`DIVW` |32 |- |`divw SrcL, SrcR, ->{t, u, Rd}` |DIVW computes the signed low-32-bit quotient using total fixed-width semantics and publishes the XLEN result.
+|`HL.ADDI` |48 |- |`hl.addi SrcL, uimm, ->{t, u, Rd}` |HL.ADDI applies XLEN addition to SrcL and a zero-extended 24-bit immediate.
+|`HL.ADDIW` |48 |- |`hl.addiw SrcL, uimm, ->{t, u, Rd}` |HL.ADDIW applies word addition to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result.
+|`HL.ANDI` |48 |- |`hl.andi SrcL, simm, ->{t, u, Rd}` |HL.ANDI applies XLEN bitwise conjunction to SrcL and a sign-extended 24-bit immediate.
+|`HL.ANDIW` |48 |- |`hl.andiw SrcL, simm, ->{t, u, Rd}` |HL.ANDIW applies word bitwise conjunction to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result.
+|`HL.BFI` |48 |- |`hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}` |HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.
+|`HL.CCAT` |48 |- |`hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCAT logically right-shifts {SrcL, SrcR}, writes the low 64-bit result to Dst0, then writes the high result to Dst1.
+|`HL.CCATW` |48 |- |`hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCATW logically right-shifts {SrcL[31:0], SrcR[31:0]}, sign-extends the low then high 32-bit results, and writes them in order.
+|`HL.DIV` |48 |- |`hl.div SrcL, SrcR, ->Dst0, Dst1` |HL.DIV computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.DIVU` |48 |- |`hl.divu SrcL, SrcR, ->Dst0, Dst1` |HL.DIVU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.DIVUW` |48 |- |`hl.divuw SrcL, SrcR, ->Dst0, Dst1` |HL.DIVUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.DIVW` |48 |- |`hl.divw SrcL, SrcR, ->Dst0, Dst1` |HL.DIVW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.LIS` |48 |- |`hl.lis simm, ->{t, u, Rd}` |HL.LIS sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
+|`HL.LIU` |48 |- |`hl.liu uimm, ->{t, u, Rd}` |HL.LIU zero-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
+|`HL.LUI` |48 |- |`hl.lui imm, ->{t, u, Rd}` |HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
+|`HL.MADD` |48 |- |`hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADD computes a signed 128-bit product plus a sign-extended XLEN addend and publishes low then high halves.
+|`HL.MADDW` |48 |- |`hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.
+|`HL.MIADD` |48 |- |`hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}` |HL.MIADD multiplies SrcR by the unsigned 19-bit immediate, adds SrcL modulo 2^PTO_XLEN, and publishes the result.
+|`HL.MISUB` |48 |- |`hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}` |HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result.
+|`HL.MUL` |48 |- |`hl.mul SrcL, SrcR, ->Dst0, Dst1` |HL.MUL computes a signed 128-bit scalar product and publishes its low half followed by its high half.
+|`HL.MULU` |48 |- |`hl.mulu SrcL, SrcR, ->Dst0, Dst1` |HL.MULU computes an unsigned 128-bit scalar product and publishes its low half followed by its high half.
+|`HL.ORI` |48 |- |`hl.ori SrcL, simm, ->{t, u, Rd}` |HL.ORI applies XLEN bitwise inclusive-or to SrcL and a sign-extended 24-bit immediate.
+|`HL.ORIW` |48 |- |`hl.oriw SrcL, simm, ->{t, u, Rd}` |HL.ORIW applies word bitwise inclusive-or to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result.
+|`HL.REM` |48 |- |`hl.rem SrcL, SrcR, ->Dst0, Dst1` |HL.REM computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.REMU` |48 |- |`hl.remu SrcL, SrcR, ->Dst0, Dst1` |HL.REMU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.REMUW` |48 |- |`hl.remuw SrcL, SrcR, ->Dst0, Dst1` |HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.REMW` |48 |- |`hl.remw SrcL, SrcR, ->Dst0, Dst1` |HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.SUBI` |48 |- |`hl.subi SrcL, uimm, ->{t, u, Rd}` |HL.SUBI applies XLEN subtraction to SrcL and a zero-extended 24-bit immediate.
+|`HL.SUBIW` |48 |- |`hl.subiw SrcL, uimm, ->{t, u, Rd}` |HL.SUBIW applies word subtraction to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result.
+|`HL.XORI` |48 |- |`hl.xori SrcL, simm, ->{t, u, Rd}` |HL.XORI applies XLEN bitwise exclusive-or to SrcL and a sign-extended 24-bit immediate.
+|`HL.XORIW` |48 |- |`hl.xoriw SrcL, simm, ->{t, u, Rd}` |HL.XORIW applies word bitwise exclusive-or to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result.
+|`LUI` |32 |- |`lui simm, ->{t, u, Rd}` |LUI sign-extends its encoded 20-bit immediate to XLEN, shifts it left by 12 bits, and publishes the result through RegDst.
+|`MADD` |32 |- |`madd SrcL, SrcR, SrcD, ->{t, u, Rd}` |MADD adds a snapshotted XLEN addend to the low XLEN scalar product modulo 2^PTO_XLEN and publishes the result.
+|`MADDW` |32 |- |`maddw SrcL, SrcR, SrcD, ->{t, u, Rd}` |MADDW adds low 32-bit source values modulo 2^32, sign-extends the accumulated result to XLEN, and publishes it.
+|`MAX` |32 |- |`max SrcL, SrcR, ->{t, u, Rd}` |MAX performs a signed full-XLEN comparison and publishes the complete bit pattern of the maximum operand.
+|`MAXU` |32 |- |`maxu SrcL, SrcR, ->{t, u, Rd}` |MAXU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the maximum operand.
+|`MIN` |32 |- |`min SrcL, SrcR, ->{t, u, Rd}` |MIN performs a signed full-XLEN comparison and publishes the complete bit pattern of the minimum operand.
+|`MINU` |32 |- |`minu SrcL, SrcR, ->{t, u, Rd}` |MINU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the minimum operand.
+|`MUL` |32 |- |`mul SrcL, SrcR, ->{t, u, Rd}` |MUL computes the low XLEN bits of the complete scalar product and publishes the result.
+|`MULU` |32 |- |`mulu SrcL, SrcR, ->{t, u, Rd}` |MULU computes the low XLEN bits of the complete unsigned scalar product and publishes the result.
+|`MULUW` |32 |- |`muluw SrcL, SrcR, ->{t, u, Rd}` |MULUW multiplies the source low 32-bit values, retains the low 32 product bits, sign-extends them to XLEN, and publishes the result.
+|`MULW` |32 |- |`mulw SrcL, SrcR, ->{t, u, Rd}` |MULW multiplies the source low 32-bit values, retains the low 32 product bits, sign-extends them to XLEN, and publishes the result.
+|`OR` |32 |- |`or SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |OR applies the selected right-source transformation before its encoded logical left shift, performs bitwise inclusive OR, and publishes the PTO_XLEN result.
+|`ORI` |32 |- |`ori SrcL, simm, ->{t, u, Rd}` |ORI sign-extends simm12 to PTO_XLEN, ORs it with the snapshotted XLEN source, and publishes the complete result through RegDst.
+|`ORIW` |32 |- |`oriw SrcL, simm, ->{t, u, Rd}` |ORIW ORs SrcL[31:0] with the low 32 bits of sign-extended simm12, sign-extends the result to XLEN, and publishes it through RegDst.
+|`ORW` |32 |- |`orw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |ORW applies the selected right-source transformation before its encoded logical left shift, performs word bitwise inclusive OR, and publishes the low 32-bit result sign-extended to XLEN.
+|`REM` |32 |- |`rem SrcL, SrcR, ->{t, u, Rd}` |REM computes the signed XLEN remainder using total fixed-width semantics and publishes the XLEN result.
+|`REMU` |32 |- |`remu SrcL, SrcR, ->{t, u, Rd}` |REMU computes the unsigned XLEN remainder using total fixed-width semantics and publishes the XLEN result.
+|`REMUW` |32 |- |`remuw SrcL, SrcR, ->{t, u, Rd}` |REMUW computes the unsigned low-32-bit remainder using total fixed-width semantics and publishes the XLEN result.
+|`REMW` |32 |- |`remw SrcL, SrcR, ->{t, u, Rd}` |REMW computes the signed low-32-bit remainder using total fixed-width semantics and publishes the XLEN result.
+|`REV` |32 |- |`rev SrcL, M, N, ->{t, u, Rd}` |REV reverses the bytes of an independently selected wrapping scalar field, zero-fills high result bits, and returns zero for a non-byte width.
+|`SLL` |32 |- |`sll SrcL, SrcR, ->{t, u, Rd}` |SLL performs a logical left shift of the PTO_XLEN source by the low six bits of the snapshotted SrcR; the XLEN result is published directly.
+|`SLLI` |32 |- |`slli SrcL, shamt, ->{t, u, Rd}` |SLLI logically shifts the snapshotted XLEN source left by the encoded six-bit amount and publishes the XLEN result through RegDst.
+|`SLLIW` |32 |- |`slliw SrcL, shamt, ->{t, u, Rd}` |SLLIW logically shifts SrcL[31:0] left by the encoded five-bit amount, sign-extends the word result to XLEN, and publishes it.
+|`SLLW` |32 |- |`sllw SrcL, SrcR, ->{t, u, Rd}` |SLLW performs a logical left shift of the low 32-bit source by the low five bits of the snapshotted SrcR; the 32-bit result is sign-extended to XLEN.
+|`SRA` |32 |- |`sra SrcL, SrcR, ->{t, u, Rd}` |SRA performs a arithmetic right shift of the PTO_XLEN source by the low six bits of the snapshotted SrcR; the XLEN result is published directly.
+|`SRAI` |32 |- |`srai SrcL, shamt, ->{t, u, Rd}` |SRAI arithmetically shifts the snapshotted XLEN source right by the encoded six-bit amount and publishes the XLEN result through RegDst.
+|`SRAIW` |32 |- |`sraiw SrcL, shamt, ->{t, u, Rd}` |SRAIW arithmetically shifts SrcL[31:0] right by the encoded five-bit amount, sign-extends the word result to XLEN, and publishes it.
+|`SRAW` |32 |- |`sraw SrcL, SrcR, ->{t, u, Rd}` |SRAW performs a arithmetic right shift of the low 32-bit source by the low five bits of the snapshotted SrcR; the 32-bit result is sign-extended to XLEN.
+|`SRL` |32 |- |`srl SrcL, SrcR, ->{t, u, Rd}` |SRL performs a logical right shift of the PTO_XLEN source by the low six bits of the snapshotted SrcR; the XLEN result is published directly.
+|`SRLI` |32 |- |`srli SrcL, shamt, ->{t, u, Rd}` |SRLI logically shifts the snapshotted XLEN source right by the encoded six-bit amount and publishes the XLEN result through RegDst.
+|`SRLIW` |32 |- |`srliw SrcL, shamt, ->{t, u, Rd}` |SRLIW logically shifts SrcL[31:0] right by the encoded five-bit amount, sign-extends the word result to XLEN, and publishes it.
+|`SRLW` |32 |- |`srlw SrcL, SrcR, ->{t, u, Rd}` |SRLW performs a logical right shift of the low 32-bit source by the low five bits of the snapshotted SrcR; the 32-bit result is sign-extended to XLEN.
+|`SUB` |32 |- |`sub SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |SUB applies the selected right-source transformation before its encoded logical left shift, performs fixed-width subtraction, and publishes the PTO_XLEN result.
+|`SUBI` |32 |- |`subi SrcL, uimm, ->{t, u, Rd}` |SUBI subtracts the zero-extended unsigned 12-bit immediate from the snapshotted XLEN source modulo 2^PTO_XLEN and publishes the result through RegDst.
+|`SUBIW` |32 |- |`subiw SrcL, uimm, ->{t, u, Rd}` |SUBIW subtracts the zero-extended unsigned 12-bit immediate from SrcL[31:0] modulo 2^32, sign-extends the word result to XLEN, and publishes it through RegDst.
+|`SUBW` |32 |- |`subw SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>, ->{t, u, Rd}` |SUBW applies the selected right-source transformation before its encoded logical left shift, performs fixed-width word subtraction, and publishes the low 32-bit result sign-extended to XLEN.
+|`XOR` |32 |- |`xor SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |XOR applies the selected right-source transformation before its encoded logical left shift, performs bitwise exclusive OR, and publishes the PTO_XLEN result.
+|`XORI` |32 |- |`xori SrcL, simm, ->{t, u, Rd}` |XORI sign-extends simm12 to PTO_XLEN, XORs it with the snapshotted XLEN source, and publishes the complete result through RegDst.
+|`XORIW` |32 |- |`xoriw SrcL, simm, ->{t, u, Rd}` |XORIW XORs SrcL[31:0] with the low 32 bits of sign-extended simm12, sign-extends the result to XLEN, and publishes it through RegDst.
+|`XORW` |32 |- |`xorw SrcL, SrcR<{.sw,.uw,.not}><<<shamt>, ->{t, u, Rd}` |XORW applies the selected right-source transformation before its encoded logical left shift, performs word bitwise exclusive OR, and publishes the low 32-bit result sign-extended to XLEN.
 |===
 
-[[insnref-pc-relative]]
-=== PC-Relative
+[[insnref-bru]]
+=== BRU
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`ADDTPC` |32 |- |`addtpc simm, ->{t, u, Rd}` |ADDTPC - Add the encoded displacement to the program counter.
-|`HL.ADDTPC` |48 |- |`hl.addtpc imm, ->{t, u, Rd}` |HL.ADDTPC - Add the encoded displacement to the program counter.
-|`HL.SETRET` |48 |- |`hl.setret imm, ->Ra` |HL.SETRET - Write the architectural return address.
-|`SETRET` |32 |- |`setret uimm, ->Ra` |SETRET - Write the architectural return address.
-|===
-
-[[insnref-bundle-control-attribute]]
-=== Bundle Control Attribute
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |Latches bundle control, trap, atomic, ordering, and address-class attributes.
-|===
-
-[[insnref-bundle-data-attribute]]
-=== Bundle Data Attribute
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` |Latches tile layout, data type, padding, conversion, rounding, and saturation attributes.
-|===
-
-[[insnref-bundle-argument]]
-=== Bundle Argument
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB1` |Writes one of the three bundle-local dimension registers.
-|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB0` |Writes one of the three bundle-local dimension registers.
-|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB2` |Writes one of the three bundle-local dimension registers.
-|===
-
-[[insnref-branch]]
-=== Branch
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
 |`B.EQ` |32 |- |`b.eq SrcL, SrcR, label` |B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.
 |`B.GE` |32 |- |`b.ge SrcL, SrcR, label` |B.GE - Conditionally branch to the PC-relative target after comparing scalar operands.
 |`B.GEU` |32 |- |`b.geu SrcL, SrcR, label` |B.GEU - Conditionally branch to the PC-relative target after comparing scalar operands.
@@ -131,160 +173,211 @@
 |`B.NE` |32 |- |`b.ne SrcL, SrcR, label` |B.NE - Conditionally branch to the PC-relative target after comparing scalar operands.
 |`B.NZ` |32 |- |`b.nz label` |B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands.
 |`B.Z` |32 |- |`b.z label` |B.Z - Conditionally branch to the PC-relative target after comparing scalar operands.
+|`C.CMP.EQI` |16 |- |`c.cmp.eqi t#1, simm, ->t` |C.CMP.EQI - Compare scalar operands and write the encoded boolean result.
+|`C.CMP.NEI` |16 |- |`c.cmp.nei t#1, simm, ->t` |C.CMP.NEI - Compare scalar operands and write the encoded boolean result.
+|`C.SETC.EQ` |16 |- |`c.setc.eq srcL, srcR` |C.SETC.EQ - Compare scalar operands and update the bundle commit condition.
+|`C.SETC.NE` |16 |- |`c.setc.ne srcL, srcR` |C.SETC.NE - Compare scalar operands and update the bundle commit condition.
+|`CMP.AND` |32 |- |`cmp.and SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` |CMP.AND - Combine scalar comparison results with the encoded logical operation.
+|`CMP.ANDI` |32 |- |`cmp.andi SrcL, simm, ->{t, u, Rd}` |CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
+|`CMP.EQ` |32 |- |`cmp.eq SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.EQ - Compare scalar operands and write the encoded boolean result.
+|`CMP.EQI` |32 |- |`cmp.eqi SrcL, simm, ->{t, u, Rd}` |CMP.EQI - Compare scalar operands and write the encoded boolean result.
+|`CMP.GE` |32 |- |`cmp.ge SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.GE - Compare scalar operands and write the encoded boolean result.
+|`CMP.GEI` |32 |- |`cmp.gei SrcL, simm, ->{t, u, Rd}` |CMP.GEI - Compare scalar operands and write the encoded boolean result.
+|`CMP.GEU` |32 |- |`cmp.geu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.GEU - Compare scalar operands and write the encoded boolean result.
+|`CMP.GEUI` |32 |- |`cmp.geui SrcL, uimm, ->{t, u, Rd}` |CMP.GEUI - Compare scalar operands and write the encoded boolean result.
+|`CMP.LT` |32 |- |`cmp.lt SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.LT - Compare scalar operands and write the encoded boolean result.
+|`CMP.LTI` |32 |- |`cmp.lti SrcL, simm, ->{t, u, Rd}` |CMP.LTI - Compare scalar operands and write the encoded boolean result.
+|`CMP.LTU` |32 |- |`cmp.ltu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.LTU - Compare scalar operands and write the encoded boolean result.
+|`CMP.LTUI` |32 |- |`cmp.ltui SrcL, uimm, ->{t, u, Rd}` |CMP.LTUI - Compare scalar operands and write the encoded boolean result.
+|`CMP.NE` |32 |- |`cmp.ne SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.NE - Compare scalar operands and write the encoded boolean result.
+|`CMP.NEI` |32 |- |`cmp.nei SrcL, simm, ->{t, u, Rd}` |CMP.NEI - Compare scalar operands and write the encoded boolean result.
+|`CMP.OR` |32 |- |`cmp.or SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` |CMP.OR - Combine scalar comparison results with the encoded logical operation.
+|`CMP.ORI` |32 |- |`cmp.ori SrcL, simm, ->{t, u, Rd}` |CMP.ORI - Combine scalar comparison results with the encoded logical operation.
+|`HL.ADDTPC` |48 |- |`hl.addtpc imm, ->{t, u, Rd}` |HL.ADDTPC - Add the encoded displacement to the program counter.
+|`HL.CMP.ANDI` |48 |- |`hl.cmp.andi SrcL, simm, ->{t, u, Rd}` |HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
+|`HL.CMP.EQI` |48 |- |`hl.cmp.eqi SrcL, simm, ->{t, u, Rd}` |HL.CMP.EQI - Compare scalar operands and write the encoded boolean result.
+|`HL.CMP.GEI` |48 |- |`hl.cmp.gei SrcL, simm, ->{t, u, Rd}` |HL.CMP.GEI - Compare scalar operands and write the encoded boolean result.
+|`HL.CMP.GEUI` |48 |- |`hl.cmp.geui SrcL, uimm, ->{t, u, Rd}` |HL.CMP.GEUI - Compare scalar operands and write the encoded boolean result.
+|`HL.CMP.LTI` |48 |- |`hl.cmp.lti SrcL, simm, ->{t, u, Rd}` |HL.CMP.LTI - Compare scalar operands and write the encoded boolean result.
+|`HL.CMP.LTUI` |48 |- |`hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}` |HL.CMP.LTUI - Compare scalar operands and write the encoded boolean result.
+|`HL.CMP.NEI` |48 |- |`hl.cmp.nei SrcL, simm, ->{t, u, Rd}` |HL.CMP.NEI - Compare scalar operands and write the encoded boolean result.
+|`HL.CMP.ORI` |48 |- |`hl.cmp.ori SrcL, simm, ->{t, u, Rd}` |HL.CMP.ORI - Combine scalar comparison results with the encoded logical operation.
+|`HL.SETC.ANDI` |48 |- |`hl.setc.andi SrcL, simm` |HL.SETC.ANDI - Combine scalar comparison results and update the bundle commit condition.
+|`HL.SETC.EQI` |48 |- |`hl.setc.eqi SrcL, simm` |HL.SETC.EQI - Compare scalar operands and update the bundle commit condition.
+|`HL.SETC.GEI` |48 |- |`hl.setc.gei SrcL, simm` |HL.SETC.GEI - Compare scalar operands and update the bundle commit condition.
+|`HL.SETC.GEUI` |48 |- |`hl.setc.geui SrcL, uimm` |HL.SETC.GEUI - Compare scalar operands and update the bundle commit condition.
+|`HL.SETC.LTI` |48 |- |`hl.setc.lti SrcL, simm` |HL.SETC.LTI - Compare scalar operands and update the bundle commit condition.
+|`HL.SETC.LTUI` |48 |- |`hl.setc.ltui SrcL, uimm` |HL.SETC.LTUI - Compare scalar operands and update the bundle commit condition.
+|`HL.SETC.NEI` |48 |- |`hl.setc.nei SrcL, simm` |HL.SETC.NEI - Compare scalar operands and update the bundle commit condition.
+|`HL.SETC.ORI` |48 |- |`hl.setc.ori SrcL, simm` |HL.SETC.ORI - Combine scalar comparison results and update the bundle commit condition.
+|`HL.SETRET` |48 |- |`hl.setret imm, ->Ra` |HL.SETRET - Write the architectural return address.
 |`J` |32 |- |`j label` |J - Jump to the PC-relative target.
 |`JR` |32 |- |`jr SrcL, label` |JR - Jump to the scalar-register target.
+|`SETC.AND` |32 |- |`setc.and SrcL, SrcR<.sw, .uw, .not>` |SETC.AND - Combine scalar comparison results and update the bundle commit condition.
+|`SETC.ANDI` |32 |- |`setc.andi SrcL, simm` |SETC.ANDI - Combine scalar comparison results and update the bundle commit condition.
+|`SETC.EQ` |32 |- |`setc.eq SrcL, SrcR<{.sw, .uw}>` |SETC.EQ - Compare scalar operands and update the bundle commit condition.
+|`SETC.EQI` |32 |- |`setc.eqi SrcL, simm` |SETC.EQI - Compare scalar operands and update the bundle commit condition.
+|`SETC.GE` |32 |- |`setc.ge SrcL, SrcR<{.sw, .uw}>` |SETC.GE - Compare scalar operands and update the bundle commit condition.
+|`SETC.GEI` |32 |- |`setc.gei SrcL, simm` |SETC.GEI - Compare scalar operands and update the bundle commit condition.
+|`SETC.GEU` |32 |- |`setc.geu SrcL, SrcR<{.sw, .uw}>` |SETC.GEU - Compare scalar operands and update the bundle commit condition.
+|`SETC.GEUI` |32 |- |`setc.geui SrcL, uimm` |SETC.GEUI - Compare scalar operands and update the bundle commit condition.
+|`SETC.LT` |32 |- |`setc.lt SrcL, SrcR<{.sw, .uw}>` |SETC.LT - Compare scalar operands and update the bundle commit condition.
+|`SETC.LTI` |32 |- |`setc.lti SrcL, simm` |SETC.LTI - Compare scalar operands and update the bundle commit condition.
+|`SETC.LTU` |32 |- |`setc.ltu SrcL, SrcR<{.sw, .uw}>` |SETC.LTU - Compare scalar operands and update the bundle commit condition.
+|`SETC.LTUI` |32 |- |`setc.ltui SrcL, uimm` |SETC.LTUI - Compare scalar operands and update the bundle commit condition.
+|`SETC.NE` |32 |- |`setc.ne SrcL, SrcR<{.sw, .uw}>` |SETC.NE - Compare scalar operands and update the bundle commit condition.
+|`SETC.NEI` |32 |- |`setc.nei SrcL, simm` |SETC.NEI - Compare scalar operands and update the bundle commit condition.
+|`SETC.OR` |32 |- |`setc.or SrcL, SrcR<.sw, .uw, .not>` |SETC.OR - Combine scalar comparison results and update the bundle commit condition.
+|`SETC.ORI` |32 |- |`setc.ori SrcL, simm` |SETC.ORI - Combine scalar comparison results and update the bundle commit condition.
+|`SETRET` |32 |- |`setret uimm, ->Ra` |SETRET - Write the architectural return address.
+|===
+
+[[insnref-bundle-control-attribute]]
+=== Bundle Control Attribute
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.CATR` |32 |- |`B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}` |Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode.
+|===
+
+[[insnref-bundle-data-attribute]]
+=== Bundle Data Attribute
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` |Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
+|===
+
+[[insnref-bundle-argument]]
+=== Bundle Argument
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB1` |Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once.
+|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB0` |Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once.
+|`B.DIM` |32 |- |`B.DIM RegSrc, uimm, ->LB2` |Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once.
+|===
+
+[[insnref-bundle-fixed-point-postprocess-attribute]]
+=== Bundle Fixed-Point PostProcess Attribute
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
 |===
 
 [[insnref-bundle-hint]]
 === Bundle Hint
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |Records non-functional branch, temperature, prefetch-size, or trace guidance.
-|`B.HINT` |32 |- |`B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` |Records non-functional branch, temperature, prefetch-size, or trace guidance.
+|`B.HINT` |32 |- |`B.HINT TRACE.{begin, end}` |Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results.
+|`B.HINT` |32 |- |`B.HINT {BR.{likely, unlikely}, TEMP.{hot, warm, cool, none}, PRFSIZE}` |Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results.
 |===
 
 [[insnref-bundle-input-output]]
 === Bundle Input & Output
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
-|`B.IOS` |32 |- |`B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>` |Binds one ordered absolute core-private Shared register S0..S255 with a per-PE source/destination size code and four-PE participation mask.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
-|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds a destination-only Local Tile operand with per-PE TSize, PE_MASK, and last-use metadata; PE_MASK=0000 is a strict no-op and there is no mask-only Shared companion form.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds v5 PE_MASK, ordered Local tile sources, last-use, and optional TSize/2-bit Local destination metadata; reuse bits do not exist.
+|`B.IOS` |32 |- |`B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>` |Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
 |===
 
 [[insnref-bundle-offset]]
 === Bundle Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.TEXT` |32 |- |`B.TEXT <label>` |Sets the out-of-line body entry address for a decoupled bundle.
 |===
 
-[[insnref-cache-maintain]]
-=== Cache Maintain
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`BC.IALL` |32 |- |`bc.iall` |BC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`BC.IVA` |32 |- |`bc.iva SrcL` |BC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.CISW` |32 |- |`dc.cisw SrcL` |DC.CISW - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.CIVA` |32 |- |`dc.civa SrcL` |DC.CIVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.CSW` |32 |- |`dc.csw SrcL` |DC.CSW - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.CVA` |32 |- |`dc.cva SrcL` |DC.CVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.IALL` |32 |- |`dc.iall` |DC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.ISW` |32 |- |`dc.isw SrcL` |DC.ISW - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.IVA` |32 |- |`dc.iva SrcL` |DC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`DC.ZVA` |32 |- |`dc.zva SrcL` |DC.ZVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`IC.IALL` |32 |- |`ic.iall` |IC.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`IC.IVA` |32 |- |`ic.iva SrcL` |IC.IVA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`TLB.IA` |32 |- |`tlb.ia SrcL` |TLB.IA - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`TLB.IALL` |32 |- |`tlb.iall` |TLB.IALL - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`TLB.IAV` |32 |- |`tlb.iav SrcL` |TLB.IAV - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|`TLB.IV` |32 |- |`tlb.iv SrcL` |TLB.IV - Perform this mnemonic's cache, TLB, or bundle maintenance operation.
-|===
-
-[[insnref-bit-operation]]
-=== Bit Operation
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`BCNT` |32 |- |`bcnt srcL, Nminus1, M, ->{t, u, Rd}` |BCNT - Count the selected bit property of the scalar source.
-|`BIC` |32 |- |`bic SrcL, Nminus1, M, ->{t, u, Rd}` |BIC - Modify the selected scalar bitfield.
-|`BIS` |32 |- |`bis SrcL, Nminus1, M, ->{t, u, Rd}` |BIS - Modify the selected scalar bitfield.
-|`BXS` |32 |- |`bxs SrcL, Nminus1, M, ->{t, u, Rd}` |BXS - Extract the selected scalar bitfield.
-|`BXU` |32 |- |`bxu SrcL, Nminus1, M, ->{t, u, Rd}` |BXU - Extract the selected scalar bitfield.
-|`CLZ` |32 |- |`clz SrcL, Nminus1, M, ->{t, u, Rd}` |CLZ - Count the selected bit property of the scalar source.
-|`CTZ` |32 |- |`ctz SrcL, Nminus1, M, ->{t, u, Rd}` |CTZ - Count the selected bit property of the scalar source.
-|`REV` |32 |- |`rev SrcL, M, N, ->{t, u, Rd}` |REV - Reverse bytes within the selected scalar bitfield.
-|===
-
 [[insnref-bundle-split]]
 === Bundle Split
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART` |32 |- |`BSTART {DIRECT, CALL}, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART` |32 |- |`BSTART COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.FP` |32 |- |`BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.FP` |32 |- |`BSTART.FP ICALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART` |32 |- |`BSTART DIRECT, <label>` |Initializes the single BARG continuation record after any retiring block commits successfully.
+|`BSTART` |32 |- |`BSTART COND, <label>` |Initializes the single BARG continuation record after any retiring block commits successfully.
+|`BSTART.FP` |32 |- |`BSTART.FP FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP RET` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.FP` |32 |- |`BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.GMOV` |32 |- |`BSTART.GMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.GMOV` |32 |- |`BSTART.GMOV DataType` |Starts a Core4 peer-Local fragment transfer block.
+|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Begins a TLSU byte-displacement gather block and selects its transfer DataType.
+|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Begins a TLSU byte-displacement atomic compare-and-swap gather block.
+|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Begins a predicate-masked TLSU byte-displacement gather block.
 |`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Begins a TLSU byte-displacement scatter block and selects its transfer DataType.
+|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Begins a predicate-masked TLSU byte-displacement scatter block.
 |`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD RET` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.STD` |32 |- |`BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.STD` |32 |- |`BSTART.STD FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.STD` |32 |- |`BSTART.STD ICALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.SYS` |32 |- |`BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.SYS` |32 |- |`BSTART.SYS FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TEPL` |32 |- |`BSTART.TEPL Mode, Function, DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TGEMV` |32 |- |`BSTART.TGEMV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TGEMV.ACC` |32 |- |`BSTART.TGEMV.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TGEMV.BIAS` |32 |- |`BSTART.TGEMV.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TGEMVMX` |32 |- |`BSTART.TGEMVMX DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TGEMVMX.ACC` |32 |- |`BSTART.TGEMVMX.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TGEMVMX.BIAS` |32 |- |`BSTART.TGEMVMX.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TGEMV` |32 |- |`BSTART.TGEMV DataType` |Starts CUBE Function 16 for the TGEMV M=1 Matrix-vector complete-bundle operation.
+|`BSTART.TGEMV.ACC` |32 |- |`BSTART.TGEMV.ACC DataType` |Starts CUBE Function 18 for the TGEMV_ACC M=1 Matrix-vector complete-bundle operation.
+|`BSTART.TGEMV.BIAS` |32 |- |`BSTART.TGEMV.BIAS DataType` |Starts CUBE Function 17 for the TGEMV_BIAS M=1 Matrix-vector complete-bundle operation.
+|`BSTART.TGEMVMX` |32 |- |`BSTART.TGEMVMX DataType` |Starts CUBE Function 20 for the TGEMV_MX M=1 Matrix-vector complete-bundle operation.
+|`BSTART.TGEMVMX.ACC` |32 |- |`BSTART.TGEMVMX.ACC DataType` |Starts CUBE Function 22 for the TGEMV_MX_ACC M=1 Matrix-vector complete-bundle operation.
+|`BSTART.TGEMVMX.BIAS` |32 |- |`BSTART.TGEMVMX.BIAS DataType` |Starts CUBE Function 21 for the TGEMV_MX_BIAS M=1 Matrix-vector complete-bundle operation.
 |`BSTART.TLOAD` |32 |- |`BSTART.TLOAD DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMATMUL.BIAS` |32 |- |`BSTART.TMATMUL.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMATMULMX` |32 |- |`BSTART.TMATMULMX DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TMATMUL` |32 |- |`BSTART.TMATMUL DataType` |Starts CUBE Function 0 for the TMATMUL Matrix-matrix complete-bundle operation.
+|`BSTART.TMATMUL.ACC` |32 |- |`BSTART.TMATMUL.ACC DataType` |Starts CUBE Function 2 for the TMATMUL_ACC Matrix-matrix complete-bundle operation.
+|`BSTART.TMATMUL.BIAS` |32 |- |`BSTART.TMATMUL.BIAS DataType` |Starts CUBE Function 1 for the TMATMUL_BIAS Matrix-matrix complete-bundle operation.
+|`BSTART.TMATMULMX` |32 |- |`BSTART.TMATMULMX DataType` |Starts CUBE Function 4 for the TMATMUL_MX Matrix-matrix complete-bundle operation.
+|`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Starts CUBE Function 6 for the TMATMUL_MX_ACC Matrix-matrix complete-bundle operation.
+|`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Starts CUBE Function 5 for the TMATMUL_MX_BIAS Matrix-matrix complete-bundle operation.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Starts a destination-free, four-PE TLSU prefetch block with an explicit element data type.
 |`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTOP` |32 |- |`BSTOP` |Commits the current bundle and transfers to its selected continuation.
-|`C.BSTART` |16 |- |`C.BSTART DIRECT, label` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`C.BSTART` |16 |- |`C.BSTART COND, label` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART` |16 |- |`C.BSTART DIRECT, label` |Starts a compressed standard block with a PC-relative direct or conditional candidate target.
+|`C.BSTART` |16 |- |`C.BSTART COND, label` |Starts a compressed standard block with a PC-relative direct or conditional candidate target.
 |`C.BSTOP` |16 |- |`C.BSTOP` |Commits the current bundle and transfers to its selected continuation.
-|`ERCOV` |32 |- |`ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |Recovers the encoded execution-context range from memory.
-|`ESAVE` |32 |- |`ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |Saves the encoded execution-context range to memory.
-|`FENTRY` |32 |- |`FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` |Atomically validates and creates a frame-template entry state.
-|`FEXIT` |32 |- |`FEXIT [RegDst0 ~ RegDstn], sp!, uimm` |Atomically validates and commits a frame-template exit state.
-|`FRET.RA` |32 |- |`FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` |Restores a frame and returns through the retained return-address target.
-|`FRET.STK` |32 |- |`FRET.STK [RegDst0 ~ RegDstn], sp!, uimm` |Restores a frame and returns through the validated stack target.
-|`MCOPY` |32 |- |`MCOPY [RegSrc0, RegSrc1, RegSrc2]` |Copies an encoded memory range with instruction-atomic preflight and snapshot semantics.
-|`MSET` |32 |- |`MSET [RegSrc0, RegSrc1, RegSrc2]` |Fills an encoded memory range after complete access preflight.
-|`XB` |32 |- |`XB ACR-ID, C-ID` |Transfers the named context value to a target virtual core block.
+|`ERCOV` |32 |- |`ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |Inventories an extension-owned execution-context recovery family rejected by PTO before operand interpretation or effects.
+|`ESAVE` |32 |- |`ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind]` |Inventories an extension-owned execution-context save family rejected by PTO before operand interpretation or effects.
+|`FENTRY` |32 |- |`FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm` |Creates a restartable stack frame by snapshotting and storing one inclusive callee-save register-ring range.
+|`FEXIT` |32 |- |`FEXIT [RegDst0 ~ RegDstn], sp!, uimm` |Destroys a restartable stack frame and restores one inclusive callee-save register-ring range.
+|`FRET.RA` |32 |- |`FRET.RA [RegDst0 ~ RegDstn], sp!, uimm` |Restores a restartable stack frame and returns through the pre-restore architectural return address.
+|`FRET.STK` |32 |- |`FRET.STK [ra ~ RegDstn], sp!, uimm` |Restores a restartable stack frame whose first stack slot supplies the validated return target.
+|`L.BSTOP` |64 |- |`L.BSTOP` |Commits the current bundle and transfers to its selected continuation.
+|`MCOPY` |32 |- |`MCOPY [RegSrc0, RegSrc1, RegSrc2]` |Copies a non-overlapping byte range in restartable forward memory steps.
+|`MSET` |32 |- |`MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` |Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
+|`XB` |32 |- |`XB ACR-ID, C-ID` |Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects.
 |===
 
 [[insnref-bstart]]
 === BSTART
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.
-|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomically closes the current bundle, computes the call target from the signed displacement and the return address from the independent unsigned displacement, writes ra, and transfers control to the call bundle.
+|`BSTART.CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomically retires the old block, installs a direct-call BARG, and writes the independent return target to ra.
+|`BSTART.ICALL` |32 |- |`BSTART.ICALL <rt_label>, ->ra` |Atomically retires the old block, snapshots its BARG.BPCN into a new indirect-call BARG, and writes the independent return target to ra.
+|`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -296,11 +389,11 @@
 |`HL.BSTART.SYS` |48 |- |`HL.BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.FP` |64 |- |`L.BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.FP` |64 |- |`L.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.FP` |64 |- |`L.BSTART.FP CALL, <label>` |Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 |`L.BSTART.FP` |64 |- |`L.BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.STD` |64 |- |`L.BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.STD` |64 |- |`L.BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`L.BSTART.STD` |64 |- |`L.BSTART.STD CALL, <label>` |Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.
 |`L.BSTART.STD` |64 |- |`L.BSTART.STD FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`L.BSTART.SYS` |64 |- |`L.BSTART.SYS FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |===
@@ -308,23 +401,472 @@
 [[insnref-block-split]]
 === Block Split
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`BSTART.VPAR` |32 |- |`BSTART.VPAR <VS8, VS16>` |TVEC-equivalent parallel SIMT header; requires B.TEXT body target in decoupled form.
 |`BSTART.VSEQ` |32 |- |`BSTART.VSEQ <VS8, VS16>` |TVEC-equivalent sequential SIMT header; requires B.TEXT body target in decoupled form.
 |===
 
+[[insnref-bundle-dimension]]
+=== Bundle Dimension
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`C.B.DIMI` |16 |- |`C.B.DIMI imm, ->{LB0, LB1, LB2}` |Zero-extends imm8 and writes one selected bundle-local LB exactly once.
+|===
+
+[[insnref-c-bstart]]
+=== C.BSTART
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`C.BSTART.FP` |16 |- |`C.BSTART.FP {FALL, IND, RET}` |Starts a compressed FP block with fallthrough, indirect, or return transfer; every other BrType rejects before effects.
+|`C.BSTART.MPAR` |16 |- |`C.BSTART.MPAR FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART.MSEQ` |16 |- |`C.BSTART.MSEQ FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`C.BSTART.STD` |16 |- |`C.BSTART.STD {FALL, IND, RET}` |Starts a compressed STD block with fallthrough, indirect, or return transfer; every other BrType rejects before effects.
+|`C.BSTART.SYS` |16 |- |`C.BSTART.SYS FALL` |Starts the fixed compressed sequential System block without a selecting branch continuation.
+|`C.BSTART.VPAR` |16 |- |`C.BSTART.VPAR FALL` |-
+|`C.BSTART.VSEQ` |16 |- |`C.BSTART.VSEQ FALL` |-
+|===
+
+[[insnref-lda-base-imm]]
+=== LDA/BASE_IMM
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`C.LDI` |16 |- |`c.ldi [srcL, simm], ->t` |C.LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`C.LWI` |16 |- |`c.lwi [srcL, simm], ->t` |C.LWI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`LBI` |32 |- |`lbi [SrcL, simm], ->{t, u, Rd}` |LBI snapshots its scalar sources, forms its encoded address, and loads one aligned little - endian 1 - byte value.
+|`LBUI` |32 |- |`lbui [SrcL, simm], ->{t, u, Rd}` |LBUI snapshots its scalar sources, forms its encoded address, and loads one aligned little - endian 1 - byte value.
+|`LDI` |32 |- |`ldi [SrcL, simm], ->{t, u, Rd}` |LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`LHI` |32 |- |`lhi [SrcL, simm], ->{t, u, Rd}` |LHI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LHUI` |32 |- |`lhui [SrcL, simm], ->{t, u, Rd}` |LHUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LWI` |32 |- |`lwi [SrcL, simm], ->{t, u, Rd}` |LWI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`LWUI` |32 |- |`lwui [SrcL, simm], ->{t, u, Rd}` |LWUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|===
+
+[[insnref-sta-base-imm]]
+=== STA/BASE_IMM
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`C.SDI` |16 |- |`c.sdi t#1, [srcL, simm]` |C.SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`C.SWI` |16 |- |`c.swi t#1, [srcL, simm]` |C.SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`SBI` |32 |- |`sbi SrcL, [SrcR, simm]` |SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`SDI` |32 |- |`sdi SrcL, [SrcR, simm]` |SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`SDI.U` |32 |- |`sdi.u SrcL, [SrcR, simm]` |SDI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`SHI` |32 |- |`shi SrcL, [SrcR, simm]` |SHI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`SHI.U` |32 |- |`shi.u SrcL, [SrcR, simm]` |SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`SWI` |32 |- |`swi SrcL, [SrcR, simm]` |SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`SWI.U` |32 |- |`swi.u SrcL, [SrcR, simm]` |SWI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
+[[insnref-amo]]
+=== AMO
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`CASB` |32 |- |`casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASB atomically compares and conditionally replaces one byte, then publishes the prior value.
+|`CASD` |32 |- |`casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value.
+|`CASH` |32 |- |`cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASH atomically compares and conditionally replaces one halfword, then publishes the prior value.
+|`CASW` |32 |- |`casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASW atomically compares and conditionally replaces one word, then publishes the prior value.
+|`DMA` |32 |- |`dma [SrcL], SrcR` |DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue.
+|`HL.CASB` |48 |- |`hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASB atomically compares and conditionally replaces one byte, then publishes the prior value.
+|`HL.CASD` |48 |- |`hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value.
+|`HL.CASH` |48 |- |`hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASH atomically compares and conditionally replaces one halfword, then publishes the prior value.
+|`HL.CASW` |48 |- |`hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASW atomically compares and conditionally replaces one word, then publishes the prior value.
+|`LD.ADD` |32 |- |`ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.ADD atomically stores the width-sized modular sum and publishes the prior memory value.
+|`LD.AND` |32 |- |`ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.
+|`LD.OR` |32 |- |`ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.OR atomically stores the width-sized bitwise OR and publishes the prior memory value.
+|`LD.SMAX` |32 |- |`ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.SMAX atomically stores the width-sized signed maximum and publishes the prior memory value.
+|`LD.SMIN` |32 |- |`ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.SMIN atomically stores the width-sized signed minimum and publishes the prior memory value.
+|`LD.UMAX` |32 |- |`ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.
+|`LD.UMIN` |32 |- |`ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.
+|`LD.XOR` |32 |- |`ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.XOR atomically stores the width-sized bitwise XOR and publishes the prior memory value.
+|`LR.B` |32 |- |`lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.B loads one byte, establishes a 64-byte-line reservation, and publishes the prior value.
+|`LR.D` |32 |- |`lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.D loads one doubleword, establishes a 64-byte-line reservation, and publishes the prior value.
+|`LR.H` |32 |- |`lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.H loads one halfword, establishes a 64-byte-line reservation, and publishes the prior value.
+|`LR.W` |32 |- |`lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.W loads one word, establishes a 64-byte-line reservation, and publishes the prior value.
+|`LW.ADD` |32 |- |`lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.ADD atomically stores the modular 32-bit sum and publishes the prior memory value.
+|`LW.AND` |32 |- |`lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.
+|`LW.OR` |32 |- |`lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.OR atomically stores the width-sized bitwise OR and publishes the prior memory value.
+|`LW.SMAX` |32 |- |`lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.SMAX atomically stores the width-sized signed maximum and publishes the prior memory value.
+|`LW.SMIN` |32 |- |`lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.SMIN atomically stores the width-sized signed minimum and publishes the prior memory value.
+|`LW.UMAX` |32 |- |`lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.
+|`LW.UMIN` |32 |- |`lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.
+|`LW.XOR` |32 |- |`lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.XOR atomically stores the width-sized bitwise XOR and publishes the prior memory value.
+|`SC.B` |32 |- |`sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.B conditionally stores one byte when the local 64-byte-line reservation matches.
+|`SC.D` |32 |- |`sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches.
+|`SC.H` |32 |- |`sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.H conditionally stores one halfword when the local 64-byte-line reservation matches.
+|`SC.W` |32 |- |`sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.W conditionally stores one word when the local 64-byte-line reservation matches.
+|`SD.ADD` |32 |- |`sd.add<.{rl, f, rlf}> [SrcL], SrcR` |SD.ADD atomically replaces the aligned 64-bit memory value with its modular sum with SrcR; it does not publish the old value.
+|`SD.AND` |32 |- |`sd.and<.{rl, f, rlf}> [SrcL], SrcR` |SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND with SrcR; it does not publish the old value.
+|`SD.OR` |32 |- |`sd.or<.{rl, f, rlf}> [SrcL], SrcR` |SD.OR atomically replaces the aligned 64-bit memory value with its bitwise OR with SrcR; it does not publish the old value.
+|`SD.SMAX` |32 |- |`sd.smax<.{rl, f, rlf}> [SrcL], SrcR` |SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value.
+|`SD.SMIN` |32 |- |`sd.smin<.{rl, f, rlf}> [SrcL], SrcR` |SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value.
+|`SD.UMAX` |32 |- |`sd.umax<.{rl, f, rlf}> [SrcL], SrcR` |SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.
+|`SD.UMIN` |32 |- |`sd.umin<.{rl, f, rlf}> [SrcL], SrcR` |SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
+|`SD.XOR` |32 |- |`sd.xor<.{rl, f, rlf}> [SrcL], SrcR` |SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.
+|`SW.ADD` |32 |- |`sw.add<.{rl, f, rlf}> [SrcL], SrcR` |SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum with SrcR; it does not publish the old value.
+|`SW.AND` |32 |- |`sw.and<.{rl, f, rlf}> [SrcL], SrcR` |SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value.
+|`SW.OR` |32 |- |`sw.or<.{rl, f, rlf}> [SrcL], SrcR` |SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR with SrcR; it does not publish the old value.
+|`SW.SMAX` |32 |- |`sw.smax<.{rl, f, rlf}> [SrcL], SrcR` |SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value.
+|`SW.SMIN` |32 |- |`sw.smin<.{rl, f, rlf}> [SrcL], SrcR` |SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value.
+|`SW.UMAX` |32 |- |`sw.umax<.{rl, f, rlf}> [SrcL], SrcR` |SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.
+|`SW.UMIN` |32 |- |`sw.umin<.{rl, f, rlf}> [SrcL], SrcR` |SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
+|`SW.XOR` |32 |- |`sw.xor<.{rl, f, rlf}> [SrcL], SrcR` |SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.
+|`SWAPB` |32 |- |`swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPB atomically replaces one byte and publishes the prior value.
+|`SWAPD` |32 |- |`swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPD atomically replaces one doubleword and publishes the prior value.
+|`SWAPH` |32 |- |`swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPH atomically replaces one halfword and publishes the prior value.
+|`SWAPW` |32 |- |`swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPW atomically replaces one word and publishes the prior value.
+|===
+
+[[insnref-fsu]]
+=== FSU
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`FABS` |32 |- |`fabs.{T} SrcL, ->{t, u, Rd}` |FABS clears the sign bit of the selected FP64 or FP32 carrier, preserves every other carrier bit, and publishes no numeric flags.
+|`FADD` |32 |- |`fadd.{T} SrcL, SrcR, ->{t, u, Rd}` |FADD adds two selected FP64 or FP32 carriers through the active numeric profile and publishes its sticky flags.
+|`FCVT` |32 |- |`fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.
+|`FCVTA` |32 |- |`fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.
+|`FCVTM` |32 |- |`fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.
+|`FCVTN` |32 |- |`fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.
+|`FCVTP` |32 |- |`fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.
+|`FCVTZ` |32 |- |`fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.
+|`FDIV` |32 |- |`fdiv.{T} SrcL, SrcR, ->{t, u, Rd}` |FDIV divides the left selected carrier by the right through the active numeric profile and publishes its sticky flags.
+|`FEQ` |32 |- |`feq.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQ performs ordered quiet equality and returns canonical XLEN zero or one.
+|`FEQS` |32 |- |`feqs.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQS performs ordered signaling equality and returns canonical XLEN zero or one.
+|`FEXP` |32 |- |`fexp.{T} SrcL, ->{t, u, Rd}` |FEXP applies the active numeric profile exponential operation to the selected FP64 or FP32 carrier.
+|`FGE` |32 |- |`fge.{T} SrcL, SrcR, ->{t, u, Rd}` |FGE performs ordered quiet greater-than-or-equal comparison and returns canonical XLEN zero or one.
+|`FGES` |32 |- |`fges.{T} SrcL, SrcR, ->{t, u, Rd}` |FGES performs ordered signaling greater-than-or-equal comparison and returns canonical XLEN zero or one.
+|`FLT` |32 |- |`flt.{T} SrcL, SrcR, ->{t, u, Rd}` |FLT performs ordered quiet less-than comparison and returns canonical XLEN zero or one.
+|`FLTS` |32 |- |`flts.{T} SrcL, SrcR, ->{t, u, Rd}` |FLTS performs ordered signaling less-than comparison and returns canonical XLEN zero or one.
+|`FMADD` |32 |- |`fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FMADD computes one fused SrcL multiplied by SrcR plus SrcA operation through the active numeric profile.
+|`FMAX` |32 |- |`fmax.{T} SrcL, SrcR, ->{t, u, Rd}` |FMAX applies the architecture-owned ordered maximum, NaN, and signed-zero rules to selected FP64 or FP32 carriers.
+|`FMIN` |32 |- |`fmin.{T} SrcL, SrcR, ->{t, u, Rd}` |FMIN applies the architecture-owned ordered minimum, NaN, and signed-zero rules to selected FP64 or FP32 carriers.
+|`FMSUB` |32 |- |`fmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FMSUB computes one fused SrcL multiplied by SrcR minus SrcA operation through the active numeric profile.
+|`FMUL` |32 |- |`fmul.{T} SrcL, SrcR, ->{t, u, Rd}` |FMUL multiplies two selected FP64 or FP32 carriers through the active numeric profile and publishes its sticky flags.
+|`FNE` |32 |- |`fne.{T} SrcL, SrcR, ->{t, u, Rd}` |FNE performs ordered quiet inequality and returns canonical XLEN zero or one.
+|`FNES` |32 |- |`fnes.{T} SrcL, SrcR, ->{t, u, Rd}` |FNES performs ordered signaling inequality and returns canonical XLEN zero or one.
+|`FNMADD` |32 |- |`fnmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FNMADD computes the negation of one fused SrcL multiplied by SrcR plus SrcA operation through the active numeric profile.
+|`FNMSUB` |32 |- |`fnmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FNMSUB computes the negation of one fused SrcL multiplied by SrcR minus SrcA operation through the active numeric profile.
+|`FRECIP` |32 |- |`frecip.{T} SrcL, ->{t, u, Rd}` |FRECIP applies the active numeric profile reciprocal operation to the selected FP64 or FP32 carrier.
+|`FSQRT` |32 |- |`fsqrt.{T} SrcL, ->{t, u, Rd}` |FSQRT applies the active numeric profile square-root operation to the selected FP64 or FP32 carrier.
+|`FSUB` |32 |- |`fsub.{T} SrcL, SrcR, ->{t, u, Rd}` |FSUB subtracts the right selected carrier from the left through the active numeric profile and publishes its sticky flags.
+|`SCVTF` |32 |- |`scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+|`UCVTF` |32 |- |`ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+|===
+
+[[insnref-lda-pc-rel]]
+=== LDA/PC_REL
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.LB.PCR` |48 |- |`hl.lb.pcr [<symbol>], ->{t, u, Rd}` |HL.LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBU.PCR` |48 |- |`hl.lbu.pcr [<symbol>], ->{t, u, Rd}` |HL.LBU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LD.PCR` |48 |- |`hl.ld.pcr [<symbol>], ->{t, u, Rd}` |HL.LD.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LH.PCR` |48 |- |`hl.lh.pcr [<symbol>], ->{t, u, Rd}` |HL.LH.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHU.PCR` |48 |- |`hl.lhu.pcr [<symbol>], ->{t, u, Rd}` |HL.LHU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LW.PCR` |48 |- |`hl.lw.pcr [<symbol>], ->{t, u, Rd}` |HL.LW.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWU.PCR` |48 |- |`hl.lwu.pcr [<symbol>], ->{t, u, Rd}` |HL.LWU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|===
+
+[[insnref-lda-post-index]]
+=== LDA/POST_INDEX
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.LB.PO` |48 |- |`hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LB.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBI.PO` |48 |- |`hl.lbi.po [SrcL, simm], ->Dst0, Dst1` |HL.LBI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBU.PO` |48 |- |`hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBU.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBUI.PO` |48 |- |`hl.lbui.po [SrcL, simm], ->Dst0, Dst1` |HL.LBUI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LD.PO` |48 |- |`hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LD.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LDI.PO` |48 |- |`hl.ldi.po [SrcL, simm], ->Dst0, Dst1` |HL.LDI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LDI.UPO` |48 |- |`hl.ldi.upo [SrcL, simm], ->Dst0, Dst1` |HL.LDI.UPO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LH.PO` |48 |- |`hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LH.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHI.PO` |48 |- |`hl.lhi.po [SrcL, simm], ->Dst0, Dst1` |HL.LHI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHI.UPO` |48 |- |`hl.lhi.upo [SrcL, simm], ->Dst0, Dst1` |HL.LHI.UPO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHU.PO` |48 |- |`hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHU.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHUI.PO` |48 |- |`hl.lhui.po [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHUI.UPO` |48 |- |`hl.lhui.upo [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.UPO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LW.PO` |48 |- |`hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LW.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWI.PO` |48 |- |`hl.lwi.po [SrcL, simm], ->Dst0, Dst1` |HL.LWI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWI.UPO` |48 |- |`hl.lwi.upo [SrcL, simm], ->Dst0, Dst1` |HL.LWI.UPO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWU.PO` |48 |- |`hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWU.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWUI.PO` |48 |- |`hl.lwui.po [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWUI.UPO` |48 |- |`hl.lwui.upo [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.UPO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|===
+
+[[insnref-lda-pre-index]]
+=== LDA/PRE_INDEX
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.LB.PR` |48 |- |`hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LB.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBI.PR` |48 |- |`hl.lbi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LBI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBU.PR` |48 |- |`hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBU.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBUI.PR` |48 |- |`hl.lbui.pr [SrcL, simm], ->Dst0, Dst1` |HL.LBUI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LD.PR` |48 |- |`hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LD.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LDI.PR` |48 |- |`hl.ldi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LDI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LDI.UPR` |48 |- |`hl.ldi.upr [SrcL, simm], ->Dst0, Dst1` |HL.LDI.UPR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LH.PR` |48 |- |`hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LH.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHI.PR` |48 |- |`hl.lhi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LHI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHI.UPR` |48 |- |`hl.lhi.upr [SrcL, simm], ->Dst0, Dst1` |HL.LHI.UPR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHU.PR` |48 |- |`hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHU.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHUI.PR` |48 |- |`hl.lhui.pr [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHUI.UPR` |48 |- |`hl.lhui.upr [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.UPR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LW.PR` |48 |- |`hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LW.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWI.PR` |48 |- |`hl.lwi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LWI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWI.UPR` |48 |- |`hl.lwi.upr [SrcL, simm], ->Dst0, Dst1` |HL.LWI.UPR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWU.PR` |48 |- |`hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWU.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWUI.PR` |48 |- |`hl.lwui.pr [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWUI.UPR` |48 |- |`hl.lwui.upr [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.UPR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|===
+
+[[insnref-lda-long]]
+=== LDA/LONG
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.LBI` |48 |- |`hl.lbi [SrcL, simm], ->{t, u, Rd}` |HL.LBI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LBUI` |48 |- |`hl.lbui [SrcL, simm], ->{t, u, Rd}` |HL.LBUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
+|`HL.LDI` |48 |- |`hl.ldi [SrcL, simm], ->{t, u, Rd}` |HL.LDI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LDI.U` |48 |- |`hl.ldi.u [SrcL, simm], ->{t, u, Rd}` |HL.LDI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`HL.LHI` |48 |- |`hl.lhi [SrcL, simm], ->{t, u, Rd}` |HL.LHI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHI.U` |48 |- |`hl.lhi.u [SrcL, simm], ->{t, u, Rd}` |HL.LHI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHUI` |48 |- |`hl.lhui [SrcL, simm], ->{t, u, Rd}` |HL.LHUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LHUI.U` |48 |- |`hl.lhui.u [SrcL, simm], ->{t, u, Rd}` |HL.LHUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`HL.LWI` |48 |- |`hl.lwi [SrcL, simm], ->{t, u, Rd}` |HL.LWI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWI.U` |48 |- |`hl.lwi.u [SrcL, simm], ->{t, u, Rd}` |HL.LWI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWUI` |48 |- |`hl.lwui [SrcL, simm], ->{t, u, Rd}` |HL.LWUI snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`HL.LWUI.U` |48 |- |`hl.lwui.u [SrcL, simm], ->{t, u, Rd}` |HL.LWUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|===
+
+[[insnref-lda-pair]]
+=== LDA/PAIR
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.LBIP` |48 |- |`hl.lbip [SrcL, simm], ->Dst0, Dst1` |HL.LBIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values.
+|`HL.LBP` |48 |- |`hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values.
+|`HL.LBUIP` |48 |- |`hl.lbuip [SrcL, simm], ->Dst0, Dst1` |HL.LBUIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values.
+|`HL.LBUP` |48 |- |`hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values.
+|`HL.LDIP` |48 |- |`hl.ldip [SrcL, simm], ->Dst0, Dst1` |HL.LDIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 8-byte values.
+|`HL.LDIP.U` |48 |- |`hl.ldip.u [SrcL, simm], ->Dst0, Dst1` |HL.LDIP.U snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 8-byte values.
+|`HL.LDP` |48 |- |`hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LDP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 8-byte values.
+|`HL.LHIP` |48 |- |`hl.lhip [SrcL, simm], ->Dst0, Dst1` |HL.LHIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
+|`HL.LHIP.U` |48 |- |`hl.lhip.u [SrcL, simm], ->Dst0, Dst1` |HL.LHIP.U snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
+|`HL.LHP` |48 |- |`hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
+|`HL.LHUIP` |48 |- |`hl.lhuip [SrcL, simm], ->Dst0, Dst1` |HL.LHUIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
+|`HL.LHUIP.U` |48 |- |`hl.lhuip.u [SrcL, simm], ->Dst0, Dst1` |HL.LHUIP.U snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
+|`HL.LHUP` |48 |- |`hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
+|`HL.LWIP` |48 |- |`hl.lwip [SrcL, simm], ->Dst0, Dst1` |HL.LWIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
+|`HL.LWIP.U` |48 |- |`hl.lwip.u [SrcL, simm], ->Dst0, Dst1` |HL.LWIP.U snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
+|`HL.LWP` |48 |- |`hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
+|`HL.LWUIP` |48 |- |`hl.lwuip [SrcL, simm], ->Dst0, Dst1` |HL.LWUIP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
+|`HL.LWUIP.U` |48 |- |`hl.lwuip.u [SrcL, simm], ->Dst0, Dst1` |HL.LWUIP.U snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
+|`HL.LWUP` |48 |- |`hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
+|===
+
+[[insnref-lda]]
+=== LDA
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.PRF` |48 |- |`hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |HL.PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
+|`HL.PRF.A` |48 |- |`hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |HL.PRF.A snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address.
+|`HL.PRFI.U` |48 |- |`hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]` |HL.PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
+|`HL.PRFI.UA` |48 |- |`hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}` |HL.PRFI.UA snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address.
+|`LB.PCR` |32 |- |`lb.pcr [symbol], ->{t, u, Rd}` |LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little - endian 1 - byte value.
+|`LBU.PCR` |32 |- |`lbu.pcr [symbol], ->{t, u, Rd}` |LBU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little - endian 1 - byte value.
+|`LD.PCR` |32 |- |`ld.pcr [symbol], ->{t, u, Rd}` |LD.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`LH.PCR` |32 |- |`lh.pcr [symbol], ->{t, u, Rd}` |LH.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LHU.PCR` |32 |- |`lhu.pcr [symbol], ->{t, u, Rd}` |LHU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LW.PCR` |32 |- |`lw.pcr [symbol], ->{t, u, Rd}` |LW.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`LWU.PCR` |32 |- |`lwu.pcr [symbol], ->{t, u, Rd}` |LWU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|===
+
+[[insnref-general]]
+=== General
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.QMT` |48 |- |`hl.qmt[.{i,e,s,r,ie,is,ir,es,er,ies,ier}] SrcL[, SrcR when i], ->RegDst` |Queries, initializes, notifies, suspends, or restores one General Queue Management queue.
+|`HL.QPOP` |48 |- |`hl.qpop[.{e,r,er}] SrcL, ->RegDst0, RegDst1` |Atomically pops one 64-bit head entry from a General Queue Management queue.
+|`HL.QPUSH` |48 |- |`hl.qpush[.{h,e,r,he,hr,er,her}] SrcL, SrcR, ->RegDst` |Atomically pushes one 64-bit entry at the tail or head of a General Queue Management queue.
+|===
+
+[[insnref-sta-pc-rel]]
+=== STA/PC_REL
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.SB.PCR` |48 |- |`hl.sb.pcr SrcL, [<symbol>]` |HL.SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`HL.SD.PCR` |48 |- |`hl.sd.pcr SrcL, [<symbol>]` |HL.SD.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SH.PCR` |48 |- |`hl.sh.pcr SrcL, [<symbol>]` |HL.SH.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SW.PCR` |48 |- |`hl.sw.pcr SrcL, [<symbol>]` |HL.SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
+[[insnref-sta-post-index]]
+=== STA/POST_INDEX
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.SB.PO` |48 |- |`hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SB.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`HL.SBI.PO` |48 |- |`hl.sbi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SBI.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`HL.SD.PO` |48 |- |`hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` |HL.SD.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SD.UPO` |48 |- |`hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SD.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SDI.PO` |48 |- |`hl.sdi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SDI.UPO` |48 |- |`hl.sdi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SH.PO` |48 |- |`hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}` |HL.SH.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SH.UPO` |48 |- |`hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SH.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SHI.PO` |48 |- |`hl.shi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SHI.UPO` |48 |- |`hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SW.PO` |48 |- |`hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}` |HL.SW.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SW.UPO` |48 |- |`hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SW.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SWI.PO` |48 |- |`hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SWI.UPO` |48 |- |`hl.swi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
+[[insnref-sta-pre-index]]
+=== STA/PRE_INDEX
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.SB.PR` |48 |- |`hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SB.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`HL.SBI.PR` |48 |- |`hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SBI.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`HL.SD.PR` |48 |- |`hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` |HL.SD.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SD.UPR` |48 |- |`hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SD.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SDI.PR` |48 |- |`hl.sdi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SDI.UPR` |48 |- |`hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SH.PR` |48 |- |`hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}` |HL.SH.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SH.UPR` |48 |- |`hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SH.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SHI.PR` |48 |- |`hl.shi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SHI.UPR` |48 |- |`hl.shi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SW.PR` |48 |- |`hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}` |HL.SW.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SW.UPR` |48 |- |`hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SW.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SWI.PR` |48 |- |`hl.swi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SWI.UPR` |48 |- |`hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
+[[insnref-sta-long]]
+=== STA/LONG
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.SBI` |48 |- |`hl.sbi SrcD, [SrcR, simm]` |HL.SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`HL.SDI` |48 |- |`hl.sdi SrcD, [SrcR, simm]` |HL.SDI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SDI.U` |48 |- |`hl.sdi.u SrcD, [SrcR, simm]` |HL.SDI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`HL.SHI` |48 |- |`hl.shi SrcD, [SrcR, simm]` |HL.SHI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SHI.U` |48 |- |`hl.shi.u SrcD, [SrcR, simm]` |HL.SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`HL.SWI` |48 |- |`hl.swi SrcD, [SrcR, simm]` |HL.SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`HL.SWI.U` |48 |- |`hl.swi.u SrcD, [SrcR, simm]` |HL.SWI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
+[[insnref-sta-pair]]
+=== STA/PAIR
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`HL.SBIP` |48 |- |`hl.sbip SrcD, SrcD1, [SrcR, simm]` |HL.SBIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 1-byte values.
+|`HL.SBP` |48 |- |`hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SBP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 1-byte values.
+|`HL.SDIP` |48 |- |`hl.sdip SrcD, SrcD1, [SrcR, simm]` |HL.SDIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values.
+|`HL.SDIP.U` |48 |- |`hl.sdip.u SrcD, SrcD1, [SrcR, simm]` |HL.SDIP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values.
+|`HL.SDP` |48 |- |`hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` |HL.SDP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values.
+|`HL.SDP.U` |48 |- |`hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SDP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 8-byte values.
+|`HL.SHIP` |48 |- |`hl.ship SrcD, SrcD1, [SrcR, simm]` |HL.SHIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
+|`HL.SHIP.U` |48 |- |`hl.ship.u SrcD, SrcD1, [SrcR, simm]` |HL.SHIP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
+|`HL.SHP` |48 |- |`hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` |HL.SHP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
+|`HL.SHP.U` |48 |- |`hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SHP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
+|`HL.SWIP` |48 |- |`hl.swip SrcD, SrcD1, [SrcR, simm]` |HL.SWIP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 4-byte values.
+|`HL.SWIP.U` |48 |- |`hl.swip.u SrcD, SrcD1, [SrcR, simm]` |HL.SWIP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 4-byte values.
+|`HL.SWP` |48 |- |`hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |HL.SWP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 4-byte values.
+|`HL.SWP.U` |48 |- |`hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SWP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 4-byte values.
+|===
+
+[[insnref-lda-base-reg]]
+=== LDA/BASE_REG
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`LB` |32 |- |`lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LB snapshots its scalar sources, forms its encoded address, and loads one aligned little - endian 1 - byte value.
+|`LBU` |32 |- |`lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LBU snapshots its scalar sources, forms its encoded address, and loads one aligned little - endian 1 - byte value.
+|`LD` |32 |- |`ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LD snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`LH` |32 |- |`lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LH snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LHU` |32 |- |`lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LHU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LW` |32 |- |`lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LW snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`LWU` |32 |- |`lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LWU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`PRF` |32 |- |`prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
+|===
+
+[[insnref-lda-unscaled]]
+=== LDA/UNSCALED
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`LDI.U` |32 |- |`ldi.u [SrcL, simm], ->{t, u, Rd}` |LDI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
+|`LHI.U` |32 |- |`lhi.u [SrcL, simm], ->{t, u, Rd}` |LHI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LHUI.U` |32 |- |`lhui.u [SrcL, simm], ->{t, u, Rd}` |LHUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 2-byte value.
+|`LWI.U` |32 |- |`lwi.u [SrcL, simm], ->{t, u, Rd}` |LWI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`LWUI.U` |32 |- |`lwui.u [SrcL, simm], ->{t, u, Rd}` |LWUI.U snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value.
+|`PRFI.U` |32 |- |`prfi.u [SrcL, simm]` |PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
+|===
+
+[[insnref-sta-base-reg]]
+=== STA/BASE_REG
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`SB` |32 |- |`sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SB snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`SD` |32 |- |`sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` |SD snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`SD.U` |32 |- |`sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SD.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`SH` |32 |- |`sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` |SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`SH.U` |32 |- |`sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SH.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`SW` |32 |- |`sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |SW snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|`SW.U` |32 |- |`sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SW.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
+[[insnref-sta]]
+=== STA
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`SB.PCR` |32 |- |`sb.pcr SrcL, [symbol]` |SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
+|`SD.PCR` |32 |- |`sd.pcr SrcL, [symbol]` |SD.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
+|`SH.PCR` |32 |- |`sh.pcr SrcL, [symbol]` |SH.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
+|`SW.PCR` |32 |- |`sw.pcr SrcL, [symbol]` |SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
+|===
+
 [[insnref-arithmetic-operation]]
 === Arithmetic Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.ADD` |16 |- |`c.add srcL, srcR, ->t` |C.ADD - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`C.AND` |16 |- |`c.and srcL, srcR, ->t` |C.AND - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`C.OR` |16 |- |`c.or srcL, srcR, ->t` |C.OR - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`C.SUB` |16 |- |`c.sub srcL, srcR, ->t` |C.SUB - Compute this mnemonic's binary scalar operation and write the selected destination.
 |`V.ADD` |64 |- |`v.add SrcL, SrcR<.neg><<<shamt>, ->Dst` |-
 |`V.ADDI` |64 |- |`v.addi SrcL, uimm, ->Dst` |-
 |`V.AND` |64 |- |`v.and SrcL, SrcR<.not><<<shamt>, ->Dst` |-
@@ -343,68 +885,155 @@
 |`V.XORI` |64 |- |`v.xori SrcL, simm, ->Dst` |-
 |===
 
-[[insnref-arithmetic]]
-=== Arithmetic
+[[insnref-bit-manipulation]]
+=== Bit Manipulation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.ADDI` |16 |- |`c.addi srcL, simm, ->t` |C.ADDI - Compute this mnemonic's binary scalar operation and write the selected destination.
+|`V.BCNT` |64 |- |`v.bcnt SrcL, Nminus1, M, ->Dst` |-
+|`V.BIC` |64 |- |`v.bic SrcL, Nminus1, M, ->Dst` |-
+|`V.BIS` |64 |- |`v.bis SrcL, Nminus1, M, ->Dst` |-
+|`V.BXS` |64 |- |`v.bxs SrcL, Nminus1, M, ->Dst` |-
+|`V.BXU` |64 |- |`v.bxu SrcL, Nminus1, M, ->Dst` |-
+|`V.CLZ` |64 |- |`v.clz SrcL, Nminus1, M, ->Dst` |-
+|`V.CTZ` |64 |- |`v.ctz SrcL, Nminus1, M, ->Dst` |-
+|`V.REV` |64 |- |`v.rev SrcL, M, N, ->Dst` |-
 |===
 
-[[insnref-bundle-dimension]]
-=== Bundle Dimension
+[[insnref-compare-instruction]]
+=== Compare Instruction
 
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`C.B.DIMI` |16 |- |`C.B.DIMI imm, ->{LB0, LB1, LB2}` |Writes one of the three bundle-local dimension registers.
-|===
-
-[[insnref-c-bstart]]
-=== C.BSTART
-
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.BSTART.FP` |16 |- |`C.BSTART.FP BrType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`C.BSTART.MPAR` |16 |- |`C.BSTART.MPAR FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`C.BSTART.MSEQ` |16 |- |`C.BSTART.MSEQ FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`C.BSTART.STD` |16 |- |`C.BSTART.STD BrType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`C.BSTART.SYS` |16 |- |`C.BSTART.SYS FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`C.BSTART.VPAR` |16 |- |`C.BSTART.VPAR FALL` |-
-|`C.BSTART.VSEQ` |16 |- |`C.BSTART.VSEQ FALL` |-
+|`V.CMP.AND` |64 |- |`v.cmp.and SrcL, SrcR, ->Dst` |-
+|`V.CMP.ANDI` |64 |- |`v.cmp.andi SrcL, simm, ->Dst` |-
+|`V.CMP.EQ` |64 |- |`v.cmp.eq SrcL, SrcR, ->Dst` |-
+|`V.CMP.EQI` |64 |- |`v.cmp.eqi SrcL, simm, ->Dst` |-
+|`V.CMP.GE` |64 |- |`v.cmp.ge SrcL, SrcR, ->Dst` |-
+|`V.CMP.GEI` |64 |- |`v.cmp.gei SrcL, simm, ->Dst` |-
+|`V.CMP.GEU` |64 |- |`v.cmp.geu SrcL, SrcR, ->Dst` |-
+|`V.CMP.GEUI` |64 |- |`v.cmp.geui SrcL, uimm, ->Dst` |-
+|`V.CMP.LT` |64 |- |`v.cmp.lt SrcL, SrcR, ->Dst` |-
+|`V.CMP.LTI` |64 |- |`v.cmp.lti SrcL, simm, ->Dst` |-
+|`V.CMP.LTU` |64 |- |`v.cmp.ltu SrcL, SrcR, ->Dst` |-
+|`V.CMP.LTUI` |64 |- |`v.cmp.ltui SrcL, uimm, ->Dst` |-
+|`V.CMP.NE` |64 |- |`v.cmp.ne SrcL, SrcR, ->Dst` |-
+|`V.CMP.NEI` |64 |- |`v.cmp.nei SrcL, simm, ->Dst` |-
+|`V.CMP.OR` |64 |- |`v.cmp.or SrcL, SrcR, ->Dst` |-
+|`V.CMP.ORI` |64 |- |`v.cmp.ori SrcL, simm, ->Dst` |-
 |===
 
-[[insnref-c-tinst]]
-=== C.TINST
+[[insnref-three-source-integer]]
+=== Three Source Integer
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.CMP.EQI` |16 |- |`c.cmp.eqi t#1, simm, ->t` |C.CMP.EQI - Compare scalar operands and write the encoded boolean result.
-|`C.CMP.NEI` |16 |- |`c.cmp.nei t#1, simm, ->t` |C.CMP.NEI - Compare scalar operands and write the encoded boolean result.
-|`C.EBREAK` |16 |- |`c.break imm` |C.EBREAK - Raise the software breakpoint exception.
-|`C.SLLI` |16 |- |`c.slli t#1, uimm, ->t` |C.SLLI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`C.SRLI` |16 |- |`c.srli t#1, uimm, ->t` |C.SRLI - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`C.SSRGET` |16 |- |`c.ssrget SSR-ID, ->t` |C.SSRGET - Read the compressed-form system register.
+|`V.CSEL` |64 |- |`v.csel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
+|`V.PSEL` |64 |- |`v.psel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
+|===
+
+[[insnref-division]]
+=== Division
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.DIV` |64 |- |`v.div SrcL, SrcR, ->Dst` |-
+|`V.REM` |64 |- |`v.rem SrcL, SrcR, ->Dst` |-
+|===
+
+[[insnref-floating-point-arithmetic]]
+=== Floating Point Arithmetic
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.FABS` |64 |- |`v.fabs SrcL, ->Dst` |-
+|`V.FCLASS` |64 |- |`v.fclass SrcL, ->Dst` |-
+|`V.FEXP` |64 |- |`v.fexp SrcL, ->Dst` |-
+|`V.FRECIP` |64 |- |`v.frecip SrcL, ->Dst` |-
+|`V.FSQRT` |64 |- |`v.fsqrt SrcL, ->Dst` |-
+|===
+
+[[insnref-three-source-floating-point]]
+=== Three-Source Floating Point
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.FADD` |64 |- |`v.fadd SrcL, SrcR, ->Dst` |-
+|`V.FDIV` |64 |- |`v.fdiv SrcL, SrcR, ->Dst` |-
+|`V.FMADD` |64 |- |`v.fmadd SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FMSUB` |64 |- |`v.fmsub SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FMUL` |64 |- |`v.fmul SrcL, SrcR, ->Dst` |-
+|`V.FNMADD` |64 |- |`v.fnmadd SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FNMSUB` |64 |- |`v.fnmsub SrcL, SrcR, SrcA, ->Dst` |-
+|`V.FSUB` |64 |- |`v.fsub SrcL, SrcR, ->Dst` |-
+|===
+
+[[insnref-format-convert]]
+=== Format Convert
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.FCVT` |64 |- |`v.fcvt.{st2dt} SrcL, ->Dst` |-
+|`V.FCVTI` |64 |- |`v.fcvti.{st2dt} SrcL, ->Dst` |-
+|`V.ICVT` |64 |- |`v.icvt.{st2dt} SrcL, ->Dst` |-
+|`V.ICVTF` |64 |- |`v.icvtf.{st2dt} SrcL, ->Dst` |-
+|===
+
+[[insnref-two-source-floating-point]]
+=== Two-Source Floating Point
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.FEQ` |64 |- |`v.feq SrcL, SrcR, ->Dst` |-
+|`V.FEQS` |64 |- |`v.feqs SrcL, SrcR, ->Dst` |-
+|`V.FGE` |64 |- |`v.fge SrcL, SrcR, ->Dst` |-
+|`V.FGES` |64 |- |`v.fges SrcL, SrcR, ->Dst` |-
+|`V.FLT` |64 |- |`v.flt SrcL, SrcR, ->Dst` |-
+|`V.FLTS` |64 |- |`v.flts SrcL, SrcR, ->Dst` |-
+|`V.FMAX` |64 |- |`v.fmax SrcL, SrcR, ->Dst` |-
+|`V.FMIN` |64 |- |`v.fmin SrcL, SrcR, ->Dst` |-
+|`V.FNE` |64 |- |`v.fne SrcL, SrcR, ->Dst` |-
+|`V.FNES` |64 |- |`v.fnes SrcL, SrcR, ->Dst` |-
+|`V.MAX` |64 |- |`v.max SrcL, SrcR, ->Dst` |-
+|`V.MIN` |64 |- |`v.min SrcL, SrcR, ->Dst` |-
+|===
+
+[[insnref-load-register-offset]]
+=== Load Register Offset
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.LB` |64 |- |`v.lb<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LB.BRG` |64 |- |`v.lb.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LBU` |64 |- |`v.lbu<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LBU.BRG` |64 |- |`v.lbu.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
+|`V.LD` |64 |- |`v.ld<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst` |-
+|`V.LD.BRG` |64 |- |`v.ld.brg<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst` |-
+|`V.LH` |64 |- |`v.lh<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LH.BRG` |64 |- |`v.lh.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LHU` |64 |- |`v.lhu<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LHU.BRG` |64 |- |`v.lhu.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
+|`V.LW` |64 |- |`v.lw<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
+|`V.LW.BRG` |64 |- |`v.lw.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
+|`V.LWU` |64 |- |`v.lwu<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
+|`V.LWU.BRG` |64 |- |`v.lwu.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
 |===
 
 [[insnref-load-immediate-offset]]
 === Load Immediate Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`C.LDI` |16 |- |`c.ldi [srcL, simm], ->t` |C.LDI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`C.LWI` |16 |- |`c.lwi [srcL, simm], ->t` |C.LWI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LBI` |32 |- |`lbi [SrcL, simm], ->{t, u, Rd}` |LBI - Load scalar data using this mnemonic's width, signedness, and address - update form.
-|`LBUI` |32 |- |`lbui [SrcL, simm], ->{t, u, Rd}` |LBUI - Load scalar data using this mnemonic's width, signedness, and address - update form.
-|`LDI` |32 |- |`ldi [SrcL, simm], ->{t, u, Rd}` |LDI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LHI` |32 |- |`lhi [SrcL, simm], ->{t, u, Rd}` |LHI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LHUI` |32 |- |`lhui [SrcL, simm], ->{t, u, Rd}` |LHUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LWI` |32 |- |`lwi [SrcL, simm], ->{t, u, Rd}` |LWI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LWUI` |32 |- |`lwui [SrcL, simm], ->{t, u, Rd}` |LWUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
 |`V.LBI` |64 |- |`v.lbi<.local> [SrcL, <lc0>, simm], ->Dst` |-
 |`V.LBI.BRG` |64 |- |`v.lbi.brg<.local> [SrcL, <lc0>, simm], ->Dst` |-
 |`V.LBUI` |64 |- |`v.lbui<.local> [SrcL, <lc0>, simm], ->Dst` |-
@@ -421,137 +1050,12 @@
 |`V.LWUI.BRG` |64 |- |`v.lwui.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
 |===
 
-[[insnref-move]]
-=== Move
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`C.MOVI` |16 |- |`c.movi simm, ->{t, u, Rd}` |C.MOVI - Move the scalar source to the selected destination.
-|`C.MOVR` |16 |- |`c.movr SrcL, ->{t, u, Rd}` |C.MOVR - Move the scalar source to the selected destination.
-|`C.SETRET` |16 |- |`c.setret uimm, ->Ra` |C.SETRET - Write the architectural return address.
-|===
-
-[[insnref-store-immediate-offset]]
-=== Store Immediate Offset
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`C.SDI` |16 |- |`c.sdi t#1, [srcL, simm]` |C.SDI - Store scalar data using this mnemonic's width and address-update form.
-|`C.SWI` |16 |- |`c.swi t#1, [srcL, simm]` |C.SWI - Store scalar data using this mnemonic's width and address-update form.
-|`SBI` |32 |- |`sbi SrcL, [SrcR, simm]` |SBI - Store scalar data using this mnemonic's width and address-update form.
-|`SDI` |32 |- |`sdi SrcL, [SrcR, simm]` |SDI - Store scalar data using this mnemonic's width and address-update form.
-|`SDI.U` |32 |- |`sdi.u SrcL, [SrcR, simm]` |SDI.U - Store scalar data using this mnemonic's width and address-update form.
-|`SHI` |32 |- |`shi SrcL, [SrcR, simm]` |SHI - Store scalar data using this mnemonic's width and address-update form.
-|`SHI.U` |32 |- |`shi.u SrcL, [SrcR, simm]` |SHI.U - Store scalar data using this mnemonic's width and address-update form.
-|`SWI` |32 |- |`swi SrcL, [SrcR, simm]` |SWI - Store scalar data using this mnemonic's width and address-update form.
-|`SWI.U` |32 |- |`swi.u SrcL, [SrcR, simm]` |SWI.U - Store scalar data using this mnemonic's width and address-update form.
-|===
-
-[[insnref-set-commit-argument]]
-=== Set Commit Argument
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`C.SETC.EQ` |16 |- |`c.setc.eq srcL, srcR` |C.SETC.EQ - Compare scalar operands and update the bundle commit condition.
-|`C.SETC.NE` |16 |- |`c.setc.ne srcL, srcR` |C.SETC.NE - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.ANDI` |48 |- |`hl.setc.andi SrcL, simm` |HL.SETC.ANDI - Combine scalar comparison results and update the bundle commit condition.
-|`HL.SETC.EQI` |48 |- |`hl.setc.eqi SrcL, simm` |HL.SETC.EQI - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.GEI` |48 |- |`hl.setc.gei SrcL, simm` |HL.SETC.GEI - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.GEUI` |48 |- |`hl.setc.geui SrcL, uimm` |HL.SETC.GEUI - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.LTI` |48 |- |`hl.setc.lti SrcL, simm` |HL.SETC.LTI - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.LTUI` |48 |- |`hl.setc.ltui SrcL, uimm` |HL.SETC.LTUI - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.NEI` |48 |- |`hl.setc.nei SrcL, simm` |HL.SETC.NEI - Compare scalar operands and update the bundle commit condition.
-|`HL.SETC.ORI` |48 |- |`hl.setc.ori SrcL, simm` |HL.SETC.ORI - Combine scalar comparison results and update the bundle commit condition.
-|`SETC.AND` |32 |- |`setc.and SrcL, SrcR<.sw, .uw, .not>` |SETC.AND - Combine scalar comparison results and update the bundle commit condition.
-|`SETC.ANDI` |32 |- |`setc.andi SrcL, simm` |SETC.ANDI - Combine scalar comparison results and update the bundle commit condition.
-|`SETC.EQ` |32 |- |`setc.eq SrcL, SrcR<{.sw, .uw}>` |SETC.EQ - Compare scalar operands and update the bundle commit condition.
-|`SETC.EQI` |32 |- |`setc.eqi SrcL, simm` |SETC.EQI - Compare scalar operands and update the bundle commit condition.
-|`SETC.GE` |32 |- |`setc.ge SrcL, SrcR<{.sw, .uw}>` |SETC.GE - Compare scalar operands and update the bundle commit condition.
-|`SETC.GEI` |32 |- |`setc.gei SrcL, simm` |SETC.GEI - Compare scalar operands and update the bundle commit condition.
-|`SETC.GEU` |32 |- |`setc.geu SrcL, SrcR<{.sw, .uw}>` |SETC.GEU - Compare scalar operands and update the bundle commit condition.
-|`SETC.GEUI` |32 |- |`setc.geui SrcL, uimm` |SETC.GEUI - Compare scalar operands and update the bundle commit condition.
-|`SETC.LT` |32 |- |`setc.lt SrcL, SrcR<{.sw, .uw}>` |SETC.LT - Compare scalar operands and update the bundle commit condition.
-|`SETC.LTI` |32 |- |`setc.lti SrcL, simm` |SETC.LTI - Compare scalar operands and update the bundle commit condition.
-|`SETC.LTU` |32 |- |`setc.ltu SrcL, SrcR<{.sw, .uw}>` |SETC.LTU - Compare scalar operands and update the bundle commit condition.
-|`SETC.LTUI` |32 |- |`setc.ltui SrcL, uimm` |SETC.LTUI - Compare scalar operands and update the bundle commit condition.
-|`SETC.NE` |32 |- |`setc.ne SrcL, SrcR<{.sw, .uw}>` |SETC.NE - Compare scalar operands and update the bundle commit condition.
-|`SETC.NEI` |32 |- |`setc.nei SrcL, simm` |SETC.NEI - Compare scalar operands and update the bundle commit condition.
-|`SETC.OR` |32 |- |`setc.or SrcL, SrcR<.sw, .uw, .not>` |SETC.OR - Combine scalar comparison results and update the bundle commit condition.
-|`SETC.ORI` |32 |- |`setc.ori SrcL, simm` |SETC.ORI - Combine scalar comparison results and update the bundle commit condition.
-|===
-
-[[insnref-c-unary]]
-=== C.UNARY
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`C.SETC.TGT` |16 |- |`c.setc.tgt srcL` |C.SETC.TGT - Write the bundle commit target.
-|`C.SEXT.B` |16 |- |`c.sext.b srcL, ->t` |C.SEXT.B - Sign-extend or zero-extend the selected scalar subword.
-|`C.SEXT.H` |16 |- |`c.sext.h srcL, ->t` |C.SEXT.H - Sign-extend or zero-extend the selected scalar subword.
-|`C.SEXT.W` |16 |- |`c.sext.w srcL, ->t` |C.SEXT.W - Sign-extend or zero-extend the selected scalar subword.
-|`C.ZEXT.B` |16 |- |`c.zext.b srcL, ->t` |C.ZEXT.B - Sign-extend or zero-extend the selected scalar subword.
-|`C.ZEXT.H` |16 |- |`c.zext.h srcL, ->t` |C.ZEXT.H - Sign-extend or zero-extend the selected scalar subword.
-|`C.ZEXT.W` |16 |- |`c.zext.w srcL, ->t` |C.ZEXT.W - Sign-extend or zero-extend the selected scalar subword.
-|===
-
 [[insnref-atomic-operation]]
 === Atomic Operation
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`CASB` |32 |- |`casb<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASB - Atomically compare the scalar memory value and conditionally store the replacement.
-|`CASD` |32 |- |`casd<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASD - Atomically compare the scalar memory value and conditionally store the replacement.
-|`CASH` |32 |- |`cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASH - Atomically compare the scalar memory value and conditionally store the replacement.
-|`CASW` |32 |- |`casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASW - Atomically compare the scalar memory value and conditionally store the replacement.
-|`LD.ADD` |32 |- |`ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.AND` |32 |- |`ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.OR` |32 |- |`ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.SMAX` |32 |- |`ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.SMIN` |32 |- |`ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.UMAX` |32 |- |`ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.UMIN` |32 |- |`ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LD.XOR` |32 |- |`ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LD.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LR.B` |32 |- |`lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.B - Load the scalar memory value and establish a matching reservation.
-|`LR.D` |32 |- |`lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.D - Load the scalar memory value and establish a matching reservation.
-|`LR.H` |32 |- |`lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.H - Load the scalar memory value and establish a matching reservation.
-|`LR.W` |32 |- |`lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}` |LR.W - Load the scalar memory value and establish a matching reservation.
-|`LW.ADD` |32 |- |`lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.AND` |32 |- |`lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.OR` |32 |- |`lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.SMAX` |32 |- |`lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.SMIN` |32 |- |`lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.UMAX` |32 |- |`lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.UMIN` |32 |- |`lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`LW.XOR` |32 |- |`lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SC.B` |32 |- |`sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.B - Conditionally store the scalar value when the matching reservation remains valid.
-|`SC.D` |32 |- |`sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.D - Conditionally store the scalar value when the matching reservation remains valid.
-|`SC.H` |32 |- |`sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.H - Conditionally store the scalar value when the matching reservation remains valid.
-|`SC.W` |32 |- |`sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.W - Conditionally store the scalar value when the matching reservation remains valid.
-|`SD.ADD` |32 |- |`sd.add<.{rl, f, rlf}> [SrcL], SrcR` |SD.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.AND` |32 |- |`sd.and<.{rl, f, rlf}> [SrcL], SrcR` |SD.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.OR` |32 |- |`sd.or<.{rl, f, rlf}> [SrcL], SrcR` |SD.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.SMAX` |32 |- |`sd.smax<.{rl, f, rlf}> [SrcL], SrcR` |SD.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.SMIN` |32 |- |`sd.smin<.{rl, f, rlf}> [SrcL], SrcR` |SD.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.UMAX` |32 |- |`sd.umax<.{rl, f, rlf}> [SrcL], SrcR` |SD.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.UMIN` |32 |- |`sd.umin<.{rl, f, rlf}> [SrcL], SrcR` |SD.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SD.XOR` |32 |- |`sd.xor<.{rl, f, rlf}> [SrcL], SrcR` |SD.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.ADD` |32 |- |`sw.add<.{rl, f, rlf}> [SrcL], SrcR` |SW.ADD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.AND` |32 |- |`sw.and<.{rl, f, rlf}> [SrcL], SrcR` |SW.AND - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.OR` |32 |- |`sw.or<.{rl, f, rlf}> [SrcL], SrcR` |SW.OR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.SMAX` |32 |- |`sw.smax<.{rl, f, rlf}> [SrcL], SrcR` |SW.SMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.SMIN` |32 |- |`sw.smin<.{rl, f, rlf}> [SrcL], SrcR` |SW.SMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.UMAX` |32 |- |`sw.umax<.{rl, f, rlf}> [SrcL], SrcR` |SW.UMAX - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.UMIN` |32 |- |`sw.umin<.{rl, f, rlf}> [SrcL], SrcR` |SW.UMIN - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SW.XOR` |32 |- |`sw.xor<.{rl, f, rlf}> [SrcL], SrcR` |SW.XOR - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SWAPB` |32 |- |`swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPB - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SWAPD` |32 |- |`swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPD - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SWAPH` |32 |- |`swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPH - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
-|`SWAPW` |32 |- |`swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |SWAPW - Atomically read, apply this mnemonic's named operation, and write the scalar memory location.
 |`V.LD.ADD` |64 |- |`v.ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
 |`V.LD.AND` |64 |- |`v.ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
 |`V.LD.MAX` |64 |- |`v.ld.max<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, ->Dst` |-
@@ -578,535 +1082,12 @@
 |`V.SW.XOR` |64 |- |`v.sw.xor<.{rl, f, rd, rlf, rdf, rlrd, rlrdf}> [SrcL], SrcR` |-
 |===
 
-[[insnref-compare-instruction]]
-=== Compare Instruction
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`CMP.AND` |32 |- |`cmp.and SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` |CMP.AND - Combine scalar comparison results with the encoded logical operation.
-|`CMP.ANDI` |32 |- |`cmp.andi SrcL, simm, ->{t, u, Rd}` |CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
-|`CMP.EQ` |32 |- |`cmp.eq SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.EQ - Compare scalar operands and write the encoded boolean result.
-|`CMP.EQI` |32 |- |`cmp.eqi SrcL, simm, ->{t, u, Rd}` |CMP.EQI - Compare scalar operands and write the encoded boolean result.
-|`CMP.GE` |32 |- |`cmp.ge SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.GE - Compare scalar operands and write the encoded boolean result.
-|`CMP.GEI` |32 |- |`cmp.gei SrcL, simm, ->{t, u, Rd}` |CMP.GEI - Compare scalar operands and write the encoded boolean result.
-|`CMP.GEU` |32 |- |`cmp.geu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.GEU - Compare scalar operands and write the encoded boolean result.
-|`CMP.GEUI` |32 |- |`cmp.geui SrcL, uimm, ->{t, u, Rd}` |CMP.GEUI - Compare scalar operands and write the encoded boolean result.
-|`CMP.LT` |32 |- |`cmp.lt SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.LT - Compare scalar operands and write the encoded boolean result.
-|`CMP.LTI` |32 |- |`cmp.lti SrcL, simm, ->{t, u, Rd}` |CMP.LTI - Compare scalar operands and write the encoded boolean result.
-|`CMP.LTU` |32 |- |`cmp.ltu SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.LTU - Compare scalar operands and write the encoded boolean result.
-|`CMP.LTUI` |32 |- |`cmp.ltui SrcL, uimm, ->{t, u, Rd}` |CMP.LTUI - Compare scalar operands and write the encoded boolean result.
-|`CMP.NE` |32 |- |`cmp.ne SrcL, SrcR<{.sw, .uw}>, ->{t, u, Rd}` |CMP.NE - Compare scalar operands and write the encoded boolean result.
-|`CMP.NEI` |32 |- |`cmp.nei SrcL, simm, ->{t, u, Rd}` |CMP.NEI - Compare scalar operands and write the encoded boolean result.
-|`CMP.OR` |32 |- |`cmp.or SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` |CMP.OR - Combine scalar comparison results with the encoded logical operation.
-|`CMP.ORI` |32 |- |`cmp.ori SrcL, simm, ->{t, u, Rd}` |CMP.ORI - Combine scalar comparison results with the encoded logical operation.
-|`HL.CMP.ANDI` |48 |- |`hl.cmp.andi SrcL, simm, ->{t, u, Rd}` |HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
-|`HL.CMP.EQI` |48 |- |`hl.cmp.eqi SrcL, simm, ->{t, u, Rd}` |HL.CMP.EQI - Compare scalar operands and write the encoded boolean result.
-|`HL.CMP.GEI` |48 |- |`hl.cmp.gei SrcL, simm, ->{t, u, Rd}` |HL.CMP.GEI - Compare scalar operands and write the encoded boolean result.
-|`HL.CMP.GEUI` |48 |- |`hl.cmp.geui SrcL, uimm, ->{t, u, Rd}` |HL.CMP.GEUI - Compare scalar operands and write the encoded boolean result.
-|`HL.CMP.LTI` |48 |- |`hl.cmp.lti SrcL, simm, ->{t, u, Rd}` |HL.CMP.LTI - Compare scalar operands and write the encoded boolean result.
-|`HL.CMP.LTUI` |48 |- |`hl.cmp.ltui SrcL, uimm, ->{t, u, Rd}` |HL.CMP.LTUI - Compare scalar operands and write the encoded boolean result.
-|`HL.CMP.NEI` |48 |- |`hl.cmp.nei SrcL, simm, ->{t, u, Rd}` |HL.CMP.NEI - Compare scalar operands and write the encoded boolean result.
-|`HL.CMP.ORI` |48 |- |`hl.cmp.ori SrcL, simm, ->{t, u, Rd}` |HL.CMP.ORI - Combine scalar comparison results with the encoded logical operation.
-|`V.CMP.AND` |64 |- |`v.cmp.and SrcL, SrcR, ->Dst` |-
-|`V.CMP.ANDI` |64 |- |`v.cmp.andi SrcL, simm, ->Dst` |-
-|`V.CMP.EQ` |64 |- |`v.cmp.eq SrcL, SrcR, ->Dst` |-
-|`V.CMP.EQI` |64 |- |`v.cmp.eqi SrcL, simm, ->Dst` |-
-|`V.CMP.GE` |64 |- |`v.cmp.ge SrcL, SrcR, ->Dst` |-
-|`V.CMP.GEI` |64 |- |`v.cmp.gei SrcL, simm, ->Dst` |-
-|`V.CMP.GEU` |64 |- |`v.cmp.geu SrcL, SrcR, ->Dst` |-
-|`V.CMP.GEUI` |64 |- |`v.cmp.geui SrcL, uimm, ->Dst` |-
-|`V.CMP.LT` |64 |- |`v.cmp.lt SrcL, SrcR, ->Dst` |-
-|`V.CMP.LTI` |64 |- |`v.cmp.lti SrcL, simm, ->Dst` |-
-|`V.CMP.LTU` |64 |- |`v.cmp.ltu SrcL, SrcR, ->Dst` |-
-|`V.CMP.LTUI` |64 |- |`v.cmp.ltui SrcL, uimm, ->Dst` |-
-|`V.CMP.NE` |64 |- |`v.cmp.ne SrcL, SrcR, ->Dst` |-
-|`V.CMP.NEI` |64 |- |`v.cmp.nei SrcL, simm, ->Dst` |-
-|`V.CMP.OR` |64 |- |`v.cmp.or SrcL, SrcR, ->Dst` |-
-|`V.CMP.ORI` |64 |- |`v.cmp.ori SrcL, simm, ->Dst` |-
-|===
-
-[[insnref-compound-operation]]
-=== Compound Operation
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`CSEL` |32 |- |`csel SrcP, SrcL, SrcR<.neg>, ->{t, u, Rd}` |CSEL - Select one of two scalar inputs under the encoded condition.
-|===
-
-[[insnref-multi-cycle-alu]]
-=== Multi-Cycle ALU
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`DIV` |32 |- |`div SrcL, SrcR, ->{t, u, Rd}` |DIV - Compute signed scalar quotient.
-|`DIVU` |32 |- |`divu SrcL, SrcR, ->{t, u, Rd}` |DIVU - Compute unsigned scalar quotient.
-|`DIVUW` |32 |- |`divuw SrcL, SrcR, ->{t, u, Rd}` |DIVUW - Compute unsigned 32-bit quotient and sign-extend it.
-|`DIVW` |32 |- |`divw SrcL, SrcR, ->{t, u, Rd}` |DIVW - Compute signed 32-bit quotient and sign-extend it.
-|`HL.DIV` |48 |- |`hl.div SrcL, SrcR, ->Dst0, Dst1` |HL.DIV - Compute quotient and remainder as a scalar result pair.
-|`HL.DIVU` |48 |- |`hl.divu SrcL, SrcR, ->Dst0, Dst1` |HL.DIVU - Compute quotient and remainder as a scalar result pair.
-|`HL.DIVUW` |48 |- |`hl.divuw SrcL, SrcR, ->Dst0, Dst1` |HL.DIVUW - Compute 32-bit quotient and remainder as a sign-extended result pair.
-|`HL.DIVW` |48 |- |`hl.divw SrcL, SrcR, ->Dst0, Dst1` |HL.DIVW - Compute 32-bit quotient and remainder as a sign-extended result pair.
-|`HL.MADD` |48 |- |`hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADD - Compute multiply-add and return the scalar result pair.
-|`HL.MADDW` |48 |- |`hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADDW - Compute multiply-add and return the scalar result pair.
-|`HL.MUL` |48 |- |`hl.mul SrcL, SrcR, ->Dst0, Dst1` |HL.MUL - Compute the full-width scalar product as a result pair.
-|`HL.MULU` |48 |- |`hl.mulu SrcL, SrcR, ->Dst0, Dst1` |HL.MULU - Compute the full-width scalar product as a result pair.
-|`HL.REM` |48 |- |`hl.rem SrcL, SrcR, ->Dst0, Dst1` |HL.REM - Compute quotient and remainder as a scalar result pair.
-|`HL.REMU` |48 |- |`hl.remu SrcL, SrcR, ->Dst0, Dst1` |HL.REMU - Compute quotient and remainder as a scalar result pair.
-|`HL.REMUW` |48 |- |`hl.remuw SrcL, SrcR, ->Dst0, Dst1` |HL.REMUW - Compute 32-bit quotient and remainder as a sign-extended result pair.
-|`HL.REMW` |48 |- |`hl.remw SrcL, SrcR, ->Dst0, Dst1` |HL.REMW - Compute 32-bit quotient and remainder as a sign-extended result pair.
-|`MADD` |32 |- |`madd SrcL, SrcR, SrcD, ->{t, u, Rd}` |MADD - Compute scalar multiply-add.
-|`MADDW` |32 |- |`maddw SrcL, SrcR, SrcD, ->{t, u, Rd}` |MADDW - Compute 32-bit multiply-add and sign-extend it.
-|`MUL` |32 |- |`mul SrcL, SrcR, ->{t, u, Rd}` |MUL - Compute the scalar product.
-|`MULU` |32 |- |`mulu SrcL, SrcR, ->{t, u, Rd}` |MULU - Compute the scalar product.
-|`MULUW` |32 |- |`muluw SrcL, SrcR, ->{t, u, Rd}` |MULUW - Compute the 32-bit product and sign-extend it.
-|`MULW` |32 |- |`mulw SrcL, SrcR, ->{t, u, Rd}` |MULW - Compute the 32-bit product and sign-extend it.
-|`REM` |32 |- |`rem SrcL, SrcR, ->{t, u, Rd}` |REM - Compute signed scalar remainder.
-|`REMU` |32 |- |`remu SrcL, SrcR, ->{t, u, Rd}` |REMU - Compute unsigned scalar remainder.
-|`REMUW` |32 |- |`remuw SrcL, SrcR, ->{t, u, Rd}` |REMUW - Compute unsigned 32-bit remainder and sign-extend it.
-|`REMW` |32 |- |`remw SrcL, SrcR, ->{t, u, Rd}` |REMW - Compute signed 32-bit remainder and sign-extend it.
-|`V.MADD` |64 |- |`v.madd SrcL, SrcR, SrcD, ->Dst` |-
-|`V.MUL` |64 |- |`v.mul SrcL, SrcR, ->Dst` |-
-|===
-
-[[insnref-dma-operation]]
-=== DMA Operation
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`DMA` |32 |- |`dma [SrcL], SrcR` |Copies exactly one 64-byte region from the SrcL address to the SrcR address; validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that a fault leaves memory unchanged.
-|===
-
-[[insnref-floating-point-arithmetic]]
-=== Floating-point Arithmetic
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`FABS` |32 |- |`fabs.{T} SrcL, ->{t, u, Rd}` |FABS - Compute this mnemonic's unary floating-point operation.
-|`FADD` |32 |- |`fadd.{T} SrcL, SrcR, ->{t, u, Rd}` |FADD - Compute this mnemonic's binary floating-point operation.
-|`FDIV` |32 |- |`fdiv.{T} SrcL, SrcR, ->{t, u, Rd}` |FDIV - Compute this mnemonic's binary floating-point operation.
-|`FEXP` |32 |- |`fexp.{T} SrcL, ->{t, u, Rd}` |FEXP - Compute this mnemonic's unary floating-point operation.
-|`FMADD` |32 |- |`fmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FMADD - Compute this mnemonic's fused floating-point operation.
-|`FMSUB` |32 |- |`fmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FMSUB - Compute this mnemonic's fused floating-point operation.
-|`FMUL` |32 |- |`fmul.{T} SrcL, SrcR, ->{t, u, Rd}` |FMUL - Compute this mnemonic's binary floating-point operation.
-|`FNMADD` |32 |- |`fnmadd.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FNMADD - Compute this mnemonic's fused floating-point operation.
-|`FNMSUB` |32 |- |`fnmsub.{T} SrcL, SrcR, SrcA, ->{t, u, Rd}` |FNMSUB - Compute this mnemonic's fused floating-point operation.
-|`FRECIP` |32 |- |`frecip.{T} SrcL, ->{t, u, Rd}` |FRECIP - Compute this mnemonic's unary floating-point operation.
-|`FSQRT` |32 |- |`fsqrt.{T} SrcL, ->{t, u, Rd}` |FSQRT - Compute this mnemonic's unary floating-point operation.
-|`FSUB` |32 |- |`fsub.{T} SrcL, SrcR, ->{t, u, Rd}` |FSUB - Compute this mnemonic's binary floating-point operation.
-|===
-
-[[insnref-format-convert]]
-=== Format Convert
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`FCVT` |32 |- |`fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVT - Convert between the encoded scalar numeric formats.
-|`FCVTA` |32 |- |`fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTA - Convert between the encoded scalar numeric formats.
-|`FCVTM` |32 |- |`fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTM - Convert between the encoded scalar numeric formats.
-|`FCVTN` |32 |- |`fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTN - Convert between the encoded scalar numeric formats.
-|`FCVTP` |32 |- |`fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTP - Convert between the encoded scalar numeric formats.
-|`FCVTZ` |32 |- |`fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTZ - Convert between the encoded scalar numeric formats.
-|`SCVTF` |32 |- |`scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |SCVTF - Convert between the encoded scalar numeric formats.
-|`UCVTF` |32 |- |`ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |UCVTF - Convert between the encoded scalar numeric formats.
-|`V.FCVT` |64 |- |`v.fcvt.{st2dt} SrcL, ->Dst` |-
-|`V.FCVTI` |64 |- |`v.fcvti.{st2dt} SrcL, ->Dst` |-
-|`V.ICVT` |64 |- |`v.icvt.{st2dt} SrcL, ->Dst` |-
-|`V.ICVTF` |64 |- |`v.icvtf.{st2dt} SrcL, ->Dst` |-
-|===
-
-[[insnref-floating-point-compare]]
-=== Floating-point Compare
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`FEQ` |32 |- |`feq.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQ - Compare floating-point operands and produce the encoded result.
-|`FEQS` |32 |- |`feqs.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQS - Compare floating-point operands and produce the encoded result.
-|`FGE` |32 |- |`fge.{T} SrcL, SrcR, ->{t, u, Rd}` |FGE - Compare floating-point operands and produce the encoded result.
-|`FGES` |32 |- |`fges.{T} SrcL, SrcR, ->{t, u, Rd}` |FGES - Compare floating-point operands and produce the encoded result.
-|`FLT` |32 |- |`flt.{T} SrcL, SrcR, ->{t, u, Rd}` |FLT - Compare floating-point operands and produce the encoded result.
-|`FLTS` |32 |- |`flts.{T} SrcL, SrcR, ->{t, u, Rd}` |FLTS - Compare floating-point operands and produce the encoded result.
-|`FNE` |32 |- |`fne.{T} SrcL, SrcR, ->{t, u, Rd}` |FNE - Compare floating-point operands and produce the encoded result.
-|`FNES` |32 |- |`fnes.{T} SrcL, SrcR, ->{t, u, Rd}` |FNES - Compare floating-point operands and produce the encoded result.
-|===
-
-[[insnref-max-min]]
-=== Max-Min
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`FMAX` |32 |- |`fmax.{T} SrcL, SrcR, ->{t, u, Rd}` |FMAX - Compute this mnemonic's binary floating-point operation.
-|`FMIN` |32 |- |`fmin.{T} SrcL, SrcR, ->{t, u, Rd}` |FMIN - Compute this mnemonic's binary floating-point operation.
-|`MAX` |32 |- |`max SrcL, SrcR, ->{t, u, Rd}` |MAX - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`MAXU` |32 |- |`maxu SrcL, SrcR, ->{t, u, Rd}` |MAXU - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`MIN` |32 |- |`min SrcL, SrcR, ->{t, u, Rd}` |MIN - Compute this mnemonic's binary scalar operation and write the selected destination.
-|`MINU` |32 |- |`minu SrcL, SrcR, ->{t, u, Rd}` |MINU - Compute this mnemonic's binary scalar operation and write the selected destination.
-|===
-
-[[insnref-reserve]]
-=== RESERVE
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.BFI` |48 |- |`hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}` |HL.BFI - Insert one scalar bitfield into another.
-|`HL.MIADD` |48 |- |`hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}` |HL.MIADD - Multiply by the encoded immediate and add the scalar source.
-|`HL.MISUB` |48 |- |`hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}` |HL.MISUB - Multiply by the encoded immediate and add the scalar source.
-|===
-
-[[insnref-atomic]]
-=== Atomic
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.CASB` |48 |- |`hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASB - Atomically compare the scalar memory value and conditionally store the replacement.
-|`HL.CASD` |48 |- |`hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASD - Atomically compare the scalar memory value and conditionally store the replacement.
-|`HL.CASH` |48 |- |`hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASH - Atomically compare the scalar memory value and conditionally store the replacement.
-|`HL.CASW` |48 |- |`hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASW - Atomically compare the scalar memory value and conditionally store the replacement.
-|===
-
-[[insnref-concat]]
-=== Concat
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.CCAT` |48 |- |`hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCAT - Concatenate two scalar values into a result pair.
-|`HL.CCATW` |48 |- |`hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCATW - Concatenate two 32-bit values into a sign-extended result pair.
-|===
-
-[[insnref-load-pc-relative]]
-=== Load PC-Relative
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LB.PCR` |48 |- |`hl.lb.pcr [<symbol>], ->{t, u, Rd}` |HL.LB.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBU.PCR` |48 |- |`hl.lbu.pcr [<symbol>], ->{t, u, Rd}` |HL.LBU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LD.PCR` |48 |- |`hl.ld.pcr [<symbol>], ->{t, u, Rd}` |HL.LD.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LH.PCR` |48 |- |`hl.lh.pcr [<symbol>], ->{t, u, Rd}` |HL.LH.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHU.PCR` |48 |- |`hl.lhu.pcr [<symbol>], ->{t, u, Rd}` |HL.LHU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LW.PCR` |48 |- |`hl.lw.pcr [<symbol>], ->{t, u, Rd}` |HL.LW.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWU.PCR` |48 |- |`hl.lwu.pcr [<symbol>], ->{t, u, Rd}` |HL.LWU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|===
-
-[[insnref-load-post-index]]
-=== Load Post-Index
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LB.PO` |48 |- |`hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LB.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBI.PO` |48 |- |`hl.lbi.po [SrcL, simm], ->Dst0, Dst1` |HL.LBI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBU.PO` |48 |- |`hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBU.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBUI.PO` |48 |- |`hl.lbui.po [SrcL, simm], ->Dst0, Dst1` |HL.LBUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LD.PO` |48 |- |`hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LD.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LDI.PO` |48 |- |`hl.ldi.po [SrcL, simm], ->Dst0, Dst1` |HL.LDI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LDI.UPO` |48 |- |`hl.ldi.upo [SrcL, simm], ->Dst0, Dst1` |HL.LDI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LH.PO` |48 |- |`hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LH.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHI.PO` |48 |- |`hl.lhi.po [SrcL, simm], ->Dst0, Dst1` |HL.LHI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHI.UPO` |48 |- |`hl.lhi.upo [SrcL, simm], ->Dst0, Dst1` |HL.LHI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHU.PO` |48 |- |`hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHU.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHUI.PO` |48 |- |`hl.lhui.po [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHUI.UPO` |48 |- |`hl.lhui.upo [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LW.PO` |48 |- |`hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LW.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWI.PO` |48 |- |`hl.lwi.po [SrcL, simm], ->Dst0, Dst1` |HL.LWI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWI.UPO` |48 |- |`hl.lwi.upo [SrcL, simm], ->Dst0, Dst1` |HL.LWI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWU.PO` |48 |- |`hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWU.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWUI.PO` |48 |- |`hl.lwui.po [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.PO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWUI.UPO` |48 |- |`hl.lwui.upo [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.UPO - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|===
-
-[[insnref-load-pre-index]]
-=== Load Pre-Index
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LB.PR` |48 |- |`hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LB.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBI.PR` |48 |- |`hl.lbi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LBI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBU.PR` |48 |- |`hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBU.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBUI.PR` |48 |- |`hl.lbui.pr [SrcL, simm], ->Dst0, Dst1` |HL.LBUI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LD.PR` |48 |- |`hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LD.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LDI.PR` |48 |- |`hl.ldi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LDI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LDI.UPR` |48 |- |`hl.ldi.upr [SrcL, simm], ->Dst0, Dst1` |HL.LDI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LH.PR` |48 |- |`hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LH.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHI.PR` |48 |- |`hl.lhi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LHI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHI.UPR` |48 |- |`hl.lhi.upr [SrcL, simm], ->Dst0, Dst1` |HL.LHI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHU.PR` |48 |- |`hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHU.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHUI.PR` |48 |- |`hl.lhui.pr [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHUI.UPR` |48 |- |`hl.lhui.upr [SrcL, simm], ->Dst0, Dst1` |HL.LHUI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LW.PR` |48 |- |`hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LW.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWI.PR` |48 |- |`hl.lwi.pr [SrcL, simm], ->Dst0, Dst1` |HL.LWI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWI.UPR` |48 |- |`hl.lwi.upr [SrcL, simm], ->Dst0, Dst1` |HL.LWI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWU.PR` |48 |- |`hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWU.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWUI.PR` |48 |- |`hl.lwui.pr [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.PR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWUI.UPR` |48 |- |`hl.lwui.upr [SrcL, simm], ->Dst0, Dst1` |HL.LWUI.UPR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|===
-
-[[insnref-load-long-offset]]
-=== Load Long Offset
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LBI` |48 |- |`hl.lbi [SrcL, simm], ->{t, u, Rd}` |HL.LBI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LBUI` |48 |- |`hl.lbui [SrcL, simm], ->{t, u, Rd}` |HL.LBUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LDI` |48 |- |`hl.ldi [SrcL, simm], ->{t, u, Rd}` |HL.LDI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LDI.U` |48 |- |`hl.ldi.u [SrcL, simm], ->{t, u, Rd}` |HL.LDI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHI` |48 |- |`hl.lhi [SrcL, simm], ->{t, u, Rd}` |HL.LHI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHI.U` |48 |- |`hl.lhi.u [SrcL, simm], ->{t, u, Rd}` |HL.LHI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHUI` |48 |- |`hl.lhui [SrcL, simm], ->{t, u, Rd}` |HL.LHUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LHUI.U` |48 |- |`hl.lhui.u [SrcL, simm], ->{t, u, Rd}` |HL.LHUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWI` |48 |- |`hl.lwi [SrcL, simm], ->{t, u, Rd}` |HL.LWI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWI.U` |48 |- |`hl.lwi.u [SrcL, simm], ->{t, u, Rd}` |HL.LWI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWUI` |48 |- |`hl.lwui [SrcL, simm], ->{t, u, Rd}` |HL.LWUI - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`HL.LWUI.U` |48 |- |`hl.lwui.u [SrcL, simm], ->{t, u, Rd}` |HL.LWUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|===
-
-[[insnref-load-pair]]
-=== Load Pair
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LBIP` |48 |- |`hl.lbip [SrcL, simm], ->Dst0, Dst1` |HL.LBIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LBP` |48 |- |`hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LBUIP` |48 |- |`hl.lbuip [SrcL, simm], ->Dst0, Dst1` |HL.LBUIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LBUP` |48 |- |`hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LBUP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LDIP` |48 |- |`hl.ldip [SrcL, simm], ->Dst0, Dst1` |HL.LDIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LDIP.U` |48 |- |`hl.ldip.u [SrcL, simm], ->Dst0, Dst1` |HL.LDIP.U - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LDP` |48 |- |`hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LDP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LHIP` |48 |- |`hl.lhip [SrcL, simm], ->Dst0, Dst1` |HL.LHIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LHIP.U` |48 |- |`hl.lhip.u [SrcL, simm], ->Dst0, Dst1` |HL.LHIP.U - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LHP` |48 |- |`hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LHUIP` |48 |- |`hl.lhuip [SrcL, simm], ->Dst0, Dst1` |HL.LHUIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LHUIP.U` |48 |- |`hl.lhuip.u [SrcL, simm], ->Dst0, Dst1` |HL.LHUIP.U - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LHUP` |48 |- |`hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LHUP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LWIP` |48 |- |`hl.lwip [SrcL, simm], ->Dst0, Dst1` |HL.LWIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LWIP.U` |48 |- |`hl.lwip.u [SrcL, simm], ->Dst0, Dst1` |HL.LWIP.U - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LWP` |48 |- |`hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LWUIP` |48 |- |`hl.lwuip [SrcL, simm], ->Dst0, Dst1` |HL.LWUIP - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LWUIP.U` |48 |- |`hl.lwuip.u [SrcL, simm], ->Dst0, Dst1` |HL.LWUIP.U - Load a scalar register pair using this mnemonic's address-update form.
-|`HL.LWUP` |48 |- |`hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` |HL.LWUP - Load a scalar register pair using this mnemonic's address-update form.
-|===
-
-[[insnref-long-immediate]]
-=== Long Immediate
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LIS` |48 |- |`hl.lis simm, ->{t, u, Rd}` |HL.LIS - Materialize the encoded signed long immediate.
-|`HL.LIU` |48 |- |`hl.liu uimm, ->{t, u, Rd}` |HL.LIU - Materialize the encoded unsigned long immediate.
-|===
-
-[[insnref-immediate]]
-=== Immediate
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.LUI` |48 |- |`hl.lui imm, ->{t, u, Rd}` |HL.LUI - Materialize the encoded signed long immediate.
-|`LUI` |32 |- |`lui simm, ->{t, u, Rd}` |LUI - Materialize the upper immediate.
-|===
-
-[[insnref-prefetch]]
-=== Prefetch
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.PRF` |48 |- |`hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |HL.PRF - Issue a scalar prefetch using this mnemonic's addressing form.
-|`HL.PRF.A` |48 |- |`hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |HL.PRF.A - Issue a scalar prefetch using this mnemonic's addressing form.
-|`HL.PRFI.U` |48 |- |`hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]` |HL.PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.
-|`HL.PRFI.UA` |48 |- |`hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}` |HL.PRFI.UA - Issue a scalar prefetch using this mnemonic's addressing form.
-|===
-
-[[insnref-general]]
-=== General
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.QMT` |48 |- |`hl.qmt.{i,e,s,r,ie,is,ir,es,er,ies,ier} SrcL, SrcR, ->{t, u}` |Moves values between scalar temporary queues according to encoded queue controls.
-|`HL.QPOP` |48 |- |`hl.qpop.{e,r,er} SrcL, ->Dst0, Dst1` |Pops selected scalar queue values into encoded destinations.
-|`HL.QPUSH` |48 |- |`hl.qpush.{h,e,r,he,hr,er,her} SrcL, SrcR, ->{t, u}` |Pushes the encoded scalar values to the selected temporary queue.
-|===
-
-[[insnref-store-pc-relative]]
-=== Store PC-Relative
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SB.PCR` |48 |- |`hl.sb.pcr SrcL, [<symbol>]` |HL.SB.PCR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SD.PCR` |48 |- |`hl.sd.pcr SrcL, [<symbol>]` |HL.SD.PCR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SH.PCR` |48 |- |`hl.sh.pcr SrcL, [<symbol>]` |HL.SH.PCR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SW.PCR` |48 |- |`hl.sw.pcr SrcL, [<symbol>]` |HL.SW.PCR - Store scalar data using this mnemonic's width and address-update form.
-|===
-
-[[insnref-store-post-index]]
-=== Store Post-Index
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SB.PO` |48 |- |`hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SB.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SBI.PO` |48 |- |`hl.sbi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SBI.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SD.PO` |48 |- |`hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` |HL.SD.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SD.UPO` |48 |- |`hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SD.UPO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SDI.PO` |48 |- |`hl.sdi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SDI.UPO` |48 |- |`hl.sdi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.UPO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SH.PO` |48 |- |`hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}` |HL.SH.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SH.UPO` |48 |- |`hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SH.UPO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SHI.PO` |48 |- |`hl.shi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SHI.UPO` |48 |- |`hl.shi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.UPO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SW.PO` |48 |- |`hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}` |HL.SW.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SW.UPO` |48 |- |`hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SW.UPO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SWI.PO` |48 |- |`hl.swi.po SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.PO - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SWI.UPO` |48 |- |`hl.swi.upo SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.UPO - Store scalar data using this mnemonic's width and address-update form.
-|===
-
-[[insnref-store-pre-index]]
-=== Store Pre-Index
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SB.PR` |48 |- |`hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SB.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SBI.PR` |48 |- |`hl.sbi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SBI.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SD.PR` |48 |- |`hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` |HL.SD.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SD.UPR` |48 |- |`hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SD.UPR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SDI.PR` |48 |- |`hl.sdi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SDI.UPR` |48 |- |`hl.sdi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SDI.UPR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SH.PR` |48 |- |`hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}` |HL.SH.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SH.UPR` |48 |- |`hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SH.UPR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SHI.PR` |48 |- |`hl.shi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SHI.UPR` |48 |- |`hl.shi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SHI.UPR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SW.PR` |48 |- |`hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}` |HL.SW.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SW.UPR` |48 |- |`hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` |HL.SW.UPR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SWI.PR` |48 |- |`hl.swi.pr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.PR - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SWI.UPR` |48 |- |`hl.swi.upr SrcD, [SrcR, simm], ->{t, u, Rd}` |HL.SWI.UPR - Store scalar data using this mnemonic's width and address-update form.
-|===
-
-[[insnref-store-long-offset]]
-=== Store Long Offset
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SBI` |48 |- |`hl.sbi SrcD, [SrcR, simm]` |HL.SBI - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SDI` |48 |- |`hl.sdi SrcD, [SrcR, simm]` |HL.SDI - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SDI.U` |48 |- |`hl.sdi.u SrcD, [SrcR, simm]` |HL.SDI.U - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SHI` |48 |- |`hl.shi SrcD, [SrcR, simm]` |HL.SHI - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SHI.U` |48 |- |`hl.shi.u SrcD, [SrcR, simm]` |HL.SHI.U - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SWI` |48 |- |`hl.swi SrcD, [SrcR, simm]` |HL.SWI - Store scalar data using this mnemonic's width and address-update form.
-|`HL.SWI.U` |48 |- |`hl.swi.u SrcD, [SrcR, simm]` |HL.SWI.U - Store scalar data using this mnemonic's width and address-update form.
-|===
-
-[[insnref-store-pair]]
-=== Store Pair
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SBIP` |48 |- |`hl.sbip SrcD, SrcD1, [SrcR, simm]` |HL.SBIP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SBP` |48 |- |`hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SBP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SDIP` |48 |- |`hl.sdip SrcD, SrcD1, [SrcR, simm]` |HL.SDIP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SDIP.U` |48 |- |`hl.sdip.u SrcD, SrcD1, [SrcR, simm]` |HL.SDIP.U - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SDP` |48 |- |`hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` |HL.SDP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SDP.U` |48 |- |`hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SDP.U - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SHIP` |48 |- |`hl.ship SrcD, SrcD1, [SrcR, simm]` |HL.SHIP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SHIP.U` |48 |- |`hl.ship.u SrcD, SrcD1, [SrcR, simm]` |HL.SHIP.U - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SHP` |48 |- |`hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` |HL.SHP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SHP.U` |48 |- |`hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SHP.U - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SWIP` |48 |- |`hl.swip SrcD, SrcD1, [SrcR, simm]` |HL.SWIP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SWIP.U` |48 |- |`hl.swip.u SrcD, SrcD1, [SrcR, simm]` |HL.SWIP.U - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SWP` |48 |- |`hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |HL.SWP - Store a scalar register pair using this mnemonic's address-update form.
-|`HL.SWP.U` |48 |- |`hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]` |HL.SWP.U - Store a scalar register pair using this mnemonic's address-update form.
-|===
-
-[[insnref-ssr-access]]
-=== SSR Access
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`HL.SSRGET` |48 |- |`hl.ssrget SSR_ID, ->{t, u, Rd}` |HL.SSRGET - Read the addressed system register.
-|`HL.SSRSET` |48 |- |`hl.ssrset SrcL, SSR_ID` |HL.SSRSET - Write the addressed system register.
-|`LSRGET` |32 |- |`lsrget LSR_ID, ->{t, u, Rd}` |LSRGET - Read the addressed system register.
-|`SETC.TGT` |32 |- |`setc.tgt SrcL` |SETC.TGT - Write the bundle commit target.
-|`SSRGET` |32 |- |`ssrget SSR_ID, ->{t, u, Rd}` |SSRGET - Read the addressed system register.
-|`SSRSET` |32 |- |`ssrset SrcL, SSR_ID` |SSRSET - Write the addressed system register.
-|`SSRSWAP` |32 |- |`ssrswap SrcL, SSR_ID, ->{t, u, Rd}` |SSRSWAP - Atomically exchange the addressed system register and scalar value.
-|===
-
-[[insnref-load-register-offset]]
-=== Load Register Offset
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`LB` |32 |- |`lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LB - Load scalar data using this mnemonic's width, signedness, and address - update form.
-|`LBU` |32 |- |`lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LBU - Load scalar data using this mnemonic's width, signedness, and address - update form.
-|`LD` |32 |- |`ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LD - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LH` |32 |- |`lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LH - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LHU` |32 |- |`lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LHU - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LW` |32 |- |`lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LW - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LWU` |32 |- |`lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` |LWU - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`PRF` |32 |- |`prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` |PRF - Issue a scalar prefetch using this mnemonic's addressing form.
-|`V.LB` |64 |- |`v.lb<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
-|`V.LB.BRG` |64 |- |`v.lb.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
-|`V.LBU` |64 |- |`v.lbu<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
-|`V.LBU.BRG` |64 |- |`v.lbu.brg<.local> [SrcL, <lc0>, SrcR<<<shamt>], ->Dst` |-
-|`V.LD` |64 |- |`v.ld<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst` |-
-|`V.LD.BRG` |64 |- |`v.ld.brg<.local> [SrcL, <lc0<<3>, SrcR<<<shamt>], ->Dst` |-
-|`V.LH` |64 |- |`v.lh<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
-|`V.LH.BRG` |64 |- |`v.lh.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
-|`V.LHU` |64 |- |`v.lhu<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
-|`V.LHU.BRG` |64 |- |`v.lhu.brg<.local> [SrcL, <lc0<<1>, SrcR<<<shamt>], ->Dst` |-
-|`V.LW` |64 |- |`v.lw<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
-|`V.LW.BRG` |64 |- |`v.lw.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
-|`V.LWU` |64 |- |`v.lwu<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
-|`V.LWU.BRG` |64 |- |`v.lwu.brg<.local> [SrcL, <lc0<<2>, SrcR<<<shamt>], ->Dst` |-
-|===
-
-[[insnref-load-symbol]]
-=== Load Symbol
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`LB.PCR` |32 |- |`lb.pcr [symbol], ->{t, u, Rd}` |LB.PCR - Load scalar data using this mnemonic's width, signedness, and address - update form.
-|`LBU.PCR` |32 |- |`lbu.pcr [symbol], ->{t, u, Rd}` |LBU.PCR - Load scalar data using this mnemonic's width, signedness, and address - update form.
-|`LD.PCR` |32 |- |`ld.pcr [symbol], ->{t, u, Rd}` |LD.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LH.PCR` |32 |- |`lh.pcr [symbol], ->{t, u, Rd}` |LH.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LHU.PCR` |32 |- |`lhu.pcr [symbol], ->{t, u, Rd}` |LHU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LW.PCR` |32 |- |`lw.pcr [symbol], ->{t, u, Rd}` |LW.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LWU.PCR` |32 |- |`lwu.pcr [symbol], ->{t, u, Rd}` |LWU.PCR - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|===
-
 [[insnref-load-unscaled]]
 === Load UnScaled
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`LDI.U` |32 |- |`ldi.u [SrcL, simm], ->{t, u, Rd}` |LDI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LHI.U` |32 |- |`lhi.u [SrcL, simm], ->{t, u, Rd}` |LHI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LHUI.U` |32 |- |`lhui.u [SrcL, simm], ->{t, u, Rd}` |LHUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LWI.U` |32 |- |`lwi.u [SrcL, simm], ->{t, u, Rd}` |LWI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`LWUI.U` |32 |- |`lwui.u [SrcL, simm], ->{t, u, Rd}` |LWUI.U - Load scalar data using this mnemonic's width, signedness, and address-update form.
-|`PRFI.U` |32 |- |`prfi.u [SrcL, simm]` |PRFI.U - Issue a scalar prefetch using this mnemonic's addressing form.
 |`V.LDI.U` |64 |- |`v.ldi.u<.local> [SrcL, <lc0<<3>, simm], ->Dst` |-
 |`V.LDI.U.BRG` |64 |- |`v.ldi.u.brg<.local> [SrcL, <lc0<<3>, simm], ->Dst` |-
 |`V.LHI.U` |64 |- |`v.lhi.u<.local> [SrcL, <lc0<<1>, simm], ->Dst` |-
@@ -1119,19 +1100,49 @@
 |`V.LWUI.U.BRG` |64 |- |`v.lwui.u.brg<.local> [SrcL, <lc0<<2>, simm], ->Dst` |-
 |===
 
+[[insnref-multi-cycle-alu]]
+=== Multi-Cycle ALU
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.MADD` |64 |- |`v.madd SrcL, SrcR, SrcD, ->Dst` |-
+|`V.MUL` |64 |- |`v.mul SrcL, SrcR, ->Dst` |-
+|===
+
+[[insnref-general-manager]]
+=== General Manager
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.QPOP` |64 |- |`v.qpop SrcL.ud, ->Dst` |-
+|`V.QPUSH` |64 |- |`v.qpush SrcL.ud, SrcR.ud, ->Dst` |-
+|===
+
+[[insnref-reduce-operation-with-register]]
+=== Reduce Operation with Register
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`V.RDADD` |64 |- |`v.rdadd SrcL, ->Dst` |-
+|`V.RDAND` |64 |- |`v.rdand SrcL, ->Dst` |-
+|`V.RDFADD` |64 |- |`v.rdfadd SrcL, ->Dst` |-
+|`V.RDFMAX` |64 |- |`v.rdfmax SrcL, ->Dst` |-
+|`V.RDFMIN` |64 |- |`v.rdfmin SrcL, ->Dst` |-
+|`V.RDMAX` |64 |- |`v.rdmax SrcL, ->Dst` |-
+|`V.RDMIN` |64 |- |`v.rdmin SrcL, ->Dst` |-
+|`V.RDOR` |64 |- |`v.rdor SrcL, ->Dst` |-
+|`V.RDXOR` |64 |- |`v.rdxor SrcL, ->Dst` |-
+|===
+
 [[insnref-store-register-offset]]
 === Store Register Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`SB` |32 |- |`sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SB - Store scalar data using this mnemonic's width and address-update form.
-|`SD` |32 |- |`sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` |SD - Store scalar data using this mnemonic's width and address-update form.
-|`SD.U` |32 |- |`sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SD.U - Store scalar data using this mnemonic's width and address-update form.
-|`SH` |32 |- |`sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` |SH - Store scalar data using this mnemonic's width and address-update form.
-|`SH.U` |32 |- |`sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SH.U - Store scalar data using this mnemonic's width and address-update form.
-|`SW` |32 |- |`sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]` |SW - Store scalar data using this mnemonic's width and address-update form.
-|`SW.U` |32 |- |`sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` |SW.U - Store scalar data using this mnemonic's width and address-update form.
 |`V.SB` |64 |- |`v.sb<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]` |-
 |`V.SB.BRG` |64 |- |`v.sb.brg<.local> SrcD.<T1>, [SrcL, <lc0>, SrcR.<T2><<<shamt>]` |-
 |`V.SD` |64 |- |`v.sd<.local> SrcD.<T1>, [SrcL, <lc0<<3>, SrcR.<T2><<(3+shamt)]` |-
@@ -1148,134 +1159,10 @@
 |`V.SW.U.BRG` |64 |- |`v.sw.u.brg<.local> SrcD.<T1>, [SrcL, <lc0<<2>, SrcR.<T2><<<shamt>]` |-
 |===
 
-[[insnref-store-symbol]]
-=== Store Symbol
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`SB.PCR` |32 |- |`sb.pcr SrcL, [symbol]` |SB.PCR - Store scalar data using this mnemonic's width and address-update form.
-|`SD.PCR` |32 |- |`sd.pcr SrcL, [symbol]` |SD.PCR - Store scalar data using this mnemonic's width and address-update form.
-|`SH.PCR` |32 |- |`sh.pcr SrcL, [symbol]` |SH.PCR - Store scalar data using this mnemonic's width and address-update form.
-|`SW.PCR` |32 |- |`sw.pcr SrcL, [symbol]` |SW.PCR - Store scalar data using this mnemonic's width and address-update form.
-|===
-
-[[insnref-bit-manipulation]]
-=== Bit Manipulation
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.BCNT` |64 |- |`v.bcnt SrcL, Nminus1, M, ->Dst` |-
-|`V.BIC` |64 |- |`v.bic SrcL, Nminus1, M, ->Dst` |-
-|`V.BIS` |64 |- |`v.bis SrcL, Nminus1, M, ->Dst` |-
-|`V.BXS` |64 |- |`v.bxs SrcL, Nminus1, M, ->Dst` |-
-|`V.BXU` |64 |- |`v.bxu SrcL, Nminus1, M, ->Dst` |-
-|`V.CLZ` |64 |- |`v.clz SrcL, Nminus1, M, ->Dst` |-
-|`V.CTZ` |64 |- |`v.ctz SrcL, Nminus1, M, ->Dst` |-
-|`V.REV` |64 |- |`v.rev SrcL, M, N, ->Dst` |-
-|===
-
-[[insnref-three-source-integer]]
-=== Three Source Integer
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.CSEL` |64 |- |`v.csel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
-|`V.PSEL` |64 |- |`v.psel SrcP, SrcL, SrcR<.neg>, ->Dst` |-
-|===
-
-[[insnref-division]]
-=== Division
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.DIV` |64 |- |`v.div SrcL, SrcR, ->Dst` |-
-|`V.REM` |64 |- |`v.rem SrcL, SrcR, ->Dst` |-
-|===
-
-[[insnref-floating-point-arithmetic-2]]
-=== Floating Point Arithmetic
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.FABS` |64 |- |`v.fabs SrcL, ->Dst` |-
-|`V.FCLASS` |64 |- |`v.fclass SrcL, ->Dst` |-
-|`V.FEXP` |64 |- |`v.fexp SrcL, ->Dst` |-
-|`V.FRECIP` |64 |- |`v.frecip SrcL, ->Dst` |-
-|`V.FSQRT` |64 |- |`v.fsqrt SrcL, ->Dst` |-
-|===
-
-[[insnref-three-source-floating-point]]
-=== Three-Source Floating Point
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.FADD` |64 |- |`v.fadd SrcL, SrcR, ->Dst` |-
-|`V.FDIV` |64 |- |`v.fdiv SrcL, SrcR, ->Dst` |-
-|`V.FMADD` |64 |- |`v.fmadd SrcL, SrcR, SrcA, ->Dst` |-
-|`V.FMSUB` |64 |- |`v.fmsub SrcL, SrcR, SrcA, ->Dst` |-
-|`V.FMUL` |64 |- |`v.fmul SrcL, SrcR, ->Dst` |-
-|`V.FNMADD` |64 |- |`v.fnmadd SrcL, SrcR, SrcA, ->Dst` |-
-|`V.FNMSUB` |64 |- |`v.fnmsub SrcL, SrcR, SrcA, ->Dst` |-
-|`V.FSUB` |64 |- |`v.fsub SrcL, SrcR, ->Dst` |-
-|===
-
-[[insnref-two-source-floating-point]]
-=== Two-Source Floating Point
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.FEQ` |64 |- |`v.feq SrcL, SrcR, ->Dst` |-
-|`V.FEQS` |64 |- |`v.feqs SrcL, SrcR, ->Dst` |-
-|`V.FGE` |64 |- |`v.fge SrcL, SrcR, ->Dst` |-
-|`V.FGES` |64 |- |`v.fges SrcL, SrcR, ->Dst` |-
-|`V.FLT` |64 |- |`v.flt SrcL, SrcR, ->Dst` |-
-|`V.FLTS` |64 |- |`v.flts SrcL, SrcR, ->Dst` |-
-|`V.FMAX` |64 |- |`v.fmax SrcL, SrcR, ->Dst` |-
-|`V.FMIN` |64 |- |`v.fmin SrcL, SrcR, ->Dst` |-
-|`V.FNE` |64 |- |`v.fne SrcL, SrcR, ->Dst` |-
-|`V.FNES` |64 |- |`v.fnes SrcL, SrcR, ->Dst` |-
-|`V.MAX` |64 |- |`v.max SrcL, SrcR, ->Dst` |-
-|`V.MIN` |64 |- |`v.min SrcL, SrcR, ->Dst` |-
-|===
-
-[[insnref-general-manager]]
-=== General Manager
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.QPOP` |64 |- |`v.qpop SrcL.ud, ->Dst` |-
-|`V.QPUSH` |64 |- |`v.qpush SrcL.ud, SrcR.ud, ->Dst` |-
-|===
-
-[[insnref-reduce-operation-with-register]]
-=== Reduce Operation with Register
-
-[cols="1,1,2,4,6",options="header"]
-|===
-|Mnemonic |Len |Decode |Assembly |Notes
-|`V.RDADD` |64 |- |`v.rdadd SrcL, ->Dst` |-
-|`V.RDAND` |64 |- |`v.rdand SrcL, ->Dst` |-
-|`V.RDFADD` |64 |- |`v.rdfadd SrcL, ->Dst` |-
-|`V.RDFMAX` |64 |- |`v.rdfmax SrcL, ->Dst` |-
-|`V.RDFMIN` |64 |- |`v.rdfmin SrcL, ->Dst` |-
-|`V.RDMAX` |64 |- |`v.rdmax SrcL, ->Dst` |-
-|`V.RDMIN` |64 |- |`v.rdmin SrcL, ->Dst` |-
-|`V.RDOR` |64 |- |`v.rdor SrcL, ->Dst` |-
-|`V.RDXOR` |64 |- |`v.rdxor SrcL, ->Dst` |-
-|===
-
 [[insnref-store-offset]]
 === Store Offset
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.SBI` |64 |- |`v.sbi<.local> SrcL, [SrcR, <lc0>, simm]` |-
@@ -1297,7 +1184,7 @@
 [[insnref-shuffle]]
 === Shuffle
 
-[cols="1,1,2,4,6",options="header"]
+[cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`V.SHFL.BFLY` |64 |- |`v.shfl.bfly SrcL, SrcP, ->Dst` |-

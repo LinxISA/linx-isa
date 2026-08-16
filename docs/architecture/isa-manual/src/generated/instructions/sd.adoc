@@ -7,7 +7,7 @@
 
 *Syntax:* sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]
 
-*Description:* SD - Store scalar data using this mnemonic's width and address-update form.
+*Description:* SD snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
 
 *Encoding:*
 
