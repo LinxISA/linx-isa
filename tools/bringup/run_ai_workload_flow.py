@@ -100,9 +100,14 @@ class CaseState:
     artifacts: dict[str, str] = dataclasses.field(default_factory=dict)
     qemu_digests: dict[str, str] = dataclasses.field(default_factory=dict)
     model_digests: dict[str, str] = dataclasses.field(default_factory=dict)
+    immutable_artifacts: dict[str, dict[str, str]] = dataclasses.field(default_factory=dict)
     failure_stage: str | None = None
     failure_owner: str | None = None
     failure_evidence: str | None = None
+
+
+class ArtifactIntegrityError(RuntimeError):
+    """An input selected for a release flow changed or disappeared."""
 
 
 def repo_root() -> Path:
@@ -140,6 +145,45 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: fp.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def capture_immutable_artifacts(paths: dict[str, Path]) -> dict[str, dict[str, str]]:
+    manifest: dict[str, dict[str, str]] = {}
+    for name, raw_path in sorted(paths.items()):
+        path = Path(raw_path).expanduser().resolve()
+        if not path.is_file():
+            raise ArtifactIntegrityError(f"{name} is missing: {path}")
+        manifest[name] = {"path": str(path), "sha256": sha256_file(path)}
+    return manifest
+
+
+def verify_immutable_artifacts(
+    manifest: dict[str, dict[str, str]],
+    paths: dict[str, Path],
+    *,
+    consumer: str,
+) -> None:
+    for name, raw_path in sorted(paths.items()):
+        path = Path(raw_path).expanduser().resolve()
+        recorded = manifest.get(name)
+        if recorded is None:
+            raise ArtifactIntegrityError(f"{name} has no recorded SHA-256 before {consumer}")
+        if str(path) != recorded.get("path"):
+            raise ArtifactIntegrityError(f"{name} path changed before {consumer}")
+        if not path.is_file():
+            raise ArtifactIntegrityError(f"{name} is missing before {consumer}: {path}")
+        if sha256_file(path) != recorded.get("sha256"):
+            raise ArtifactIntegrityError(f"{name} SHA-256 changed before {consumer}")
+
+
+def verify_recorded_artifacts(
+    manifest: dict[str, dict[str, str]], *, consumer: str
+) -> None:
+    verify_immutable_artifacts(
+        manifest,
+        {name: Path(row["path"]) for name, row in manifest.items()},
+        consumer=consumer,
+    )
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -650,6 +694,7 @@ def tool_manifest(paths: dict[str, str]) -> dict[str, dict[str, Any]]:
             "path": value,
             "exists": Path(value).exists(),
             "executable": executable(Path(value)),
+            "sha256": sha256_file(Path(value)) if Path(value).is_file() else None,
             "version": first_version_line(key, value),
         }
         for key, value in paths.items()
@@ -659,6 +704,7 @@ def tool_manifest(paths: dict[str, str]) -> dict[str, dict[str, Any]]:
             "path": paths["model_root"],
             "exists": Path(paths["model_root"]).exists(),
             "executable": False,
+            "sha256": None,
             "version": None,
         }
     }
@@ -1219,6 +1265,17 @@ def compiler_contract(
                     copied.parent.mkdir(parents=True, exist_ok=True)
                     if not dry_run and elf.exists():
                         shutil.copy2(elf, copied)
+                        state.immutable_artifacts = capture_immutable_artifacts(
+                            {
+                                "compiler": Path(paths["clangxx"]),
+                                "linker": Path(paths["lld"]),
+                                "elf": copied,
+                            }
+                        )
+                        identity_path = case_artifacts / "immutable-artifacts.json"
+                        write_json(identity_path, state.immutable_artifacts)
+                        state.artifacts["immutable_artifacts"] = str(identity_path)
+                        artifacts["immutable_artifacts"] = str(identity_path)
                     state.artifacts["elf"] = str(copied)
                     artifacts["elf"] = str(copied)
                     objdump = Path(paths["llvm_objdump"])
@@ -1375,6 +1432,31 @@ def qemu_execution(
                     )
                 )
                 continue
+            if not dry_run:
+                try:
+                    verify_recorded_artifacts(
+                        state.immutable_artifacts, consumer="qemu"
+                    )
+                    state.immutable_artifacts.update(
+                        capture_immutable_artifacts({"qemu": Path(paths["qemu"])})
+                    )
+                    verify_recorded_artifacts(
+                        state.immutable_artifacts, consumer="qemu"
+                    )
+                    identity_path = case_artifacts / "immutable-artifacts.json"
+                    write_json(identity_path, state.immutable_artifacts)
+                    state.artifacts["immutable_artifacts"] = str(identity_path)
+                except ArtifactIntegrityError as exc:
+                    rows.append(
+                        stage_row(
+                            state,
+                            "qemu-execution",
+                            "fail",
+                            owner="integration",
+                            evidence=str(exc),
+                        )
+                    )
+                    continue
             cmd = [
                 paths["qemu"],
                 "-machine",
@@ -1701,6 +1783,31 @@ def linxcoremodel_execution(
                 )
             )
             continue
+        if not dry_run:
+            try:
+                verify_recorded_artifacts(
+                    state.immutable_artifacts, consumer="model"
+                )
+                state.immutable_artifacts.update(
+                    capture_immutable_artifacts({"model": gfsim})
+                )
+                verify_recorded_artifacts(
+                    state.immutable_artifacts, consumer="model"
+                )
+                identity_path = state.case_dir / "model" / "immutable-artifacts.json"
+                write_json(identity_path, state.immutable_artifacts)
+                state.artifacts["immutable_artifacts"] = str(identity_path)
+            except ArtifactIntegrityError as exc:
+                rows.append(
+                    stage_row(
+                        state,
+                        "linxcoremodel-execution",
+                        "fail",
+                        owner="integration",
+                        evidence=str(exc),
+                    )
+                )
+                continue
         log_path = state.case_dir / "model" / "gfsim.log"
         cmd = [str(gfsim), "-f", str(elf)]
         result = run_command(
@@ -1781,6 +1888,35 @@ def differential_triage(states: list[CaseState]) -> list[dict[str, Any]]:
                 artifacts={
                     "qemu_digest_count": str(len(qemu)),
                     "model_digest_count": str(len(model)),
+                },
+            )
+        )
+    return rows
+
+
+def final_artifact_verification(states: list[CaseState]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for state in states:
+        if not state.immutable_artifacts:
+            continue
+        try:
+            verify_recorded_artifacts(
+                state.immutable_artifacts, consumer="final verification"
+            )
+            status = "pass"
+            evidence = "all recorded artifact SHA-256 values remain unchanged"
+        except ArtifactIntegrityError as exc:
+            status = "fail"
+            evidence = str(exc)
+        rows.append(
+            stage_row(
+                state,
+                "immutable-artifact-final-verification",
+                status,
+                owner="integration",
+                evidence=evidence,
+                artifacts={
+                    "immutable_artifacts": state.artifacts.get("immutable_artifacts", "")
                 },
             )
         )
@@ -2204,6 +2340,19 @@ def main(argv: list[str]) -> int:
                 break
 
     emitted_stage_ids = {stage["id"] for stage in stage_reports}
+    artifact_rows = final_artifact_verification(states)
+    if artifact_rows:
+        stage_reports.append(
+            {
+                "id": "immutable-artifact-final-verification",
+                "owner": "integration",
+                "hard_break": True,
+                "result": artifact_rows,
+            }
+        )
+        if stage_failed(artifact_rows):
+            failed = True
+        emitted_stage_ids.add("immutable-artifact-final-verification")
     if any(state.failure_stage for state in states) and "fix-packets" not in emitted_stage_ids:
         rows = write_fix_packets(out_dir, states)
         stage_reports.append(

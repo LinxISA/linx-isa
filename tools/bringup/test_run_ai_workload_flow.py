@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 import tempfile
 import unittest
@@ -10,9 +11,90 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import run_ai_workload_flow
+import run_model_diff_suite
 
 
 class AiWorkloadFlowTests(unittest.TestCase):
+    def test_release_strict_rejects_trace_only_payload(self) -> None:
+        with self.assertRaisesRegex(
+            run_model_diff_suite.ReleaseStrictError,
+            r"immutable artifact provenance",
+        ):
+            run_model_diff_suite.validate_release_strict_payload(
+                {"cases": [{"id": "trace-only", "status": "pass"}]}
+            )
+
+    def test_release_strict_accepts_complete_result_memory_proof(self) -> None:
+        artifacts = {
+            name: {
+                "path": f"/{name}",
+                "sha256": hashlib.sha256(name.encode()).hexdigest(),
+            }
+            for name in (
+                "compiler",
+                "linker",
+                "elf",
+                "qemu",
+                "model",
+                "manifest",
+                "golden",
+            )
+        }
+        payload = {
+            "provenance": {"artifacts": artifacts, "verified_after_run": True},
+            "cases": [
+                {
+                    "id": "complete",
+                    "status": "pass",
+                    "result_memory": {
+                        "qemu": {"path": "/qemu.bin", "sha256": "a" * 64},
+                        "model": {"path": "/model.bin", "sha256": "b" * 64},
+                    },
+                    "golden_comparisons": {
+                        "qemu": {"status": "pass"},
+                        "model": {"status": "pass"},
+                    },
+                    "pairwise_comparisons": {
+                        "qemu:model": {"status": "pass"},
+                    },
+                }
+            ],
+        }
+
+        run_model_diff_suite.validate_release_strict_payload(payload)
+
+    def test_immutable_artifact_manifest_rejects_mutation_before_second_consumer(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            artifact = Path(td) / "case.elf"
+            artifact.write_bytes(b"linked ELF bytes")
+            manifest = run_ai_workload_flow.capture_immutable_artifacts(
+                {"elf": artifact}
+            )
+
+            run_ai_workload_flow.verify_immutable_artifacts(
+                manifest, {"elf": artifact}, consumer="qemu"
+            )
+            artifact.write_bytes(b"mutated ELF bytes")
+
+            with self.assertRaisesRegex(
+                run_ai_workload_flow.ArtifactIntegrityError,
+                r"elf SHA-256 changed before model",
+            ):
+                run_ai_workload_flow.verify_immutable_artifacts(
+                    manifest, {"elf": artifact}, consumer="model"
+                )
+
+    def test_immutable_artifact_manifest_requires_every_input(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            missing = Path(td) / "missing.bin"
+            with self.assertRaisesRegex(
+                run_ai_workload_flow.ArtifactIntegrityError,
+                r"compiler is missing",
+            ):
+                run_ai_workload_flow.capture_immutable_artifacts(
+                    {"compiler": missing}
+                )
+
     def classify(self, text: str) -> tuple[str, str]:
         with tempfile.TemporaryDirectory() as td:
             log_path = Path(td) / "compile.log"
