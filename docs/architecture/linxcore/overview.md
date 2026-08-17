@@ -1,7 +1,7 @@
 <!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
 <!-- Source: rtl/LinxCore/docs/architecture/overview.md -->
 
-# LinxCore v0.57 Superscalar Bring-up Overview
+# LinxCore v0.58.1 Superscalar Bring-up Overview
 
 > This published page mirrors the canonical LinxCore source in
 > `rtl/LinxCore/docs/architecture/overview.md`.
@@ -10,7 +10,7 @@
 ## Scope
 
 This document is the top-level specification overview for LinxCore under the
-live LinxISA `v0.57` contract.
+live LinxISA `v0.58.1` contract.
 
 LinxCore is specified here as:
 
@@ -20,7 +20,7 @@ LinxCore is specified here as:
 - the owner of precise retirement, recovery, interrupt, MMU, and trace-visible
   execution behavior,
 - the machine that downstream compiler, emulator, pyCircuit, and testbench
-  work must target for canonical `v0.57` behavior.
+  work must target for canonical `v0.58.1` behavior.
 
 This specification is not a performance wish-list and not a historical bring-up
 log. It defines the live contract the implementation must preserve.
@@ -32,6 +32,7 @@ glue.
 
 ## Normative links
 
+- Machine-readable ISA authority: `isa/v0.58/linxisa-v0.58.json`
 - Base ISA architecture contract: `docs/architecture/v0.58-architecture-contract.md`
 - Workload-to-engine model: `docs/architecture/v0.58-architecture-contract.md`
 - Rendering command model: `docs/architecture/v0.58-architecture-contract.md`
@@ -146,26 +147,28 @@ stream, completion model, flush rules, and observability rules as scalar work.
 
 ## Architectural role in LinxISA
 
-Under v0.58, LinxCore is the execution substrate for the multi-workload
+Under `v0.58.1`, LinxCore is the execution substrate for the multi-workload
 LinxISA model.
+
+The Tile execution engines are exactly `VEC`, `SFU`, `TLSU`, and `CUBE`.
+`TEPL` is the unchanged Mode/Function encoding carrier for `VEC` and `SFU`; it
+is not an execution engine.
 
 - BCC and the block fabric provide the architectural control and submission
   path.
-- `VEC` is the general programmable SIMT engine for parallel-loop work.
+- `VEC` is the element-wise programmable engine for vector work; `SFU` owns
+  complex functions, reductions/expands, rearrangement, and SFU-class moves.
 - `TLSU` remains selected through the same block model. Architecturally it owns
   the Tile Load/Store command/completion frontend, while southbound memory
   transport terminates at the shared CSU/L2 boundary. That target CSU owner is
   not yet promoted here; `src/tma/tma.py` is the current reduced compatibility
   facade; that filename is non-normative implementation history.
-- `CUBE`, `VEC`, and `SFU` are the Tile execution engines selected through the
-  same block model. TEPL is only the VEC/SFU Mode/Function encoding carrier.
+- `CUBE` owns matrix and matrix-vector computation.
 - Engine-backed work must retire, cancel, redirect, and trace through LinxCore
   rules rather than through a separate architectural domain.
 
 This composition rule is required for consistency with:
 
-- `docs/architecture/v0.58-architecture-contract.md`
-- `docs/architecture/v0.58-architecture-contract.md`
 - `docs/architecture/v0.58-architecture-contract.md`
 
 ## Current architecture closure slice
@@ -251,7 +254,7 @@ expand a mechanism, but they must not weaken or redefine the live contract.
 
 The live closure target for this specification is:
 
-- LinxISA `v0.57` architectural behavior,
+- LinxISA `v0.58.1` architectural behavior,
 - ACR service-request entry/return behavior, including `BI=1` block-state
   restoration,
 - MMU and interrupt correctness,
@@ -267,6 +270,6 @@ This overview does not freeze:
 
 - final frequency, area, or power targets,
 - future width scaling beyond the current live contract,
-- future engine additions not already covered by the LinxISA `v0.57`
+- future engine additions not already covered by the LinxISA `v0.58.1`
   architecture contract,
 - historical bring-up strategies that are no longer part of the live behavior.

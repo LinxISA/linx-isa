@@ -1,13 +1,13 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-08-16 19:27:52Z`
+- Generated (UTC): `2026-08-16 23:31:50Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `unavailable`
 - L3 semantic oracle: `unavailable`
 - Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
 - Spec unique mnemonics: `731`
-- QEMU unique decode mnemonics (non-internal): `849`
+- QEMU unique decode mnemonics (non-internal): `845`
 - QEMU mapped spec mnemonics: `731`
 - L1 mnemonic mapping: `731/731` (`100.0%`)
 - Spec legal forms: `765`

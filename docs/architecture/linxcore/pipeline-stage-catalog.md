@@ -521,7 +521,8 @@ Specifications and new interfaces must use only the canonical meanings above.
 - Owner module: `src/tma/tma.py` (`JanusTma`)
 - Design role: reduced TLSU command/completion facade. The target
   architecture keeps this block-visible frontend but moves southbound memory
-  transport to a shared CSU/L2 owner that is not yet promoted here.
+  transport to a shared CSU/L2 owner that is not yet promoted here. The `tma`
+  module name is a non-normative compatibility artifact.
 
 ### CUBE
 
@@ -533,18 +534,18 @@ Specifications and new interfaces must use only the canonical meanings above.
 - Owner module: `src/vec/vec.py` (`LinxCoreVec`)
 - Design role: vector-engine command/response boundary.
 
-### TAU
+### Legacy `tau` compatibility shell
 
 - Owner module: `src/tau/tau.py` (`JanusTau`)
-- Design role: typed tile-to-tile template/tile-operation command/response
-  boundary; memory access remains tile-to-tile.
+- Design role: retained implementation shell only. It is not an architectural
+  engine and does not own v0.58.1 execution semantics.
 
 ### TEPL carrier — target VEC/SFU dispatch
 
-- Target route: BCTRL preserves the architectural Mode/Function selector and
-  dispatches the catalogued operation to VEC or SFU. TEPL is not an engine.
-- The current `src/tau/tau.py` name is an implementation artifact and does not
-  create an architectural TAU engine or a second selector namespace.
+- Target route: BCTRL preserves Mode/Function and dispatches the catalogued
+  operation to VEC or SFU. TEPL is not an engine.
+- Design role: preserve TEPL block identity through BCTRL/BROB without creating
+  an architectural TAU engine or a second selector namespace.
 
 ### BROB
 
@@ -573,7 +574,8 @@ Specifications and new interfaces must use only the canonical meanings above.
 - Owner module: `src/tma/tma.py` (`JanusTma`)
 - Design role: current TLSU frontend/completion boundary under
   block control. Southbound memory transport converges to the shared CSU/L2
-  owner rather than remaining hidden in a peer engine.
+  owner rather than remaining hidden in a peer engine. The `tma` filename is
+  non-normative implementation history.
 
 ### CUBE
 
@@ -585,15 +587,16 @@ Specifications and new interfaces must use only the canonical meanings above.
 - Owner module: `src/vec/vec.py` (`LinxCoreVec`)
 - Design role: programmable SIMT engine boundary under block control.
 
-### TAU
+### SFU
 
-- Owner module: `src/tau/tau.py` (`JanusTau`)
-- Design role: typed tile-to-tile template/tile-operation boundary under block
-  control.
+- Target owner: promoted SFU implementation selected by the v0.58.1 operation
+  catalog.
+- Design role: complex functions, reductions/expands, rearrangement, and
+  SFU-class moves under block control.
 
 ### TEPL carrier — VEC/SFU-selected execution
 
-- Target owner is VEC or SFU according to the v0.58 operation catalog.
-- Design role: Mode/Function-selected Tile execution. Unsupported selector
+- Target owner is VEC or SFU according to the v0.58.1 operation catalog.
+- Design role: Mode/Function-carried selection. Unsupported or not-yet-promoted
   values fail explicitly and never alias another engine. The `src/tau/tau.py`
-  filename is non-normative implementation history.
+  shell is a compatibility artifact, not an architectural owner.

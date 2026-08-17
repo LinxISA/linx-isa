@@ -1,7 +1,7 @@
 <!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
 <!-- Source: rtl/LinxCore/docs/architecture/verification-matrix.md -->
 
-# LinxCore v0.57 Verification Matrix
+# LinxCore v0.58.1 Verification Matrix
 
 > This published page mirrors the canonical LinxCore source in
 > `rtl/LinxCore/docs/architecture/verification-matrix.md`.
@@ -48,7 +48,7 @@ It is the normative mapping between:
 | `LinxCore::pyCircuit architecture adapter` | `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001` |
 | `LinxCore::Chisel architecture adapter` | `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001`, `LC-MA-STAGE-001`, `LC-IF-TRACE-001` |
 | `LinxCore::canonical IFU throughput` | `LC-MA-PIPE-001`, `LC-MA-FWD-001` |
-| `LinxCore::production D1 decode` | `LC-MA-PIPE-001`, `LC-MA-HAZ-001`, `LC-MA-FWD-001` |
+| `LinxCore::D1 decode` | `LC-MA-PIPE-001`, `LC-MA-HAZ-001`, `LC-MA-FWD-001` |
 | `LinxCore::shared microarchitecture conformance` | `LC-MA-PIPE-001`, `LC-MA-RES-001`, `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-PRV-001`, `LC-MA-IRQ-001`, `LC-MA-MEM-001`, `LC-MA-ENG-001`, `LC-MA-FWD-001` |
 | `LinxCore::focused OOO promotion` | `LC-MA-ROB-001`, `LC-MA-HAZ-001`, `LC-MA-BLK-001`, `LC-MA-FWD-001` |
 | `LinxCore::focused LSU promotion` | `LC-MA-MEM-001`, `LC-MA-RES-001`, `LC-MA-HAZ-001`, `LC-MA-FWD-001` |
@@ -78,10 +78,10 @@ It is the normative mapping between:
 | LinxCore | `LinxCore::pyCircuit architecture adapter` | `bash rtl/LinxCore/tests/test_pycircuit_architecture_adapter.sh` | AST-backed top, parameter, state-owner, promotion, known-gap, and rejected-architecture evidence for the pyCircuit lane |
 | LinxCore | `LinxCore::Chisel architecture adapter` | `bash rtl/LinxCore/tests/test_chisel_architecture_adapter.sh` | reduced-top role safety, parameter, named-owner, focused-test, known-gap, and rejected-architecture evidence for the Chisel lane |
 | LinxCore | `LinxCore::canonical IFU throughput` | `bash rtl/LinxCore/tools/chisel/run_chisel_ifu_throughput_gate.sh` | generated-RTL 64-byte-line proof for thirty-two consecutive full four-wide D1 groups, final B-F4 metadata per lane, and multiple prediction joins/ordered line contexts in flight |
-| LinxCore | `LinxCore::production D1 decode` | `bash rtl/LinxCore/tools/chisel/run_chisel_d1_instruction_decode_probe.sh` | generated-RTL proof for direct fixed-width four-lane full decode, instruction-UID preservation, final prediction sidecars, blocked-output stability, and precise older-prefix survival; Chisel I-F3 tests separately prove monotonic UID allocation |
+| LinxCore | `LinxCore::D1 decode` | `bash rtl/LinxCore/tools/chisel/run_chisel_d1_instruction_decode_probe.sh` | generated-RTL proof for direct fixed-width four-lane full decode, instruction-UID preservation, final prediction sidecars, blocked-output stability, and precise older-prefix survival; Chisel I-F3 tests separately prove monotonic UID allocation |
 | LinxCore | `LinxCore::IFU backend feedback` | `bash rtl/LinxCore/tools/chisel/run_chisel_ifu_backend_feedback_bridge_probe.sh` | generated-RTL proof for conditional direction-only comparison, Dispatch Call and BRU Return target validation, atomic training/recovery backpressure, exact request identity, actual restart PC, and typed GHR/RAS recovery |
 | LinxCore | `LinxCore::IFU line memory transport` | `bash rtl/LinxCore/tools/chisel/run_chisel_ifu_line_memory_bridge_probe.sh` | generated-RTL proof for tagged 64-byte requests, multiple outstanding exact request rows, blocked-request stability, out-of-order tag-plus-PA response matching, retained refill data, and stale response drain |
-| LinxCore | `LinxCore::production IFU composition` | `bash rtl/LinxCore/tools/chisel/run_chisel_linxcore_production_composition_probe.sh` | generated-RTL proof that tagged translated line fetch reaches fixed-width four-wide D1 full decode and that an exact Direct target mismatch trains the retained new-epoch checkpoint before canonical BRU recovery |
+| LinxCore | `LinxCore::IFU composition` | `bash rtl/LinxCore/tools/chisel/run_chisel_linxcore_composition_probe.sh` | generated-RTL proof that tagged translated line fetch reaches fixed-width four-wide D1 full decode and that an exact Direct target mismatch trains the retained new-epoch checkpoint before canonical BRU recovery |
 | LinxCore | `LinxCore::fixed-width D1 backend ingress` | `bash rtl/LinxCore/tools/chisel/run_chisel_d1_decode_rename_rob_ingress_probe.sh` | generated-RTL proof that a four-lane decoded group enters real rename/ROB without packet/window/F4Slot reconstruction; rejects verification decoder modules |
 | LinxCore | `LinxCore::shared microarchitecture conformance` | `bash rtl/LinxCore/tests/test_microarchitecture_conformance.sh` | normalized event schema, shared invariant vectors, architectural commit fields, owner-source mappings, and deterministic cross-lane mismatch detection |
 | LinxCore | `LinxCore::focused OOO promotion` | `bash rtl/LinxCore/tests/test_ooo_promotion.sh` | parameterized pyCircuit MapQ allocation/commit/flush and Chisel per-STID BID ring-order wrap semantics |
@@ -176,8 +176,8 @@ Mandatory scenario families:
   for multiple same-block commands including duplicate-response rejection
 - CTU D3 parent/child reservation, child-before-final-row retirement and trace
   ordering, partial-expansion flush, and adjacent-boundary/BID allocation
-- target TEPL-to-TAU and FIXP unsupported paths fail explicitly until their
-  execution/completion owners are promoted
+- unsupported VEC/SFU catalog selections and FIXP paths fail explicitly until
+  their execution/completion owners are promoted
 - split-store identity, strong non-flush SCB admission, byte-granular
   nearest-older forwarding, response retry, and replay ordering
 - MDB same-BID inner recovery versus cross-BID head-taken nuke

@@ -22,8 +22,6 @@ matrix is published. Its historical PASS results do not transfer to v0.58.
 ## Key References
 
 - `docs/bringup/AVS_CONTRACT.md`
-- Historical April 2026 blocker snapshot:
-  `docs/archive/v0.58/bringup/SUPERPROJECT_BRINGUP_CHECKLIST.md`
 - `docs/bringup/SUPERPROJECT_MILESTONES.md`
 - `docs/bringup/SPEC_WORKLOAD_PLAN.md`
 - `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`

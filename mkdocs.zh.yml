@@ -46,6 +46,12 @@ nav:
         - 架构合约: architecture/v0.58-architecture-contract.md
         - v0.58.1 发布说明: releases/v0.58.1.md
         - v0.58.0 发布说明: releases/v0.58.0.md
+    - LinxCore 架构:
+        - 概述: architecture/linxcore/overview.md
+        - 微架构合约: architecture/linxcore/microarchitecture.md
+        - 模块目录: architecture/linxcore/module-catalog.md
+        - 流水级目录: architecture/linxcore/pipeline-stage-catalog.md
+        - 验证矩阵: architecture/linxcore/verification-matrix.md
     - 设计背景: background/index.md
     - 总体架构:
         - 块指令定义: isa/arch/bisa.md

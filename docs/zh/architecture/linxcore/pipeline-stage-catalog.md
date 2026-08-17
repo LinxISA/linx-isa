@@ -1,6 +1,6 @@
 # 灵犀Core 管道阶段目录
 
-> 此发布的页面镜像了规范的 灵犀Core 源代码
+> 本页是中文摘要；完整规范来源为
 > `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`。
 
 

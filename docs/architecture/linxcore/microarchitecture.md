@@ -1,7 +1,7 @@
 <!-- AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. -->
 <!-- Source: rtl/LinxCore/docs/architecture/microarchitecture.md -->
 
-# LinxCore v0.57 Microarchitecture Contract
+# LinxCore v0.58.1 Microarchitecture Contract
 
 > This published page mirrors the canonical LinxCore source in
 > `rtl/LinxCore/docs/architecture/microarchitecture.md`.
@@ -9,7 +9,7 @@
 
 ## Baseline superscalar contract
 
-LinxCore is the canonical superscalar out-of-order core for LinxISA `v0.57`.
+LinxCore is the canonical superscalar out-of-order core for LinxISA `v0.58.1`.
 It retires precisely, executes out of order, and preserves a block-ordered
 architectural control model across scalar and engine-backed work.
 
@@ -29,7 +29,7 @@ the same ordering, recovery, and observability contracts.
 
 LinxCore must preserve the following architectural state classes:
 
-- scalar, control, and privilege state defined by LinxISA `v0.57`,
+- scalar, control, and privilege state defined by LinxISA `v0.58.1`,
 - CSR, trap, MMU, and interrupt-visible state,
 - block-visible architectural state for `BSTART`, `BSTOP`, and
   boundary-authoritative redirect,
@@ -317,6 +317,17 @@ the same cycle.
 - D1 output carries fixed `inst[63:0]`, decoded opcode/uop semantics, operand
   and immediate information, parent vectors, early fault state, and group
   demand.
+- A decoded `FENTRY/FEXIT/FRET.*` parent is diverted to the external CTU through
+  the OOO-side ingress bridge before D2. The bridge retains one exact
+  generation-qualified lease per STID and accepts only an exact child count
+  followed by ordered canonical children. Each child returns through the
+  ordinary D2/D3/S1 path; CTU owns no RID/BID/PTag/IQ/ROB or architectural
+  effect port. Nonfinal children carry no trace-parent demand and only the final
+  child owns the single parent, even when the stream spans multiple RID groups.
+- Global recovery prepares/fences this CTU ingress state before O3 admission
+  and cancels it only on the same common apply as the ROB/rename transaction.
+  Stale leases, wrong ordinals/counts, malformed children, and post-cancel
+  children fail closed without advancing the lease. Unrelated STIDs continue.
 
 #### D2
 
@@ -599,6 +610,83 @@ Detailed local-register lifetime and recovery rules are documented in
   after I2. It deallocates only when every producer load resolves hit at E5.
   On miss/replay, recovery cancels the speculative pipe copy, clears
   `inflight`, and leaves the resident entry eligible for repick.
+
+### Physical issue-policy blocking
+
+- Conditions that prevent a current pick are typed scheduling policy, not IQ
+  mutation. A blocked row remains resident, valid, and not `inflight`.
+- The canonical reason vector distinguishes global quiesce, power throttle,
+  per-class/per-STID pressure, load-queue pressure, store-window pressure,
+  domain structural occupancy, latency reservation, reflow reservation,
+  LSU sidedoor conflict, and result-bus reservation.
+- Load-queue pressure applies only to load-address rows
+  (`Agu && !isStore`). It must not suppress a store-address row merely because
+  both share an AGU class.
+- Store-window pressure applies only to typed store rows in `Agu` or `Std`.
+  It must not suppress loads or unrelated execution classes.
+- Class pressure is shared by all physical domains projecting that class.
+  Structural, latency, reflow, sidedoor, and result-bus reasons are qualified
+  by both physical domain and STID.
+- A picker token retained before a policy change must be revalidated against
+  current policy before the IQ claim fire. If it becomes blocked, the token is
+  consumed as a typed policy event without setting the row `inflight`; the
+  unchanged resident row may be selected again after unblock.
+- The policy matrix is the early-block owner only. A conflict discovered after
+  P1 acceptance requires an exact stage-qualified cancel/repick event; it must
+  not be approximated by deleting or reinserting the IQ row.
+
+### Physical issue topology and capability
+
+- Logical dispatch class, physical IQ residency, picker function, and
+  execution capability are separate contracts. A class name alone never
+  proves that a row is executable on a particular pipe.
+- The first formal profile contains six ALU, three AGU, two BRU, and one
+  external FSU issue domain. Each domain owns an independent bank mask for
+  every logical class, and every dispatchable class/bank address has exactly
+  one owner.
+- STD rows reside only in ALU0/3 projections. SYS rows reside only in ALU2/5
+  projections. FSU and engine-command rows share the external FSU domain.
+  Boundary metadata is fast-resolved and owns no physical IQ row.
+- All six ALU domains accept simple ALU recipes; only ALU2/5 declare
+  multi-cycle capability. All three AGU domains accept LDA; only AGU0/1
+  declare STA capability. These restrictions require generated recipe-level
+  capability admission at D3 and revalidation before a retained pick claims
+  the canonical row.
+- AGU0/1 ultimately expose independent LDA and STA picker functions over one
+  residency owner. Shared DIV, PAC, system, and result-bus resources arbitrate
+  across local oldest-ready winners and never create a second IQ entry owner.
+- The twelve-domain atomic RF allocator ranks exact requests, then greedily
+  accepts complete P/T/U/PC groups in priority order. It must not enumerate
+  every domain subset or partially grant a uop.
+
+### Exact post-P1 stage cancellation
+
+- A physical conflict discovered after P1 is represented by one retained
+  `{stage, member, reservation, reason_mask}` request. `stage` is exactly I1 or
+  I2; the complete member and dispatch reservation identify the already
+  `inflight` canonical IQ row.
+- Only pipe-local structural, latency-reservation, reflow-reservation,
+  sidedoor, and result-bus reasons are legal late-cancel causes. Global,
+  power, class, LDQ, and store-window pressure remain early-block policy and
+  may not retroactively cancel a retained stage.
+- A late-cancel producer holds its request until accepted. The lane suppresses
+  the addressed I1 read attempt or I2 output immediately, but it clears the
+  retained stage only when storage for the exact IQ retry is guaranteed.
+- I1 and I2 can contain different uops. If exact requests target both in one
+  cycle, the older I2 transaction returns first and I1 remains retained for a
+  later accepted retry. Two identities must never be collapsed into one retry
+  pulse.
+- The retry path carries the original member and reservation back to the
+  canonical IQ. It clears `inflight`; it never deletes or reinserts the row.
+  Pending stored retries participate in lane/fabric quiescence.
+- A wrong stage, stale identity, missing stage occupancy, empty reason mask, or
+  early-only reason is consumed as a typed rejection without changing I1, I2,
+  or IQ state.
+- Architectural recovery and exact speculative-load cancellation take
+  precedence over a same-cycle resource cancel. Recovery deletes killed
+  residency through its normal owner; load cancellation repairs speculative
+  source readiness and `inflight` directly, so neither event manufactures a
+  duplicate ordinary retry.
 
 ### Ready table vs speculative ready
 
@@ -924,7 +1012,9 @@ Detailed recovery behavior remains documented in:
 
 - For block completion semantics, LinxCore follows the ISA-visible canonical
   block-type domain
-  `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TLSU, CUBE, VEC, SFU, FIXP}`.
+  `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TEPL, TLSU, CUBE, FIXP}`.
+- The compiled block-family domain contains `TEPL`, `TLSU`, and `CUBE`;
+  VEC/SFU are TEPL semantic engines and assembly aliases.
 - `STD`, `FP`, and `SYS` are equivalent in the two-layer completion model.
 - Dynamic block instances collapse to exactly one of three architectural
   participant sets:
@@ -947,7 +1037,7 @@ Normative block-type routing is:
 | `MPAR`, `MSEQ`, `VPAR`, `VSEQ` | target `VEC` | canonical route; current pyCircuit facade is reduced |
 | `TLSU` | TLSU command/completion frontend; shared CSU/L2 transport | target split; reduced facade current |
 | `CUBE` | target `CUBE` | canonical boundary; current pyCircuit facade is reduced |
-| `VEC`, `SFU` | TEPL-carried operation selected by Mode/Function and catalogued engine | unsupported until descriptor/completion behavior is promoted |
+| `TEPL` | target `VEC` or `SFU`, selected by Mode/Function and the operation catalog | unsupported until descriptor/completion behavior is promoted |
 | `FIXP` | no owner | unsupported until a completion owner is promoted |
 | `FENTRY`, `FEXIT`, `FRET.*` | CTU-expanded scalar child group | `{scalar}`, `needs_engine=0`; scalar done when the final template row is eligible after all children |
 
@@ -1014,7 +1104,7 @@ owners are not yet proven complete by the reduced RTL paths.
 ## MMU contract (LC-MA-MMU-001)
 
 - Translation success and failure must produce deterministic trap envelopes.
-- MMU behavior must remain aligned with the `v0.57` privileged contract wording.
+- MMU behavior must remain aligned with the `v0.58.1` privileged contract wording.
 - MMU fault paths must preserve precise retirement and recovery ordering.
 
 ## Interrupt contract (LC-MA-IRQ-001)
@@ -1167,6 +1257,40 @@ implementation choices and must not change architectural identity widths:
 
 - A scalar store splits into address (`STA`) and data (`STD`) work with one
   shared instruction, BID, RID, SID, and LSID identity.
+- A scalar store owns one logical group descriptor carrying exact owner,
+  first full LSID/store ID, request count, and beat ordinal. A normal scalar
+  group has one beat; a pair group has consecutive beats 0/1. Both pair beats
+  must remain resident, revalidate against their independent physical STQ
+  leases, and issue atomically. Pair plus cache-line splitting may create four
+  SCB fragments, but accepted SCB admission emits one logical drain-completion
+  record and two physical row frees. That logical record is not a lower-level
+  WriteResp or final architectural memory-completion acknowledgement.
+- The grouped ROB stores per-logical-uop memory-order tail snapshots rather
+  than physical STQ pointers. On the common ROB/BROB/rename commit fire, the
+  store-commit owner validates the complete group/member/memory chain,
+  reconstructs one/two ordered beat tokens, and atomically captures the whole
+  batch. The LSU later accepts each token only after exactly one converged
+  live STQ row matches the full generation-qualified owner and logical serial
+  range. Token acceptance, `WAIT -> Commit`, and CommitQ enqueue are one edge;
+  missing, duplicate, stale, or queue-blocked rows cannot partially promote.
+- Store memory class is translation/PMA evidence, not decode policy. Each
+  physical STQ residency receives a typed sidecar result keyed by its physical
+  lease generation, complete semantic owner, and logical beat. The routable
+  classes are `NormalCacheable`, `NormalNonCacheable`, and `DeviceMmio`;
+  `Unknown` and `Fault` fail closed at ROB commit ingress. Slot reuse makes an
+  older sidecar unreachable even when the numerical STQ index is reused.
+- Every beat of one logical scalar/pair store has one common memory class. A
+  mixed-class logical group is malformed and cannot issue. Cacheable committed
+  stores enter SCB coalescing. Normal-noncacheable and Device/MMIO committed
+  stores bypass SCB and enter one retained, single-outstanding serializer.
+- The serialized owner retains the complete logical store batch, emits one
+  exact transaction at a time, and waits for the matching transaction response
+  before advancing. It releases every physical STQ beat and emits one logical
+  completion only after the final exact response. A stale response has zero
+  effect. Ordinary speculative recovery fences new serialized admission but
+  cannot cancel, duplicate, or reissue an already accepted committed batch.
+  Terminal error remains attached to that exact batch for the precise
+  exception/platform-error owner.
 - Dispatch reserves the two halves atomically. After dispatch, address and data
   may execute and merge into STQ independently; a blocked address allocation
   must not prevent a complementary data half from merging into an existing
@@ -1194,8 +1318,10 @@ implementation choices and must not change architectural identity widths:
 - SCB owns committed, non-flushable, physical-cacheline coalescing. It must not
   merge new bytes into a row that has issued ownership traffic and is awaiting
   its response.
-- An accepted final SCB fragment, not a standalone drain attempt, authorizes
-  the matching committed STQ row to free. Request acceptance is not fence- or
+- For `NormalCacheable`, an accepted final SCB fragment, not a standalone drain
+  attempt, authorizes the matching committed STQ row to free. For
+  `NormalNonCacheable` and `DeviceMmio`, only the serializer's final exact
+  response authorizes free. Request acceptance is not fence- or
   store-completion evidence; the required WriteResp or platform-equivalent
   completion must be observed where architectural completion depends on it.
 - Committed stores drain in program order. Store coalescing may reduce physical
@@ -1692,9 +1818,11 @@ Detailed ordering behavior remains documented in:
   block-engine completion model.
 - Engine-local work must not create hidden global-memory side effects outside
   architecturally visible memory operations and committed block boundaries.
-- `TAU` is the typed tile-to-tile template/tile-operation engine. It must keep
-  memory access tile-to-tile and must not be described as a generic tensor or
-  auxiliary memory engine.
+- The Tile execution engines are exactly `VEC`, `SFU`, `TLSU`, and `CUBE`.
+- `TEPL` is the unchanged Mode/Function encoding carrier for `VEC` and `SFU`;
+  it is not an execution engine.
+- Legacy `tma` and `tau` source names are compatibility artifacts and do not
+  establish architectural engines or ownership.
 
 ### Workload-engine composition
 
@@ -1706,7 +1834,7 @@ Detailed ordering behavior remains documented in:
   `src/tma/tma.py` remains a reduced compatibility facade whose filename is
   not an architectural term.
 - `CUBE`, `VEC`, and `SFU` integrate through the same block/BID contract as
-  peer engines. TEPL remains only their encoding carrier.
+  peer engines. TEPL remains only the VEC/SFU encoding carrier.
 - Engine issue, completion, exception, and flush behavior must remain visible
   to ROB, BROB, and trace machinery through the canonical interfaces.
 

@@ -38,7 +38,7 @@
   "form_coverage_count": 765,
   "form_coverage_ratio_percent": 100.0,
   "form_missing_count": 0,
-  "generated_at_utc": "2026-08-16 19:27:52Z",
+  "generated_at_utc": "2026-08-16 23:31:50Z",
   "legal_form_count": 765,
   "legal_mnemonic_count": 731,
   "limitations": [
@@ -493,9 +493,6 @@
     "bse": [
       "BSE"
     ],
-    "bstart_call": [
-      "BSTART.STD"
-    ],
     "bstart_cond": [
       "BSTART",
       "BSTART.STD"
@@ -507,9 +504,6 @@
     "bstart_fall": [
       "BSTART.STD"
     ],
-    "bstart_fp_call": [
-      "BSTART.FP"
-    ],
     "bstart_fp_cond": [
       "BSTART.FP"
     ],
@@ -517,9 +511,6 @@
       "BSTART.FP"
     ],
     "bstart_fp_fall": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_icall": [
       "BSTART.FP"
     ],
     "bstart_fp_ind": [
@@ -530,10 +521,6 @@
     ],
     "bstart_gmov": [
       "BSTART.GMOV"
-    ],
-    "bstart_icall": [
-      "BSTART",
-      "BSTART.STD"
     ],
     "bstart_ind": [
       "BSTART",
@@ -2705,12 +2692,12 @@
   ],
   "qemu_mapped_spec_forms": 765,
   "qemu_mapped_spec_mnemonics": 731,
-  "qemu_meta_mnemonics": 848,
+  "qemu_meta_mnemonics": 844,
   "qemu_meta_path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
   "qemu_root": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 863,
-  "qemu_unique_mnemonics": 849,
+  "qemu_unique_forms": 859,
+  "qemu_unique_mnemonics": 845,
   "reserved_encoding_families": [
     {
       "behavior": "illegal_instruction",

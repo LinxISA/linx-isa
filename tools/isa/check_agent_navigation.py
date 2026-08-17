@@ -40,6 +40,7 @@ CURRENT_CONTRACT = "isa/v0.58/linxisa-v0.58.json"
 HISTORICAL_ROUTES = (
     "isa/v0.57/",
     "docs/archive/",
+    "docs/zh/archive/",
     "docs/reference/examples/v0.57/",
     "architecture/v0.57-",
 )
