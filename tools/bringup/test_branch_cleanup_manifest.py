@@ -110,6 +110,23 @@ class BranchCleanupManifestTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("attached worktree", result.stderr)
 
+    def test_transient_integration_commit_fails_static_validation(self) -> None:
+        run("git", "switch", "--detach", self.base, cwd=self.root)
+        (self.root / "transient").write_text("review-only\n", encoding="utf-8")
+        run("git", "add", "transient", cwd=self.root)
+        run("git", "commit", "-m", "transient review commit", cwd=self.root)
+        transient = run("git", "rev-parse", "HEAD", cwd=self.root).stdout.strip()
+        run("git", "switch", "main", cwd=self.root)
+
+        entry = self.entry(scope="local", ref="stale", action="delete")
+        entry["required_integration_commit"] = transient
+        entry["evidence"]["replacement_oid"] = transient
+        self.write_manifest([entry])
+
+        result = self.check("static")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("must be an ancestor of HEAD", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
