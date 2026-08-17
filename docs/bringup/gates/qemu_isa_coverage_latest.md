@@ -1,22 +1,22 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-08-10 06:00:55Z`
+- Generated (UTC): `2026-08-16 23:31:50Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `unavailable`
 - L3 semantic oracle: `unavailable`
 - Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
-- Spec unique mnemonics: `728`
-- QEMU unique decode mnemonics (non-internal): `846`
-- QEMU mapped spec mnemonics: `728`
-- L1 mnemonic mapping: `728/728` (`100.0%`)
-- Spec legal forms: `766`
-- QEMU mapped spec forms: `759`
-- L1 form mapping: `759/766` (`99.09%`)
+- Spec unique mnemonics: `731`
+- QEMU unique decode mnemonics (non-internal): `845`
+- QEMU mapped spec mnemonics: `731`
+- L1 mnemonic mapping: `731/731` (`100.0%`)
+- Spec legal forms: `765`
+- QEMU mapped spec forms: `765`
+- L1 form mapping: `765/765` (`100.0%`)
 - Missing spec mnemonics: `0`
-- Missing spec forms: `7`
+- Missing spec forms: `0`
 - Reserved spec forms: `1`
-- Unmapped QEMU mnemonics: `88`
+- Unmapped QEMU mnemonics: `87`
 
 ## L1 Mnemonic Mapping By Prefix
 
@@ -32,13 +32,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `16`
+- `B`: `17`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `32`
+- `BSTART`: `33`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -99,7 +99,7 @@
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
-- `L`: `3`
+- `L`: `4`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -201,13 +201,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `21`
+- `B`: `24`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `45`
+- `BSTART`: `47`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -268,7 +268,7 @@
 - `IC`: `2`
 - `J`: `1`
 - `JR`: `1`
-- `L`: `9`
+- `L`: `10`
 - `LB`: `2`
 - `LBI`: `1`
 - `LBU`: `2`
@@ -355,12 +355,9 @@
 
 ## Missing Forms By Prefix
 
-- `B`: `2`
-- `BSTART`: `5`
 
 ## Unmapped QEMU Mnemonics
 
-- `bstart_acccvt`
 - `bstart_tabs`
 - `bstart_tadd`
 - `bstart_tadds`
@@ -453,11 +450,3 @@
 
 
 ## Missing Spec Forms (First 200)
-
-- `B.IOT [len=32 mask=0x7e7f match=0x4013]`
-- `B.IOT [len=32 mask=0xfc007e7f match=0x5013]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0x911181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0xa11181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0xb11181]`
-- `BSTART.TMOV [len=32 mask=0x7ffffff match=0xc11181]`
-- `BSTART.TSTORE [len=32 mask=0x7ffffff match=0xe11181]`

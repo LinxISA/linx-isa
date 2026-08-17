@@ -1,21 +1,21 @@
 # LLVM C/C++ CodeGen ISA Mnemonic Breadth
 
-- Generated (UTC): `2026-08-02 12:51:42Z`
+- Generated (UTC): `2026-08-16 22:39:38Z`
 - Status: `MEASURED` (no target threshold is asserted)
-- Pure CodeGen direct coverage: `145/728`
-- Pure CodeGen after alias closure: `146/728`
-- C/C++ source-oriented direct coverage: `146/728` (`20.055%`)
-- C/C++ source-oriented after explicit alias closure: `147/728` (`20.192%`)
+- Pure CodeGen direct coverage: `144/731`
+- Pure CodeGen after alias closure: `146/731`
+- C/C++ source-oriented direct coverage: `145/731` (`19.836%`)
+- C/C++ source-oriented after explicit alias closure: `147/731` (`20.109%`)
 - Frozen plain-C reachable contract: `146/146` (`PASS`)
 - Included C/C++ artifacts: `44`
 - Excluded disassembly artifacts: `3`
-- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 3feb50e4e1896105746a1831d3545d690518d3b3)`
+- Compiler identity: `clang version 23.0.0git (https://github.com/LinxISA/llvm-project.git 1245c0f89aab24104ea935fa686a0ac5ad9ab2c9)`
 
 Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. The broader source-oriented boundary includes those tests but does not relabel their source-directed instructions as compiler-selected CodeGen. Neither metric reuses generated `99_spec_decode` or hand-authored assembly-lane artifacts.
 
 ## Measurement Contract
 
-- Metric scope: unique v0.57 ISA mnemonics observed in llvm-objdump disassembly of objects whose stems match current AVS C/C++ sources; pure CodeGen excludes sources with inline asm/builtins, and explicit alias closure is separate
+- Metric scope: unique v0.58.1 ISA mnemonics observed in llvm-objdump disassembly of objects whose stems match current AVS C/C++ sources; pure CodeGen excludes sources with inline asm/builtins, and explicit alias closure is separate
 - Provenance rule: require a complete canonical run.sh build manifest with the exact current source set, exact flags, artifact and tool hashes; recompile every source with the manifest flags and regenerate objdump before accepting source-to-object-to-disassembly provenance
 - Not measured:
   - encoding/form acceptance
@@ -38,7 +38,8 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 
 ## Explicit Alias Additions
 
-- `BSTART.STD` -> `BSTART`
+- `C.BSTART.STD` -> `BSTART`
+- `C.BSTART.STD` -> `BSTART.STD`
 
 ## Included Artifacts
 
@@ -89,7 +90,7 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 
 ## Excluded Artifacts
 
-- `avs/compiler/linx-llvm/tests/out/41_v057_isa_forms/41_v057_isa_forms.objdump`: hand-authored assembly source; not C/C++ CodeGen
+- `avs/compiler/linx-llvm/tests/out/41_v0581_isa_forms/41_v0581_isa_forms.objdump`: hand-authored assembly source; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.objdump`: generated ISA disassembly vector; not C/C++ CodeGen
 - `avs/compiler/linx-llvm/tests/out/99_spec_decode/99_spec_decode.roundtrip.objdump`: roundtrip-only artifact; not C/C++ CodeGen
 
@@ -101,10 +102,12 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `B.CATR`
 - `B.DIM`
 - `B.EQ`
+- `B.FPATR`
 - `B.GE`
 - `B.GEU`
 - `B.HINT`
 - `B.IOR`
+- `B.IOS`
 - `B.IOT`
 - `B.LT`
 - `B.LTU`
@@ -118,9 +121,9 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `BIC`
 - `BIS`
 - `BSE`
-- `BSTART.ACCCVT`
 - `BSTART.CALL`
 - `BSTART.FP`
+- `BSTART.GMOV`
 - `BSTART.MGATHER`
 - `BSTART.MGATHER.CAS`
 - `BSTART.MGATHER.MASK`
@@ -153,7 +156,6 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `BWI`
 - `BWT`
 - `BXS`
-- `C.B.DIM`
 - `C.B.DIMI`
 - `C.BSTART.FP`
 - `C.BSTART.MPAR`
@@ -162,6 +164,7 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `C.BSTART.VPAR`
 - `C.BSTART.VSEQ`
 - `C.EBREAK`
+- `C.SETRET`
 - `C.SEXT.B`
 - `C.SEXT.H`
 - `C.SLLI`
@@ -390,6 +393,7 @@ Pure CodeGen excludes C/C++ sources containing inline asm or compiler builtins. 
 - `L.BSTART.FP`
 - `L.BSTART.STD`
 - `L.BSTART.SYS`
+- `L.BSTOP`
 - `LB.PCR`
 - `LBU`
 - `LBU.PCR`

@@ -12,10 +12,10 @@ jobs:
   guards:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Initialize canonical QEMU leaf
@@ -31,6 +31,7 @@ jobs:
           python3 tools/isa/test_fused_call_contract.py
           python3 tools/isa/test_agent_navigation.py
           python3 tools/isa/test_b_datr_documentation.py
+          python3 tools/isa/test_b_ios_documentation.py
           python3 tools/isa/test_documentation_includes.py
           python3 tools/isa/check_agent_navigation.py --root .
           python3 tools/isa/report_encoding_space.py --check
@@ -40,6 +41,8 @@ jobs:
           python3 tools/isa/gen_sail_status.py --check
       - name: Enforce canonical v0.58 release guard
         run: python3 tools/isa/check_canonical_v058.py --root .
+      - name: Validate branch cleanup evidence schema
+        run: python3 tools/bringup/check_branch_cleanup_manifest.py --manifest docs/bringup/branch_cleanup_manifest.json --mode static
       - name: Enforce canonical QEMU opcode metadata
         run: python3 tools/bringup/check_qemu_opcode_meta_sync.py --strict
       - name: Cross-check QEMU v0.58 TEPL carrier selectors
@@ -53,10 +56,10 @@ jobs:
       OPAMROOT: ${{ github.workspace }}/.ci-opam
       XDG_CACHE_HOME: ${{ github.workspace }}/.ci-xdg-cache
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - uses: ocaml/setup-ocaml@v3
@@ -99,10 +102,10 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - uses: ruby/setup-ruby@v1
@@ -126,10 +129,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install python lint deps
@@ -152,10 +155,10 @@ jobs:
   model:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Init tools/model submodule

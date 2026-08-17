@@ -1,5 +1,7 @@
 # LinxISA v0.58 Component Release Train Design
 
+Archive status: historical and non-normative.
+
 ## 1. Objective
 
 Upgrade every component governed by `docs/bringup/component-lock.v0.58.json`

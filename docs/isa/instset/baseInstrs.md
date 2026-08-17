@@ -10,7 +10,7 @@ The basic instruction set not only provides a series of basic functions required
 |-----|------|
 | **Block start command** | [BSTART](../header/BSTART.md), [XB](../header/XB.md) |
 | **Block end command** | [BSTOP](../header/BSTOP.md) |
-| **Block description instructions** | [B.IOR](../header/B.IOR.md), [B.IOT](../header/B.IOT.md), [B.TEXT](../header/B.TEXT.md), [B.CATR](../header/B.CATR.md), [B.DATR](../header/B.DATR.md), [B.HINT](../header/B.HINT.md), [B.DIM](../header/B.DIM.md) |
+| **Block description instructions** | [B.IOR](../header/B.IOR.md), [B.IOS](../header/B.IOS.md), [B.IOT](../header/B.IOT.md), [B.TEXT](../header/B.TEXT.md), [B.CATR](../header/B.CATR.md), [B.DATR](../header/B.DATR.md), [B.HINT](../header/B.HINT.md), [B.DIM](../header/B.DIM.md) |
 | **Template block instruction** | [MCOPY](../header/templateblock/MCOPY.md), [MSET](../header/templateblock/MSET.md), [FENTRY](../header/templateblock/FENTRY.md), [FRET.RA](../header/templateblock/FRET.RA.md), [FEXIT](../header/templateblock/FEXIT.md), [FRET.STK](../header/templateblock/FRET.STK.md) |
 
 ## <span id="BaseI">Microinstructions</span>

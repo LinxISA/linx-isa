@@ -101,6 +101,24 @@ class AgentNavigationTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("historical route", result.stderr)
 
+    def test_rejects_chinese_archive_from_active_entrypoint(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_entrypoints(
+                root,
+                "Canonical ISA: isa/v0.58/linxisa-v0.58.json\n",
+            )
+            (root / "docs/zh/bringup/README.md").write_text(
+                "Canonical ISA: isa/v0.58/linxisa-v0.58.json\n"
+                "Historical checklist: docs/zh/archive/v0.58/checklist.md\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("historical route", result.stderr)
+
     def test_rejects_v057_described_as_active_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

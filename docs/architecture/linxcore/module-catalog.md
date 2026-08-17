@@ -8,7 +8,7 @@
 
 
 This chapter defines the canonical module structure for LinxCore under the live
-`v0.57` superscalar contract.
+`v0.58.1` superscalar contract.
 
 It freezes which module families own architectural behavior, which files are
 the canonical owners of those behaviors, and how those modules compose into the
@@ -198,7 +198,7 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 - Does not own I-F2 miss classification, L1I state, or lower-memory error
   semantics.
 
-### `chisel/src/main/scala/linxcore/top/LinxCoreProductionComposition.scala`
+### `chisel/src/main/scala/linxcore/top/LinxCoreComposition.scala`
 
 - Is the single promoted frontend composition owner for `LinxCoreIfu`,
   `IfuLineMemoryBridge`, `D1InstructionDecodeStage`, and
@@ -958,21 +958,22 @@ metadata, and UID allocation required by the stage, block, and trace contracts.
 
 ### `src/tau/tau.py`
 
-- Owns the current `TAU` typed tile-to-tile template/tile-operation boundary.
+- Owns a legacy compatibility shell. The `tau` filename is non-normative and
+  does not define an architectural engine or execution owner.
 
 ### TEPL carrier owner status
 
-- LinxISA v0.58 uses TEPL only as the Mode/Function encoding carrier and routes
-  each selected operation to VEC or SFU according to the catalog.
+- LinxISA v0.58.1 uses TEPL only as the Mode/Function encoding carrier and
+  routes each selected operation to VEC or SFU according to the catalog.
 - Current `src/tau/tau.py` is a reduced fixed-latency shell without promoted
-  Mode/Function, descriptor, STID, rejection, or tile-state behavior. BCTRL must
-  fail an unsupported selected operation explicitly until that behavior and its
-  single non-scalar completion are integrated; it must not silently route it to
-  the reduced shell.
+  TileOpcode, descriptor, STID, rejection, or tile-state behavior. BCTRL must
+  fail an unsupported selected operation explicitly until that behavior and
+  its single non-scalar completion are integrated; it must not silently route
+  it to the reduced shell.
 
 ### FIXP owner status
 
-- LinxISA `v0.57` defines `FIXP` as a non-scalar block type, but this
+- LinxISA `v0.58.1` defines `FIXP` as a non-scalar block type, but this
   repository does not yet have a promoted FIXP execution-owner module.
 - BCTRL/BROB must preserve its `{non-scalar}` completion obligation and reject
   unsupported execution explicitly; FIXP must not alias a scalar or unrelated

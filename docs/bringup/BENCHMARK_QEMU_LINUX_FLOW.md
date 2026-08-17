@@ -10,11 +10,13 @@ runner is `tools/bringup/run_benchmark_linux_flow.py`.
 Evidence:
 
 - `docs/bringup/gates/qemu_isa_coverage_latest.md` is regenerated from the
-  exact v0.58 QEMU leaf and records L1 decoder/source mapping at `728/728`
-  mnemonics and `759/766` legal forms. L2 runtime execution, L3 semantic
-  oracles, current-pin LLVM breadth, and AVS translation coverage remain
-  unavailable until freshly regenerated; archived v0.57 reports do not close
-  those levels.
+  exact v0.58.1 QEMU leaf and records complete L1 decoder/source mapping at
+  `731/731` mnemonics and `765/765` legal forms. The current-pin LLVM breadth
+  report separately measures `147/731` unique mnemonics across 44 replay-verified
+  C/C++ objects; it does not claim form acceptance or runtime semantics. L2
+  runtime execution, L3 semantic oracles, and a current aggregate AVS translation
+  report remain separate evidence levels; archived v0.57 reports do not close
+  them.
 - The v0.57 TSVC hard break is closed on clean QEMU
   `b270924c2240d7a1dc9bad4672345cc098510341`: 8/8 deterministic batches,
   `150/151` strict-vectorized kernels, and `151/151` QEMU completions. `s451`

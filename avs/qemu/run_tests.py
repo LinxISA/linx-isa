@@ -19,8 +19,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
 LLVM_AVS_ROOT = REPO_ROOT / "avs" / "compiler" / "linx-llvm" / "tests"
 LLVM_AVS_DISASM_VECTOR_GEN = LLVM_AVS_ROOT / "gen_disasm_vectors.py"
-LLVM_AVS_V057_FORMS = LLVM_AVS_ROOT / "asm" / "41_v057_isa_forms.s"
-LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.57" / "linxisa-v0.57.json"
+LLVM_AVS_V0581_FORMS = LLVM_AVS_ROOT / "asm" / "41_v0581_isa_forms.s"
+LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.58" / "linxisa-v0.58.json"
 DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
   text PT_LOAD FLAGS(5);
@@ -65,8 +65,6 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "atomic": 0x00007160,
     "jumptable": 0x00008002,
     "varargs": 0x00009004,
-    "v057_vector": 0x000012F0,
-    "v057_vector_ops": 0x00001320,
     "callret": 0x00001412,
     "runtime": 0x00002110,
     "executable_memory": 0x0000220D,
@@ -490,15 +488,6 @@ SUITES: dict[str, dict[str, str]] = {
     "jumptable": {"src": "tests/08_jumptable.c", "macro": "LINX_TEST_ENABLE_JUMPTABLE"},
     "varargs": {"src": "tests/09_varargs.c", "macro": "LINX_TEST_ENABLE_VARARGS"},
     "system": {"src": "tests/11_system.c", "macro": "LINX_TEST_ENABLE_SYSTEM"},
-    "v057_vector": {"src": "tests/12_v057_vector_tile.c", "macro": "LINX_TEST_ENABLE_V057_VECTOR"},
-    "v057_vector_ops": {
-        "src": "tests/13_v057_vector_ops_matrix.c",
-        "macro": "LINX_TEST_ENABLE_V057_VECTOR_OPS",
-    },
-    "v057_vector_body_fault": {
-        "src": "tests/18_v057_vector_body_fault.c",
-        "macro": "LINX_TEST_ENABLE_V057_VECTOR_BODY_FAULT",
-    },
     "translation_corpus": {
         "src": "tests/20_translation_corpus_stub.c",
         "macro": "LINX_TEST_ENABLE_TRANSLATION_CORPUS",
@@ -599,11 +588,9 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
 }
 
 EXPERIMENTAL_SUITES: set[str] = {
-    # v0.57 migration keeps this behind --all-suites until the vblock body
-    # symbol lowering and objdump expectations are refreshed for canonical B.IOT.
+    # Compiler-generated SIMT remains opt-in until its objdump expectations are
+    # refreshed against the exact 0.58.1 encoding projection.
     "simt_autovec",
-    # Standalone negative trap regression; not a normal smoke lane.
-    "v057_vector_body_fault",
     # Compile-only per-instruction translation corpus used by coverage/reporting.
     "translation_corpus",
     # Evidence carrier: run explicitly so it never collides with the ordinary
@@ -1123,8 +1110,8 @@ def main(argv: list[str]) -> int:
             sys.stderr.buffer.write(p.stderr)
             raise SystemExit("error: failed to generate QEMU translation corpus")
         generated_translation_sources.append(generated_spec_decode)
-        if LLVM_AVS_V057_FORMS.is_file():
-            generated_translation_sources.append(LLVM_AVS_V057_FORMS)
+        if LLVM_AVS_V0581_FORMS.is_file():
+            generated_translation_sources.append(LLVM_AVS_V0581_FORMS)
 
     include_dir = SCRIPT_DIR / "lib"
     libc_include_dir = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
@@ -1162,9 +1149,6 @@ def main(argv: list[str]) -> int:
             add_source(REPO_ROOT / rel)
     softfp_suites = {
         "float",
-        "v057_vector",
-        "v057_vector_ops",
-        "v04_vector_ops",
         "simt_autovec",
         "runtime",
     }

@@ -1,11 +1,11 @@
 # 灵犀核心模块目录
 
-> 此发布的页面镜像了规范的 灵犀Core 源代码
+> 本页是中文摘要；完整规范来源为
 > `rtl/LinxCore/docs/architecture/module-catalog.md`。
 
 
 本章定义了现场直播下 灵犀Core 的规范模块结构
-`v0.57` 超级标量 合约。
+`v0.58.1` 超标量合约。
 
 它冻结了哪些模块系列拥有架构行为，哪些文件是
 这些行为的规范所有者，以及这些模块如何组成
@@ -387,9 +387,11 @@ mismatch 使用 Dispatch/BRU flush/recover。
 
 - 拥有 `CUBE` 发动机边界。
 
-### `src/tau/tau.py`
+### `src/tau/tau.py` （历史兼容名）
 
-- 拥有 `TAU` 发动机边界。
+- 保留历史 `TAU` 文件名的兼容边界。当前 ISA 中 `TEPL`
+  仅为 Mode/Function 编码载体，操作按 catalog 路由到 `VEC`
+  或 `SFU`；`TAU` 不是规范语义引擎。
 
 ### `src/tmu/noc/node.py` 和 `src/tmu/noc/pipe.py`
 

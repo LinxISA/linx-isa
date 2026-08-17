@@ -61,11 +61,15 @@ cd avs/qemu
 
 Active runtime note:
 
-- the live QEMU runtime lane keeps the `system`, `callret`, scalar, and the
-  still-supported handwritten `v057` SIMT/vector suites;
-- the older handwritten `v04_vector_ops` runtime suite is removed from the
-  active surface on this Bisheng branch because the current compiler/MC stack
-  does not accept that handwritten asm dialect reliably enough for gating.
+- the live QEMU runtime lane is bound to the root 0.58.1 catalog and includes
+  `system`, `callret`, scalar, and compiler-generated SIMT coverage;
+- handwritten `v057` and `v04` vector suites are legacy evidence only and are
+  not published through `SUITES`, `--all`, or the release gate.
+- `qemu_executable_coverage_manifest.json` preserves audited 0.57.1 evidence
+  as an explicitly archival ledger; it is not active 0.58.1 release evidence.
+- every executable must carry the exact PTO ISA 0.58.1 ELF identity note;
+  missing, old, malformed, trailing-NUL, and conflicting identities are
+  rejected by QEMU before any guest state is installed.
 
 Run a specific suite:
 

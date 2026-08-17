@@ -1,6 +1,6 @@
-# Bring-up Progress (v0.58)
+# Bring-up Progress (v0.58.1)
 
-Last updated: 2026-08-10
+Last updated: 2026-08-17
 
 ## Current architecture baseline
 
@@ -8,7 +8,7 @@ Last updated: 2026-08-10
 - `isa/v0.58/pto-spec.lock.json` pins the released PTO common subset.
 - The semantic engines are `VEC`, `TLSU`, `CUBE`, and `SFU`; TEPL remains an
   unchanged encoding carrier and is not an engine.
-- LLVM, QEMU, and Linux gitlinks are updated to their merged v0.58-compatible
+- LLVM, QEMU, and Linux gitlinks are updated to their merged v0.58.1-compatible
   commits.
 - `tools/Linx-TileOP-API` is the active Tile API component.
 - SuperNPU sources are nested under
@@ -17,22 +17,23 @@ Last updated: 2026-08-10
 
 ## Evidence policy
 
-Only exact-head v0.58 results may be promoted as current evidence. Historical
+Only exact-head v0.58.1 results may be promoted as current evidence. Historical
 v0.57 reports and the retired AVS Tile/PTO parity suites are archived and do
-not transfer pass status to v0.58. Pending, skipped, missing-tool, or
+not transfer pass status to v0.58.1. Pending, skipped, missing-tool, or
 different-SHA results are not success.
 
 ## Current checked-in status
 
 | Surface | Status | Evidence |
 | --- | --- | --- |
-| ISA catalog and PTO lock | Released | v0.58 catalog, manifest, and PTO lock |
+| ISA catalog and PTO lock | Released | v0.58.1 catalog projection, manifest, and PTO lock |
 | Component topology | Required check | `python3 tools/ci/check_component_lock.py --root .` |
 | Linx-TileOP-API | Required check | `make -C tools/Linx-TileOP-API check` |
 | Nested SuperNPU source contract | Required check | `python3 workloads/pto_kernels/scripts/check_supernpu_v058.py` |
-| QEMU decode inventory | Partial | 728/728 mnemonics and 759/766 forms; L2/L3 unavailable in the checked-in report |
-| AVS Tile/PTO runtime | Open | Rebuild on v0.58 components; tracked by issue 169 |
-| Full runtime/model/nightly closure | Open | Must be rerun on one exact component manifest |
+| QEMU decode inventory | L1 complete | 731/731 mnemonics and 765/765 forms; L2/L3 remain separate runtime evidence levels |
+| AVS Tile/PTO runtime | Verified | Exact merged QEMU passed native Tile tests, strict system AVS, and the full AVS suite |
+| Cross-model release closure | Verified | Seven ordered release-strict cases passed on one exact compiler/QEMU/model manifest; see `docs/bringup/gates/model_diff_release-strict.json` |
+| Broader nightly and benchmark closure | Open | Nightly workload breadth remains separate from the release-strict result-memory proof |
 
 ## Canonical commands
 
@@ -46,6 +47,7 @@ python3 tools/isa/check_canonical_v058.py --root .
 python3 tools/isa/check_agent_navigation.py --root .
 make -C tools/Linx-TileOP-API check
 python3 workloads/pto_kernels/scripts/check_supernpu_v058.py
+python3 tools/bringup/run_model_diff_suite.py --root . --suite avs/model/linx_model_diff_suite.yaml --profile release-strict --trace-schema-version 1.0 --report-out docs/bringup/gates/model_diff_summary.json
 python3 docs/check_documentation.py --root .
 ```
 

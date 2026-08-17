@@ -24,7 +24,7 @@ cases:
     source: emulator/qemu/tests/linxisa/vector_header_smoke.s
     require_block_kind_any_of: [vpar, vseq]
     seed: 2001
-    required_in_profile: [release-strict]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
@@ -33,30 +33,42 @@ cases:
   - id: MODEL-TILE-DESCRIPTOR-LEGALITY
     category: tile_descriptor_legality
     source: emulator/qemu/tests/linxisa/tile_descriptor_smoke.s
-    require_block_kind_any_of: [tma, cube, tepl]
+    require_block_kind_any_of: [tlsu]
     seed: 2002
-    required_in_profile: [release-strict]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
-    notes: "Minimal tile header smoke while deeper tile descriptor/control parity remains in follow-on phase."
+    notes: "Minimal BSTART.TLOAD header smoke; exact v0.58.1 authority assigns TLOAD to TLSU."
 
   - id: MODEL-TILE-CONTROL-FLOW
     category: tile_control_flow
     source: emulator/qemu/tests/linxisa/tile_control_flow_smoke.s
-    require_block_kind_any_of: [tma, cube, tepl]
+    require_block_kind_any_of: [tlsu]
     seed: 2003
-    required_in_profile: [release-strict]
+    required_in_profile: [dev, release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
-    notes: "Control-flow baseline for decoupled tile header/body path in current pyCircuit bring-up scope."
+    notes: "Control-flow baseline around the authority-defined TLSU BSTART.TLOAD header."
 
   - id: MODEL-PRIVILEGED-EXCEPTION-EDGE
     category: privileged_exception_edge
     source: emulator/qemu/tests/linxisa/privileged_ssrset_smoke.s
     require_block_kind_any_of: [sys]
     seed: 2004
+    required_in_profile: [dev, release-strict]
+    trace_version: "1.0"
+    ignore_fields: [cycle]
+
+  - id: MODEL-RELEASE-RESULT-MEMORY
+    category: release_result_memory
+    source: avs/model/release_result_memory.s
+    result_manifest: avs/model/release_result_memory.json
+    golden: avs/model/release_result_memory.golden.bin
+    link_mode: release-executable
+    seed: 581
     required_in_profile: [release-strict]
     trace_version: "1.0"
     ignore_fields: [cycle]
+    notes: "One ET_EXEC publishes independent golden bytes through architecture-visible RAM on QEMU, ref, and compare."

@@ -1,92 +1,571 @@
 {
   "cases": [
     {
-      "category": "scalar_basic",
       "id": "MODEL-SCALAR-COMMIT-SMOKE",
-      "log": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work/00_MODEL-SCALAR-COMMIT-SMOKE_seed1001/run.log",
-      "required": true,
-      "seed": "1001",
-      "source_kind": "asm",
-      "stage": "model",
-      "status": "fail"
+      "provenance": {
+        "artifacts": {
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/00_MODEL-SCALAR-COMMIT-SMOKE/linked.o",
+            "sha256": "2155a9b8401cc2db15c60787b138b77f1634d31bd0e2b13a565ce235031505fe"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          },
+          "model": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/mcopy_mset_basic.s",
+            "sha256": "34274e00acb25b258946d3b7ee0c7ca3a4fa09c87456daa43f3c04f7bbde0717"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/mcopy_mset_basic.s",
+      "source_sha256": "34274e00acb25b258946d3b7ee0c7ca3a4fa09c87456daa43f3c04f7bbde0717",
+      "status": "pass"
     },
     {
-      "category": "scalar_basic",
       "id": "MODEL-SCALAR-MCOPY-MSET",
-      "log": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work/01_MODEL-SCALAR-MCOPY-MSET_seed1002/run.log",
-      "required": true,
-      "seed": "1002",
-      "source_kind": "asm",
-      "stage": "model",
-      "status": "fail"
+      "provenance": {
+        "artifacts": {
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/01_MODEL-SCALAR-MCOPY-MSET/linked.o",
+            "sha256": "2155a9b8401cc2db15c60787b138b77f1634d31bd0e2b13a565ce235031505fe"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          },
+          "model": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/mcopy_mset_basic.s",
+            "sha256": "34274e00acb25b258946d3b7ee0c7ca3a4fa09c87456daa43f3c04f7bbde0717"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/mcopy_mset_basic.s",
+      "source_sha256": "34274e00acb25b258946d3b7ee0c7ca3a4fa09c87456daa43f3c04f7bbde0717",
+      "status": "pass"
     },
     {
-      "category": "vector_lane_control",
       "id": "MODEL-VECTOR-LANE-CONTROL",
-      "log": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work/02_MODEL-VECTOR-LANE-CONTROL_seed2001/run.log",
-      "required": true,
-      "seed": "2001",
-      "source_kind": "asm",
-      "stage": "shape_block_kind",
-      "status": "fail"
+      "provenance": {
+        "artifacts": {
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/02_MODEL-VECTOR-LANE-CONTROL/linked.o",
+            "sha256": "ec9083938b3fbe19394f32e6eb932a3733f0b49b7d2d21f2285d7190cfb7e601"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          },
+          "model": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/vector_header_smoke.s",
+            "sha256": "85a2daca3f7c5e5820b7be2f61310c99ec05664c2cb4ceb48684424fe9905bc3"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/vector_header_smoke.s",
+      "source_sha256": "85a2daca3f7c5e5820b7be2f61310c99ec05664c2cb4ceb48684424fe9905bc3",
+      "status": "pass"
     },
     {
-      "category": "tile_descriptor_legality",
       "id": "MODEL-TILE-DESCRIPTOR-LEGALITY",
-      "log": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work/03_MODEL-TILE-DESCRIPTOR-LEGALITY_seed2002/run.log",
-      "required": true,
-      "seed": "2002",
-      "source_kind": "ir",
-      "stage": "shape_block_kind",
-      "status": "fail"
+      "provenance": {
+        "artifacts": {
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/03_MODEL-TILE-DESCRIPTOR-LEGALITY/linked.o",
+            "sha256": "7c0feb8eb50979e35c7306a988f6fe3e519b2f2d7aa66a6997d3c0cfa170d071"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          },
+          "model": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/tile_descriptor_smoke.s",
+            "sha256": "dd00b1aad52fcc711fa333209f62baf170be00116cb3b570a436a8f75eb20098"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/tile_descriptor_smoke.s",
+      "source_sha256": "dd00b1aad52fcc711fa333209f62baf170be00116cb3b570a436a8f75eb20098",
+      "status": "pass"
     },
     {
-      "category": "tile_control_flow",
       "id": "MODEL-TILE-CONTROL-FLOW",
-      "log": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work/04_MODEL-TILE-CONTROL-FLOW_seed2003/run.log",
-      "required": true,
-      "seed": "2003",
-      "source_kind": "ir",
-      "stage": "shape_block_kind",
-      "status": "fail"
+      "provenance": {
+        "artifacts": {
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/04_MODEL-TILE-CONTROL-FLOW/linked.o",
+            "sha256": "da395dc4e5e48a864834c034c472f925dfe706785da715054c0b64b7ce95889f"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          },
+          "model": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/tile_control_flow_smoke.s",
+            "sha256": "5e5defcb618a2046c863c4c9558c25dd820a68bb941f06f64519b369b4bc2e48"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/tile_control_flow_smoke.s",
+      "source_sha256": "5e5defcb618a2046c863c4c9558c25dd820a68bb941f06f64519b369b4bc2e48",
+      "status": "pass"
     },
     {
-      "category": "privileged_exception_edge",
       "id": "MODEL-PRIVILEGED-EXCEPTION-EDGE",
-      "log": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work/05_MODEL-PRIVILEGED-EXCEPTION-EDGE_seed2004/run.log",
-      "required": true,
-      "seed": "2004",
-      "source_kind": "asm",
-      "stage": "model",
-      "status": "fail"
+      "provenance": {
+        "artifacts": {
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/05_MODEL-PRIVILEGED-EXCEPTION-EDGE/linked.o",
+            "sha256": "1755a49bca9d20cc7713f2ffc4035b5059c6e8fef1f6a578abf1253ce526f9c9"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          },
+          "model": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/privileged_ssrset_smoke.s",
+            "sha256": "e5b9f098d8d3c4170c39f1723532039e247cd6894e2492e0db1089cc969e1f67"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/tests/linxisa/privileged_ssrset_smoke.s",
+      "source_sha256": "e5b9f098d8d3c4170c39f1723532039e247cd6894e2492e0db1089cc969e1f67",
+      "status": "pass"
+    },
+    {
+      "golden_comparisons": {
+        "compare": {
+          "actual_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "golden_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12,
+          "status": "pass"
+        },
+        "qemu": {
+          "actual_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
+          "golden_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12,
+          "status": "pass"
+        },
+        "ref": {
+          "actual_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "golden_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12,
+          "status": "pass"
+        }
+      },
+      "id": "MODEL-RELEASE-RESULT-MEMORY",
+      "pairwise_comparisons": {
+        "qemu:compare": {
+          "left_consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
+          "left_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "right_consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "right_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12,
+          "status": "pass"
+        },
+        "qemu:ref": {
+          "left_consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
+          "left_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "right_consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "right_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12,
+          "status": "pass"
+        },
+        "ref:compare": {
+          "left_consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "left_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "right_consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "right_sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12,
+          "status": "pass"
+        }
+      },
+      "provenance": {
+        "artifacts": {
+          "compare": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          },
+          "compiler": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/llvm-mc",
+            "sha256": "a5f9ebad06531b8ec7c7c73aca98b45d0ac3af1354f43b3d2e3df581ceeeee34"
+          },
+          "elf": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/06_MODEL-RELEASE-RESULT-MEMORY/case.elf",
+            "sha256": "6e492f365bd46ebb902882f95d56f55ffa63c2b27b28aefcbba703867f455e96"
+          },
+          "golden": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/release_result_memory.golden.bin",
+            "sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a"
+          },
+          "linker": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm/build-linxisa-clang/bin/lld",
+            "sha256": "f7f4c5f6c029f7ce3c77a061956a2cab883f6fbf103d5408947149812149b9c0"
+          },
+          "manifest": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/release_result_memory.json",
+            "sha256": "4d17fe0303b574e1367d1acff1e44f402384947ba232d8ead6b5a17338fd020b"
+          },
+          "qemu": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/qemu-system-linx64",
+            "sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd"
+          },
+          "qemu_source_marker": {
+            "path": "/private/tmp/linx-qemu-retired-call-direct-build/.linx_qemu_clean_head",
+            "sha256": "eb856e815da9cd5d05d62334241c1afc95b9b88ae32d5e87a3831756e7dccbc8"
+          },
+          "ref": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model/build/linx_model_cli",
+            "sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba"
+          }
+        },
+        "components": {
+          "compiler": {
+            "clean": true,
+            "commit": "1245c0f89aab24104ea935fa686a0ac5ad9ab2c9",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/compiler/llvm",
+            "tree": "0e0bea6810e0fbfb7411ca6389bb54d73b6e3b59"
+          },
+          "model": {
+            "clean": true,
+            "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/tools/model",
+            "tree": "fb0c6098394ba8a4f237328c3d2babcd3dd9467f"
+          },
+          "qemu": {
+            "clean": true,
+            "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+            "tree": "506acd2e9234d5bffe8d5173f7519f707665eaae"
+          }
+        },
+        "inputs": {
+          "source": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/release_result_memory.s",
+            "sha256": "e0ec704b014d35811180d8ef948c16145fc5190d508f6107e2cd1f5743a21267"
+          },
+          "suite": {
+            "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+            "sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10"
+          }
+        },
+        "verified_after_run": true
+      },
+      "result_memory": {
+        "compare": {
+          "consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/06_MODEL-RELEASE-RESULT-MEMORY/compare.result.bin",
+          "sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12
+        },
+        "qemu": {
+          "consumer_sha256": "fa617898a34f8b9d19d98e9fddfe8defa8afdea62971e347eb322c9ecd8635bd",
+          "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/06_MODEL-RELEASE-RESULT-MEMORY/qemu.result.bin",
+          "sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12
+        },
+        "ref": {
+          "consumer_sha256": "b8d77ec5e895681d54bdfdaeb4f3fe8e71dcef2785ce3ebef4ecd218e7241dba",
+          "path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/gates/model_diff_work/06_MODEL-RELEASE-RESULT-MEMORY/ref.result.bin",
+          "sha256": "b4f8dd4aa33545575cd35add493bf98f99af26d16559683e2c272d23fd46773a",
+          "size": 12
+        }
+      },
+      "source": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/release_result_memory.s",
+      "source_sha256": "e0ec704b014d35811180d8ef948c16145fc5190d508f6107e2cd1f5743a21267",
+      "status": "pass"
     }
   ],
-  "failing_required_categories": [
-    "privileged_exception_edge",
-    "scalar_basic",
-    "tile_control_flow",
-    "tile_descriptor_legality",
-    "vector_lane_control"
-  ],
-  "missing_required_categories": [],
-  "ok": false,
   "profile": "release-strict",
-  "required_categories": [
-    "privileged_exception_edge",
-    "scalar_basic",
-    "tile_control_flow",
-    "tile_descriptor_legality",
-    "vector_lane_control"
-  ],
-  "required_categories_passed": [],
-  "required_categories_seen": [
-    "privileged_exception_edge",
-    "scalar_basic",
-    "tile_control_flow",
-    "tile_descriptor_legality",
-    "vector_lane_control"
-  ],
-  "suite": "${LINXISA_ROOT}/avs/model/linx_model_diff_suite.yaml",
-  "trace_schema_version": "1.0",
-  "workdir": "${LINXISA_ROOT}/docs/bringup/gates/model_diff_work"
+  "release_strict": {
+    "status": "pass"
+  },
+  "suite": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/avs/model/linx_model_diff_suite.yaml",
+  "suite_sha256": "b5806eef2d6e67bbf87795c68afefa991478f633724a55590a99026306eaba10",
+  "trace_schema_version": "1.0"
 }

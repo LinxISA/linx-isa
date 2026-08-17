@@ -54,6 +54,7 @@ nav:
       - Encoding formats: isa/encoding.md
       - Instruction groups: isa/groups/index.md
       - All instructions: isa/instructions/index.md
+      - B.IOS Shared binding: isa/header/B.IOS.md
       - Full ISA manual: architecture/isa-manual/README.md
   - Programming:
       - Assembly guide: reference/linxisa-assembly-agent-guide.md

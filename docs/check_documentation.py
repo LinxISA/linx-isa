@@ -236,6 +236,14 @@ def main() -> int:
             if result.returncode:
                 _error(errors, "Chinese translation source/translation hashes are stale")
 
+    language_map_result = subprocess.run(
+        [sys.executable, "tools/docs/update_language_map.py", "--check"],
+        cwd=root,
+        check=False,
+    )
+    if language_map_result.returncode:
+        _error(errors, "English/Chinese documentation language map is stale")
+
     encoding = (docs / "isa" / "encoding.md").read_text(encoding="utf-8")
     required_encoding_text = (
         "only as a non-normative review aid",

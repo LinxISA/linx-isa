@@ -1,12 +1,12 @@
-# 灵犀Core v0.57 微架构合约
+# 灵犀Core v0.58.1 微架构合约
 
-> 此发布的页面镜像了规范的 灵犀Core 源代码
+> 本页是中文摘要；完整规范来源为
 > `rtl/LinxCore/docs/architecture/microarchitecture.md`。
 
 
 ## 基线 super标量 合约
 
-灵犀Core 是 灵犀指令集 `v0.57` 的规范 super标量 乱序核心。
+灵犀Core 是 灵犀指令集 `v0.58.1` 的规范超标量乱序核心。
 它精确地退出，无序执行，并保留块排序
 跨 标量 和引擎支持工作的架构控制模型。
 
@@ -18,14 +18,14 @@
 - 提交宽度：最多 4
 - 路易斯安那州立大学宽度：1
 
-这些限制是实时 `v0.57` 闭合基线。更广泛的问题或多 LSU
+这些限制是当前 `v0.58.1` 闭合基线。更广泛的问题或多 LSU
 扩展是一个后续轨道，而不是这里规范合同的一部分。
 
 ## 架构状态模型
 
 灵犀Core 必须保留以下 架构状态 类：
 
-- 标量，灵犀指令集 `v0.57` 定义的控制和特权状态，
+- 标量，灵犀指令集 `v0.58.1` 定义的控制和特权状态，
 - CSR、陷阱、MMU 和 中断-可见状态，
 - `BSTART`、`BSTOP` 的块可见 架构状态 和
   边界权威重定向，
@@ -460,7 +460,8 @@ mismatch 使用 BRU flush/recover 并发布 frontend restart。
   跨槽排序。
 
 ### 架构块完成抽象- 对于块完成语义，灵犀Core 遵循 ISA 可见规范
-  块类型域 `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TLSU, CUBE, VEC, SFU}`。
+  编译块族域 `{STD, FP, SYS, MPAR, MSEQ, VPAR, VSEQ, TLSU, CUBE, TEPL, FIXP}`。
+  `TEPL` 是唯一解码载体；其 Mode/Function 再决定语义引擎 `VEC` 或 `SFU`。
 - `STD`、`FP` 和 `SYS` 在两层完成模型中等效。
 - 动态块实例完全崩溃为三种架构之一
   参与者集：
@@ -498,7 +499,7 @@ mismatch 使用 BRU flush/recover 并发布 frontend restart。
 ## MMU合约（LC-MA-MMU-001）
 
 - 翻译成功和失败必须产生确定性陷阱包络。
-- MMU 行为必须与 `v0.57` 特权合同措辞保持一致。
+- MMU 行为必须与 `v0.58.1` 特权合约措辞保持一致。
 - MMU 故障路径必须保持精确的退役和恢复顺序。
 
 ## 中断合约 (LC-MA-IRQ-001)
@@ -542,8 +543,8 @@ mismatch 使用 BRU flush/recover 并发布 frontend restart。
   块引擎完成模型。
 - 引擎本地工作不得在外部产生隐藏的全局内存副作用
   架构上可见的内存操作和提交的块边界。
-- 面向图块的引擎（例如 `TAU`）必须保留当前的图块到图块
-  除非未来的规范架构更新改变了该规则。
+- 面向 Tile 的 `TEPL` 操作必须保留 Mode/Function 载体身份，
+  并由当前 catalog 明确路由到 `VEC` 或 `SFU`。
 
 ### 工作负载-引擎组成
 
@@ -551,8 +552,8 @@ mismatch 使用 BRU flush/recover 并发布 frontend restart。
 - `TLSU` 通过与灵犀 Core 相同的块/BID 合约集成到灵犀 Core
   机器的其余部分，但其南向内存流量归 CSU 所有
   子系统并以 CSU L2 和前端填充流量为目标。
-- `CUBE` 和 `TAU` 继续通过相同的区块/BID 合约进行集成
-  作为对等引擎。
+- `CUBE`、`VEC` 和 `SFU` 通过相同的块/BID 合约集成；
+  `TEPL` 本身不是执行引擎。
 - 引擎问题、完成、异常 和刷新行为必须保持可见
   通过规范接口来 ROB、BROB 和跟踪机器。
 

@@ -10,14 +10,14 @@
     "C.BSTART.FP [len=16 mask=0xc7ff match=0x80]",
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]"
   ],
-  "coverage_count": 728,
+  "coverage_count": 731,
   "coverage_ratio_percent": 100.0,
   "evidence": {
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 759,
-      "mnemonic_count": 728
+      "form_count": 765,
+      "mnemonic_count": 731
     },
     "L2": {
       "availability": "unavailable",
@@ -35,12 +35,12 @@
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 759,
-  "form_coverage_ratio_percent": 99.09,
-  "form_missing_count": 7,
-  "generated_at_utc": "2026-08-10 06:00:55Z",
-  "legal_form_count": 766,
-  "legal_mnemonic_count": 728,
+  "form_coverage_count": 765,
+  "form_coverage_ratio_percent": 100.0,
+  "form_missing_count": 0,
+  "generated_at_utc": "2026-08-16 23:31:50Z",
+  "legal_form_count": 765,
+  "legal_mnemonic_count": 731,
   "limitations": [
     "no_runtime_execution_evidence",
     "no_semantic_oracle_evidence"
@@ -58,13 +58,13 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 16,
+    "B": 17,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 32,
+    "BSTART": 33,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -125,7 +125,7 @@
     "IC": 2,
     "J": 1,
     "JR": 1,
-    "L": 3,
+    "L": 4,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
@@ -223,13 +223,13 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 21,
+    "B": 24,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 45,
+    "BSTART": 47,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -290,7 +290,7 @@
     "IC": 2,
     "J": 1,
     "JR": 1,
-    "L": 9,
+    "L": 10,
     "LB": 2,
     "LBI": 1,
     "LBU": 2,
@@ -433,6 +433,9 @@
     "b_eq": [
       "B.EQ"
     ],
+    "b_fpatr": [
+      "B.FPATR"
+    ],
     "b_ge": [
       "B.GE"
     ],
@@ -490,10 +493,6 @@
     "bse": [
       "BSE"
     ],
-    "bstart_call": [
-      "BSTART CALL",
-      "BSTART.STD"
-    ],
     "bstart_cond": [
       "BSTART",
       "BSTART.STD"
@@ -505,9 +504,6 @@
     "bstart_fall": [
       "BSTART.STD"
     ],
-    "bstart_fp_call": [
-      "BSTART.FP"
-    ],
     "bstart_fp_cond": [
       "BSTART.FP"
     ],
@@ -515,9 +511,6 @@
       "BSTART.FP"
     ],
     "bstart_fp_fall": [
-      "BSTART.FP"
-    ],
-    "bstart_fp_icall": [
       "BSTART.FP"
     ],
     "bstart_fp_ind": [
@@ -528,10 +521,6 @@
     ],
     "bstart_gmov": [
       "BSTART.GMOV"
-    ],
-    "bstart_icall": [
-      "BSTART",
-      "BSTART.STD"
     ],
     "bstart_ind": [
       "BSTART",
@@ -620,10 +609,25 @@
     "bstart_tmov": [
       "BSTART.TMOV"
     ],
+    "bstart_tmov_l2s_insert": [
+      "BSTART.TMOV"
+    ],
+    "bstart_tmov_l2s_publish": [
+      "BSTART.TMOV"
+    ],
+    "bstart_tmov_s2l_broadcast": [
+      "BSTART.TMOV"
+    ],
+    "bstart_tmov_s2l_extract": [
+      "BSTART.TMOV"
+    ],
     "bstart_tprefetch": [
       "BSTART.TPREFETCH"
     ],
     "bstart_tstore": [
+      "BSTART.TSTORE"
+    ],
+    "bstart_tstore_spart": [
       "BSTART.TSTORE"
     ],
     "bstart_vpar": [
@@ -677,19 +681,7 @@
     "c_bstart_mseq": [
       "C.BSTART.MSEQ"
     ],
-    "c_bstart_std_call": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_cond": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_direct": [
-      "C.BSTART.STD"
-    ],
     "c_bstart_std_fall": [
-      "C.BSTART.STD"
-    ],
-    "c_bstart_std_icall": [
       "C.BSTART.STD"
     ],
     "c_bstart_std_ind": [
@@ -1640,6 +1632,9 @@
     "l_bstart_sys": [
       "L.BSTART.SYS"
     ],
+    "l_bstop": [
+      "L.BSTOP"
+    ],
     "lb": [
       "LB"
     ],
@@ -2031,14 +2026,15 @@
       "SSRSWAP"
     ],
     "start_call_32": [
-      "BSTART CALL",
-      "BSTART.STD",
-      "HL.BSTART CALL",
-      "HL.BSTART.STD"
+      "BSTART.CALL",
+      "HL.BSTART CALL"
     ],
     "start_call_48": [
-      "HL.BSTART CALL",
-      "HL.BSTART.STD"
+      "BSTART.CALL",
+      "HL.BSTART CALL"
+    ],
+    "start_icall_32": [
+      "BSTART.ICALL"
     ],
     "sub": [
       "SUB"
@@ -2688,31 +2684,20 @@
   },
   "missing_by_prefix": {},
   "missing_count": 0,
-  "missing_forms_by_prefix": {
-    "B": 2,
-    "BSTART": 5
-  },
-  "missing_spec_forms": [
-    "B.IOT [len=32 mask=0x7e7f match=0x4013]",
-    "B.IOT [len=32 mask=0xfc007e7f match=0x5013]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0x911181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0xa11181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0xb11181]",
-    "BSTART.TMOV [len=32 mask=0x7ffffff match=0xc11181]",
-    "BSTART.TSTORE [len=32 mask=0x7ffffff match=0xe11181]"
-  ],
+  "missing_forms_by_prefix": {},
+  "missing_spec_forms": [],
   "missing_spec_mnemonics": [],
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 759,
-  "qemu_mapped_spec_mnemonics": 728,
-  "qemu_meta_mnemonics": 845,
-  "qemu_meta_path": "${QEMU_ROOT}/target/linx/linx_opcode_meta_gen.h",
-  "qemu_root": "${QEMU_ROOT}",
+  "qemu_mapped_spec_forms": 765,
+  "qemu_mapped_spec_mnemonics": 731,
+  "qemu_meta_mnemonics": 844,
+  "qemu_meta_path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
+  "qemu_root": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 862,
-  "qemu_unique_mnemonics": 846,
+  "qemu_unique_forms": 859,
+  "qemu_unique_mnemonics": 845,
   "reserved_encoding_families": [
     {
       "behavior": "illegal_instruction",
@@ -2732,11 +2717,10 @@
     "ok": true
   },
   "schema_version": "qemu-isa-coverage-v3",
-  "spec_path": "${LINXISA_ROOT}/isa/v0.58/linxisa-v0.58.json",
-  "spec_total_forms": 766,
-  "spec_unique_mnemonics": 728,
+  "spec_path": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/isa/v0.58/linxisa-v0.58.json",
+  "spec_total_forms": 765,
+  "spec_unique_mnemonics": 731,
   "unmapped_qemu_mnemonics": [
-    "bstart_acccvt",
     "bstart_tabs",
     "bstart_tadd",
     "bstart_tadds",
