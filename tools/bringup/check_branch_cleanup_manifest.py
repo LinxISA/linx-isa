@@ -75,6 +75,10 @@ def _object_exists(root: Path, oid: str) -> bool:
     return _git(root, "cat-file", "-e", f"{oid}^{{commit}}").returncode == 0
 
 
+def _is_ancestor_of_head(root: Path, oid: str) -> bool:
+    return _git(root, "merge-base", "--is-ancestor", oid, "HEAD").returncode == 0
+
+
 def validate_static(root: Path, manifest: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if manifest.get("schema") != "linx-branch-cleanup-v1":
@@ -108,6 +112,11 @@ def validate_static(root: Path, manifest: dict[str, Any]) -> list[str]:
             errors.append(f"{label} required integration commit must be a full Git OID")
         elif not _object_exists(root, integration):
             errors.append(f"{label} required integration commit is unavailable: {integration}")
+        elif not _is_ancestor_of_head(root, integration):
+            errors.append(
+                f"{label} required integration commit must be an ancestor of HEAD: "
+                f"{integration}"
+            )
         if not isinstance(entry["attached_worktree_prohibited"], bool):
             errors.append(f"{label} attached_worktree_prohibited must be boolean")
         if entry["action"] == "delete" and not entry["attached_worktree_prohibited"]:
@@ -125,8 +134,14 @@ def validate_static(root: Path, manifest: dict[str, Any]) -> list[str]:
                     errors.append(f"{label} evidence.{field} must be a non-empty string")
             replacement = evidence.get("replacement_oid", "")
             if isinstance(replacement, str) and OID_RE.fullmatch(replacement):
-                if evidence.get("kind") != "retention-policy" and not _object_exists(root, replacement):
-                    errors.append(f"{label} replacement OID is unavailable: {replacement}")
+                if evidence.get("kind") != "retention-policy":
+                    if not _object_exists(root, replacement):
+                        errors.append(f"{label} replacement OID is unavailable: {replacement}")
+                    elif not _is_ancestor_of_head(root, replacement):
+                        errors.append(
+                            f"{label} replacement OID must be an ancestor of HEAD: "
+                            f"{replacement}"
+                        )
             else:
                 errors.append(f"{label} evidence.replacement_oid must be a full Git OID")
         key = (entry["repository"], entry["scope"], entry.get("remote", ""), entry["ref"])

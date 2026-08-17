@@ -44,10 +44,10 @@
       "classification": "unique-content-integrated-and-cleaned",
       "evidence": {
         "kind": "semantic-port-plus-regression",
-        "replacement_oid": "abf5768a9782876d9d1816d8b7dc556e488f0988",
-        "summary": "Bilingual B.IOS content was integrated and hardened; the loose L.BSTOP test was preserved separately before cleanup."
+        "replacement_oid": "7bd8a28cd2b2e2c011b168149826a6590a86ba3e",
+        "summary": "Bilingual B.IOS content was integrated and hardened in the canonical v0.58.1 superproject merge; the loose L.BSTOP test was preserved separately before cleanup."
       },
-      "required_integration_commit": "abf5768a9782876d9d1816d8b7dc556e488f0988",
+      "required_integration_commit": "7bd8a28cd2b2e2c011b168149826a6590a86ba3e",
       "attached_worktree_prohibited": true,
       "pre_state": {"expected_present": false},
       "post_state": {"expected_present": false}
@@ -116,10 +116,10 @@
       "classification": "dependency-update-ported",
       "evidence": {
         "kind": "semantic-port",
-        "replacement_oid": "d1f437b3bcdde293569e323990835cff3caa547a",
-        "summary": "All six checkout uses were ported to v7 with the Chinese Pages workflow update."
+        "replacement_oid": "7bd8a28cd2b2e2c011b168149826a6590a86ba3e",
+        "summary": "All six checkout uses were ported to v7 with the Chinese Pages workflow update in the canonical v0.58.1 superproject merge."
       },
-      "required_integration_commit": "d1f437b3bcdde293569e323990835cff3caa547a",
+      "required_integration_commit": "7bd8a28cd2b2e2c011b168149826a6590a86ba3e",
       "attached_worktree_prohibited": true,
       "pre_state": {"expected_present": true},
       "post_state": {"expected_present": false}
@@ -134,10 +134,10 @@
       "classification": "dependency-update-ported",
       "evidence": {
         "kind": "semantic-port",
-        "replacement_oid": "d1f437b3bcdde293569e323990835cff3caa547a",
-        "summary": "All six setup-python uses were ported to v7 and the workflow YAML was validated."
+        "replacement_oid": "7bd8a28cd2b2e2c011b168149826a6590a86ba3e",
+        "summary": "All six setup-python uses were ported to v7 and the workflow YAML was validated in the canonical v0.58.1 superproject merge."
       },
-      "required_integration_commit": "d1f437b3bcdde293569e323990835cff3caa547a",
+      "required_integration_commit": "7bd8a28cd2b2e2c011b168149826a6590a86ba3e",
       "attached_worktree_prohibited": true,
       "pre_state": {"expected_present": true},
       "post_state": {"expected_present": false}
