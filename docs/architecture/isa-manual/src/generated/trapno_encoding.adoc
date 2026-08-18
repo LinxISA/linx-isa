@@ -4,7 +4,8 @@
 ==== TRAPNO encoding (v0.58 bring-up)
 
 * TRAPNO is shared for faults, traps, and interrupts.
-* E=1 indicates asynchronous interrupt; E=0 indicates synchronous fault/trap.
+* E=1 indicates a synchronous exception; E=0 indicates an asynchronous interrupt.
+* CAUSE is interpreted within the selected TRAPNUM class.
 * ARGV=1 indicates TRAPARG0 is valid.
 
 Bit layout:
@@ -21,7 +22,7 @@ Bit layout:
 |===
 |Field |Bits |Description
 
-|`E` |`[63]` |Asynchronous interrupt indicator (1=async interrupt, 0=sync fault/trap).
+|`E` |`[63]` |Synchronous exception indicator (1=sync exception, 0=async interrupt).
 |`ARGV` |`[62]` |TRAPARG0 valid (1=valid).
 |`CAUSE` |`[47:24]` |Sub-cause encoding (profile-defined per TRAPNUM).
 |`TRAPNUM` |`[5:0]` |Trap major class (6-bit).
@@ -41,9 +42,26 @@ Bring-up trap classes:
 |`0b100001` |33 |`INST_PAGE_FAULT` |Instruction page fault (IFSC in CAUSE).
 |`0b100010` |34 |`DATA_ALIGN_FAULT` |Data alignment fault.
 |`0b100011` |35 |`DATA_PAGE_FAULT` |Data page fault (DFSC/LaneNum/WnR in CAUSE).
-|`0b101100` |44 |`INTERRUPT` |Interrupt class (E=1, TRAPARG0=irq_id).
+|`0b101100` |44 |`INTERRUPT` |Interrupt class (E=0, TRAPARG0=irq_id).
 |`0b110001` |49 |`HW_BREAKPOINT` |Hardware breakpoint trap.
 |`0b110010` |50 |`SW_BREAKPOINT` |Software breakpoint trap (EBREAK).
 |`0b110011` |51 |`HW_WATCHPOINT` |Hardware watchpoint trap.
 |`0b110100` |52 |`ASSERT_FAIL` |ASSERT failure trap (bring-up / fixup-aware).
+|===
+
+VECTOR/CUBE first-use exception:
+
+[%header,cols="1,1"]
+|===
+|Field |Value
+
+|`e` |`1`
+|`argv` |`1`
+|`trapnum` |`E_INST`
+|`trapnum_value` |`0`
+|`cause` |`EC_PERM`
+|`cause_value` |`4`
+|`bi` |`0`
+|`TRAPARG0.CUBE` |`1`
+|`TRAPARG0.VECTOR` |`0`
 |===

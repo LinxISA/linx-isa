@@ -109,6 +109,7 @@ def gen_system_registers_ssr(spec_path: str, sysregs: Dict[str, Any]) -> str:
 
     dbg = sysregs.get("debug_ssr", {}) or {}
     dbg_entries = list(dbg.get("entries", []) or [])
+    econfig = sysregs.get("econfig_contract", {}) or {}
 
     lines: List[str] = []
     lines.append(_adoc_header(spec_path).rstrip("\n"))
@@ -184,6 +185,39 @@ def gen_system_registers_ssr(spec_path: str, sysregs: Dict[str, Any]) -> str:
     lines.append("|===")
     lines.append("")
 
+    if econfig:
+        lines.append("[[ssr-econfig-contract]]")
+        lines.append(f"==== ECONFIG field contract ({profile})")
+        lines.append("")
+        lines.append(f"* Width: `{_as_int(econfig.get('width_bits'))}` bits")
+        lines.append(f"* Reset value: `{str(econfig.get('reset_value') or '').strip()}`")
+        lines.append(
+            "* Scope: per hardware thread"
+            if econfig.get("per_hardware_thread") is True
+            else "* Scope: profile-defined"
+        )
+        lines.append("")
+        lines.append("[%header,cols=\"1,1,4\"]")
+        lines.append("|===")
+        lines.append("|Field |Bit |Description")
+        lines.append("")
+        fields = econfig.get("fields", {}) or {}
+        for name, row in sorted(fields.items(), key=lambda item: _as_int(item[1]["bit"])):
+            lines.append(
+                f"|`{name}` |`{_as_int(row['bit'])}` |{str(row.get('description') or '').strip()}"
+            )
+        lines.append("|===")
+        lines.append("")
+        ranges = econfig.get("reserved_ranges", []) or []
+        rendered_ranges = ", ".join(f"`[{hi}:{lo}]`" for lo, hi in ranges)
+        lines.append(f"Reserved ranges: {rendered_ranges}.")
+        lines.append("")
+        lines.append(
+            f"Reserved writes are `{econfig.get('reserved_write')}`; "
+            f"reserved reads return `{econfig.get('reserved_read')}`."
+        )
+        lines.append("")
+
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -192,6 +226,7 @@ def gen_trapno_encoding(spec_path: str, sysregs: Dict[str, Any]) -> str:
     enc = sysregs.get("trapno_encoding", {}) or {}
     fields = list(enc.get("fields", []) or [])
     trapnums = list(enc.get("bringup_trapnums", []) or [])
+    first_use = enc.get("first_use_exception", {}) or {}
 
     lines: List[str] = []
     lines.append(_adoc_header(spec_path).rstrip("\n"))
@@ -239,6 +274,20 @@ def gen_trapno_encoding(spec_path: str, sysregs: Dict[str, Any]) -> str:
             nm = str(t.get("name") or "").strip() or "-"
             desc = str(t.get("description") or "").strip()
             lines.append(f"|`0b{tn:06b}` |{tn} |`{nm}` |{desc}")
+        lines.append("|===")
+        lines.append("")
+
+    if first_use:
+        lines.append("VECTOR/CUBE first-use exception:")
+        lines.append("")
+        lines.append("[%header,cols=\"1,1\"]")
+        lines.append("|===")
+        lines.append("|Field |Value")
+        lines.append("")
+        for field in ("e", "argv", "trapnum", "trapnum_value", "cause", "cause_value", "bi"):
+            lines.append(f"|`{field}` |`{first_use.get(field)}`")
+        for kind, value in sorted((first_use.get("traparg0") or {}).items()):
+            lines.append(f"|`TRAPARG0.{kind}` |`{_as_int(value)}`")
         lines.append("|===")
         lines.append("")
 

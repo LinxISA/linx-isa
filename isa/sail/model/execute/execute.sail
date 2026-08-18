@@ -3047,8 +3047,32 @@ function exec_bstart_transition() -> bool = {
 
 function exec_bstart() -> unit = { let _accepted = exec_bstart_transition(); () }
 
+function bstart_target_preflight() -> bool = {
+  let tgt = decoded_block_target_pc();
+  if not_bool(is_block_start_marker(tgt)) then {
+    trap_block_cfi(0x1, read_pc_or_tpc());
+    false
+  } else true
+}
+
+function exec_vector_bstart() -> unit = {
+  if not_bool(bstart_target_preflight()) then ()
+  else if first_use_enabled(0b0) then trap_extension_first_use(0b0)
+  else exec_bstart()
+}
+
+function exec_cube_bstart() -> unit = {
+  if not_bool(bstart_target_preflight()) then ()
+  else if first_use_enabled(0b1) then trap_extension_first_use(0b1)
+  else exec_bstart()
+}
+
 function exec_tile_bstart(family : bits(2), selector : bits(5)) -> unit = {
-  if exec_bstart_transition() then tile_effect_begin(family, selector) else ()
+  if (family == 0b10) & not_bool(bstart_target_preflight()) then {
+    ()
+  } else if (family == 0b10) & first_use_enabled(0b1) then {
+    trap_extension_first_use(0b1)
+  } else if exec_bstart_transition() then tile_effect_begin(family, selector) else ()
 }
 
 // Typed 32/48-bit BSTART variants share the same boundary semantics; the decoder
@@ -3056,11 +3080,11 @@ function exec_tile_bstart(family : bits(2), selector : bits(5)) -> unit = {
 function exec_bstart_std() -> unit = { exec_bstart() }
 function exec_bstart_fp() -> unit = { exec_bstart() }
 function exec_bstart_sys() -> unit = { exec_bstart() }
-function exec_bstart_mpar() -> unit = { exec_bstart() }
-function exec_bstart_mseq() -> unit = { exec_bstart() }
-function exec_bstart_vpar() -> unit = { exec_bstart() }
-function exec_bstart_vseq() -> unit = { exec_bstart() }
-function exec_bstart_cube() -> unit = { exec_bstart() }
+function exec_bstart_mpar() -> unit = { exec_vector_bstart() }
+function exec_bstart_mseq() -> unit = { exec_vector_bstart() }
+function exec_bstart_vpar() -> unit = { exec_vector_bstart() }
+function exec_bstart_vseq() -> unit = { exec_vector_bstart() }
+function exec_bstart_cube() -> unit = { exec_cube_bstart() }
 function exec_bstart_tepl() -> unit = { exec_bstart() }
 function exec_bstart_tload() -> unit = { exec_bstart() }
 function exec_bstart_tstore() -> unit = { exec_bstart() }
@@ -3148,10 +3172,10 @@ function exec_c_bstart() -> unit = { exec_bstart() }
 function exec_c_bstart_std() -> unit = { exec_bstart() }
 function exec_c_bstart_fp() -> unit = { exec_bstart() }
 function exec_c_bstart_sys() -> unit = { exec_bstart() }
-function exec_c_bstart_mpar() -> unit = { exec_bstart() }
-function exec_c_bstart_mseq() -> unit = { exec_bstart() }
-function exec_c_bstart_vpar() -> unit = { exec_bstart() }
-function exec_c_bstart_vseq() -> unit = { exec_bstart() }
+function exec_c_bstart_mpar() -> unit = { exec_vector_bstart() }
+function exec_c_bstart_mseq() -> unit = { exec_vector_bstart() }
+function exec_c_bstart_vpar() -> unit = { exec_vector_bstart() }
+function exec_c_bstart_vseq() -> unit = { exec_vector_bstart() }
 
 function exec_bstop() -> unit = {
   // Explicit block terminator.
