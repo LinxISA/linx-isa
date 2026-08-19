@@ -86,7 +86,7 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "aa37c3f4d917721828ca5c73603eb62a527bfb3a",
+      "commit": "74dc99f6c9785f995bc9020a70d15c3435b64e98",
       "role": "queue-wired model"
     },
     {
