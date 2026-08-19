@@ -18,6 +18,58 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 
+EXPECTED_V058_FIRST_USE_BRINGUP_TRAPNUMS = {
+    "EXEC_STATE_CHECK": 0,
+    "ILLEGAL_INST": 4,
+    "BLOCK_TRAP": 5,
+    "SCALL": 6,
+    "INST_PC_FAULT": 32,
+    "INST_PAGE_FAULT": 33,
+    "DATA_ALIGN_FAULT": 34,
+    "DATA_PAGE_FAULT": 35,
+    "INTERRUPT": 44,
+    "HW_BREAKPOINT": 49,
+    "SW_BREAKPOINT": 50,
+    "HW_WATCHPOINT": 51,
+    "ASSERT_FAIL": 52,
+}
+
+EXPECTED_V058_FIRST_USE_ECONFIG_BITS = {
+    "E": 0,
+    "T": 1,
+    "S": 2,
+    "A": 3,
+    "V": 32,
+    "C": 33,
+}
+
+EXPECTED_V058_FIRST_USE_TRAP = {
+    "e": 1,
+    "argv": 1,
+    "trapnum": "E_INST",
+    "trapnum_value": 0,
+    "cause": "EC_PERM",
+    "cause_value": 4,
+    "bi": 0,
+}
+
+EXPECTED_V058_FIRST_USE_REGISTER = {
+    **EXPECTED_V058_FIRST_USE_TRAP,
+    "traparg0": {"VECTOR": 0, "CUBE": 1},
+}
+
+EXPECTED_V058_FIRST_USE_VECTOR_HEADERS = [
+    "BSTART.MPAR",
+    "BSTART.MSEQ",
+    "BSTART.VPAR",
+    "BSTART.VSEQ",
+    "C.BSTART.MPAR",
+    "C.BSTART.MSEQ",
+    "C.BSTART.VPAR",
+    "C.BSTART.VSEQ",
+]
+
+
 def _parse_hex(s: str) -> int:
     s = s.strip().lower()
     if not s.startswith("0x"):
@@ -1082,6 +1134,114 @@ def _validate_frame_template_contract(spec: Dict[str, Any], errors: List[str]) -
             errors.append("template-integrity ASSERT_FAIL producer must be unmaskable with no fixup")
 
 
+def _validate_first_use_register_contract(
+    spec: Dict[str, Any], errors: List[str]
+) -> None:
+    if str(spec.get("version") or "") != "0.58.1":
+        return
+
+    system_registers = ((spec.get("state") or {}).get("system_registers") or {})
+    trapno = system_registers.get("trapno_encoding") or {}
+    rows = trapno.get("bringup_trapnums") or []
+    bringup = {row.get("name"): row.get("trapnum") for row in rows}
+    if len(rows) != len(bringup) or bringup != EXPECTED_V058_FIRST_USE_BRINGUP_TRAPNUMS:
+        errors.append(f"v0.58: existing bring-up trap numbers changed: {bringup}")
+    if trapno.get("first_use_exception") != EXPECTED_V058_FIRST_USE_REGISTER:
+        errors.append("v0.58: first-use exception envelope mismatch")
+    if "E_PEREM" in json.dumps(system_registers, sort_keys=True):
+        errors.append("v0.58: active system-register contract contains E_PEREM")
+
+    e_field = next(
+        (field for field in trapno.get("fields", []) if field.get("name") == "E"),
+        {},
+    )
+    if e_field.get("synchronous_exception_value") != 1:
+        errors.append("v0.58: TRAPNO.E synchronous exception value must be 1")
+    if e_field.get("asynchronous_interrupt_value") != 0:
+        errors.append("v0.58: TRAPNO.E asynchronous interrupt value must be 0")
+
+    econfig = system_registers.get("econfig_contract") or {}
+    fields = {
+        name: row.get("bit")
+        for name, row in (econfig.get("fields") or {}).items()
+        if isinstance(row, dict)
+    }
+    if fields != EXPECTED_V058_FIRST_USE_ECONFIG_BITS:
+        errors.append(f"v0.58: ECONFIG field map mismatch: {fields}")
+    if econfig.get("reset_value") != "0x0000000300000008":
+        errors.append("v0.58: ECONFIG reset must be 0x0000000300000008")
+    if econfig.get("reserved_ranges") != [[4, 31], [34, 63]]:
+        errors.append("v0.58: ECONFIG reserved ranges must be [[4, 31], [34, 63]]")
+    if econfig.get("reserved_write") != "must-zero":
+        errors.append("v0.58: ECONFIG reserved writes must be must-zero")
+    if econfig.get("reserved_read") != "zero":
+        errors.append("v0.58: ECONFIG reserved reads must be zero")
+    if econfig.get("per_hardware_thread") is not True:
+        errors.append("v0.58: ECONFIG must be per hardware thread")
+
+
+def _validate_first_use_semantics_contract(
+    spec: Dict[str, Any], errors: List[str]
+) -> None:
+    if str(spec.get("version") or "") != "0.58.1":
+        return
+
+    conventions = spec.get("semantics_conventions") or {}
+    first_use = conventions.get("extension_first_use") or {}
+    if first_use.get("trap") != EXPECTED_V058_FIRST_USE_TRAP:
+        errors.append("v0.58: extension-first-use trap envelope mismatch")
+    if first_use.get("source_acr") != 2 or first_use.get("manager_acr") != 1:
+        errors.append("v0.58: extension-first-use ACR route must be ACR2 to ACR1")
+    if first_use.get("kinds") != {"VECTOR": 0, "CUBE": 1}:
+        errors.append("v0.58: extension-first-use kind map mismatch")
+    if first_use.get("vector_headers") != EXPECTED_V058_FIRST_USE_VECTOR_HEADERS:
+        errors.append("v0.58: extension-first-use VECTOR header set mismatch")
+    if first_use.get("cube_membership") != (
+        "state.pto_ops.operations entries with family=CUBE and engine=CUBE"
+    ):
+        errors.append("v0.58: extension-first-use CUBE membership source mismatch")
+    if first_use.get("ordering") != [
+        "legal-decode",
+        "acr-permission",
+        "first-use",
+        "resource-allocation",
+        "effects",
+    ]:
+        errors.append("v0.58: extension-first-use ordering mismatch")
+    if first_use.get("zero_effects") != [
+        "BARG",
+        "BSTATE",
+        "queues",
+        "memory-requests",
+        "completion-state",
+    ]:
+        errors.append("v0.58: extension-first-use zero-effect set mismatch")
+
+    mnemonics = {str(item.get("mnemonic") or "") for item in spec.get("instructions", [])}
+    missing_headers = set(EXPECTED_V058_FIRST_USE_VECTOR_HEADERS) - mnemonics
+    if missing_headers:
+        errors.append(
+            f"v0.58: extension-first-use VECTOR headers missing: {sorted(missing_headers)}"
+        )
+    if {"BSTART.VEC", "BSTART.SFU"} & set(first_use.get("vector_headers") or []):
+        errors.append("v0.58: TEPL VEC/SFU aliases must not trigger VECTOR first use")
+
+    state = spec.get("state") or {}
+    pto_ops = (state.get("pto_ops") or {}).get("operations") or []
+    cube_ops = [
+        operation
+        for operation in pto_ops
+        if operation.get("family") == "CUBE" and operation.get("engine") == "CUBE"
+    ]
+    if len(cube_ops) != 12:
+        errors.append(f"v0.58: expected 12 derived CUBE first-use operations, got {len(cube_ops)}")
+    cube_count = ((state.get("engine_ops") or {}).get("semantic_engine_counts") or {}).get(
+        "CUBE"
+    )
+    if cube_count != 12:
+        errors.append(f"v0.58: engine CUBE count must be 12, got {cube_count!r}")
+
+
 def validate(path: str) -> List[str]:
     with open(path, "r", encoding="utf-8") as f:
         spec = json.load(f)
@@ -1126,6 +1286,9 @@ def validate(path: str) -> List[str]:
             if not isinstance(ebarg, dict):
                 errors.append("v0.2: system_registers.ebarg_group missing/invalid")
 
+    _validate_first_use_register_contract(spec, errors)
+    _validate_first_use_semantics_contract(spec, errors)
+
     _validate_engine_ops(spec, errors)
 
     compiled_fields = _validate_field_definitions(spec, errors)
@@ -1138,7 +1301,11 @@ def validate(path: str) -> List[str]:
         errors.append("missing compiled retired_encodings.entries")
     else:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
-        expected_retired = set() if str(spec.get("version") or "") in {"0.58.0", "0.58.1"} else {"B.IOD", "BSTART.PAR"}
+        expected_retired = (
+            set()
+            if str(spec.get("version") or "") in {"0.58.0", "0.58.1"}
+            else {"B.IOD", "BSTART.PAR"}
+        )
         if retired_names != expected_retired:
             errors.append(
                 f"retired encoding identities must be exactly {sorted(expected_retired)}, got {retired_names}"

@@ -944,12 +944,27 @@ register last_trapnum  : bits(6)  = sail_zeros(6)
 register last_cause    : bits(24) = sail_zeros(24)
 register last_traparg0 : bits(64) = 0x0000_0000_0000_0000
 register last_bi       : bits(1)  = 0b0
+register last_e        : bits(1)  = 0b0
+register last_argv     : bits(1)  = 0b0
 
-function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi : bits(1)) -> unit = {
+function raise_trap_full(
+  e : bits(1),
+  argv : bits(1),
+  trapnum : bits(6),
+  cause : bits(24),
+  traparg0 : bits(64),
+  bi : bits(1)
+) -> unit = {
+  last_e        = e;
+  last_argv     = argv;
   last_trapnum  = trapnum;
   last_cause    = cause;
   last_traparg0 = traparg0;
   last_bi       = bi
+}
+
+function raise_trap(trapnum : bits(6), cause : bits(24), traparg0 : bits(64), bi : bits(1)) -> unit = {
+  raise_trap_full(0b1, 0b1, trapnum, cause, traparg0, bi)
 }
 
 // -----------------------------------------------------------------------------
@@ -969,9 +984,9 @@ register ssr_cstate : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0020
 register ssr_ecstate_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F00 (low nibble = target ACR, bit4 = BI)
 register ssr_ecstate_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F00
 register ssr_ecstate_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F00
-register ssr_econfig_acr0 : bits(64) = 0x0000_0000_0000_0008 // SSR_ID 0x0F07
-register ssr_econfig_acr1 : bits(64) = 0x0000_0000_0000_0008 // SSR_ID 0x1F07
-register ssr_econfig_acr2 : bits(64) = 0x0000_0000_0000_0008 // SSR_ID 0x2F07
+register ssr_econfig_acr0 : bits(64) = 0x0000_0003_0000_0008 // SSR_ID 0x0F07
+register ssr_econfig_acr1 : bits(64) = 0x0000_0003_0000_0008 // SSR_ID 0x1F07
+register ssr_econfig_acr2 : bits(64) = 0x0000_0003_0000_0008 // SSR_ID 0x2F07
 register ssr_ebarg_bpc_cur_acr0 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0F41
 register ssr_ebarg_bpc_cur_acr1 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x1F41
 register ssr_ebarg_bpc_cur_acr2 : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x2F41
@@ -1120,21 +1135,12 @@ function record_xb_dispatch(acr : bits(4), cid : bits(7), entry_ea : bits(64), w
 }
 
 // -----------------------------------------------------------------------------
-// ILLEGAL_INST / E_INST helpers (current v0.58 architecture contract)
+// Existing E_INST helpers plus the scoped v0.58.1 first-use trap.
 //
-// TRAPNUM major class:
-//   ILLEGAL_INST = 4
-// E_INST cause space (bring-up normative):
-//   cause[15:8] = EC_* (subcause class)
-//   cause[7:0]  = detail (subcause detail, 0 unless specified)
-//
-// EC_* allocation (staged, kept small):
-//   EC_ILLEGAL = 0x01  (illegal encoding / reserved values)
-//   EC_PARAM   = 0x02  (bad parameter / out-of-range / invalid combination)
-//   EC_PERM    = 0x03  (permission/ACR policy violation)
-//   EC_XBID    = 0x10  (XB index/id invalid)
-//   EC_XBDEF   = 0x11  (XB definition invalid / CAC_TABLE entry invalid)
+// The generic staged illegal-instruction path remains unchanged.  First use
+// has its own exact E_INST(0), raw EC_PERM(4) envelope.
 
+function trapnum_e_inst() -> bits(6) = { sail_zeros(6) }
 function trapnum_illegal_inst() -> bits(6) = { (sail_zeros(6) + 4) }
 function trapnum_data_page_fault() -> bits(6) = { (sail_zeros(6) + 35) }
 
@@ -1148,7 +1154,6 @@ function trap_e_inst(ec : bits(8), detail : bits(8), traparg0 : bits(64)) -> uni
 }
 
 function trap_illegal_inst(traparg0 : bits(64)) -> unit = {
-  // Legacy helper: map to E_INST(EC_ILLEGAL) with detail=0.
   trap_e_inst(0x01, 0x00, traparg0)
 }
 
@@ -1159,8 +1164,6 @@ function trap_data_page_fault(fault_va : bits(64)) -> unit = {
 }
 
 function trap_illegal_ssr() -> unit = {
-  // For now, illegal SSR access is modeled as ILLEGAL_INST (manual: "illegal SSR").
-  // TODO: when E_ISSR is fully wired, route to that trap class with a structured CAUSE.
   trap_illegal_inst(read_pc_or_tpc())
 }
 
@@ -1225,9 +1228,10 @@ function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
     0xF00 => write_ecstate_for_acr(current_acr_id(), v),
     0xF07 => {
       let cur_acr : bits(4) = current_acr_id();
-      if cur_acr == 0x0 then ssr_econfig_acr0 = v
-      else if cur_acr == 0x1 then ssr_econfig_acr1 = v
-      else if cur_acr == 0x2 then ssr_econfig_acr2 = v
+      let masked = v & 0x0000_0003_0000_000F;
+      if cur_acr == 0x0 then ssr_econfig_acr0 = masked
+      else if cur_acr == 0x1 then ssr_econfig_acr1 = masked
+      else if cur_acr == 0x2 then ssr_econfig_acr2 = masked
       else trap_illegal_ssr()
     },
     0xF41 => write_ebarg_bpc_cur_for_acr(current_acr_id(), v),
@@ -1775,7 +1779,6 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
 }
 
 function trap_assert_fail(traparg0 : bits(64)) -> unit = {
-  // TRAPNUM_ASSERT_FAIL = 52, CAUSE=0, BI=0
   raise_trap((sail_zeros(6) + 52), (sail_zeros(24) + 0), traparg0, 0b0)
 }
 
@@ -1792,9 +1795,25 @@ function exceptions_enabled() -> bool = {
   read_econfig()[3] == 0b1
 }
 
+function first_use_enabled(kind : bits(1)) -> bool = {
+  (current_acr_id() == 0x2) &
+  (if kind == 0b0 then ssr_econfig_acr1[32] == 0b1
+   else ssr_econfig_acr1[33] == 0b1)
+}
+
+function trap_extension_first_use(kind : bits(1)) -> unit = {
+  raise_trap_full(
+    0b1,
+    0b1,
+    trapnum_e_inst(),
+    (sail_zeros(24) + 4),
+    sail_zero_extend(kind, 64),
+    0b0
+  )
+}
+
 
 function trap_sw_breakpoint(traparg0 : bits(64)) -> unit = {
-  // TRAPNUM_SW_BREAKPOINT = 50, CAUSE=0, BI=0
   raise_trap((sail_zeros(6) + 50), (sail_zeros(24) + 0), traparg0, 0b0)
 }
 

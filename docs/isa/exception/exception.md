@@ -1,73 +1,82 @@
-# exception
+# Exceptions
 
-exception is an event that is detected synchronously in the instruction pipeline. This kind of event usually causes the pipeline to be logically unable to continue (for example, the requirements of the instruction cannot be met), and must be immediately transferred to other instruction sequences.
+An exception is a synchronous event detected while processing an instruction. Unless an instruction-specific rule states otherwise, the faulting instruction commits no architectural effects and the saved execution point identifies that instruction for retry.
 
-exception can occur synchronously during the execution of the instruction. During this process, part of the behavior of the instruction may have taken effect, may not have taken effect, or may have all taken effect. The specific situation and specific instructions are related to the type of exception. If there is no special explanation, by default the specific instruction occurs exception, then all actions required by the instruction will not take effect, and the instruction pointer will still stay on the instruction where exception occurred.
+`TRAPNO` carries the trap class and cause. `TRAPARG0` carries an additional argument when `TRAPNO.ARGV=1`. See [TRAPNO](../register/ssr/TRAPNO.md) for the wire format.
 
-When exception is detected, unless the instruction causing exception comes from the [active repair block] (../arch/fixup.md) that has not been taken over, otherwise `ZXTERMZH38QXZ逻辑核` will enter the [SERVICE_REQUEST] (./acr_switch.md#SR_Process) process.
+## Recoverable exceptions during block execution
 
-## exception trap code
+When a recoverable exception occurs after a block has entered execution, hardware must freeze the faulting block and preserve every state element needed to continue it. Hardware must not overwrite or release those resources until software saves the state or explicitly terminates the block.
 
-Different exception causes can be distinguished by their `陷入代号` and `陷入参数`. The following table lists all supported `陷入代号`:| exception Category | Subcode | Description |
-|----------|------|-------|
-| **E_INST(0)** | | Instruction related exception |
-| | 0 | Command access exception (EC_ACCESS_FAULT) |
-| | 1 | Command translation exception (EC_TRANS_FAULT) |
-| | 2 | Instruction misaligned (EC_MISALIGNED) |
-| | 3 | Illegal command (EC_ILLEGAL) |
-| | 4 | Command authority exception (EC_PERM) |
-| | 5 | Illegal command page (EC_PF) |
-| | 6 | Bus exception (EC_BUS) |
-| | 7 | Illegal parameter (EC_PARAM) |
-| | 8 | Illegal operation (EC_NV) |
-| | 9 | Divide by Zero (EC_DZ) |
-| | 10 | Overflow (EC_OF) |
-| | 11 | Underflow (EC_UF) |
-| | 12 | Imprecise (EC_NX) |
-| **E_DATA(1)** | | Data access related exception. When this exception occurs, system register[TRAPARG0](../register/ssr/TRAPARG0.md) is always equal to the address of the data being accessed. |
-| | 0 | Memory read exception (EC_LOAD) |
-| | 1 | Memory read misalignment (EC_MISALIGNED) |
-| | 2 | Memory read page exception (EC_LOAD_PAGE) |
-| | 3 | Memory write access exception (EC_STORE_A_ACCESS) |
-| | 4 | Memory write address misalignment (EC_STORE_A_MISALIGNED) |
-| | 5 | Illegal page for write operation (EC_STORE_A_PF) |
-| | 6 | Illegal access range (EC_RANGE) |
-| | 7 | Bus exception (EC_BUS) |
-| **E_BLOCK(4)** | | Block format exception |
-| | 0 | Output unspecified output register (EC_INVAL_SET) |
-| | 1 | Read unspecified input register (EC_INVAL_GET) |
-| | 2 | Illegal parameter (EC_INVAL_PARM) |
-| | 3 | In-block repeat setting register (EC_INVAL_DOUBLESET) |
-| | 4 | Incorrect subfix block parameter (EC_INVAL_FIXUP) |
-| | 5 | Incorrect block type (EC_TYPE) || 5-14 | | Reserved |
-| **E_ASSERT(15)** | | Assert exception (see [assert](../inst/misa_s/ASSERT.md) command for details) |
-| **E_SCALL(16)** | | Software active exception (system call) |
-| **E_BREAKPOINT(17)** | | software breakpoint |
-| 18-61 | | Reserved |
-| **E_ISSR(62)** | | Illegal SSRexception |
-| **E_NIL(63)** | | exception classification is invalid |
+The retained state includes, at minimum:
 
-The category of the reason parameter is not specified, and the reason parameter is always 0.
+- block-register contents;
+- execution and sequence progress;
+- predicate and control state;
+- outstanding-operation state;
+- any additional architectural cursor needed for restart.
 
-For more specific `陷入参数` that are not generic, please refer to the description context of the specific exception behavior.
+Software may export the retained state with a state-save block such as `ESAVE`. Implementations must provide an independent save path or reserve enough registers, queue entries, and issue capacity for `ESAVE` to make progress even when the faulting block occupies all ordinary resources.
 
-## exception routing
+The current profile distinguishes block families as follows:
 
-The default exception `路由` policy is defined by the following table:
+1. VECTOR blocks may raise architecturally defined recoverable internal exceptions.
+2. CUBE blocks do not raise CUBE-owned recoverable exceptions after execution starts.
+3. TLSU blocks do not raise TLSU-owned recoverable exceptions. Translation, permission, and bus faults raised by the memory system remain `E_DATA` exceptions.
+4. VECTOR/CUBE first-use exceptions occur before block execution and are not internal block exceptions.
 
-| exception type | Currently executing at ACR0 | Currently executing at ACR1 | Currently executing at ACR2 |
-|----------|---------------|---------------|----------------|
-| E_INST | ACR0 | ACR1 | ACR1 |
-| E_DATA | ACR0 | ACR1 | ACR1 |
-| E_BLOCK | ACR0 | ACR1 | ACR1 |
-| E_ASSERT | ACR0 | ACR1 | ACR1 |
-| E_BREAKPOINT | ACR0 | ACR1 | ACR1 |
-| E_ISSR | ACR0 | ACR1 | ACR1 |
-| E_SCALL | ACR0 | - | - |
+`TMA` is a historical name for TLSU and is not used by the active profile.
 
-The routing strategy of E_SCALL is determined by the service_type of the request instruction (reference: [acrc](../inst/misa_s/ACRC.md)):
+## VECTOR/CUBE first-use exception
 
-* When service_type is SCT_SYS, ACR2 is routed to ACR1.
-* All other valid types are routed to ACR0.
+The first-use mechanism lets an ACR1 kernel allocate and restore VECTOR or CUBE context only when an ACR2 task needs it. It is a precise pre-execution exception.
 
-Some extensions may modify the default routing behavior. If this type of extension is enabled, the definition of the extension shall prevail. (There are currently no extensions that modify the default routing behavior)
+### Trigger set
+
+VECTOR first-use checks apply to:
+
+- `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, and `BSTART.VSEQ`;
+- the corresponding `C.BSTART.*` forms.
+
+`BSTART.VEC` and `BSTART.SFU` are TEPL assembly aliases and do not belong to this VECTOR first-use set.
+
+CUBE membership is derived from canonical PTO operation rows whose `family` and `engine` are both `CUBE`.
+
+### Exact trap envelope
+
+| Field | VECTOR | CUBE |
+| --- | ---: | ---: |
+| `TRAPNO.E` | `1` | `1` |
+| `TRAPNO.ARGV` | `1` | `1` |
+| `TRAPNO.TRAPNUM` | `E_INST (0)` | `E_INST (0)` |
+| `TRAPNO.CAUSE` | `EC_PERM (4)` | `EC_PERM (4)` |
+| `TRAPARG0` | `TRAPARG0 = 0` | `TRAPARG0 = 1` |
+| `ECSTATE.BI` | `0` | `0` |
+
+Archived v0.55 material contains a misspelling of `EC_PERM`; that spelling is not an active alias.
+
+### Ordering and precision
+
+The processor performs legal decode and ACR permission checks before the first-use check. It performs the first-use check before BARG/BSTATE mutation, extension-context allocation, queue admission, memory issue, or any other effect.
+
+An invalid encoding or invalid block target therefore keeps its normal exception priority. If first use traps, the saved PC identifies the original block header. After software handles the exception, the same header can be retried without duplicate effects.
+
+### Kernel handling
+
+For a never-used extension, the kernel allocates and initializes its task context, marks it resident, clears only the corresponding `ECONFIG_ACR1.V` or `.C` bit, and retries the original header.
+
+For a previously used but nonresident extension, the kernel restores the saved context, marks it resident, clears only the corresponding bit, and retries. Handling VECTOR must not clear CUBE enable, and handling CUBE must not clear VECTOR enable.
+
+Task software must distinguish:
+
+| State | Context allocated | Resident in hardware | Enable bit |
+| --- | --- | --- | --- |
+| `NEVER_USED` | no | no | `1` |
+| `SAVED_NOT_RESTORED` | yes | no | `1` |
+| `LIVE` | yes | yes | `0` |
+
+On context switch, software saves only used, resident contexts. Before returning to ACR2, it programs `ECONFIG_ACR1.V/C` for the next task; configuring the bits only once during kernel boot is insufficient.
+
+## Routing
+
+The first-use exception is synchronous (`TRAPNO.E=1`) and follows the normal `E_INST` route. In the current unreleased v0.58 main contract, an exception from ACR2 is delivered to ACR1.

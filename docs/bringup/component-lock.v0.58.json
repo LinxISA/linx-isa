@@ -21,7 +21,7 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "51160366fac325ab71ff7876dcdb1711edeed06d",
+      "commit": "2d062533d39eb456a46fb8e5a0843dc5c31b1536",
       "role": "v0.58.1 emulator"
     },
     {
@@ -86,7 +86,7 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "7537c1970ce6c51175a8f6bcf0e7a92d4e07785b",
+      "commit": "aa37c3f4d917721828ca5c73603eb62a527bfb3a",
       "role": "queue-wired model"
     },
     {

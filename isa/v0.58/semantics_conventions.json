@@ -319,6 +319,59 @@
       }
     }
   },
+  "extension_first_use": {
+    "cube_membership": "state.pto_ops.operations entries with family=CUBE and engine=CUBE",
+    "econfig_bits": {
+      "CUBE": "C",
+      "VECTOR": "V"
+    },
+    "esave_forward_progress": "dedicated-path-or-reserved-capacity-required",
+    "internal_exception_boundary": {
+      "CUBE": "no-extension-owned-recoverable-internal-exceptions",
+      "TLSU": "no-extension-owned-recoverable-internal-exceptions; memory faults are E_DATA",
+      "VECTOR": "recoverable-internal-exceptions-allowed"
+    },
+    "kinds": {
+      "CUBE": 1,
+      "VECTOR": 0
+    },
+    "manager_acr": 1,
+    "ordering": [
+      "legal-decode",
+      "acr-permission",
+      "first-use",
+      "resource-allocation",
+      "effects"
+    ],
+    "retry_pc": "faulting block-header PC",
+    "source_acr": 2,
+    "trap": {
+      "argv": 1,
+      "bi": 0,
+      "cause": "EC_PERM",
+      "cause_value": 4,
+      "e": 1,
+      "trapnum": "E_INST",
+      "trapnum_value": 0
+    },
+    "vector_headers": [
+      "BSTART.MPAR",
+      "BSTART.MSEQ",
+      "BSTART.VPAR",
+      "BSTART.VSEQ",
+      "C.BSTART.MPAR",
+      "C.BSTART.MSEQ",
+      "C.BSTART.VPAR",
+      "C.BSTART.VSEQ"
+    ],
+    "zero_effects": [
+      "BARG",
+      "BSTATE",
+      "queues",
+      "memory-requests",
+      "completion-state"
+    ]
+  },
   "fixup_blocks": {
     "description": "Unmanaged fixup block routing rules (v0.58, retained by v0.58).",
     "unmanaged_fixup_block": {

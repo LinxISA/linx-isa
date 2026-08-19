@@ -42,7 +42,95 @@ function reset_tile_effect_case() -> unit = {
   block_marker_strict = false
 }
 
+function reset_first_use_case(base_pc : bits(64)) -> unit = {
+  pc = base_pc;
+  tpc = base_pc;
+  ssr_cstate = 0x0000_0000_0000_0002;
+  ssr_econfig_acr1 = 0x0000_0003_0000_0008;
+  last_e = 0b0;
+  last_argv = 0b0;
+  last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  last_bi = 0b0;
+  barg_valid = false;
+  barg_commit_seqno = sail_zeros(64);
+  barg_bpc_cur = sail_zeros(64);
+  barg_bpc_tgt = sail_zeros(64);
+  tile_effect_pending = false;
+  tile_effect_commit_seq = sail_zeros(64);
+  decoded_block_target_pc_shadow = base_pc + 2;
+  decoded_block_type_shadow = 0b0000;
+  decoded_block_xfer_kind_shadow = block_xfer_fall();
+  decoded_block_contract_kind_shadow = 0b0000;
+  block_marker_strict = false;
+  bdesc_reset()
+}
+
 function main() : unit -> unit = {
+  // VECTOR first use is a precise E_INST(EC_PERM) exception before BARG or
+  // queue state changes.
+  reset_first_use_case(0x0000_0000_0000_0800);
+  exec_bstart_mpar();
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_e_inst());
+  assert(last_cause == 0x000004);
+  assert(last_traparg0 == 0x0000_0000_0000_0000);
+  assert(last_bi == 0b0);
+  assert(not_bool(barg_valid));
+  assert(barg_commit_seqno == 0x0000_0000_0000_0000);
+  assert(not_bool(tile_effect_pending));
+
+  // An invalid target is rejected before the first-use check and therefore
+  // remains E_BLOCK(EC_CFI), not E_INST(EC_PERM).
+  reset_first_use_case(0x0000_0000_0000_0810);
+  block_marker_strict = true;
+  exec_bstart_mseq();
+  assert(last_trapnum == trapnum_block_trap());
+  assert(last_cause != 0x000004);
+  assert(last_traparg0 == 0x0000_0000_0000_0810);
+  assert(not_bool(barg_valid));
+
+  // Clearing only V permits VECTOR retry but leaves CUBE first use armed.
+  reset_first_use_case(0x0000_0000_0000_0820);
+  ssr_econfig_acr1[32] = 0b0;
+  exec_bstart_vseq();
+  assert(last_e == 0b0);
+  assert(barg_valid);
+  assert(barg_commit_seqno == 0x0000_0000_0000_0000);
+  last_e = 0b0;
+  last_argv = 0b0;
+  last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  barg_valid = false;
+  barg_commit_seqno = sail_zeros(64);
+  exec_bstart_tmatmul();
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_e_inst());
+  assert(last_cause == 0x000004);
+  assert(last_traparg0 == 0x0000_0000_0000_0001);
+  assert(not_bool(barg_valid));
+  assert(not_bool(tile_effect_pending));
+
+  // Clearing C after the CUBE trap permits exact retry and begins the CUBE
+  // header without reporting another exception.
+  ssr_econfig_acr1[33] = 0b0;
+  last_e = 0b0;
+  last_argv = 0b0;
+  last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  exec_bstart_tmatmul();
+  assert(last_e == 0b0);
+  assert(barg_valid);
+  assert(tile_effect_pending);
+  assert(barg_commit_seqno == 0x0000_0000_0000_0000);
+  tile_effect_reset_arch();
+  bdesc_reset();
+
   // SrcRType arithmetic codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
   assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
   assert(apply_srcrtype_arith64(0b01, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
@@ -140,9 +228,10 @@ function main() : unit -> unit = {
   // slot for B.IOS. PE_MASK=0000 is a strict no-op; a participating mask binds
   // the absolute Shared register and per-PE TSize.
   shared_tile_binding_valid = false;
+  last_e = 0b0;
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0000_1013);
-  assert(last_trapnum != trapnum_illegal_inst());
+  assert(last_e == 0b0);
   assert(not_bool(shared_tile_binding_valid));
   decode_execute32(0x02A5_9613);
   assert(shared_tile_binding_valid);
@@ -153,9 +242,10 @@ function main() : unit -> unit = {
   // BSTART.PAR is also permanently removed as a spelling, but its historical
   // bits are not reserved: the current catalog assigns this word to
   // BSTART.MPAR, so it must decode rather than trap.
+  last_e = 0b0;
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0200_1181);
-  assert(last_trapnum != trapnum_illegal_inst());
+  assert(last_e == 0b0);
 
   // Trap records retain precise source state and the block-interrupted bit.
   trap_block_cfi(0x1, 0xCAFE_BABE_DEAD_BEEF);

@@ -503,6 +503,49 @@
       }
     ]
   },
+  "econfig_contract": {
+    "fields": {
+      "A": {
+        "bit": 3,
+        "description": "ASSERT instruction exception enable."
+      },
+      "C": {
+        "bit": 33,
+        "description": "CUBE first-use exception enable."
+      },
+      "E": {
+        "bit": 0,
+        "description": "External interrupt enable."
+      },
+      "S": {
+        "bit": 2,
+        "description": "Software interrupt enable."
+      },
+      "T": {
+        "bit": 1,
+        "description": "Timer interrupt enable."
+      },
+      "V": {
+        "bit": 32,
+        "description": "VECTOR first-use exception enable."
+      }
+    },
+    "per_hardware_thread": true,
+    "reserved_ranges": [
+      [
+        4,
+        31
+      ],
+      [
+        34,
+        63
+      ]
+    ],
+    "reserved_read": "zero",
+    "reserved_write": "must-zero",
+    "reset_value": "0x0000000300000008",
+    "width_bits": 64
+  },
   "trapno_encoding": {
     "bringup_trapnums": [
       {
@@ -546,7 +589,7 @@
         "trapnum": 35
       },
       {
-        "description": "Interrupt class (E=1, TRAPARG0=irq_id).",
+        "description": "Interrupt class (E=0, TRAPARG0=irq_id).",
         "name": "INTERRUPT",
         "trapnum": 44
       },
@@ -571,12 +614,27 @@
         "trapnum": 52
       }
     ],
+    "first_use_exception": {
+      "argv": 1,
+      "bi": 0,
+      "cause": "EC_PERM",
+      "cause_value": 4,
+      "e": 1,
+      "traparg0": {
+        "CUBE": 1,
+        "VECTOR": 0
+      },
+      "trapnum": "E_INST",
+      "trapnum_value": 0
+    },
     "fields": [
       {
-        "description": "Asynchronous interrupt indicator (1=async interrupt, 0=sync fault/trap).",
+        "asynchronous_interrupt_value": 0,
+        "description": "Synchronous exception indicator (1=sync exception, 0=async interrupt).",
         "lsb": 63,
         "msb": 63,
-        "name": "E"
+        "name": "E",
+        "synchronous_exception_value": 1
       },
       {
         "description": "TRAPARG0 valid (1=valid).",
@@ -599,7 +657,8 @@
     ],
     "notes": [
       "TRAPNO is shared for faults, traps, and interrupts.",
-      "E=1 indicates asynchronous interrupt; E=0 indicates synchronous fault/trap.",
+      "E=1 indicates a synchronous exception; E=0 indicates an asynchronous interrupt.",
+      "CAUSE is interpreted within the selected TRAPNUM class.",
       "ARGV=1 indicates TRAPARG0 is valid."
     ]
   },

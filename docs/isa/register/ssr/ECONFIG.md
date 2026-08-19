@@ -1,39 +1,37 @@
 # ECONFIG
 
-The **exception Configuration Register (Exception Config Register)** is a **readable and writable (RW)** system register used to enable or disable ACR for a specific interrupt and enable or disable triggering for a specific block type for a exception.
+`ECONFIG_ACRn` is a 64-bit readable/writable exception and interrupt configuration register. It is independent per hardware thread and per manager ACR.
 
-The register fields are defined as shown below:
+## Field layout
 
-![ECONFIG](../../../figs/bitfield/svg/Sysregs/ECONFIG.svg)
+| Field | Bit | Meaning |
+| --- | ---: | --- |
+| `E` | `0` | External-interrupt enable |
+| `T` | `1` | Timer-interrupt enable |
+| `S` | `2` | Software-interrupt enable |
+| `A` | `3` | `ASSERT` instruction exception enable |
+| Reserved | `31:4` | Must be written as zero; reads return zero |
+| `V` | bit 32 | VECTOR first-use exception enable |
+| `C` | bit 33 | CUBE first-use exception enable |
+| Reserved | `63:34` | Must be written as zero; reads return zero |
 
-## interrupt control bit
+Reset value: `0x0000000300000008`.
 
-This register controls whether the processor is enabled to receive a specific interrupt. The compiler can use this register to optimize code for interrupt processing. These bits map to the following corresponding interrupt of the ACR:
+## First-use control
 
-- **E**: Maps to external interrupt.
-- **T**: Map to timer interrupt.
+For the current unreleased v0.58 main contract, `ECONFIG_ACR1.V/C` controls first use by an ACR2 task:
 
-When the corresponding bit is cleared, the corresponding interrupt will not be triggered.
+- `V=1`: a covered VECTOR block header traps before execution;
+- `C=1`: a covered CUBE block header traps before execution;
+- `0`: the corresponding first-use trap is disabled.
 
-## exception enable bit
-
-These fields are used to control whether the processor triggers the corresponding exception when parsing to a specific block type. The details are as follows:
-
-- **V**: Enable VECTOR type block instruction (packet block MPAR, MSEQ, VPAR, VSEQ block) whether to trigger exception.
-- **C**: Enable CUBE type block instruction (package block CUBE block) whether to trigger exception.
-
-The exception enable bit should be initialized to 1 when the processor is powered on or reset. When the corresponding bit is cleared, the corresponding exception will not trigger; otherwise, the corresponding exception will trigger.
+Handling one extension clears only its own bit. Software rewrites both bits for the next task before returning to ACR2. The reset value does not replace per-task programming.
 
 ## Address space
 
-The naming and addressing space of this register differs in each ACR, as follows:
-
-| ACR level | Register name | Address space |
-|---------|---------|---------|
-| ACR0 | ECONFIG_ACR0 | 0x0f07 |
-| ACR1 | ECONFIG_ACR1 | 0x1f07 |
-| ACR2 | ECONFIG_ACR2 | 0x2f07 |
-| ... | ... | ... |
-| ACRn | ECONFIG_ACRn | 0xnf07 |
-
-Among them, the "_ACR{m}" suffix indicates that the register is accessed from ACR{m}.
+| Manager ACR | Register | SSR ID |
+| --- | --- | --- |
+| ACR0 | `ECONFIG_ACR0` | `0x0F07` |
+| ACR1 | `ECONFIG_ACR1` | `0x1F07` |
+| ACR2 | `ECONFIG_ACR2` | `0x2F07` |
+| ACRn | `ECONFIG_ACRn` | `0xnF07` |

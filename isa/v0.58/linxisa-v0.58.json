@@ -146241,6 +146241,59 @@
         "policy": "sign_extend_all_w_results"
       }
     },
+    "extension_first_use": {
+      "cube_membership": "state.pto_ops.operations entries with family=CUBE and engine=CUBE",
+      "econfig_bits": {
+        "CUBE": "C",
+        "VECTOR": "V"
+      },
+      "esave_forward_progress": "dedicated-path-or-reserved-capacity-required",
+      "internal_exception_boundary": {
+        "CUBE": "no-extension-owned-recoverable-internal-exceptions",
+        "TLSU": "no-extension-owned-recoverable-internal-exceptions; memory faults are E_DATA",
+        "VECTOR": "recoverable-internal-exceptions-allowed"
+      },
+      "kinds": {
+        "CUBE": 1,
+        "VECTOR": 0
+      },
+      "manager_acr": 1,
+      "ordering": [
+        "legal-decode",
+        "acr-permission",
+        "first-use",
+        "resource-allocation",
+        "effects"
+      ],
+      "retry_pc": "faulting block-header PC",
+      "source_acr": 2,
+      "trap": {
+        "argv": 1,
+        "bi": 0,
+        "cause": "EC_PERM",
+        "cause_value": 4,
+        "e": 1,
+        "trapnum": "E_INST",
+        "trapnum_value": 0
+      },
+      "vector_headers": [
+        "BSTART.MPAR",
+        "BSTART.MSEQ",
+        "BSTART.VPAR",
+        "BSTART.VSEQ",
+        "C.BSTART.MPAR",
+        "C.BSTART.MSEQ",
+        "C.BSTART.VPAR",
+        "C.BSTART.VSEQ"
+      ],
+      "zero_effects": [
+        "BARG",
+        "BSTATE",
+        "queues",
+        "memory-requests",
+        "completion-state"
+      ]
+    },
     "fixup_blocks": {
       "assert": {
         "cause": 0,
@@ -199679,6 +199732,49 @@
           }
         ]
       },
+      "econfig_contract": {
+        "fields": {
+          "A": {
+            "bit": 3,
+            "description": "ASSERT instruction exception enable."
+          },
+          "C": {
+            "bit": 33,
+            "description": "CUBE first-use exception enable."
+          },
+          "E": {
+            "bit": 0,
+            "description": "External interrupt enable."
+          },
+          "S": {
+            "bit": 2,
+            "description": "Software interrupt enable."
+          },
+          "T": {
+            "bit": 1,
+            "description": "Timer interrupt enable."
+          },
+          "V": {
+            "bit": 32,
+            "description": "VECTOR first-use exception enable."
+          }
+        },
+        "per_hardware_thread": true,
+        "reserved_ranges": [
+          [
+            4,
+            31
+          ],
+          [
+            34,
+            63
+          ]
+        ],
+        "reserved_read": "zero",
+        "reserved_write": "must-zero",
+        "reset_value": "0x0000000300000008",
+        "width_bits": 64
+      },
       "notes": [
         "v0.58 system registers (SSR) and trap envelope definitions, defined by v0.58 unless explicitly noted.",
         "v0.58 preserves the v0.58 ACR/EBARG/TRAPNO contract while integrating the reviewed v0.58 extension semantics.",
@@ -200022,7 +200118,7 @@
             "trapnum": 35
           },
           {
-            "description": "Interrupt class (E=1, TRAPARG0=irq_id).",
+            "description": "Interrupt class (E=0, TRAPARG0=irq_id).",
             "name": "INTERRUPT",
             "trapnum": 44
           },
@@ -200049,10 +200145,12 @@
         ],
         "fields": [
           {
-            "description": "Asynchronous interrupt indicator (1=async interrupt, 0=sync fault/trap).",
+            "asynchronous_interrupt_value": 0,
+            "description": "Synchronous exception indicator (1=sync exception, 0=async interrupt).",
             "lsb": 63,
             "msb": 63,
-            "name": "E"
+            "name": "E",
+            "synchronous_exception_value": 1
           },
           {
             "description": "TRAPARG0 valid (1=valid).",
@@ -200073,9 +200171,23 @@
             "name": "TRAPNUM"
           }
         ],
+        "first_use_exception": {
+          "argv": 1,
+          "bi": 0,
+          "cause": "EC_PERM",
+          "cause_value": 4,
+          "e": 1,
+          "traparg0": {
+            "CUBE": 1,
+            "VECTOR": 0
+          },
+          "trapnum": "E_INST",
+          "trapnum_value": 0
+        },
         "notes": [
           "TRAPNO is shared for faults, traps, and interrupts.",
-          "E=1 indicates asynchronous interrupt; E=0 indicates synchronous fault/trap.",
+          "E=1 indicates a synchronous exception; E=0 indicates an asynchronous interrupt.",
+          "CAUSE is interpreted within the selected TRAPNUM class.",
           "ARGV=1 indicates TRAPARG0 is valid."
         ]
       },

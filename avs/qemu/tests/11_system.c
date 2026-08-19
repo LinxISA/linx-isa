@@ -56,6 +56,7 @@ enum {
     SSR_TRAPARG0_ACR1 = 0x1F03,
     SSR_ETEMP_ACR1 = 0x1F05,
     SSR_ETEMP0_ACR1 = 0x1F06,
+    SSR_ECONFIG_ACR1 = 0x1F07,
     SSR_EBARG_BPC_CUR_ACR1 = 0x1F41,
     SSR_EBARG_BPC_TGT_ACR1 = 0x1F42,
     SSR_EBARG_TPC_ACR1 = 0x1F43,
@@ -1321,6 +1322,13 @@ __attribute__((noreturn)) static void linx_system_done(void)
 void run_system_tests(void)
 {
     test_suite_begin(0x53595354u); /* 'SYST' */
+
+    /*
+     * This legacy system matrix tests debug, interrupt, and ACR routing.
+     * Disable first-use while it enters ACR2 VECTOR blocks; dedicated QEMU
+     * first-use tests own the armed V/C trap and retry contract.
+     */
+    hl_ssrset_uimm24(SSR_ECONFIG_ACR1, UINT64_C(0x8));
 
     /* --------------------------------------------------------------------- */
     /* Base SSR access + symbolic IDs                                         */

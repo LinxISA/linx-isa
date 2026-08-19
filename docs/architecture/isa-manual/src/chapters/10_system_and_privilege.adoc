@@ -149,8 +149,8 @@ single internal action (no intervening architectural events may occur):
 . Reset `BARG` to its architectural initial state.
 . Vector control to the trap handler by setting `BPC = EVBASE_ACRm`.
 . Populate trap reporting registers:
-  * For a SYNC_SERVICE_REQUEST: set `TRAPNO_ACRm.E = 0`, then write `TRAPNO_ACRm` / `TRAPARG0_ACRm`.
-  * For an ASYNC_SERVICE_REQUEST: set `TRAPNO_ACRm.E = 1`, then write `TRAPNO_ACRm`/`TRAPARG0_ACRm` according to the
+  * For a SYNC_SERVICE_REQUEST: set `TRAPNO_ACRm.E = 1`, then write `TRAPNO_ACRm` / `TRAPARG0_ACRm`.
+  * For an ASYNC_SERVICE_REQUEST: set `TRAPNO_ACRm.E = 0`, then write `TRAPNO_ACRm`/`TRAPARG0_ACRm` according to the
     interrupt source definition.
 
 NOTE: The bring-up profile specifies `BPC` vectoring explicitly. At the start of the trap handler block, `TPC` is expected
@@ -344,6 +344,61 @@ NOTE: earlier draft text previously used `E_INST(EC_ILLEGAL)` and `E_INST(EC_PAR
 |===
 
 For system calls (`TRAPNUM=SCALL` in v0.2), routing is defined by the `ACRC` `request_type` rules above.
+
+[[system-block-exception-retention]]
+===== Recoverable exceptions during block execution
+
+If a recoverable exception occurs after a block enters execution, hardware MUST freeze the faulting block and retain all
+architectural state required to continue it.  At minimum this includes block-register contents, execution and sequence
+progress, predicate/control state, outstanding-operation state, and any restart cursor defined by the block family.
+
+Software MAY export retained state with `ESAVE`.  An implementation MUST provide an independent save path or reserve
+enough registers, queue entries, and issue capacity for `ESAVE` to make progress when the faulting block occupies all
+ordinary resources.
+
+* VECTOR blocks MAY raise architecturally defined recoverable internal exceptions.
+* CUBE blocks do not raise CUBE-owned recoverable exceptions after execution starts.
+* TLSU blocks do not raise TLSU-owned recoverable exceptions.  Translation, permission, and bus errors produced by the
+  memory system remain `E_DATA` exceptions.
+* VECTOR/CUBE first-use exceptions occur before execution and are not block-internal exceptions.
+
+`TMA` is a historical name for TLSU and is not used by the active profile.
+
+[[system-extension-first-use]]
+===== VECTOR/CUBE first-use exception
+
+The current unreleased v0.58 main contract defines a precise pre-execution exception so an ACR1 kernel can allocate or restore extension
+context only when an ACR2 task first needs it.
+
+The exact trap envelope is:
+
+[%header,cols="2,1,1"]
+|===
+|Field |VECTOR |CUBE
+
+|`TRAPNO.E` |`1` |`1`
+|`TRAPNO.ARGV` |`1` |`1`
+|`TRAPNO.TRAPNUM` |`E_INST (0)` |`E_INST (0)`
+|`TRAPNO.CAUSE` |`EC_PERM (4)` |`EC_PERM (4)`
+|`TRAPARG0` |`0` |`1`
+|`ECSTATE.BI` |`0` |`0`
+|===
+
+This producer uses raw `CAUSE=4`; it does not change the profile-specific cause formats or trap numbers used by other
+producers.  Archived misspellings of `EC_PERM` are not active aliases.
+
+VECTOR first-use applies to `BSTART.MPAR`, `BSTART.MSEQ`, `BSTART.VPAR`, `BSTART.VSEQ`, and their compressed forms.
+It does not apply to the TEPL assembly aliases `BSTART.VEC` or `BSTART.SFU`.  CUBE membership is derived from canonical
+PTO operations whose `family` and `engine` are both `CUBE`.
+
+The processor MUST complete legal decode and ACR permission checks before this check.  It MUST take first use before
+BARG/BSTATE mutation, context allocation, queue admission, memory issue, or any other architectural effect.  An invalid
+encoding or invalid block target therefore retains its normal exception priority.  The saved PC identifies the original
+block header, and retry after software clears/restores the corresponding state MUST execute that header exactly once.
+
+`ECONFIG_ACR1.V` controls VECTOR and `ECONFIG_ACR1.C` controls CUBE for ACR2.  Handling one extension MUST NOT clear the
+other enable bit.  Software MUST distinguish `NEVER_USED`, `SAVED_NOT_RESTORED`, and `LIVE`; one used/not-used flag is
+insufficient for lazy restore.
 
 [[system-template-integrity-fail]]
 ===== Template-integrity `ASSERT_FAIL`
