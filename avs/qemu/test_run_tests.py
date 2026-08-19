@@ -42,6 +42,16 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
             with self.subTest(invocation=invocation):
                 self.assertLess(main_source.index(invocation), system_index)
 
+    def test_legacy_system_matrix_disables_first_use_explicitly(self) -> None:
+        system_source = (run_tests.SCRIPT_DIR / "tests" / "11_system.c").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("SSR_ECONFIG_ACR1 = 0x1F07", system_source)
+        self.assertIn(
+            "hl_ssrset_uimm24(SSR_ECONFIG_ACR1, UINT64_C(0x8));",
+            system_source,
+        )
+
     def test_active_catalog_is_the_exact_v0581_catalog(self) -> None:
         self.assertEqual(run_tests.LLVM_AVS_SPEC, run_tests.REPO_ROOT / "isa/v0.58/linxisa-v0.58.json")
         catalog = json.loads(run_tests.LLVM_AVS_SPEC.read_text())
