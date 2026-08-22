@@ -1002,72 +1002,20 @@ function exec_c_setc_tgt(SrcL : bits(5)) -> unit = {
 // -----------------------------------------------------------------------------
 // BRU: control-transfer (vec-engine scalar lane; updates TPC)
 //
-// Contract summary (strict v0.57 staged):
-// - Vec-engine scalar-lane only (scalar blocks executing these trap: TRAPNUM=4).
+// Contract summary (PTO ISA 0.58.3):
 // - Updates TPC (body-local PC), not architectural global PC.
 // - PC-relative base is *current instruction* TPC.
 // - Immediate offsets are halfword-scaled: target = base + sail_shiftleft(sext(offset, 1)).
-// - B.Z/B.NZ consult predicate register p (modeled via read_predicate_p()).
+// - Retired B.EQ/NE/LT/GE/LTU/GEU/Z/NZ words are reserved and decode illegal.
 // - Misaligned/unfetchable targets are reported as E_BLOCK(EC_BFETCH) by the fetch machinery.
-
-function tpc_rel_target_from_imm12(simm12 : bits(12)) -> bits(64) = {
-  let off = sail_shiftleft(sext12_to64(simm12), 1);
-  read_tpc() + off
-}
 
 function tpc_rel_target_from_imm22(simm22 : bits(22)) -> bits(64) = {
   let off = sail_shiftleft(sext22_to64(simm22), 1);
   read_tpc() + off
 }
 
-function exec_b_eq(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
-  let a = read_reg5(SrcL);
-  let b = read_reg5(SrcR);
-  if a == b then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
-}
-
-function exec_b_ne(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
-  let a = read_reg5(SrcL);
-  let b = read_reg5(SrcR);
-  if a != b then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
-}
-
-function exec_b_lt(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
-  let a = read_reg5(SrcL);
-  let b = read_reg5(SrcR);
-  if signed(a) < signed(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
-}
-
-function exec_b_ge(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
-  let a = read_reg5(SrcL);
-  let b = read_reg5(SrcR);
-  if signed(a) >= signed(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
-}
-
-function exec_b_ltu(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
-  let a = read_reg5(SrcL);
-  let b = read_reg5(SrcR);
-  if unsigned(a) < unsigned(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
-}
-
-function exec_b_geu(SrcL : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit = {
-  let a = read_reg5(SrcL);
-  let b = read_reg5(SrcR);
-  if unsigned(a) >= unsigned(b) then write_tpc(tpc_rel_target_from_imm12(simm12)) else ()
-}
-
 function exec_j(simm22 : bits(22)) -> unit = {
   write_tpc(tpc_rel_target_from_imm22(simm22))
-}
-
-function exec_b_nz(simm22 : bits(22)) -> unit = {
-  let p = read_predicate_p();
-  if p != 0x0000_0000_0000_0000 then write_tpc(tpc_rel_target_from_imm22(simm22)) else ()
-}
-
-function exec_b_z(simm22 : bits(22)) -> unit = {
-  let p = read_predicate_p();
-  if p == 0x0000_0000_0000_0000 then write_tpc(tpc_rel_target_from_imm22(simm22)) else ()
 }
 
 function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
@@ -2823,6 +2771,19 @@ function exec_bse() -> unit = { () }
 // -----------------------------------------------------------------------------
 // PTO ISA 0.58 tile transaction envelope
 
+function decode_pe_mode(PEMode : bits(3)) -> bits(4) = {
+  match PEMode {
+    0b000 => 0x0,
+    0b001 => 0x8,
+    0b010 => 0x4,
+    0b011 => 0x2,
+    0b100 => 0x1,
+    0b101 => 0xC,
+    0b110 => 0xE,
+    _ => 0xF
+  }
+}
+
 function tile_effect_begin(family : bits(2), selector : bits(5)) -> unit = {
   tile_effect_pending = true;
   tile_effect_family = family;
@@ -2834,29 +2795,33 @@ function tile_effect_begin(family : bits(2), selector : bits(5)) -> unit = {
 
 function tile_effect_append_iot(raw : bits(64)) -> unit = {
   let func : bits(3) = raw[14..12];
+  let pe_mode : bits(3) = raw[11..9];
+  let pe_mask : bits(4) = decode_pe_mode(pe_mode);
   let source_count : bits(6) =
     if func == 0b100 then 0b00_0010
     else if func == 0b101 then 0b00_0001
     else if func == 0b110 then 0b00_0000
     else 0b00_0000;
   let size : bits(4) = raw[18..15];
-  let dst : bits(3) = raw[9..7];
-  let output_active = (unsigned(size) >= 3) & (unsigned(size) <= 9) & (unsigned(dst) <= 3);
+  let dst : bits(2) = raw[8..7];
+  let output_active = (unsigned(size) >= 1) & (unsigned(size) <= 10);
   let last = raw[19] == 0b1;
-  if tile_effect_last_seen then tile_effect_after_last = true else ();
-  if last then tile_effect_last_seen = true else ();
-  tile_effect_iot_count = tile_effect_iot_count + 0b00_0001;
-  tile_effect_source_count = tile_effect_source_count + source_count;
-  if output_active then tile_effect_output_count = tile_effect_output_count + 0b00_0001 else ();
-  if (func != 0b100) & (func != 0b101) & (func != 0b110) then tile_effect_iot_legal = false else ();
-  if (size != 0b0000) & not_bool(output_active) then tile_effect_iot_legal = false else ();
-  if (unsigned(source_count) >= 1) & (raw[10] == 0b0) then
-    tile_effect_release_count = tile_effect_release_count + 0b00_0001
-  else ();
-  if (source_count == 0b00_0010) & (raw[11] == 0b0) then
-    tile_effect_release_count = tile_effect_release_count + 0b00_0001
-  else ();
-  bdesc_mark_iot()
+  // PTO 0.58.3 makes PEMode=000 a strict no-effect path before placement,
+  // duplicate, schema, allocation, descriptor, memory, and fault checks.
+  if pe_mask == 0x0 then ()
+  else {
+    if tile_effect_last_seen then tile_effect_after_last = true else ();
+    if last then tile_effect_last_seen = true else ();
+    tile_effect_iot_count = tile_effect_iot_count + 0b00_0001;
+    tile_effect_source_count = tile_effect_source_count + source_count;
+    if output_active then tile_effect_output_count = tile_effect_output_count + 0b00_0001 else ();
+    if (func != 0b100) & (func != 0b101) & (func != 0b110) then tile_effect_iot_legal = false else ();
+    if (size != 0b0000) & not_bool(output_active) then tile_effect_iot_legal = false else ();
+    if (func == 0b110) & not_bool(output_active) then tile_effect_iot_legal = false else ();
+    // L terminates only the effective binding sequence; it never releases a
+    // source in the 0.58.3 contract.
+    bdesc_mark_iot()
+  }
 }
 
 function tile_tlsu_required_sources(selector : bits(5)) -> bits(6) = {
@@ -3213,19 +3178,6 @@ function exec_b_dim() -> unit = {
 }
 function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
-function decode_pe_mode(PEMode : bits(3)) -> bits(4) = {
-  match PEMode {
-    0b000 => 0x0,
-    0b001 => 0x8,
-    0b010 => 0x4,
-    0b011 => 0x2,
-    0b100 => 0x1,
-    0b101 => 0xC,
-    0b110 => 0xE,
-    _ => 0xF
-  }
-}
-
 function exec_b_ios(SharedTID : bits(8), SizeCode : bits(4), PEMode : bits(3)) -> unit = {
   // Role is consumed by the surrounding BSTART schema. The architectural
   // index is absolute (S0..S255). PEMode expands to the fixed four-PE mask;

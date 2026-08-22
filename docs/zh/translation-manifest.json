@@ -770,8 +770,8 @@
       "translation_sha256": "d6a37ba03a54b35b841eaf6efe797bf5a8de3d2e4048fb018f47a479aec12c4b"
     },
     "isa/blockIntro/scainstrs/branch.md": {
-      "source_sha256": "ee189a40ecd1a17b7f6138efce780ff15f3aa58d769f37235436d1f48eadd35d",
-      "translation_sha256": "3ba46eaabf8be008f46a982973ffc6519bfc2b8cf7b858b08f6e382745348d7f"
+      "source_sha256": "171e91c7e71145e4e83e6c0208783ed15f1bc4fddaa2d88b0c70e560690d947f",
+      "translation_sha256": "5113b326c59118ba5eb2a37670b3c8558d300900c76c57dbf610ecbf2a621825"
     },
     "isa/blockIntro/scainstrs/compare.md": {
       "source_sha256": "9df4b45878d73e1cc3f9c41a90dcca745a35a96cfdad62240e6308af4a6ee477",
@@ -1059,7 +1059,7 @@
     },
     "isa/encoding.md": {
       "source_sha256": "7b2a2169ffa3e2619a5b32c43207bc0e9cb74a42bb966e31ac08c87ac9438b1f",
-      "translation_sha256": "1284feccc9af2e9c03b451c1e33acbaec0220e78b9ce13bca6a6de6233903a3f"
+      "translation_sha256": "fb32797dd737afd2f860ee28bd3d74c8d604c86f82c1114a0529b70a0cc0412a"
     },
     "isa/encoding/overview.md": {
       "source_sha256": "84438cae02fb073b72bde31091520d642f3b6bc5b635b8ce8eae23f5f829f75c",
@@ -1202,8 +1202,8 @@
       "translation_sha256": "97b60b526ca1af1e386a768c3fe5d92660ccaeab069c6921bbaa88558777bbbf"
     },
     "isa/header/B.IOS.md": {
-      "source_sha256": "af68300e086331c7535e17793746e3cf622dd4620189715ef25906d4d9679cc0",
-      "translation_sha256": "235b1f169e9981399b96c45d7ab3cf718deaa0af4d8b88b22c30495237529afe"
+      "source_sha256": "b63cc7b9759ad23207ba7c5e57cc550ceaef75585e624e9a5f1f50c5269b10d7",
+      "translation_sha256": "958bb1cf3ebcb80b073299289a920ef9b65684cba376c81d5ae1bb7bccb3ad54"
     },
     "isa/header/B.IOT.md": {
       "source_sha256": "d2faa362777299fd7717dbd625f3fe5958ec95cb256492cbbb3e69c92a1419c5",
@@ -1659,7 +1659,7 @@
     },
     "isa/index.md": {
       "source_sha256": "5d4e46716b46aae41688bfeff2a9efa5afd6c0dad056986526a871c6da9fc529",
-      "translation_sha256": "8cb8f5f6f8b7e873f3d34b44139468c90dab8932f44e36235dbe09d346891e75"
+      "translation_sha256": "504872c9b0a20331515739515f895677f299de26ec99936fbb57fa674c4d00ca"
     },
     "isa/inst/LibPseudoCode.md": {
       "source_sha256": "251f6a031c683e186f49827826b4ac152e047e8b70313f59d7492c9834793532",
@@ -1948,38 +1948,6 @@
     "isa/inst/misa_g/ANDW.md": {
       "source_sha256": "80ff3e9aae35e3229da246cb82c53375e33a5f3e9299da24929008bc2b294c9e",
       "translation_sha256": "e63785fd0aa15575cf91c5b0403b1b179487f53f7b920f3ba46425bdb6d27605"
-    },
-    "isa/inst/misa_g/B.EQ.md": {
-      "source_sha256": "cf271716094f9c2fd7b230de0eb53858e5992189dfb82270e8eda351740f2e67",
-      "translation_sha256": "756779c64a9db9b01e9d3f07ffbbac8013faaf787b18ab69e8d49ccf831c55ed"
-    },
-    "isa/inst/misa_g/B.GE.md": {
-      "source_sha256": "64be57e8df3742deab62ca1f30cde663d51b8bc3e52dc80ed155252cd50be79e",
-      "translation_sha256": "bb669226288befa4786da84d232663714bc00761ad69c9aacca317ad1d89414f"
-    },
-    "isa/inst/misa_g/B.GEU.md": {
-      "source_sha256": "b68b3647450deeeb1c87b6fd4a07d59115e8dfd89bc16fba8f6fad39df727d14",
-      "translation_sha256": "126f7dddabeb20c00d47a3f11952a641dd84d4142de8997b3f601f6d3a925a1f"
-    },
-    "isa/inst/misa_g/B.LT.md": {
-      "source_sha256": "6504fd278f65971c9b29f2444871c3add4fb8ab24b44837788c9b36398bbc66e",
-      "translation_sha256": "1a46557fcd5e6b314317a34d7a95a9b40070d39f12dbe36c767b546e0b31c368"
-    },
-    "isa/inst/misa_g/B.LTU.md": {
-      "source_sha256": "e89535f73e37b41f1726ec1444f9d88053af2212a43ba28df5df2bec1b54bcb9",
-      "translation_sha256": "2e9d84a290974b1410ef86b2b53231f101372d094f18f8f97963801d15592cbd"
-    },
-    "isa/inst/misa_g/B.NE.md": {
-      "source_sha256": "b7fb78251358e8585037dace31bf64fa38fd5bb95812e2ff3859e8dc15efbcf4",
-      "translation_sha256": "47ad80096c253a5a76ed16df150192f36ffe077617d990284e32ea01bc944783"
-    },
-    "isa/inst/misa_g/B.NZ.md": {
-      "source_sha256": "5ee6b29f8a7bc1e0d95749d66ce9df43e32c3b951dbe022e72debb31496244e1",
-      "translation_sha256": "0c296340e69a3346adfaf73021fc3d64d7705c6783e0491b901976be31137a1e"
-    },
-    "isa/inst/misa_g/B.Z.md": {
-      "source_sha256": "942d2e068c7e3dc6abb1c711c5cdb7255862044fe4a2bbef56a09dcdf584c6e6",
-      "translation_sha256": "d1456ddb5a7d275139a96e42194fff2706997e0de32e34d4c79a71726eeeaa21"
     },
     "isa/inst/misa_g/BCNT.md": {
       "source_sha256": "e8e32b45411268c02dce7f2f37930de8b416fe68f6ae3b18b7f96f5f0cbdcdff",
@@ -8209,14 +8177,6 @@
     "isa/header/tileblock/ERCOV.md",
     "isa/header/tileblock/ESAVE.md",
     "isa/instructions/b_arg.md",
-    "isa/instructions/b_eq.md",
-    "isa/instructions/b_ge.md",
-    "isa/instructions/b_geu.md",
-    "isa/instructions/b_lt.md",
-    "isa/instructions/b_ltu.md",
-    "isa/instructions/b_ne.md",
-    "isa/instructions/b_nz.md",
-    "isa/instructions/b_z.md",
     "isa/instructions/bstart_cube.md",
     "isa/instructions/bstart_fixp.md",
     "isa/instructions/c_b_dim.md"

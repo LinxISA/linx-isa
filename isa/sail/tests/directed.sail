@@ -67,7 +67,30 @@ function reset_first_use_case(base_pc : bits(64)) -> unit = {
   bdesc_reset()
 }
 
+function assert_reserved_branch_word(word : bits(32), at_pc : bits(64)) -> unit = {
+  reset_first_use_case(at_pc);
+  decode_execute32(word);
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(last_cause == 0x000100);
+  assert(last_traparg0 == at_pc);
+  assert(not_bool(barg_valid));
+  assert(not_bool(tile_effect_pending))
+}
+
 function main() : unit -> unit = {
+  // PTO ISA 0.58.3 reserves all eight former standalone conditional branch
+  // encodings. They must reject before the armed first-use profile can fire.
+  assert_reserved_branch_word(0x0000_0027, 0x0000_0000_0000_0700); // B.EQ
+  assert_reserved_branch_word(0x0000_1027, 0x0000_0000_0000_0710); // B.NE
+  assert_reserved_branch_word(0x0000_2027, 0x0000_0000_0000_0720); // B.LT
+  assert_reserved_branch_word(0x0000_3027, 0x0000_0000_0000_0730); // B.GE
+  assert_reserved_branch_word(0x0000_4027, 0x0000_0000_0000_0740); // B.LTU
+  assert_reserved_branch_word(0x0000_5027, 0x0000_0000_0000_0750); // B.GEU
+  assert_reserved_branch_word(0x0000_1037, 0x0000_0000_0000_0760); // B.Z
+  assert_reserved_branch_word(0x0000_2037, 0x0000_0000_0000_0770); // B.NZ
+
   // VECTOR first use is a precise E_INST(EC_PERM) exception before BARG or
   // queue state changes.
   reset_first_use_case(0x0000_0000_0000_0800);
@@ -288,7 +311,8 @@ function main() : unit -> unit = {
 
   // Positive masked gather: one descriptor carries indices+mask and one
   // destination.  Only a successful complete preflight publishes effects and
-  // last-use releases; false mask lanes are recorded as access-suppressing.
+  // PEMode zero is ignored; an effective all-PE binding commits without
+  // interpreting any PEMode bit as a source-lifetime release.
   reset_tile_effect_case();
   bdesc_mark_datr();
   bdesc_mark_ior();
@@ -296,11 +320,13 @@ function main() : unit -> unit = {
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b01, 0b00110);
   tile_effect_append_iot(0x0000_0000_0819_C013);
+  assert(tile_effect_iot_count == 0b00_0000);
+  tile_effect_append_iot(0x0000_0000_0819_CE13);
   assert(tile_effect_finalize());
   assert(tile_effect_commit_seq == 0x0000_0000_0000_0001);
   assert(tile_effect_memory_seq == 0x0000_0000_0000_0001);
   assert(tile_effect_tile_seq == 0x0000_0000_0000_0001);
-  assert(tile_effect_lifetime_releases == 0x0000_0000_0000_0002);
+  assert(tile_effect_lifetime_releases == 0x0000_0000_0000_0000);
   assert(tile_effect_last_masked);
   assert(tile_effect_last_mask_suppresses_access);
   assert(tile_effect_last_pad == 0b01);
@@ -312,7 +338,7 @@ function main() : unit -> unit = {
   bdesc_mark_ior();
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b01, 0b00100);
-  tile_effect_append_iot(0x0000_0000_0019_D013); // one source + dst, size=3
+  tile_effect_append_iot(0x0000_0000_0019_DE13); // one source + dst, size=3, all PEs
   tile_effect_access_set_valid = false;
   tile_effect_fault_address = 0x0000_0000_DEAD_0040;
   assert(not_bool(tile_effect_finalize()));
@@ -352,9 +378,9 @@ function main() : unit -> unit = {
   exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b1, 0b1);
   assert(bfpatr_trans_a);
   assert(bfpatr_trans_b);
-  tile_effect_append_iot(0x0000_0000_0810_4013);
-  tile_effect_append_iot(0x0000_0000_1030_4013);
-  tile_effect_append_iot(0x0000_0000_0058_5013);
+  tile_effect_append_iot(0x0000_0000_0810_4E13);
+  tile_effect_append_iot(0x0000_0000_1030_4E13);
+  tile_effect_append_iot(0x0000_0000_0058_5E13);
   assert(tile_effect_finalize());
   assert(tile_acc_valid);
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0001);
@@ -375,7 +401,7 @@ function main() : unit -> unit = {
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b10, 0b10010);
   exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0818_4013);
+  tile_effect_append_iot(0x0000_0000_0818_4E13);
   assert(not_bool(tile_effect_finalize()));
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0000);
   assert(not_bool(tile_acc_valid));
@@ -384,13 +410,13 @@ function main() : unit -> unit = {
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10000);
   exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0818_4013);
+  tile_effect_append_iot(0x0000_0000_0818_4E13);
   assert(tile_effect_finalize());
   assert(tile_acc_valid);
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10010);
   exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0818_4013);
+  tile_effect_append_iot(0x0000_0000_0818_4E13);
   assert(tile_effect_finalize());
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0002);
   assert(tile_effect_last_accumulate)

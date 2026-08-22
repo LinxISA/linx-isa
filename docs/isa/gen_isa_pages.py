@@ -302,12 +302,6 @@ _INSN_DESCRIPTIONS: dict[str, str] = {
     "BSTART": "Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind.",
     "BSTOP": "Block termination marker. Ends the current basic block.",
     "SETC": "Sets the block-commit condition/argument consumed by subsequent conditional block transitions.",
-    "B.EQ": "Conditional branch taken when SrcL equals SrcR.",
-    "B.NE": "Conditional branch taken when SrcL not equal to SrcR.",
-    "B.LT": "Conditional branch taken when SrcL is less than SrcR (signed).",
-    "B.GE": "Conditional branch taken when SrcL is greater than or equal to SrcR (signed).",
-    "B.LTU": "Conditional branch taken when SrcL is less than SrcR (unsigned).",
-    "B.GEU": "Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned).",
     "J": "Unconditional PC-relative jump to a target label.",
     "JR": "Jump register: PC-relative or register-based jump to the address in a register.",
     "EBREAK": "Environment break instruction. Traps to the debugging or OS handler.",
@@ -1199,14 +1193,6 @@ def _derive_pseudocode(mnemonic: str, group: str, asm: str) -> str:
         return "rd = CountLeadingZeros(rs1);"
     if root == "CTZ":
         return "rd = CountTrailingZeros(rs1);"
-    if root == "B.EQ":
-        return "if (rs1 == rs2) TPC = target;"
-    if root == "B.NE":
-        return "if (rs1 != rs2) TPC = target;"
-    if root == "B.LT":
-        return "if (signed(rs1) < signed(rs2)) TPC = target;"
-    if root == "B.GE":
-        return "if (signed(rs1) >= signed(rs2)) TPC = target;"
     if root in {"FEQ", "FEQS"}:
         return "rd = (fs1 == fs2) ? 1 : 0;"
     if root == "FMAX":

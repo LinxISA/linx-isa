@@ -8,20 +8,16 @@
 
 |     微指令    | 汇编格式       |     描述                            |
 |---------------|---------------|-------------------------------------|
-|  B.EQ  |  b.eq srcL, srcR, label |  根据左右源操作数是否相等决定是否跳转  |
-|  B.NE  |  b.ne srcL, srcR, label |  根据左右源操作数是否不等决定是否跳转  |
-|  B.LT  |  b.lt srcL, srcR, label |  根据左源操作数是否小于右源操作数（有符号比较）决定是否跳转  |
-|  B.GE  |  b.ge srcL, srcR, label |  根据左源操作数是否大于等于右源操作数（有符号比较）决定是否跳转  |
-|  B.LTU  |  b.ltu srcL, srcR, label |  根据左源操作数是否小于右源操作数（无符号比较）决定是否跳转  |
-|  B.GEU  |  b.geu srcL, srcR, label |  根据左源操作数是否大于等于右源操作数（无符号比较）决定是否跳转  |
-|  B.Z  |  b.z label |  根据P寄存器的值是否是全零决定是否跳转  |
-|  B.NZ  |  b.z label |  根据P寄存器的值是否是非全零决定是否跳转  |
 |  JR  |  jr SrcL, label |  无条件跳转到寄存器内tpc加偏移的目标地址处  |
 |  J  |  j label |  无条件跳转到当前tpc加偏移的目标地址处  |
+
+PTO ISA 0.58.3 删除 `B.EQ`、`B.NE`、`B.LT`、`B.GE`、`B.LTU`、
+`B.GEU`、`B.Z` 和 `B.NZ`，并保留其原编码空间。块控制条件使用
+`SETC.*` 与 `BSTART COND`。
 
 ![InnerBlockBranch32bits](../../../figs/bitfield/svg/Introduction_32bit/BranchInstruction.svg)
 
 ## 备注
 
 1. 该类指令无目的寄存器，且不占用块内私有寄存器。
-3. 该类指令作为块体的最后一条指令时，本指令提交后块指令立即提交，块内跳转不生效。
+2. 该类指令作为块体的最后一条指令时，本指令提交后块指令立即提交，块内跳转不生效。
