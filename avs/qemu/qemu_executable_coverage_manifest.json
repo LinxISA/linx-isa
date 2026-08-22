@@ -3,7 +3,7 @@
   "release": "0.57.1",
   "active_release": false,
   "release_status": "archived-legacy-evidence",
-  "superseded_by": "0.58.1",
+  "superseded_by": "0.58.3",
   "availability": {
     "L2": "available",
     "L3": "available"

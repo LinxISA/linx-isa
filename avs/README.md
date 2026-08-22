@@ -1,6 +1,7 @@
 # Architecture Validation Suite (AVS)
 
-This directory contains the canonical **Architecture Validation Suite** for LinxISA v0.57.
+This directory contains the canonical **Architecture Validation Suite** for
+LinxISA v0.58, aligned with the PTO ISA 0.58.3 projection.
 
 ## Overview
 
@@ -21,9 +22,17 @@ The AVS validates that all implementations (compiler, emulator, RTL, kernel) con
 ### Runtime Tests (QEMU)
 
 ```bash
-cd avs/qemu
-./run_tests.sh --all --timeout 10
+python3 avs/qemu/run_tests.py \
+  --suite tile_v0583_tlsu \
+  --suite tile_v0583_vec \
+  --suite tile_v0583_sfu \
+  --suite tile_v0583_cube \
+  --timeout 30 \
+  --no-progress-timeout 15
 ```
+
+The Tile runtime lane covers TLSU, VEC, SFU, and CUBE with canonical assembly
+carriers and independent freestanding C result oracles.
 
 ### Compile Tests (LLVM)
 

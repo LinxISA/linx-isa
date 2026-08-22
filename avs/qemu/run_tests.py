@@ -73,6 +73,10 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "executable_hl_cmp": 0x00002707,
     "executable_setc_imm": 0x0000280A,
     "executable_maddw_bfi_mi": 0x00002904,
+    "tile_v0583_tlsu": 0x00002A01,
+    "tile_v0583_vec": 0x00002B01,
+    "tile_v0583_sfu": 0x00002C01,
+    "tile_v0583_cube": 0x00002D01,
     "system": 0x0000110D,
 }
 
@@ -525,11 +529,36 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/27_executable_maddw_bfi_mi.c",
         "macro": "LINX_TEST_ENABLE_MADDW_BFI_MI",
     },
+    "tile_v0583_tlsu": {
+        "src": "tests/28_v0583_tile_tlsu.c",
+        "macro": "LINX_TEST_ENABLE_TILE_V0583_TLSU",
+    },
+    "tile_v0583_vec": {
+        "src": "tests/29_v0583_tile_vec.c",
+        "macro": "LINX_TEST_ENABLE_TILE_V0583_VEC",
+    },
+    "tile_v0583_sfu": {
+        "src": "tests/30_v0583_tile_sfu.c",
+        "macro": "LINX_TEST_ENABLE_TILE_V0583_SFU",
+    },
+    "tile_v0583_cube": {
+        "src": "tests/31_v0583_tile_cube.c",
+        "macro": "LINX_TEST_ENABLE_TILE_V0583_CUBE",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {}
 
+EXTRA_SOURCES_BY_SUITE: dict[str, list[str]] = {
+    "tile_v0583_tlsu": ["avs/qemu/tests/28_v0583_tile_tlsu_carrier.S"],
+    "tile_v0583_vec": ["avs/qemu/tests/29_v0583_tile_vec_carrier.S"],
+    "tile_v0583_sfu": ["avs/qemu/tests/30_v0583_tile_sfu_carrier.S"],
+    "tile_v0583_cube": ["avs/qemu/tests/31_v0583_tile_cube_carrier.S"],
+}
+
 def _extra_sources_for_suite(suite: str) -> list[str]:
+    if suite in EXTRA_SOURCES_BY_SUITE:
+        return EXTRA_SOURCES_BY_SUITE[suite]
     if suite == "atomic":
         return [
             "avs/qemu/tests/07_atomic_lr_srczero.S",
@@ -565,6 +594,26 @@ EXTRA_LLCFLAGS_BY_SUITE: dict[str, list[str]] = {
 }
 
 OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
+    "tile_v0583_tlsu": [
+        r"\bBSTART\.TLOAD\s+S32\b",
+        r"\bBSTART\.TSTORE\s+S32\b",
+        r"\bB\.IOT\s+mask=0001,\s+last,\s+->t<4KB>",
+    ],
+    "tile_v0583_vec": [
+        r"\bBSTART\.(?:VEC|TEPL)\s+TADD,\s+FP32\b",
+        r"\bB\.IOT\s+t#2,\s+t#1,\s+mask=0001,\s+last,\s+->t<4KB>",
+    ],
+    "tile_v0583_sfu": [
+        r"\bBSTART\.SFU\s+TEXP,\s+FP32\b",
+        r"\bB\.IOT\s+t#1,\s+mask=0001,\s+last,\s+->t<4KB>",
+    ],
+    "tile_v0583_cube": [
+        r"\bB\.DATR\s+Layout22,\s+DTYPE_NONE,\s+Null\b",
+        r"\bB\.DATR\s+Layout23,\s+DTYPE_NONE,\s+Null\b",
+        r"\bBSTART\.TMATMUL\s+S32\b",
+        r"\bB\.FPATR\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0\b",
+        r"\bB\.DATR\s+Layout25,\s+DTYPE_NONE,\s+Null\b",
+    ],
     "simt_autovec": [
         r"(?s)<search_store_index_grouped_boundary>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?B\.IOTI.*?B\.IOTI.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.sw\.brg\.local\b.*?\bv\.lw\.brg\b.*?->p.*?\bb\.nz\b.*?\bj\b.*?\bv\.sw\.brg\b",
         r"(?s)<search_store_index_split_addrs_autovec>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.psel\s+p,.*?\bv\.sw\.brg\b.*?\bv\.sw\.brg\b.*?\bv\.cmp\.ne\b",
@@ -587,9 +636,11 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
     ],
 }
 
+OBJDUMP_CARRIER_SUITES: set[str] = set(EXTRA_SOURCES_BY_SUITE)
+
 EXPERIMENTAL_SUITES: set[str] = {
     # Compiler-generated SIMT remains opt-in until its objdump expectations are
-    # refreshed against the exact 0.58.1 encoding projection.
+    # refreshed against the exact 0.58.3 encoding projection.
     "simt_autovec",
     # Compile-only per-instruction translation corpus used by coverage/reporting.
     "translation_corpus",
@@ -1223,6 +1274,16 @@ def main(argv: list[str]) -> int:
                 if meta["src"] == src_rel:
                     src_suite = suite_name
                     break
+        if src_suite is None:
+            try:
+                repo_rel = src.relative_to(REPO_ROOT).as_posix()
+            except ValueError:
+                repo_rel = None
+            if repo_rel is not None:
+                for suite_name, extra_sources in EXTRA_SOURCES_BY_SUITE.items():
+                    if repo_rel in extra_sources:
+                        src_suite = suite_name
+                        break
         if src_suite is not None:
             cflags.extend(EXTRA_CFLAGS_BY_SUITE.get(src_suite, []))
         tool = clang
@@ -1270,7 +1331,9 @@ def main(argv: list[str]) -> int:
         if src.suffix.lower() in {".s", ".S"}:
             sidecar = obj.with_suffix(src.suffix.lower())
             shutil.copyfile(src, sidecar)
-        if src_suite in OBJDUMP_ASSERTS_BY_SUITE:
+        if src_suite in OBJDUMP_ASSERTS_BY_SUITE and (
+            src_suite not in OBJDUMP_CARRIER_SUITES or src.name.endswith("_carrier.S")
+        ):
             _verify_objdump_shape(
                 llvm_objdump,
                 obj,

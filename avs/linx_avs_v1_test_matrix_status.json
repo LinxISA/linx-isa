@@ -41,9 +41,9 @@
       "tests": 2
     },
     "LNX-TILE": {
-      "implemented": 3,
+      "implemented": 7,
       "pass": 3,
-      "tests": 4
+      "tests": 8
     },
     "LNX-VPAR": {
       "implemented": 3,
@@ -192,64 +192,80 @@
     },
     "ev-0033": {
       "kind": "note",
-      "source": "ev-0033"
+      "source": "local PTO ISA 0.58.3 LLVM compile/objdump and uncommitted QEMU PR #68 runtime oracle passed; dirty build is not release evidence"
     },
     "ev-0034": {
       "kind": "note",
-      "source": "ev-0034"
+      "source": "local PTO ISA 0.58.3 LLVM compile/objdump and uncommitted QEMU PR #68 runtime oracle passed; dirty build is not release evidence"
     },
     "ev-0035": {
       "kind": "note",
-      "source": "ev-0035"
+      "source": "local PTO ISA 0.58.3 LLVM compile/objdump and uncommitted QEMU PR #68 runtime oracle passed; dirty build is not release evidence"
     },
     "ev-0036": {
       "kind": "note",
-      "source": "ev-0036"
+      "source": "local PTO ISA 0.58.3 LLVM compile/objdump passed; rebuilt uncommitted QEMU PR #68 source stalled after START 0x2D01, so no release pass is claimed"
     },
     "ev-0037": {
       "kind": "note",
-      "source": "ev-0037"
+      "source": "ev-0033"
     },
     "ev-0038": {
       "kind": "note",
-      "source": "ev-0038"
+      "source": "ev-0034"
     },
     "ev-0039": {
       "kind": "note",
-      "source": "ev-0039"
+      "source": "ev-0035"
     },
     "ev-0040": {
       "kind": "note",
-      "source": "ev-0040"
+      "source": "ev-0036"
     },
     "ev-0041": {
       "kind": "note",
-      "source": "ev-0041"
+      "source": "ev-0037"
     },
     "ev-0042": {
       "kind": "note",
-      "source": "ev-0042"
+      "source": "ev-0038"
     },
     "ev-0043": {
       "kind": "note",
-      "source": "ev-0043"
+      "source": "ev-0039"
     },
     "ev-0044": {
       "kind": "note",
-      "source": "ev-0044"
+      "source": "ev-0040"
     },
     "ev-0045": {
       "kind": "note",
-      "source": "ev-0045"
+      "source": "ev-0041"
     },
     "ev-0046": {
+      "kind": "note",
+      "source": "ev-0042"
+    },
+    "ev-0047": {
+      "kind": "note",
+      "source": "ev-0043"
+    },
+    "ev-0048": {
+      "kind": "note",
+      "source": "ev-0044"
+    },
+    "ev-0049": {
+      "kind": "note",
+      "source": "ev-0045"
+    },
+    "ev-0050": {
       "kind": "note",
       "source": "ev-0046"
     }
   },
-  "generated_at_utc": "2026-08-10 05:55:07Z",
+  "generated_at_utc": "2026-08-22 20:41:58Z",
   "matrix_file": "avs/linx_avs_v1_test_matrix.yaml",
-  "schema_version": "linx-avs-v0.57-status-v1",
+  "schema_version": "linx-avs-v0.58-status-v1",
   "statuses": {
     "AVS-ABI-001": {
       "evidence": [
@@ -396,7 +412,7 @@
     },
     "AVS-EMU-001": {
       "evidence": [
-        "ev-0033"
+        "ev-0037"
       ],
       "implemented": true,
       "validated": "pass"
@@ -423,49 +439,49 @@
     },
     "AVS-LIBC-001": {
       "evidence": [
-        "ev-0039"
+        "ev-0043"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-002": {
       "evidence": [
-        "ev-0040"
+        "ev-0044"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-003": {
       "evidence": [
-        "ev-0041"
+        "ev-0045"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LIBC-004": {
       "evidence": [
-        "ev-0042"
+        "ev-0046"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-001": {
       "evidence": [
-        "ev-0036"
+        "ev-0040"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-002": {
       "evidence": [
-        "ev-0037"
+        "ev-0041"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-LINUX-003": {
       "evidence": [
-        "ev-0038"
+        "ev-0042"
       ],
       "implemented": true,
       "validated": "pass"
@@ -495,14 +511,14 @@
     },
     "AVS-MODEL-001": {
       "evidence": [
-        "ev-0034"
+        "ev-0038"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-MODEL-002": {
       "evidence": [
-        "ev-0035"
+        "ev-0039"
       ],
       "implemented": true,
       "validated": "pass"
@@ -525,6 +541,34 @@
       ],
       "implemented": true,
       "validated": "pass"
+    },
+    "AVS-TILE-CUBE-001": {
+      "evidence": [
+        "ev-0036"
+      ],
+      "implemented": true,
+      "validated": "partial"
+    },
+    "AVS-TILE-SFU-001": {
+      "evidence": [
+        "ev-0035"
+      ],
+      "implemented": true,
+      "validated": "partial"
+    },
+    "AVS-TILE-TLSU-001": {
+      "evidence": [
+        "ev-0033"
+      ],
+      "implemented": true,
+      "validated": "partial"
+    },
+    "AVS-TILE-VEC-001": {
+      "evidence": [
+        "ev-0034"
+      ],
+      "implemented": true,
+      "validated": "partial"
     },
     "AVS-TOOL-001": {
       "evidence": [
@@ -574,21 +618,21 @@
     },
     "AVS-WORK-001": {
       "evidence": [
-        "ev-0043"
+        "ev-0047"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-WORK-002": {
       "evidence": [
-        "ev-0044"
+        "ev-0048"
       ],
       "implemented": true,
       "validated": "pass"
     },
     "AVS-WORK-003": {
       "evidence": [
-        "ev-0045"
+        "ev-0049"
       ],
       "implemented": true,
       "validated": "pass"
@@ -600,7 +644,7 @@
     },
     "AVS-WORK-005": {
       "evidence": [
-        "ev-0046"
+        "ev-0050"
       ],
       "implemented": true,
       "validated": "pass"
@@ -613,14 +657,14 @@
   },
   "tier_summaries": {
     "nightly": {
-      "implemented": 32,
+      "implemented": 36,
       "pass": 32,
-      "tests": 54
+      "tests": 58
     },
     "pr": {
-      "implemented": 31,
+      "implemented": 35,
       "pass": 31,
-      "tests": 31
+      "tests": 35
     }
   }
 }

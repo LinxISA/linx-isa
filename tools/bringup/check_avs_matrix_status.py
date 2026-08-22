@@ -91,9 +91,9 @@ def main(argv: list[str]) -> int:
     extra_status = sorted(status_set - matrix_set)
 
     schema_version = str(status_data.get("schema_version", "")).strip()
-    if schema_version != "linx-avs-v0.57-status-v1":
+    if schema_version != "linx-avs-v0.58-status-v1":
         print(
-            f"error: status JSON schema_version must be 'linx-avs-v0.57-status-v1' (got {schema_version!r})",
+            f"error: status JSON schema_version must be 'linx-avs-v0.58-status-v1' (got {schema_version!r})",
             file=sys.stderr,
         )
         return 1
