@@ -2809,10 +2809,15 @@ function tile_effect_append_iot(raw : bits(64)) -> unit = {
   // PTO 0.58.3 makes PEMode=000 a strict no-effect path before placement,
   // duplicate, schema, allocation, descriptor, memory, and fault checks.
   if pe_mask == 0x0 then ()
+  else if not_bool(tile_effect_iot_legal) then ()
   else if unsigned(tile_effect_iot_count) >= 4 then {
+    // Fifth effective binding: Illegal Block / invalid B.IOT stream.
+    trap_blockfmt(0x05, 0x01, read_pc_or_tpc());
     tile_effect_iot_legal = false
   }
   else if tile_effect_pe_mode_valid & (pe_mode != tile_effect_pe_mode) then {
+    // Linx mapping of PTO Fault_TileLegality for a mismatched decoded mask.
+    trap_blockfmt(0x05, 0x03, read_pc_or_tpc());
     tile_effect_iot_legal = false
   }
   else {

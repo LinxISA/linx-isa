@@ -38,7 +38,12 @@ function reset_tile_effect_case() -> unit = {
   ssr_lb0 = 0x0000_0000_0000_0002;
   ssr_lb1 = 0x0000_0000_0000_0003;
   ssr_lb2 = 0x0000_0000_0000_0041;
+  last_e = 0b0;
+  last_argv = 0b0;
   last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  last_bi = 0b0;
   block_marker_strict = false
 }
 
@@ -340,6 +345,15 @@ function main() : unit -> unit = {
   assert(tile_effect_pe_mask == 0xF);
   tile_effect_append_iot(0x0000_0000_0028_5A13); // source 2, mode 5, last
   assert(not_bool(tile_effect_iot_legal));
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_block_trap());
+  assert(last_cause == 0x000200);
+  assert(last_traparg0 == 0x0000_0000_0000_0305);
+  assert(last_bi == 0b0);
+  assert(tile_effect_iot_count == 0b00_0001);
+  assert(tile_effect_source_count == 0b00_0001);
+  tile_effect_append_iot(0x0000_0000_0038_5E13); // later match: still no mutation
   assert(tile_effect_iot_count == 0b00_0001);
   assert(tile_effect_source_count == 0b00_0001);
 
@@ -356,6 +370,12 @@ function main() : unit -> unit = {
   assert(tile_effect_iot_count == 0b00_0100);
   tile_effect_append_iot(0x0000_0000_0058_5E13);
   assert(not_bool(tile_effect_iot_legal));
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_block_trap());
+  assert(last_cause == 0x000200);
+  assert(last_traparg0 == 0x0000_0000_0000_0105);
+  assert(last_bi == 0b0);
   assert(tile_effect_iot_count == 0b00_0100);
   assert(tile_effect_source_count == 0b00_0100);
 
