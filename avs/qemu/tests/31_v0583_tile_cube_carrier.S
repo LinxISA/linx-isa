@@ -28,7 +28,7 @@ linx_v0583_cube_matmul:
     B.DATR M162ND, DTYPE_NONE, Null
     C.B.DIMI 4, ->lb0
     C.B.DIMI 4, ->lb1
-    B.IOR [a2, a3]
+    B.IOR [a2, a4]
     B.IOT m#1, mask=0001, last
     FRET.STK [ra ~ ra], sp!, 8
     .size linx_v0583_cube_matmul, .-linx_v0583_cube_matmul
