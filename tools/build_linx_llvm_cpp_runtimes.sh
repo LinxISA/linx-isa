@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+LINUX_UAPI_ROOT="${LINUX_UAPI_ROOT:-$ROOT/kernel/linux}"
 
 MODE="phase-b"
 PROFILE="noeh"
@@ -146,7 +147,7 @@ install_linux_uapi_headers() {
   mkdir -p "$MUSL_SYSROOT/include/linux" "$MUSL_SYSROOT/usr/include/linux"
   local header source
   for header in limits.h futex.h; do
-    source="$ROOT/kernel/linux/include/uapi/linux/$header"
+    source="$LINUX_UAPI_ROOT/include/uapi/linux/$header"
     if [[ ! -f "$source" ]]; then
       echo "error: required Linux UAPI header missing: $source" >&2
       exit 2
@@ -474,7 +475,7 @@ summary = {
         "install": "${install_log}",
     },
     "merge_sysroot": ${MERGE_SYSROOT},
-    "copied_runtime_libs": [x for x in """${copied_libs[*]}""".split() if x],
+    "copied_runtime_libs": [x for x in """${copied_libs[*]-}""".split() if x],
 }
 
 summary_path = Path("${SUMMARY}")
