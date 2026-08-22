@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
-assert spec["version"] == "0.58.1"
-assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 548
+assert spec["version"] == "0.58.3"
+assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 540
 pto_owned_instructions = [
     item
     for item in spec["instructions"]
@@ -21,7 +21,7 @@ linx_only_instructions = [
     for item in spec["instructions"]
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
-assert len(pto_owned_instructions) == 553
+assert len(pto_owned_instructions) == 545
 assert len(linx_only_instructions) == 212
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
@@ -52,7 +52,7 @@ reservations = json.loads(
         encoding="utf-8"
     )
 )["reservations"]
-assert len(reservations) == 32
+assert len(reservations) == 40
 
 
 def encoding_parts(item: dict) -> tuple[tuple[int, int, int], ...]:
@@ -167,10 +167,20 @@ shared = json.loads((ROOT / "isa/v0.58/state/shared_tile_registers.json").read_t
 assert shared["register_count"] == 256
 assert shared["register_names"]["first"] == "S0"
 assert shared["register_names"]["last"] == "S255"
-assert shared["tsize_bytes"] == [None, 128, 256, 512, 1024, 2048, 4096, 8192]
-assert shared["pe_mask"]["owner"] == "B.IOS"
+assert shared["size_code_bytes"]["B.IOT"] == [
+    None, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536
+]
+assert shared["size_code_bytes"]["B.IOS"] == [
+    None, 128, 256, 512, 1024, 2048, 4096, 8192,
+    16384, 32768, 65536, 131072, 262144,
+]
+assert shared["pe_mode"]["owners"] == ["B.IOT", "B.IOS"]
+assert shared["pe_mode"]["decoded_masks"] == [
+    "0000", "1000", "0100", "0010", "0001", "1100", "1110", "1111"
+]
 assert shared["gm_access"]["base_selector"] == "B.IOR.RegSrc0"
 assert shared["gm_access"]["row_stride_selector"] == "B.IOR.RegSrc1"
+assert shared["gm_access"]["row_stride_unit"] == "bytes"
 b_ios_page = (ROOT / "docs/isa/instructions/b_ios.md").read_text(encoding="utf-8")
 b_ior_page = (ROOT / "docs/isa/instructions/b_ior.md").read_text(encoding="utf-8")
 assert "## Description\n\nBinds one ordered absolute Core-private Shared register" in b_ios_page

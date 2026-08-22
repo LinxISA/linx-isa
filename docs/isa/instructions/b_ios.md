@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>`
+- `B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.
+Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Binds one ordered absolute Core-private Shared register S0..S255 as a source or 
 
 ## Encoding Notes
 
-- `Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.`
+- `Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>` | 32 | — |
+| `B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>` | 32 | — |
 
 <div class="insn-nav">
 

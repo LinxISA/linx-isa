@@ -26,7 +26,7 @@
 
 ## Description
 
-HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snap
 
 ## Encoding Notes
 
-- `HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.`
+- `HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.`
 
 ## Full Catalog Forms
 

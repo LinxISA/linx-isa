@@ -26,7 +26,7 @@
 
 ## Description
 
-HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
+HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = ZeroExtend(imm20) << 12;
 
 ## Encoding Notes
 
-- `HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.`
+- `HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0.`
 
 ## Full Catalog Forms
 

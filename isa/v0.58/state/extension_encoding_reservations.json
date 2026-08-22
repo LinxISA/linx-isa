@@ -1,7 +1,7 @@
 {
   "isa": "PTO Instruction Set Architecture",
-  "release": "0.58.1",
-  "reservation_count": 32,
+  "release": "0.58.3",
+  "reservation_count": 40,
   "reservations": [
     {
       "encoding": [
@@ -1043,6 +1043,414 @@
       "length_bits": 64,
       "mnemonic": "L.BSTART.SYS.FALL",
       "owner": "PTO reserved two-level extended BSTART space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00000027",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 7,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.EQ",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00001027",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 7,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.NE",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00002027",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 7,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.LT",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00003027",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 7,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.GE",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00004027",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 7,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.LTU",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00005027",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "simm12",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 7
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 7,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 12
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.GEU",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00001037",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm22",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 17,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 22
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.Z",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x0000707f",
+          "match": "0x00002037",
+          "width_bits": 32
+        }
+      ],
+      "fields": [
+        {
+          "name": "simm22",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 17
+            },
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 17,
+              "width": 5
+            }
+          ],
+          "signedness": "signed",
+          "width": 22
+        }
+      ],
+      "length_bits": 32,
+      "mnemonic": "B.NZ",
+      "owner": "PTO reserved two-level block-body conditional branch extension space",
       "status": "reserved-in-pto"
     }
   ],

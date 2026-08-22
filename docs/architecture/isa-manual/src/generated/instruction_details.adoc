@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.1 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.3 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-sys]]
 ==== SYS
@@ -2541,7 +2541,7 @@ image::encodings/enc_hl_lui.svg[HL.LUI encoding form hl_lui_48_6807bdeb5949,alig
 
 Encoding notes (informative)::
 +
-* HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
+* HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0.
 
 Operation (informative)::
 +
@@ -2605,7 +2605,7 @@ image::encodings/enc_hl_maddw.svg[HL.MADDW encoding form hl_maddw_48_f3705bdfbff
 
 Encoding notes (informative)::
 +
-* HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.
+* HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves.
 
 Operation (informative)::
 +
@@ -2827,7 +2827,7 @@ image::encodings/enc_hl_rem.svg[HL.REM encoding form hl_rem_48_d27b2fa30c08,alig
 
 Encoding notes (informative)::
 +
-* HL.REM computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+* HL.REM computes a signed XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 Operation (informative)::
 +
@@ -2865,7 +2865,7 @@ image::encodings/enc_hl_remu.svg[HL.REMU encoding form hl_remu_48_4c8ad6d9e72e,a
 
 Encoding notes (informative)::
 +
-* HL.REMU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+* HL.REMU computes an unsigned XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 Operation (informative)::
 +
@@ -2902,7 +2902,7 @@ image::encodings/enc_hl_remuw.svg[HL.REMUW encoding form hl_remuw_48_43e2a747266
 
 Encoding notes (informative)::
 +
-* HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+* HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 Operation (informative)::
 +
@@ -2941,7 +2941,7 @@ image::encodings/enc_hl_remw.svg[HL.REMW encoding form hl_remw_48_1d5c20784d8d,a
 
 Encoding notes (informative)::
 +
-* HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+* HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 Operation (informative)::
 +
@@ -4362,7 +4362,7 @@ image::encodings/enc_addtpc.svg[ADDTPC encoding form addtpc_32_425b43c01598,alig
 
 Encoding notes (informative)::
 +
-* ADDTPC - Add the encoded displacement to the program counter.
+* ADDTPC - Add a signed 4 KiB page displacement to the current TPC.
 
 Operation (informative)::
 +
@@ -4371,230 +4371,6 @@ Operation (informative)::
 base = CurrentPC()
 off = (SignExtend(imm20) << 1)
 Write(RegDst, base + off)
-----
-
-[[insndesc-bru-b-eq]]
-===== B.EQ
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.eq SrcL, SrcR, label`
-
-Encoding::
-+
-.`b_eq_32_f0f909e9f755` — `b.eq SrcL, SrcR, label`
-image::encodings/enc_b_eq.svg[B.EQ encoding form b_eq_32_f0f909e9f755,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-ge]]
-===== B.GE
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.ge SrcL, SrcR, label`
-
-Encoding::
-+
-.`b_ge_32_4d00af558ba0` — `b.ge SrcL, SrcR, label`
-image::encodings/enc_b_ge.svg[B.GE encoding form b_ge_32_4d00af558ba0,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.GE - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-geu]]
-===== B.GEU
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.geu SrcL, SrcR, label`
-
-Encoding::
-+
-.`b_geu_32_7832bac8f1a4` — `b.geu SrcL, SrcR, label`
-image::encodings/enc_b_geu.svg[B.GEU encoding form b_geu_32_7832bac8f1a4,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.GEU - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-lt]]
-===== B.LT
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.lt SrcL, SrcR, label`
-
-Encoding::
-+
-.`b_lt_32_59c035b9c132` — `b.lt SrcL, SrcR, label`
-image::encodings/enc_b_lt.svg[B.LT encoding form b_lt_32_59c035b9c132,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.LT - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-ltu]]
-===== B.LTU
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.ltu SrcL, SrcR, label`
-
-Encoding::
-+
-.`b_ltu_32_fe13236f720b` — `b.ltu SrcL, SrcR, label`
-image::encodings/enc_b_ltu.svg[B.LTU encoding form b_ltu_32_fe13236f720b,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.LTU - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-ne]]
-===== B.NE
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.ne SrcL, SrcR, label`
-
-Encoding::
-+
-.`b_ne_32_af79aa13d05a` — `b.ne SrcL, SrcR, label`
-image::encodings/enc_b_ne.svg[B.NE encoding form b_ne_32_af79aa13d05a,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.NE - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-nz]]
-===== B.NZ
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.nz label`
-
-Encoding::
-+
-.`b_nz_32_890ac2de1897` — `b.nz label`
-image::encodings/enc_b_nz.svg[B.NZ encoding form b_nz_32_890ac2de1897,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
-----
-
-[[insndesc-bru-b-z]]
-===== B.Z
-
-Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `b.z label`
-
-Encoding::
-+
-.`b_z_32_caa0ef1ffc2e` — `b.z label`
-image::encodings/enc_b_z.svg[B.Z encoding form b_z_32_caa0ef1ffc2e,align="center"]
-
-
-Encoding notes (informative)::
-+
-* B.Z - Conditionally branch to the PC-relative target after comparing scalar operands.
-
-Operation (informative)::
-+
-[source]
-----
-Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-bru-c-cmp-eqi]]
@@ -5212,7 +4988,7 @@ image::encodings/enc_hl_addtpc.svg[HL.ADDTPC encoding form hl_addtpc_48_ff231c57
 
 Encoding notes (informative)::
 +
-* HL.ADDTPC - Add the encoded displacement to the program counter.
+* HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC.
 
 Operation (informative)::
 +
@@ -6412,12 +6188,12 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn`
+* `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
 
 Encoding::
 +
-.`b_fpatr_32_cba93d710148` — `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn`
-image::encodings/enc_b_fpatr.svg[B.FPATR encoding form b_fpatr_32_cba93d710148,align="center"]
+.`b_fpatr_32_ecbf4a9b6cf0` — `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
+image::encodings/enc_b_fpatr.svg[B.FPATR encoding form b_fpatr_32_ecbf4a9b6cf0,align="center"]
 
 
 Encoding notes (informative)::
@@ -6487,7 +6263,7 @@ image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_df50a269be7c,align="
 
 Encoding notes (informative)::
 +
-* Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
+* Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
 
 Operation (informative)::
 +
@@ -6505,17 +6281,17 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>`
+* `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
 
 Encoding::
 +
-.`b_ios_32_11ff57a2e635` — `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>`
-image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_11ff57a2e635,align="center"]
+.`b_ios_32_0f62f62d6a81` — `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
+image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_0f62f62d6a81,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.
+* Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
 
 Operation (informative)::
 +
@@ -6533,29 +6309,29 @@ Catalog forms:: 5 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
-* `B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>`
-* `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>`
-* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>`
 * `B.IOT SrcTile0, mask=PE_MASK, <last>`
+* `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+* `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 
 Encoding::
 +
-.`b_iot_32_36792782e584` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
-image::encodings/enc_b_iot_32_36792782e584.svg[B.IOT encoding form b_iot_32_36792782e584,align="center"]
-.`b_iot_32_3a493c45ddfa` — `B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>`
-image::encodings/enc_b_iot_32_3a493c45ddfa.svg[B.IOT encoding form b_iot_32_3a493c45ddfa,align="center"]
-.`b_iot_32_437af312f86d` — `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>`
-image::encodings/enc_b_iot_32_437af312f86d.svg[B.IOT encoding form b_iot_32_437af312f86d,align="center"]
-.`b_iot_32_84944b9c3d19` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>`
-image::encodings/enc_b_iot_32_84944b9c3d19.svg[B.IOT encoding form b_iot_32_84944b9c3d19,align="center"]
-.`b_iot_32_f17390877416` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
-image::encodings/enc_b_iot_32_f17390877416.svg[B.IOT encoding form b_iot_32_f17390877416,align="center"]
+.`b_iot_32_21bee57b65c0` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_21bee57b65c0.svg[B.IOT encoding form b_iot_32_21bee57b65c0,align="center"]
+.`b_iot_32_3bc48b48fea2` — `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_3bc48b48fea2.svg[B.IOT encoding form b_iot_32_3bc48b48fea2,align="center"]
+.`b_iot_32_53c1ffc02364` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_53c1ffc02364.svg[B.IOT encoding form b_iot_32_53c1ffc02364,align="center"]
+.`b_iot_32_7d0899202df1` — `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_7d0899202df1.svg[B.IOT encoding form b_iot_32_7d0899202df1,align="center"]
+.`b_iot_32_cd6ec8181a49` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_cd6ec8181a49.svg[B.IOT encoding form b_iot_32_cd6ec8181a49,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+* Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
 
 Operation (informative)::
 +

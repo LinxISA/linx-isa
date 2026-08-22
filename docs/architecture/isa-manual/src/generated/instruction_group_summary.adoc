@@ -8,7 +8,7 @@
 |Group |Forms |Unique mnemonics
 |SYS |35 |35
 |ALU |107 |107
-|BRU |66 |66
+|BRU |58 |58
 |Bundle Control Attribute |1 |1
 |Bundle Data Attribute |1 |1
 |Bundle Argument |3 |1

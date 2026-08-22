@@ -423,7 +423,7 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     if str(spec.get("version") or "") == "0.57.1":
         _validate_engine_ops_v0571(spec, engine_ops, errors)
         return
-    if str(spec.get("version") or "") in {"0.58.0", "0.58.1"}:
+    if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3"}:
         _validate_engine_ops_v058(spec, engine_ops, errors)
         return
 
@@ -1137,7 +1137,7 @@ def _validate_frame_template_contract(spec: Dict[str, Any], errors: List[str]) -
 def _validate_first_use_register_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") != "0.58.1":
+    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3"}:
         return
 
     system_registers = ((spec.get("state") or {}).get("system_registers") or {})
@@ -1183,7 +1183,7 @@ def _validate_first_use_register_contract(
 def _validate_first_use_semantics_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") != "0.58.1":
+    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3"}:
         return
 
     conventions = spec.get("semantics_conventions") or {}
@@ -1303,7 +1303,7 @@ def validate(path: str) -> List[str]:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
         expected_retired = (
             set()
-            if str(spec.get("version") or "") in {"0.58.0", "0.58.1"}
+            if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3"}
             else {"B.IOD", "BSTART.PAR"}
         )
         if retired_names != expected_retired:

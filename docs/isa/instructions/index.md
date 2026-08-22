@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **765** instruction forms in the LinxISA v0.58.1 catalog.
+Complete alphabetical index of all **757** instruction forms in the LinxISA v0.58.3 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -32,25 +32,17 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
-| [B.EQ](b_eq.md) | [BRU](../groups/bru.md) | 32 | Conditional branch taken when SrcL equals SrcR. |
 | [B.FPATR](b_fpatr.md) | [Bundle Fixed-Point PostProcess Attribute](../groups/bundle_fixed_point_postprocess_attribute.md) | 32 | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
-| [B.GE](b_ge.md) | [BRU](../groups/bru.md) | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
-| [B.GEU](b_geu.md) | [BRU](../groups/bru.md) | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
 | [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
 | [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
-| [B.IOR](b_ior.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride. |
-| [B.IOS](b_ios.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask. |
-| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
-| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
-| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
-| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
-| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
-| [B.LT](b_lt.md) | [BRU](../groups/bru.md) | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
-| [B.LTU](b_ltu.md) | [BRU](../groups/bru.md) | 32 | Conditional branch taken when SrcL is less than SrcR (unsigned). |
-| [B.NE](b_ne.md) | [BRU](../groups/bru.md) | 32 | Conditional branch taken when SrcL not equal to SrcR. |
-| [B.NZ](b_nz.md) | [BRU](../groups/bru.md) | 32 | B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands. |
+| [B.IOR](b_ior.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride. |
+| [B.IOS](b_ios.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.TEXT](b_text.md) | [Bundle Offset](../groups/bundle_offset.md) | 32 | Sets the out-of-line body entry address for a decoupled bundle. |
-| [B.Z](b_z.md) | [BRU](../groups/bru.md) | 32 | B.Z - Conditionally branch to the PC-relative target after comparing scalar operands. |
 | [BC.IALL](bc_iall.md) | [SYS](../groups/sys.md) | 32 | Branch-predictor cache invalidate all entries. |
 | [BC.IVA](bc_iva.md) | [SYS](../groups/sys.md) | 32 | Branch-predictor cache invalidate by address. |
 | [BCNT](bcnt.md) | [ALU](../groups/alu.md) | 32 | Population count. Counts the number of set bits in a register. |
@@ -248,7 +240,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 |----------|-------|------|-------------|
 | [HL.ADDI](hl_addi.md) | [ALU](../groups/alu.md) | 48 | HL.ADDI applies XLEN addition to SrcL and a zero-extended 24-bit immediate. |
 | [HL.ADDIW](hl_addiw.md) | [ALU](../groups/alu.md) | 48 | HL.ADDIW applies word addition to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result. |
-| [HL.ADDTPC](hl_addtpc.md) | [BRU](../groups/bru.md) | 48 | HL.ADDTPC - Add the encoded displacement to the program counter. |
+| [HL.ADDTPC](hl_addtpc.md) | [BRU](../groups/bru.md) | 48 | HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC. |
 | [HL.ANDI](hl_andi.md) | [ALU](../groups/alu.md) | 48 | HL.ANDI applies XLEN bitwise conjunction to SrcL and a sign-extended 24-bit immediate. |
 | [HL.ANDIW](hl_andiw.md) | [ALU](../groups/alu.md) | 48 | HL.ANDIW applies word bitwise conjunction to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result. |
 | [HL.BFI](hl_bfi.md) | [ALU](../groups/alu.md) | 48 | [48-bit HL.] Bit-field insert. |
@@ -334,7 +326,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [HL.LHUP](hl_lhup.md) | [LDA/PAIR](../groups/lda_pair.md) | 48 | HL.LHUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values. |
 | [HL.LIS](hl_lis.md) | [ALU](../groups/alu.md) | 48 | HL.LIS sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst. |
 | [HL.LIU](hl_liu.md) | [ALU](../groups/alu.md) | 48 | HL.LIU zero-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst. |
-| [HL.LUI](hl_lui.md) | [ALU](../groups/alu.md) | 48 | HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst. |
+| [HL.LUI](hl_lui.md) | [ALU](../groups/alu.md) | 48 | HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0. |
 | [HL.LW.PCR](hl_lw_pcr.md) | [LDA/PC_REL](../groups/lda_pc_rel.md) | 48 | HL.LW.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value. |
 | [HL.LW.PO](hl_lw_po.md) | [LDA/POST_INDEX](../groups/lda_post_index.md) | 48 | HL.LW.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value. |
 | [HL.LW.PR](hl_lw_pr.md) | [LDA/PRE_INDEX](../groups/lda_pre_index.md) | 48 | HL.LW.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 4-byte value. |
@@ -360,7 +352,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [HL.LWUIP.U](hl_lwuip_u.md) | [LDA/PAIR](../groups/lda_pair.md) | 48 | HL.LWUIP.U snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values. |
 | [HL.LWUP](hl_lwup.md) | [LDA/PAIR](../groups/lda_pair.md) | 48 | HL.LWUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values. |
 | [HL.MADD](hl_madd.md) | [ALU](../groups/alu.md) | 48 | HL.MADD computes a signed 128-bit product plus a sign-extended XLEN addend and publishes low then high halves. |
-| [HL.MADDW](hl_maddw.md) | [ALU](../groups/alu.md) | 48 | HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves. |
+| [HL.MADDW](hl_maddw.md) | [ALU](../groups/alu.md) | 48 | HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves. |
 | [HL.MIADD](hl_miadd.md) | [ALU](../groups/alu.md) | 48 | HL.MIADD multiplies SrcR by the unsigned 19-bit immediate, adds SrcL modulo 2^PTO_XLEN, and publishes the result. |
 | [HL.MISUB](hl_misub.md) | [ALU](../groups/alu.md) | 48 | HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result. |
 | [HL.MUL](hl_mul.md) | [ALU](../groups/alu.md) | 48 | [48-bit HL.] Integer multiply. |
@@ -376,8 +368,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [HL.QPUSH](hl_qpush.md) | [General](../groups/general.md) | 48 | Atomically pushes one 64-bit entry at the tail or head of a General Queue Management queue. |
 | [HL.REM](hl_rem.md) | [ALU](../groups/alu.md) | 48 | [48-bit HL.] Signed integer remainder. |
 | [HL.REMU](hl_remu.md) | [ALU](../groups/alu.md) | 48 | [48-bit HL.] Unsigned integer remainder. |
-| [HL.REMUW](hl_remuw.md) | [ALU](../groups/alu.md) | 48 | HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder. |
-| [HL.REMW](hl_remw.md) | [ALU](../groups/alu.md) | 48 | HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder. |
+| [HL.REMUW](hl_remuw.md) | [ALU](../groups/alu.md) | 48 | HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient. |
+| [HL.REMW](hl_remw.md) | [ALU](../groups/alu.md) | 48 | HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient. |
 | [HL.SB.PCR](hl_sb_pcr.md) | [STA/PC_REL](../groups/sta_pc_rel.md) | 48 | HL.SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
 | [HL.SB.PO](hl_sb_po.md) | [STA/POST_INDEX](../groups/sta_post_index.md) | 48 | HL.SB.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
 | [HL.SB.PR](hl_sb_pr.md) | [STA/PRE_INDEX](../groups/sta_pre_index.md) | 48 | HL.SB.PR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |

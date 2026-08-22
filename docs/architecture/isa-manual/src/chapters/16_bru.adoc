@@ -12,9 +12,10 @@ The Branch and Compare (BRU) group covers all conditional and unconditional bran
 * `JR` -- indirect jump: target = Rs_base + (offset `<<` 1).
 * `ADDTPC` -- add a signed immediate to the temporary PC (TPC), used for relative control-flow adjustments.
 
-**Conditional branches** (`B.EQ`, `B.NE`, `B.LT`, `B.GE`, `B.LTU`, `B.GEU`) compare two register values and take the branch if the condition holds. The target is PC-relative. In the block-structured model, the branch condition is produced by `SETC.*` and consumed by `BSTART COND`, rather than being encoded inline on the branch itself.
-
-`B.Z` and `B.NZ` test whether the architectural EXEC mask `p` is zero or non-zero inside a SIMT kernel body.
+PTO ISA 0.58.3 removes the standalone `B.EQ`, `B.NE`, `B.LT`, `B.GE`,
+`B.LTU`, `B.GEU`, `B.Z`, and `B.NZ` forms and reserves their former encoding
+space for extensions. In the block-structured model, condition state is
+produced by `SETC.*` and consumed by `BSTART COND`.
 
 **Comparison** (`CMP.*`) writes 1 to the destination if the condition is true, 0 otherwise. The destination may be a GPR or a ClockHands queue entry.
 
@@ -25,17 +26,6 @@ The Branch and Compare (BRU) group covers all conditional and unconditional bran
 include::../generated/instructions/j.adoc[]
 include::../generated/instructions/jr.adoc[]
 include::../generated/instructions/addtpc.adoc[]
-
-=== Conditional Branches
-
-include::../generated/instructions/b_eq.adoc[]
-include::../generated/instructions/b_ne.adoc[]
-include::../generated/instructions/b_lt.adoc[]
-include::../generated/instructions/b_ltu.adoc[]
-include::../generated/instructions/b_ge.adoc[]
-include::../generated/instructions/b_geu.adoc[]
-include::../generated/instructions/b_z.adoc[]
-include::../generated/instructions/b_nz.adoc[]
 
 === Return Instructions
 

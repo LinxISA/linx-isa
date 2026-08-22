@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import the canonical PTO ISA 0.58.1 release into the Linx v0.58 profile."""
+"""Import the canonical PTO ISA 0.58.3 release into the Linx v0.58 profile."""
 
 from __future__ import annotations
 
@@ -16,8 +16,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = ROOT / "isa" / "v0.58"
 LOCK_PATH = PROFILE / "pto-spec.lock.json"
-RELEASE = "0.58.1"
-EXPECTED_ABI = "pto-isa-0.58.1-mode-function-v1"
+RELEASE = "0.58.3"
+EXPECTED_ABI = "pto-isa-0.58.3-mode-function-v1"
+VECTOR_BASENAME = "pto-isa-0583-hardware-numeric-vectors.json"
+SCALAR_FORM_COUNT = 466
+EXTENSION_RESERVATION_COUNT = 40
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -44,7 +47,7 @@ def source_paths(source_root: Path) -> dict[str, Path]:
         "scalars": source_root / "spec/catalog/scalar-forms.json",
         "reservations": source_root / "spec/catalog/extension-encoding-reservations.json",
         "hardware": source_root / "spec/hardware-conformance-profile.json",
-        "vectors": source_root / "spec/evidence/pto-isa-0581-hardware-numeric-vectors.json",
+        "vectors": source_root / "spec/evidence" / VECTOR_BASENAME,
     }
 
 
@@ -56,13 +59,13 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     docs = {name: load_json(path) for name, path in paths.items()}
     manifest = docs["manifest"]
     if manifest.get("release") != RELEASE or manifest.get("encoding_abi") != EXPECTED_ABI:
-        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.1 contract")
+        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.3 contract")
     counts = manifest.get("catalog_counts") or {}
     expected = {
         "tile_operations_total": 109,
         "command_forms": 74,
-        "scalar_forms": 474,
-        "extension_encoding_reservations": 32,
+        "scalar_forms": SCALAR_FORM_COUNT,
+        "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
     }
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
@@ -90,7 +93,11 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         {"CMD": 69, "BBD": 5}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
-    if docs["scalars"].get("form_count") != 474 or docs["reservations"].get("reservation_count") != 32:
+    if (
+        docs["scalars"].get("form_count") != SCALAR_FORM_COUNT
+        or docs["reservations"].get("reservation_count")
+        != EXTENSION_RESERVATION_COUNT
+    ):
         raise ValueError("unexpected PTO 0.58 scalar/reservation cardinality")
 
     canonical = {entry["path"]: entry["sha256"] for entry in manifest["canonical_inputs"]}
@@ -103,7 +110,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         if canonical.get(relative) != sha256(paths[name]):
             raise ValueError(f"{relative} does not match the release manifest")
     hardware = manifest["hardware_conformance_profile"]
-    if hardware.get("evidence") != "spec/evidence/pto-isa-0581-hardware-numeric-vectors.json":
+    if hardware.get("evidence") != f"spec/evidence/{VECTOR_BASENAME}":
         raise ValueError("release manifest names the wrong numeric evidence")
     if hardware.get("sha256") != sha256(paths["hardware"]):
         raise ValueError("hardware profile does not match the release manifest")
@@ -123,9 +130,13 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
     catalogs = {}
     for name, relative, count in (
         ("command_forms", "spec/catalog/command-forms.json", 74),
-        ("scalar_forms", "spec/catalog/scalar-forms.json", 474),
+        ("scalar_forms", "spec/catalog/scalar-forms.json", SCALAR_FORM_COUNT),
         ("tile_operations", "spec/catalog/tile-operations.json", 109),
-        ("extension_encoding_reservations", "spec/catalog/extension-encoding-reservations.json", 32),
+        (
+            "extension_encoding_reservations",
+            "spec/catalog/extension-encoding-reservations.json",
+            EXTENSION_RESERVATION_COUNT,
+        ),
     ):
         key = "reservations" if name == "extension_encoding_reservations" else name.split("_")[0] + "s"
         catalogs[name] = {"path": relative, "sha256": sha256(paths[key]), "count": count}
@@ -141,7 +152,7 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
             "sha256": sha256(paths["hardware"]),
         },
         "numeric_conformance_vectors": {
-            "path": "spec/evidence/pto-isa-0581-hardware-numeric-vectors.json",
+            "path": f"spec/evidence/{VECTOR_BASENAME}",
             "sha256": sha256(paths["vectors"]),
         },
         "release": RELEASE,
@@ -233,7 +244,7 @@ def project_release_manifest(docs: dict[str, dict[str, Any]]) -> dict[str, Any]:
             "command_forms": len(commands["forms"]),
             "command_form_families": manifest["catalog_counts"]["command_form_families"],
             "scalar_forms": len(scalars["forms"]),
-            "extension_encoding_reservations": 32,
+            "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
         },
         "migration_aliases": {},
         "deleted_names": tiles["deleted_names"],
@@ -314,12 +325,18 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "cell_bytes": 128,
         "cells_per_pe": 2048,
         "capacity_bytes_per_pe": 262144,
-        "b_iot_tsize_bytes": [None, 128, 256, 512, 1024, 2048, 4096, 8192],
-        "b_ios_tsize_bytes": [None, 128, 256, 512, 1024, 2048, 4096, 8192],
+        "b_iot_size_code_bytes": [
+            None, 128, 256, 512, 1024, 2048, 4096, 8192,
+            16384, 32768, 65536,
+        ],
+        "b_ios_size_code_bytes": [
+            None, 128, 256, 512, 1024, 2048, 4096, 8192,
+            16384, 32768, 65536, 131072, 262144,
+        ],
         "normal_tile_min_bytes": 128,
-        "normal_tile_max_bytes": 8192,
+        "normal_tile_max_bytes": 65536,
         "shape": {
-            "rows": "TSizeBytes / (columns * element_size)",
+            "rows": "SizeCodeBytes / (columns * element_size)",
             "rows_power_of_two": True,
             "columns_power_of_two": True,
             "valid_rows_at_most_rows": True,
@@ -335,7 +352,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "assembly_names": "S0..S255",
         "addressing": "absolute-index",
         "sharing_domain": "one bank private to each core and shared by its four PEs",
-        "quarter_selection": "B.IOS 4-bit PE mask; zero means NOP",
+        "quarter_selection": "B.IOS 3-bit PEMode decoded to the fixed four-PE mask; zero means NOP",
         "access": "all four PEs may access all shared registers and independently select tile offsets",
         "write_atomicity": "atomic descriptor-and-payload read-modify-write",
         "initial_state": "uninitialized; reads behave like undefined-register reads",
@@ -361,27 +378,30 @@ def shared_register_state() -> dict[str, Any]:
             "conflict_avoidance": "programmer responsibility",
             "allocation": "compiler",
         },
-        "pe_mask": {
-            "owner": "B.IOS",
-            "width": 4,
-            "kind": "predicate bitmask",
-            "multiple_bits_allowed": True,
-            "zero_behavior": "nop",
+        "pe_mode": {
+            "owners": ["B.IOT", "B.IOS"],
+            "width": 3,
+            "kind": "fixed participation mode",
+            "decoded_masks": ["0000", "1000", "0100", "0010", "0001", "1100", "1110", "1111"],
+            "zero_behavior": "strict-no-effect-before-downstream-checks",
             "source_read_updates_descriptor": False,
             "destination_write_updates_descriptor": True,
         },
-        "tsize_bytes": [None, 128, 256, 512, 1024, 2048, 4096, 8192],
+        "size_code_bytes": {
+            "B.IOT": [None, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536],
+            "B.IOS": [None, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144],
+        },
         "gm_access": {
             "gpr_scope": "each selected PE resolves selectors in its private GPR file",
             "base_selector": "B.IOR.RegSrc0",
             "row_stride_selector": "B.IOR.RegSrc1",
-            "row_stride_unit": "logical-elements",
+            "row_stride_unit": "bytes",
             "omitted_b_ior": {
                 "base": 0,
-                "row_stride": "dense-column-count",
+                "row_stride": "dense-row-bytes",
             },
             "explicit_zero_stride": "zero",
-            "element_address": "base + (row * row_stride + column) * element_size",
+            "element_address": "base + row * row_stride_bytes + column * element_size",
             "packed_four_bit": "logical index selects containing byte and nibble",
             "preflight": "all selected accesses before effects",
             "pe_order": "none",

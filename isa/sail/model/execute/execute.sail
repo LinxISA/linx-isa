@@ -3213,15 +3213,30 @@ function exec_b_dim() -> unit = {
 }
 function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
-function exec_b_ios(SharedTID : bits(8), PE_MASK : bits(4), TSize : bits(3)) -> unit = {
+function decode_pe_mode(PEMode : bits(3)) -> bits(4) = {
+  match PEMode {
+    0b000 => 0x0,
+    0b001 => 0x8,
+    0b010 => 0x4,
+    0b011 => 0x2,
+    0b100 => 0x1,
+    0b101 => 0xC,
+    0b110 => 0xE,
+    _ => 0xF
+  }
+}
+
+function exec_b_ios(SharedTID : bits(8), SizeCode : bits(4), PEMode : bits(3)) -> unit = {
   // Role is consumed by the surrounding BSTART schema. The architectural
-  // index is absolute (S0..S255), and each mask bit selects one fixed PE
-  // quarter. A zero mask is a strict no-op and does not mutate descriptors.
-  if PE_MASK == 0x0 then ()
+  // index is absolute (S0..S255). PEMode expands to the fixed four-PE mask;
+  // mode zero is a strict no-op and does not mutate descriptors.
+  let pe_mask = decode_pe_mode(PEMode);
+  if pe_mask == 0x0 then ()
   else {
     shared_tile_binding_id = SharedTID;
-    shared_tile_binding_pe_mask = PE_MASK;
-    shared_tile_binding_tsize = TSize;
+    shared_tile_binding_pe_mode = PEMode;
+    shared_tile_binding_pe_mask = pe_mask;
+    shared_tile_binding_size_code = SizeCode;
     shared_tile_binding_valid = true;
     bdesc_mark_iot()
   }
@@ -3253,7 +3268,7 @@ function exec_b_datr() -> unit = {
   bdatr_raw = decoded_bdatr_raw();
   bdesc_mark_datr()
 }
-function exec_b_fpatr(PreQuantMode : bits(6), ReluMode : bits(3), GroupNCode : bits(4), RowMaxEn : bits(1), GroupMaxEn : bits(1), RowMaxInit : bits(1), MaxAbsEn : bits(1)) -> unit = {
+function exec_b_fpatr(PreQuantMode : bits(6), ReluMode : bits(3), GroupNCode : bits(4), RowMaxEn : bits(1), GroupMaxEn : bits(1), RowMaxInit : bits(1), MaxAbsEn : bits(1), TransA : bits(1), TransB : bits(1)) -> unit = {
   let row_max = RowMaxEn == 0b1;
   let group_max = GroupMaxEn == 0b1;
   let row_init = RowMaxInit == 0b1;
@@ -3276,6 +3291,8 @@ function exec_b_fpatr(PreQuantMode : bits(6), ReluMode : bits(3), GroupNCode : b
     bfpatr_group_max_en = group_max;
     bfpatr_row_max_init = row_init;
     bfpatr_max_abs_en = max_abs;
+    bfpatr_trans_a = TransA == 0b1;
+    bfpatr_trans_b = TransB == 0b1;
     bdesc_mark_fpatr()
   }
 }

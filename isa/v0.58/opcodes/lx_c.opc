@@ -14,7 +14,7 @@ C.BSTART.VSEQ [{"asm":"C.BSTART.VSEQ FALL","group":"C.BSTART","length_bits":16}]
 C.BSTART.MPAR [{"asm":"C.BSTART.MPAR FALL","group":"C.BSTART","length_bits":16,"note":"Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.","pto_source_constraints":[]}] : 15..0=16'b0000100011000000 ;  ; -
 C.BSTART.MSEQ [{"asm":"C.BSTART.MSEQ FALL","group":"C.BSTART","length_bits":16,"note":"Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.","pto_source_constraints":[]}] : 15..0=16'b0100100011000000 ;  ; -
 
-# PTO ISA 0.58.1 canonical scalar and command forms
+# PTO ISA 0.58.3 canonical scalar and command forms
 C.ADD [{"asm":"c.add srcL, srcR, ->t","group":"ALU","length_bits":16,"note":"C.ADD snapshots two complete Reg5 sources, adds SrcL and SrcR, and pushes the wrapping XLEN result to T.","pto_source_constraints":[]}] : 15..11=SrcR 10..6=SrcL 5..0=6'b001000 ; SrcL SrcR ; -
 C.ADDI [{"asm":"c.addi srcL, simm, ->t","group":"ALU","length_bits":16,"note":"C.ADDI snapshots one complete Reg5 source, sign-extends simm5, adds modulo 2^XLEN, and pushes the result to T.","pto_source_constraints":[]}] : 15..11=simm5 10..6=SrcL 5..0=6'b001100 ; SrcL simm5 ; -
 C.AND [{"asm":"c.and srcL, srcR, ->t","group":"ALU","length_bits":16,"note":"C.AND snapshots two complete Reg5 sources, computes the bitwise conjunction of SrcL and SrcR, and pushes the wrapping XLEN result to T.","pto_source_constraints":[]}] : 15..11=SrcR 10..6=SrcL 5..0=6'b101000 ; SrcL SrcR ; -

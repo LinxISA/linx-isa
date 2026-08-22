@@ -225,19 +225,20 @@ function main() : unit -> unit = {
   assert(read_reg5(0b01010) == 0x0000_0000_0000_100A);
 
   // PTO/Linx 0.58 permanently remove the B.IOD spelling and reuse its former
-  // slot for B.IOS. PE_MASK=0000 is a strict no-op; a participating mask binds
-  // the absolute Shared register and per-PE TSize.
+  // slot for B.IOS. PEMode=000 is a strict no-op; a participating mode binds
+  // the absolute Shared register and per-PE SizeCode.
   shared_tile_binding_valid = false;
   last_e = 0b0;
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0000_1013);
   assert(last_e == 0b0);
   assert(not_bool(shared_tile_binding_valid));
-  decode_execute32(0x02A5_9613);
+  decode_execute32(0x02A1_9A13);
   assert(shared_tile_binding_valid);
   assert(shared_tile_binding_id == 0x2A);
-  assert(shared_tile_binding_pe_mask == 0xB);
-  assert(shared_tile_binding_tsize == 0b011);
+  assert(shared_tile_binding_pe_mode == 0b101);
+  assert(shared_tile_binding_pe_mask == 0xC);
+  assert(shared_tile_binding_size_code == 0x3);
 
   // BSTART.PAR is also permanently removed as a spelling, but its historical
   // bits are not reserved: the current catalog assigns this word to
@@ -348,7 +349,9 @@ function main() : unit -> unit = {
   bdesc_mark_dim();
   decoded_tile_datatype_shadow = 0b00001; // FP32 header/ACC for MX
   tile_effect_begin(0b10, 0b10101);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b1, 0b1);
+  assert(bfpatr_trans_a);
+  assert(bfpatr_trans_b);
   tile_effect_append_iot(0x0000_0000_0810_4013);
   tile_effect_append_iot(0x0000_0000_1030_4013);
   tile_effect_append_iot(0x0000_0000_0058_5013);
@@ -371,7 +374,7 @@ function main() : unit -> unit = {
   bdesc_mark_dim();
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b10, 0b10010);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0818_4013);
   assert(not_bool(tile_effect_finalize()));
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0000);
@@ -380,13 +383,13 @@ function main() : unit -> unit = {
   tile_effect_restart_pending = false;
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10000);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0818_4013);
   assert(tile_effect_finalize());
   assert(tile_acc_valid);
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10010);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
   tile_effect_append_iot(0x0000_0000_0818_4013);
   assert(tile_effect_finalize());
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0002);

@@ -590,7 +590,7 @@ def _assign_stable_ids(instructions: List[Dict[str, Any]]) -> None:
 def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]) -> None:
     """Attach sole-source PTO identities without replacing Linx stable IDs."""
     source_specs = (
-        (in_dir / "state" / "pto_scalar_forms.json", 474),
+        (in_dir / "state" / "pto_scalar_forms.json", 466),
         (
             in_dir / "state" / "pto_command_forms.json",
             74,

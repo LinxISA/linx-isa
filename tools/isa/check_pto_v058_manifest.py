@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check exact PTO 0.58.1 common-subset alignment and Linx extensions."""
+"""Check exact PTO 0.58.3 common-subset alignment and Linx extensions."""
 
 from __future__ import annotations
 
@@ -199,17 +199,17 @@ def validate(root: Path) -> list[str]:
         return [f"missing PTO/Linx 0.58 artifact: {relative}" for relative in missing]
     docs = {name: load(root, relative) for name, relative in paths.items()}
     lock = docs["lock"]
-    if lock.get("release") != "0.58.1" or lock.get("encoding_abi") != "pto-isa-0.58.1-mode-function-v1":
-        errors.append("PTO lock has the wrong 0.58.1 release/ABI identity")
+    if lock.get("release") != "0.58.3" or lock.get("encoding_abi") != "pto-isa-0.58.3-mode-function-v1":
+        errors.append("PTO lock has the wrong 0.58.3 release/ABI identity")
     if not GIT_OID.fullmatch(str(lock.get("source", {}).get("commit", ""))):
         errors.append("PTO lock must pin an exact source commit")
     if not GIT_OID.fullmatch(str(lock.get("source", {}).get("tree", ""))):
         errors.append("PTO lock must pin an exact source tree")
     expected_catalogs = {
-        "scalar_forms": 474,
+        "scalar_forms": 466,
         "command_forms": 74,
         "tile_operations": 109,
-        "extension_encoding_reservations": 32,
+        "extension_encoding_reservations": 40,
     }
     for name, count in expected_catalogs.items():
         entry = lock.get("catalogs", {}).get(name, {})
@@ -240,8 +240,8 @@ def validate(root: Path) -> list[str]:
         errors.append("PTO operation projection must publish exact semantic classification counts")
     source_forms = docs["scalars"].get("forms", []) + docs["commands"].get("forms", [])
     scalar_ids = {str(form["form_id"]) for form in docs["scalars"].get("forms", [])}
-    if len(source_forms) != 548:
-        errors.append("PTO scalar/block form inventory must contain exactly 548 forms")
+    if len(source_forms) != 540:
+        errors.append("PTO scalar/block form inventory must contain exactly 540 forms")
     source_ids = [str(form["form_id"]) for form in source_forms]
     if len(source_ids) != len(set(source_ids)):
         errors.append("PTO scalar/block form identities must be unique")
@@ -254,8 +254,8 @@ def validate(root: Path) -> list[str]:
     }
     if len(compiled_items) != len(compiled):
         errors.append("compiled Linx profile must not duplicate PTO form identities")
-    if len(compiled) != 548:
-        errors.append("compiled Linx profile must attach exactly 548 PTO form identities")
+    if len(compiled) != 540:
+        errors.append("compiled Linx profile must attach exactly 540 PTO form identities")
     if set(compiled) != set(source_ids):
         errors.append("compiled Linx PTO form identity set must equal the canonical PTO set")
     for form in source_forms:
@@ -348,8 +348,8 @@ def validate(root: Path) -> list[str]:
         errors.append("BSTART.VEC/SFU aliases must not create additional decode identities")
     reservations = docs["reservations"].get("reservations", [])
     reservation_by_name = {str(item.get("mnemonic")): item for item in reservations}
-    if len(reservations) != 32 or len(reservation_by_name) != 32:
-        errors.append("PTO must publish exactly 32 unique extension encoding reservations")
+    if len(reservations) != 40 or len(reservation_by_name) != 40:
+        errors.append("PTO must publish exactly 40 unique extension encoding reservations")
     uncovered = sorted(
         str(item.get("asm") or item.get("mnemonic"))
         for item in linx_only
@@ -363,19 +363,32 @@ def validate(root: Path) -> list[str]:
         errors.append("Shared tile bank must expose absolute S0..S255 names")
     if shared.get("scope") != {"private_to": "core", "shared_by": "four PEs in that core"}:
         errors.append("Shared tile bank must be core-private and shared by four PEs")
-    if shared.get("tsize_bytes") != [None, 128, 256, 512, 1024, 2048, 4096, 8192]:
-        errors.append("Shared and Local TSize codes must both map 1..7 to 128 B..8 KiB")
-    mask = shared.get("pe_mask", {})
-    if mask.get("owner") != "B.IOS" or mask.get("width") != 4 or mask.get("zero_behavior") != "nop":
-        errors.append("Shared tile PE mask must be a B.IOS 4-bit predicate with zero=Nop")
+    size_codes = shared.get("size_code_bytes", {})
+    if size_codes.get("B.IOT") != [
+        None, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536
+    ]:
+        errors.append("B.IOT SizeCode must map 1..10 to 128 B..64 KiB")
+    if size_codes.get("B.IOS") != [
+        None, 128, 256, 512, 1024, 2048, 4096, 8192,
+        16384, 32768, 65536, 131072, 262144,
+    ]:
+        errors.append("B.IOS SizeCode must map 1..12 to 128 B..256 KiB")
+    mode = shared.get("pe_mode", {})
+    if (
+        mode.get("owners") != ["B.IOT", "B.IOS"]
+        or mode.get("width") != 3
+        or mode.get("decoded_masks")
+        != ["0000", "1000", "0100", "0010", "0001", "1100", "1110", "1111"]
+    ):
+        errors.append("Local/Shared binders must use the exact 3-bit PEMode decoder")
     gm_access = shared.get("gm_access", {})
     if (
         gm_access.get("base_selector") != "B.IOR.RegSrc0"
         or gm_access.get("row_stride_selector") != "B.IOR.RegSrc1"
-        or gm_access.get("row_stride_unit") != "logical-elements"
+        or gm_access.get("row_stride_unit") != "bytes"
         or gm_access.get("b_iot_scope") != "local-only"
     ):
-        errors.append("Shared GM access must use per-PE B.IOR base/stride and Local-only B.IOT")
+        errors.append("Shared GM access must use per-PE B.IOR byte stride and Local-only B.IOT")
 
     retired_entries = docs["spec"].get("retired_encodings", {}).get("entries")
     if retired_entries != []:

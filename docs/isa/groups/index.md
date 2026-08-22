@@ -1,13 +1,13 @@
 # Instruction Groups
 
-Alphabetical list of all 54 instruction groups in the LinxISA v0.58.1 catalog.
+Alphabetical list of all 54 instruction groups in the LinxISA v0.58.3 catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
 |-------|-------|---------|------------------|
 | [SYS](sys.md) | 35 | **Ch 19** — [source](index.md) | `ACRC`, `ACRE`, `ASSERT`, `BC.IALL`, `BC.IVA`, `BSE`, `BWE`, `BWI` +27 |
 | [ALU](alu.md) | 107 | **Ch 12** — [source](index.md) | `ADD`, `ADDI`, `ADDIW`, `ADDW`, `AND`, `ANDI`, `ANDIW`, `ANDW` +99 |
-| [BRU](bru.md) | 66 | **Ch 16** — [source](index.md) | `ADDTPC`, `B.EQ`, `B.GE`, `B.GEU`, `B.LT`, `B.LTU`, `B.NE`, `B.NZ` +58 |
+| [BRU](bru.md) | 58 | **Ch 16** — [source](index.md) | `ADDTPC`, `C.CMP.EQI`, `C.CMP.NEI`, `C.SETC.EQ`, `C.SETC.NE`, `CMP.AND`, `CMP.ANDI`, `CMP.EQ` +50 |
 | [Bundle Control Attribute](bundle_control_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.CATR` |
 | [Bundle Data Attribute](bundle_data_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.DATR` |
 | [Bundle Argument](bundle_argument.md) | 3 | **Ch 4** — [source](index.md) | `B.DIM` |

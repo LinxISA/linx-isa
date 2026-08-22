@@ -36,7 +36,7 @@ rd = PC + SignExtend(imm);
 
 ## Encoding Notes
 
-- `ADDTPC - Add the encoded displacement to the program counter.`
+- `ADDTPC - Add a signed 4 KiB page displacement to the current TPC.`
 
 ## Full Catalog Forms
 

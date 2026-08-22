@@ -36,7 +36,7 @@ rd = (rs2 != 0) ? (rs1 % rs2) : rs1;
 
 ## Encoding Notes
 
-- `HL.REM computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.`
+- `HL.REM computes a signed XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.`
 
 ## Full Catalog Forms
 
