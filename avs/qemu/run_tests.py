@@ -19,7 +19,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
 LLVM_AVS_ROOT = REPO_ROOT / "avs" / "compiler" / "linx-llvm" / "tests"
 LLVM_AVS_DISASM_VECTOR_GEN = LLVM_AVS_ROOT / "gen_disasm_vectors.py"
-LLVM_AVS_V0581_FORMS = LLVM_AVS_ROOT / "asm" / "41_v0581_isa_forms.s"
+LLVM_AVS_V0583_FORMS = LLVM_AVS_ROOT / "asm" / "41_v0583_isa_forms.s"
 LLVM_AVS_SPEC = REPO_ROOT / "isa" / "v0.58" / "linxisa-v0.58.json"
 DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
@@ -1110,8 +1110,8 @@ def main(argv: list[str]) -> int:
             sys.stderr.buffer.write(p.stderr)
             raise SystemExit("error: failed to generate QEMU translation corpus")
         generated_translation_sources.append(generated_spec_decode)
-        if LLVM_AVS_V0581_FORMS.is_file():
-            generated_translation_sources.append(LLVM_AVS_V0581_FORMS)
+        if LLVM_AVS_V0583_FORMS.is_file():
+            generated_translation_sources.append(LLVM_AVS_V0583_FORMS)
 
     include_dir = SCRIPT_DIR / "lib"
     libc_include_dir = REPO_ROOT / "avs" / "runtime" / "freestanding" / "include"
