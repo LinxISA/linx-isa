@@ -14,13 +14,13 @@
 源绑定：
 
 ```asm
-B.IOS S<SharedTID>, mask=<PEMode>
+B.IOS S<SharedTID>, mask=<PE_MASK>
 ```
 
 目的绑定：
 
 ```asm
-B.IOS mask=<PEMode>, ->S<SharedTID><SizeCode>
+B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>
 ```
 
 `SharedTID` 是 0 到 255 的绝对整数。规范汇编名称因此是 `S0` 到
@@ -81,7 +81,8 @@ form 是 `b_ios_32_4ba5ef98fdaa`，独立 Linx 目录中的 form 是
 
 ## 操作
 
-`PEMode` 从上表选择固定参与 mask。`PEMode=000` 是所有 placement、
+汇编操作数 `PE_MASK` 必须是上表八种语义 mask 之一；汇编器将其编码为
+对应的 `PEMode`。`PEMode=000` 是所有 placement、
 duplicate、schema、allocation、descriptor、memory 和 fault 检查之前的
 严格无副作用路径。目的绑定选择的总容量等于单 PE 容量乘以参与 PE 数量。
 
@@ -103,20 +104,20 @@ columns 不能超过已分配 shape。矩阵操作也遵循同一 shape 约束�
 将 `S7` 作为 PE0 和 PE1 的源：
 
 ```asm
-B.IOS S7, mask=101
+B.IOS S7, mask=1100
 ```
 
 在 `S23` 中为每个参与 PE 分配 128 B；四个 PE 全部参与时总容量为
 512 B：
 
 ```asm
-B.IOS mask=111, ->S23<128B>
+B.IOS mask=1111, ->S23<128B>
 ```
 
 完全禁止该绑定：
 
 ```asm
-B.IOS S7, mask=000
+B.IOS S7, mask=0000
 ```
 
 `B.IOT` 仍是独立的 Local Tile 绑定指令，不绑定 Shared `S0` 到

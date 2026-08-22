@@ -16,13 +16,13 @@ page explains that record and does not define an alternate encoding.
 Source binding:
 
 ```asm
-B.IOS S<SharedTID>, mask=<PEMode>
+B.IOS S<SharedTID>, mask=<PE_MASK>
 ```
 
 Destination binding:
 
 ```asm
-B.IOS mask=<PEMode>, ->S<SharedTID><SizeCode>
+B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>
 ```
 
 `SharedTID` is an absolute integer in the range 0 through 255. Canonical
@@ -84,7 +84,8 @@ Fixed-bit mismatches do not decode as `B.IOS`.
 
 ## Operation
 
-`PEMode` selects one fixed participation mask from the table above.
+The assembly `PE_MASK` token denotes one of the eight semantic masks in the
+table above; the assembler encodes the corresponding `PEMode` value.
 `PEMode=000` is a strict no-effect path: it performs no binding,
 allocation, register read, descriptor update, payload update, or faulting
 access. For a nonzero mask, each set bit enables the corresponding PE quarter.
@@ -112,20 +113,20 @@ operations obey the same shape rule.
 Bind `S7` as a source for PE0 and PE1:
 
 ```asm
-B.IOS S7, mask=101
+B.IOS S7, mask=1100
 ```
 
 Allocate 128 B per participating PE in `S23`; four participating PEs select
 512 B in aggregate:
 
 ```asm
-B.IOS mask=111, ->S23<128B>
+B.IOS mask=1111, ->S23<128B>
 ```
 
 Suppress the binding completely:
 
 ```asm
-B.IOS S7, mask=000
+B.IOS S7, mask=0000
 ```
 
 `B.IOT` remains the distinct Local tile binding instruction. It does not bind

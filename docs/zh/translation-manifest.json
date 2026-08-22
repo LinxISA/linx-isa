@@ -50,7 +50,7 @@
       "translation_sha256": "01f410e30bb831b3d5ed1c2fd7f6dead644c4978612e91487fc12e6a6e11a208"
     },
     "architecture/v0.58-architecture-contract.md": {
-      "source_sha256": "9425636f3d7eeb24a96fcdf7bc4600efbd61b89e7fd5e74b8005caffe3916020",
+      "source_sha256": "ad5cf57f8f3b52f55318b90aa859cfe62043bafbbbaddf135e75bd2cbc9744ef",
       "translation_sha256": "c800405a1404f8d9ff44e07e9c4d2f59963cc0baf996616ea0c37d284788082d"
     },
     "archive/design-updates/README.md": {
@@ -1202,12 +1202,12 @@
       "translation_sha256": "97b60b526ca1af1e386a768c3fe5d92660ccaeab069c6921bbaa88558777bbbf"
     },
     "isa/header/B.IOS.md": {
-      "source_sha256": "b63cc7b9759ad23207ba7c5e57cc550ceaef75585e624e9a5f1f50c5269b10d7",
-      "translation_sha256": "958bb1cf3ebcb80b073299289a920ef9b65684cba376c81d5ae1bb7bccb3ad54"
+      "source_sha256": "0a197da91b828bea4c20c12787bbf342fa050b8b459eb5fec45cd9b53173961c",
+      "translation_sha256": "e21a24ff34d63bdb9246559bc6e6e923aee36b70a3ce24aac02d2a40ff68933a"
     },
     "isa/header/B.IOT.md": {
-      "source_sha256": "d2faa362777299fd7717dbd625f3fe5958ec95cb256492cbbb3e69c92a1419c5",
-      "translation_sha256": "aca5b60312e5797ab57f6e337e487aad9ac4e64f4ce5a6216a5cdfb39999e459"
+      "source_sha256": "4b50034c1e3d9005cf9f11e1f857b943c5f64041edb084b77e7c8b24079f9dfe",
+      "translation_sha256": "51baa7038f8897047d0c97d0df3aedfae3f31968889e9ed141421fb652c46f65"
     },
     "isa/header/B.TEXT.md": {
       "source_sha256": "d5481274b6382820d0dbce347f7ebe0792b3c0505887bcde6dab66d3e74ab7ab",

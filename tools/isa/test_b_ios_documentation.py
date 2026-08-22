@@ -39,14 +39,12 @@ def main() -> int:
         {"insn_lsb": 9, "insn_msb": 11, "token": "PEMode", "width": 3}
     ]
 
-    syntax = (
-        "B.IOS S<SharedTID>, mask=<PEMode>",
-        "B.IOS mask=<PEMode>, ->S<SharedTID><SizeCode>",
-    )
+    syntax = tuple(record["asm"].split(" | "))
     common = syntax + (
         "S0",
         "S255",
         "PEMode=000",
+        "PE_MASK",
         "SizeCode=0",
         "SizeCode=12",
         "13..15",
