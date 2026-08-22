@@ -101,7 +101,7 @@ python3 avs/qemu/run_tests.py \
 | `tile_v0583_tlsu` | S32 TLOAD/TSTORE copies a nontrivial 4 KiB Local Tile using a byte row stride |
 | `tile_v0583_vec` | FP32 TADD produces `1.0 + 2.0 = 3.0` |
 | `tile_v0583_sfu` | FP32 TEXP produces `exp(0.0) = 1.0` |
-| `tile_v0583_cube` | S32 4x4 identity TMATMUL uses ND2M16/ND2N8 and M162ND conversion layouts |
+| `tile_v0583_cube` | U8 4x4 identity TMATMUL produces U32 accumulation through ND2M16/ND2N8 and M162ND layouts |
 
 All four use `PEMode=4` (`mask=0001`) so the result oracle observes one
 selected PE without depending on replicated private-GPR state. The CUBE case

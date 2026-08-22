@@ -610,7 +610,7 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
     "tile_v0583_cube": [
         r"\bB\.DATR\s+ND2M16,\s+DTYPE_NONE,\s+Null\b",
         r"\bB\.DATR\s+ND2N8,\s+DTYPE_NONE,\s+Null\b",
-        r"\bBSTART\.TMATMUL\s+S32\b",
+        r"\bBSTART\.TMATMUL\s+U8\b",
         r"\bB\.FPATR\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0\b",
         r"\bB\.DATR\s+M162ND,\s+DTYPE_NONE,\s+Null\b",
     ],

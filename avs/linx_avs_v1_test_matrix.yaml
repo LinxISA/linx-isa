@@ -514,7 +514,7 @@ tests:
       - isa/v0.58/pto-spec.lock.json
       - avs/qemu/tests/31_v0583_tile_cube.c
       - avs/qemu/tests/31_v0583_tile_cube_carrier.S
-    requirement: "PTO ISA 0.58.3 CUBE executes S32 TMATMUL with ND2M16, ND2N8, and M162ND conversions plus exactly one all-zero B.FPATR."
+    requirement: "PTO ISA 0.58.3 CUBE executes U8 primary TMATMUL with a U32 M16 accumulator result, ND2M16/ND2N8/M162ND conversions, and exactly one all-zero B.FPATR."
     pass_fail: "run_tests.py --suite tile_v0583_cube observes test 0x2D01 PASS after the C oracle verifies 4x4 identity-times-right equals the right matrix."
 
   - id: AVS-EMU-001

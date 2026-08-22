@@ -85,14 +85,17 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         for token in (
             "B.DATR ND2M16, DTYPE_NONE, Null",
             "B.DATR ND2N8, DTYPE_NONE, Null",
+            "BSTART.TMATMUL U8",
             "B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0",
             "B.DATR M162ND, DTYPE_NONE, Null",
+            "BSTART.TSTORE U32",
             "B.IOT mask=0001, last, ->m<256B>",
             "B.IOT m#1, n#1, mask=0001, last, ->m<256B>",
         ):
             self.assertIn(token, source)
         for retired in ("B.EQ", "B.NE", "B.LT", "B.GE", "B.Z", "B.NZ"):
             self.assertNotIn(retired, source)
+        self.assertNotIn("BSTART.TMATMUL U32", source)
 
     def test_v0571_executable_evidence_is_explicitly_archived(self) -> None:
         manifest = json.loads(
