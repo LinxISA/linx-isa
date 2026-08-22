@@ -77,6 +77,8 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
                     run_tests.COMPLETION_TEST_IDS_BY_SUITE[suite],
                     completion_id,
                 )
+                source = (run_tests.SCRIPT_DIR / run_tests.SUITES[suite]["src"]).read_text()
+                self.assertIn("linx_test_disable_extension_first_use();", source)
 
     def test_v0583_cube_carrier_uses_released_layout_contract(self) -> None:
         source = (run_tests.SCRIPT_DIR / "tests" / "31_v0583_tile_cube_carrier.S").read_text()

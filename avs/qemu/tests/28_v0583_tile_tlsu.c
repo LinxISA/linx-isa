@@ -13,6 +13,7 @@ extern void linx_v0583_tlsu_copy(const int32_t *src, int32_t *dst,
 
 void run_tile_v0583_tlsu_tests(void)
 {
+    linx_test_disable_extension_first_use();
     test_start(kTestId);
     for (unsigned i = 0; i < kElements; ++i) {
         input[i] = (int32_t)(i * 17u) - 4091;

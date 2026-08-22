@@ -14,6 +14,7 @@ extern void linx_v0583_cube_matmul(const int32_t *a, const int32_t *b,
 
 void run_tile_v0583_cube_tests(void)
 {
+    linx_test_disable_extension_first_use();
     test_start(kTestId);
     for (unsigned row = 0; row < kDim; ++row) {
         for (unsigned col = 0; col < kDim; ++col) {

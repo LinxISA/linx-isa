@@ -13,6 +13,7 @@ extern void linx_v0583_sfu_exp(const uint32_t *src, uint32_t *dst,
 
 void run_tile_v0583_sfu_tests(void)
 {
+    linx_test_disable_extension_first_use();
     test_start(kTestId);
     for (unsigned i = 0; i < kElements; ++i) {
         input[i] = 0x00000000u;

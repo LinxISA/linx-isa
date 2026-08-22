@@ -14,6 +14,7 @@ extern void linx_v0583_vec_add(const uint32_t *a, const uint32_t *b,
 
 void run_tile_v0583_vec_tests(void)
 {
+    linx_test_disable_extension_first_use();
     test_start(kTestId);
     for (unsigned i = 0; i < kElements; ++i) {
         lhs[i] = 0x3F800000u;
