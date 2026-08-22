@@ -608,11 +608,11 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
         r"\bB\.IOT\s+t#1,\s+mask=0001,\s+last,\s+->t<4KB>",
     ],
     "tile_v0583_cube": [
-        r"\bB\.DATR\s+Layout22,\s+DTYPE_NONE,\s+Null\b",
-        r"\bB\.DATR\s+Layout23,\s+DTYPE_NONE,\s+Null\b",
+        r"\bB\.DATR\s+ND2M16,\s+DTYPE_NONE,\s+Null\b",
+        r"\bB\.DATR\s+ND2N8,\s+DTYPE_NONE,\s+Null\b",
         r"\bBSTART\.TMATMUL\s+S32\b",
         r"\bB\.FPATR\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0\b",
-        r"\bB\.DATR\s+Layout25,\s+DTYPE_NONE,\s+Null\b",
+        r"\bB\.DATR\s+M162ND,\s+DTYPE_NONE,\s+Null\b",
     ],
     "simt_autovec": [
         r"(?s)<search_store_index_grouped_boundary>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?B\.IOTI.*?B\.IOTI.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.sw\.brg\.local\b.*?\bv\.lw\.brg\b.*?->p.*?\bb\.nz\b.*?\bj\b.*?\bv\.sw\.brg\b",

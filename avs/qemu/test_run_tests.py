@@ -81,10 +81,10 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
     def test_v0583_cube_carrier_uses_released_layout_contract(self) -> None:
         source = (run_tests.SCRIPT_DIR / "tests" / "31_v0583_tile_cube_carrier.S").read_text()
         for token in (
-            "B.DATR Layout22, DTYPE_NONE, Null",
-            "B.DATR Layout23, DTYPE_NONE, Null",
+            "B.DATR ND2M16, DTYPE_NONE, Null",
+            "B.DATR ND2N8, DTYPE_NONE, Null",
             "B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0",
-            "B.DATR Layout25, DTYPE_NONE, Null",
+            "B.DATR M162ND, DTYPE_NONE, Null",
             "B.IOT m#1, n#1, mask=0001, last, ->m<128B>",
         ):
             self.assertIn(token, source)

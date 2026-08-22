@@ -4,14 +4,14 @@
 linx_v0583_cube_matmul:
     FENTRY [ra ~ ra], sp!, 8
     BSTART.TLOAD S32
-    B.DATR Layout22, DTYPE_NONE, Null
+    B.DATR ND2M16, DTYPE_NONE, Null
     C.B.DIMI 4, ->lb0
     C.B.DIMI 4, ->lb1
     B.IOR [a0, a3]
     B.IOT mask=0001, last, ->m<128B>
 
     BSTART.TLOAD S32
-    B.DATR Layout23, DTYPE_NONE, Null
+    B.DATR ND2N8, DTYPE_NONE, Null
     C.B.DIMI 4, ->lb0
     C.B.DIMI 4, ->lb1
     B.IOR [a1, a3]
@@ -25,7 +25,7 @@ linx_v0583_cube_matmul:
     B.IOT m#1, n#1, mask=0001, last, ->m<128B>
 
     BSTART.TSTORE S32
-    B.DATR Layout25, DTYPE_NONE, Null
+    B.DATR M162ND, DTYPE_NONE, Null
     C.B.DIMI 4, ->lb0
     C.B.DIMI 4, ->lb1
     B.IOR [a2, a3]
