@@ -2809,7 +2809,18 @@ function tile_effect_append_iot(raw : bits(64)) -> unit = {
   // PTO 0.58.3 makes PEMode=000 a strict no-effect path before placement,
   // duplicate, schema, allocation, descriptor, memory, and fault checks.
   if pe_mask == 0x0 then ()
+  else if unsigned(tile_effect_iot_count) >= 4 then {
+    tile_effect_iot_legal = false
+  }
+  else if tile_effect_pe_mode_valid & (pe_mode != tile_effect_pe_mode) then {
+    tile_effect_iot_legal = false
+  }
   else {
+    if not_bool(tile_effect_pe_mode_valid) then {
+      tile_effect_pe_mode_valid = true;
+      tile_effect_pe_mode = pe_mode;
+      tile_effect_pe_mask = pe_mask
+    } else ();
     if tile_effect_last_seen then tile_effect_after_last = true else ();
     if last then tile_effect_last_seen = true else ();
     tile_effect_iot_count = tile_effect_iot_count + 0b00_0001;
@@ -2885,7 +2896,8 @@ function tile_effect_header_legal() -> bool = {
         else tile_effect_output_count == 0b00_0000;
       (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_ior & bdesc_seen_iot &
       not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
-      not_bool(tile_effect_after_last) & (tile_effect_source_count == required) & output_ok &
+      not_bool(tile_effect_after_last) & (unsigned(tile_effect_iot_count) <= 4) &
+      (tile_effect_source_count == required) & output_ok &
       ((tile_effect_function != 0b01000) | (bcatr_raw[17] == 0b1))
     }
   } else if tile_effect_family == 0b10 then {
@@ -2903,7 +2915,8 @@ function tile_effect_header_legal() -> bool = {
     (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_dim & bdesc_seen_iot &
     bdesc_seen_fpatr &
     not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
-    not_bool(tile_effect_after_last) & (tile_effect_source_count == required) &
+    not_bool(tile_effect_after_last) & (unsigned(tile_effect_iot_count) <= 4) &
+    (tile_effect_source_count == required) &
     (tile_effect_output_count == 0b00_0000) & dtype_ok & acc_ok
   } else false
 }

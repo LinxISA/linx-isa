@@ -257,6 +257,9 @@ register tile_effect_family : bits(2) = 0b00 // 1=TLSU, 2=CUBE
 register tile_effect_function : bits(5) = 0b00000
 register tile_effect_datatype : bits(5) = 0b00000
 register tile_effect_iot_count : bits(6) = 0b00_0000
+register tile_effect_pe_mode_valid : bool = false
+register tile_effect_pe_mode : bits(3) = 0b000
+register tile_effect_pe_mask : bits(4) = 0x0
 register tile_effect_source_count : bits(6) = 0b00_0000
 register tile_effect_output_count : bits(6) = 0b00_0000
 register tile_effect_release_count : bits(6) = 0b00_0000
@@ -297,6 +300,9 @@ register tile_acc_k : bits(64) = 0x0000_0000_0000_0000
 
 function tile_effect_reset_descriptors() -> unit = {
   tile_effect_iot_count = 0b00_0000;
+  tile_effect_pe_mode_valid = false;
+  tile_effect_pe_mode = 0b000;
+  tile_effect_pe_mask = 0x0;
   tile_effect_source_count = 0b00_0000;
   tile_effect_output_count = 0b00_0000;
   tile_effect_release_count = 0b00_0000;

@@ -331,6 +331,34 @@ function main() : unit -> unit = {
   assert(tile_effect_last_mask_suppresses_access);
   assert(tile_effect_last_pad == 0b01);
 
+  // All effective B.IOT bindings in one block share one decoded PE mask.
+  // A mismatched later mode faults before changing count/source state.
+  reset_tile_effect_case();
+  tile_effect_begin(0b10, 0b10101);
+  tile_effect_append_iot(0x0000_0000_0010_5E13); // source 1, mode 7
+  assert(tile_effect_iot_count == 0b00_0001);
+  assert(tile_effect_pe_mask == 0xF);
+  tile_effect_append_iot(0x0000_0000_0028_5A13); // source 2, mode 5, last
+  assert(not_bool(tile_effect_iot_legal));
+  assert(tile_effect_iot_count == 0b00_0001);
+  assert(tile_effect_source_count == 0b00_0001);
+
+  // A fifth effective binding is rejected before descriptor mutation. Mode
+  // zero entries remain excluded from both the common-mask and count rules.
+  reset_tile_effect_case();
+  tile_effect_begin(0b10, 0b10101);
+  tile_effect_append_iot(0x0000_0000_0010_5013); // mode zero: no effect
+  assert(tile_effect_iot_count == 0b00_0000);
+  tile_effect_append_iot(0x0000_0000_0010_5E13);
+  tile_effect_append_iot(0x0000_0000_0020_5E13);
+  tile_effect_append_iot(0x0000_0000_0030_5E13);
+  tile_effect_append_iot(0x0000_0000_0040_5E13);
+  assert(tile_effect_iot_count == 0b00_0100);
+  tile_effect_append_iot(0x0000_0000_0058_5E13);
+  assert(not_bool(tile_effect_iot_legal));
+  assert(tile_effect_iot_count == 0b00_0100);
+  assert(tile_effect_source_count == 0b00_0100);
+
   // Negative/retry path: a failed full access-set preflight reports the first
   // original address and commits no memory, Tile, ACC, or lifetime effect.
   reset_tile_effect_case();
