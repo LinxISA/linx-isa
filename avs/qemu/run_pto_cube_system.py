@@ -262,10 +262,21 @@ def _classify_runtime(text: str, returncode: int, timed_out: bool) -> tuple[bool
         (line for line in text.splitlines() if line.startswith("Linx: EBREAK trap")),
         "",
     )
+    panic_line = next(
+        (
+            line
+            for line in text.splitlines()
+            if "Kernel panic" in line or line.startswith("LINX_PANIC")
+            or line.startswith("LINX_DIE") or line.startswith("LINX_EXIT_INIT")
+        ),
+        "",
+    )
     if fail_line:
         return False, "runtime_case_failure", fail_line
     if breakpoint_line and not start:
         return False, "runtime_kernel_breakpoint", breakpoint_line
+    if panic_line:
+        return False, "runtime_kernel_panic", panic_line
     if timed_out:
         return False, "runtime_timeout", f"timeout: start={start} case_passes={case_passes} pass={passed}"
     if returncode != 0:
@@ -319,6 +330,9 @@ def _run_qemu_bounded(
                     "PTO_CUBE" in line
                     or "LINX_REBOOT" in line
                     or "Kernel panic" in line
+                    or "LINX_PANIC" in line
+                    or "LINX_DIE" in line
+                    or "LINX_EXIT_INIT" in line
                     or "Linx: EBREAK trap" in line
                 ):
                     observed.append(line.rstrip())
@@ -339,7 +353,11 @@ def _run_qemu_bounded(
 
         for line in process.stdout:
             stream.write(line)
-            if "PTO_CUBE" in line or "LINX_REBOOT" in line or "Kernel panic" in line:
+            if (
+                "PTO_CUBE" in line or "LINX_REBOOT" in line
+                or "Kernel panic" in line or "LINX_PANIC" in line
+                or "LINX_DIE" in line or "LINX_EXIT_INIT" in line
+            ):
                 observed.append(line.rstrip())
 
     selector.close()

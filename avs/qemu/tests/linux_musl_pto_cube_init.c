@@ -1,7 +1,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/reboot.h>
 #include <sys/syscall.h>
@@ -32,19 +31,54 @@ static void setup_console(void)
 		(void)close(fd);
 }
 
+static void write_text(const char *text)
+{
+	size_t length = 0;
+
+	while (text[length])
+		length++;
+	(void)syscall(SYS_write, STDOUT_FILENO, text, length);
+}
+
+static void write_decimal(unsigned int value)
+{
+	char digits[10];
+	size_t count = 0;
+
+	do {
+		digits[count++] = (char)('0' + value % 10);
+		value /= 10;
+	} while (value);
+	while (count)
+		(void)syscall(SYS_write, STDOUT_FILENO, &digits[--count], 1);
+}
+
 static void emit_case_marker(const char *kind, const char *name, int value)
 {
-	char line[192];
-	int length;
+	write_text("PTO_CUBE_CASE_");
+	write_text(kind);
+	write_text(" ");
+	write_text(name);
+	if (value >= 0) {
+		write_text(" value=");
+		write_decimal((unsigned int)value);
+	}
+	write_text("\n");
+}
 
-	if (value >= 0)
-		length = snprintf(line, sizeof(line), "PTO_CUBE_CASE_%s %s value=%d\n",
-				  kind, name, value);
-	else
-		length = snprintf(line, sizeof(line), "PTO_CUBE_CASE_%s %s\n",
-				  kind, name);
-	if (length > 0)
-		(void)syscall(SYS_write, STDOUT_FILENO, line, (size_t)length);
+static void make_case_path(char *path, const char *name)
+{
+	const char *prefix = "/pto_cube/";
+	const char *suffix = ".elf";
+	size_t offset = 0;
+
+	while (*prefix)
+		path[offset++] = *prefix++;
+	while (*name)
+		path[offset++] = *name++;
+	while (*suffix)
+		path[offset++] = *suffix++;
+	path[offset] = '\0';
 }
 
 static void poweroff_now(void)
@@ -68,7 +102,7 @@ int main(void)
 		pid_t waited;
 		int status = 0;
 
-		(void)snprintf(path, sizeof(path), "/pto_cube/%s.elf", cases[index]);
+		make_case_path(path, cases[index]);
 		emit_case_marker("START", cases[index], -1);
 		child = fork();
 		if (child < 0) {

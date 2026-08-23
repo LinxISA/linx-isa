@@ -41,6 +41,24 @@ class PtoCubeSystemTests(unittest.TestCase):
             (False, "runtime_kernel_breakpoint", line),
         )
 
+    def test_pid1_panic_overrides_timeout(self) -> None:
+        line = "LINX_EXIT_INIT code=0x000000000000000b"
+        self.assertEqual(
+            run_pto_cube_system._classify_runtime(
+                "PTO_CUBE_START count=6\n" + line, 124, True
+            ),
+            (False, "runtime_kernel_panic", line),
+        )
+
+    def test_pid1_source_avoids_formatted_io(self) -> None:
+        source = (
+            Path(__file__).resolve().parent
+            / "tests"
+            / "linux_musl_pto_cube_init.c"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("snprintf", source)
+        self.assertNotIn("printf(", source)
+
     def test_timeout_reports_completed_case_count(self) -> None:
         text = "\n".join(
             ["PTO_CUBE_START count=6"]
