@@ -775,7 +775,7 @@ def build_report(
         "threshold": None,
         "threshold_met": None,
         "metric_scope": (
-            "unique v0.58.1 ISA mnemonics observed in llvm-objdump disassembly of objects "
+            "unique v0.58.3 ISA mnemonics observed in llvm-objdump disassembly of objects "
             "whose stems match current AVS C/C++ sources; pure CodeGen excludes sources "
             "with inline asm/builtins, and explicit alias closure is separate"
         ),
