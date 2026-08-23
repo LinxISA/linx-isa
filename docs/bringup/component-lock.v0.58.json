@@ -75,8 +75,8 @@
       "path": "skills/linx-skills",
       "url": "https://github.com/LinxISA/linx-skills.git",
       "branch": "main",
-      "commit": "b20426c0d0e8c2a81fac020773336910c3b43591",
-      "tree": "085687ba4cb864796e0acd23fda892889c971bf9",
+      "commit": "0fc0dfaec025f1019505b43bd4389aa36b2c89d3",
+      "tree": "44365f4ba0b3a0079c9750fba2b4a6e72e3abb87",
       "release": "0.58.3",
       "role": "agent routing and v0.58.3 workflow skills"
     },
@@ -102,8 +102,8 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "eee8fd57506dcf7b1959df3acf9220a02edb3b32",
-      "tree": "fc237df388d9544974f64fbc22b4f7b97ce7e83f",
+      "commit": "5dacc098990948329001df1258fba5f1259135b9",
+      "tree": "4e0970ba4ca9e5a8dde75f8a86255b5d178442d8",
       "release": "0.58.3",
       "role": "v0.58.3 queue-wired model"
     },

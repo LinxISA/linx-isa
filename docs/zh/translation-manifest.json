@@ -210,7 +210,7 @@
       "translation_sha256": "ac906ca7fa565897747fdbf2117a393755580598746e0eda25389d8010039650"
     },
     "bringup/ALIGNMENT_MATRIX.md": {
-      "source_sha256": "bede7f76e27e4bdc39a3e19da9c96d9f79deaa9bc80e26b899e5bdc26e238a94",
+      "source_sha256": "46cc341e6d6ffdd86e1d666a512bc64611a4ac4e60a3e10b3a015d8d85e3eeff",
       "translation_sha256": "1bdff28e67bc6edd27f659df24898b15891d0fa9ed352ffb091a80df81f3da10"
     },
     "bringup/AVS_CONTRACT.md": {
@@ -242,8 +242,8 @@
       "translation_sha256": "900c546670f0c22d80d7d8e01bdff8d4ee2987a41f3516254abcb01011648313"
     },
     "bringup/PROGRESS.md": {
-      "source_sha256": "64cd18bb845b7cace5c31afc28150495bd16cebeb8a5c4175f2ea0e1e0feb58f",
-      "translation_sha256": "f670a6d52af439f5ff4b0fb072c1eceb87cb972394b2fb971f9a634308acbc47"
+      "source_sha256": "974f34c93113799a36f887fa1c0736a47382bee35ce2ab7b6c186dab4bc769ee",
+      "translation_sha256": "6c43ebe9b9a356dad3fb0d231e9c7ea8be4adf680ce3e9f6e600e6f836391ef7"
     },
     "bringup/README.md": {
       "source_sha256": "5828c2818d24287582376ebf4788b8a2c1022fcb6bc34976335f6cc70cc2e7b5",

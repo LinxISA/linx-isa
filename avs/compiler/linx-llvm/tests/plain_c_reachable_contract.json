@@ -123,7 +123,7 @@
     },
     {
       "mnemonic": "BXU",
-      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/14_lui.c",
       "evidence_kind": "direct"
     },
     {
@@ -408,7 +408,7 @@
     },
     {
       "mnemonic": "HL.LUI",
-      "witness_source": "avs/compiler/linx-llvm/tests/c/07_constants.c",
+      "witness_source": "avs/compiler/linx-llvm/tests/c/25_immediate_materialization.c",
       "evidence_kind": "direct"
     },
     {
