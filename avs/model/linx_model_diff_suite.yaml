@@ -39,7 +39,7 @@ cases:
     trace_version: "1.0"
     ignore_fields: [cycle, next_pc]
     drop_boundary_selfloops: true
-    notes: "Minimal BSTART.TLOAD header smoke; exact v0.58.1 authority assigns TLOAD to TLSU."
+    notes: "Minimal BSTART.TLOAD header smoke; exact v0.58.3 authority assigns TLOAD to TLSU."
 
   - id: MODEL-TILE-CONTROL-FLOW
     category: tile_control_flow

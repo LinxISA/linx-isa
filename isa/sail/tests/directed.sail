@@ -165,6 +165,19 @@ function main() : unit -> unit = {
   assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
   assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
 
+  // CSEL has a form-specific SrcRType assignment: 11 is the canonical plain
+  // spelling and 10 is .neg. Predicate true always selects SrcL.
+  write_reg5(0b00001, 0x0000_0000_0000_0000); // predicate
+  write_reg5(0b00010, 0x1111_2222_3333_4444); // SrcL
+  write_reg5(0b00011, 0x0000_0000_0000_0007); // SrcR
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
+  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0xFFFF_FFFF_FFFF_FFF9);
+  write_reg5(0b00001, 0x0000_0000_0000_0001);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0x1111_2222_3333_4444);
+
   // LBU host memory is outside this REPL proof boundary: read_mem8/write_mem8
   // require host primops here.  Mirror exec_lbu's executable composition:
   // apply SrcRType first, shift that modifier, add base, then zext8_from8.
