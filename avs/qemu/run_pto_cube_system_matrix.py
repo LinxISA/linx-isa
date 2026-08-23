@@ -93,6 +93,14 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
 
     expected_consistent = len(expected_values) == 1 and len(results) == len(required_cases)
     provenance_consistent = len(provenance_values) == 1 and len(results) == len(required_cases)
+    expected_fingerprint = (
+        hashlib.sha256(next(iter(expected_values)).encode("utf-8")).hexdigest()
+        if expected_consistent else None
+    )
+    provenance_fingerprint = (
+        hashlib.sha256(next(iter(provenance_values)).encode("utf-8")).hexdigest()
+        if provenance_consistent else None
+    )
     passed = sum(
         1 for case in single.CUBE_CASES
         if isinstance(results.get(case), dict) and results[case].get("ok") is True
@@ -107,6 +115,8 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
         "exact_case_keys": exact_case_keys,
         "expected_consistent": expected_consistent,
         "actual_provenance_consistent": provenance_consistent,
+        "expected_fingerprint_sha256": expected_fingerprint,
+        "actual_provenance_fingerprint_sha256": provenance_fingerprint,
         "result": {"ok": ok, "classification": "runtime_pass" if ok else "runtime_failure"},
     }
 

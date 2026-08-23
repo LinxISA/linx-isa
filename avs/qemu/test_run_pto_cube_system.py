@@ -160,7 +160,10 @@ class PtoCubeSystemTests(unittest.TestCase):
                     "provenance": copy.deepcopy(provenance),
                 }
 
-            self.assertTrue(run_pto_cube_system_matrix._aggregate_results(results)["result"]["ok"])
+            aggregate = run_pto_cube_system_matrix._aggregate_results(results)
+            self.assertTrue(aggregate["result"]["ok"])
+            self.assertEqual(len(aggregate["expected_fingerprint_sha256"]), 64)
+            self.assertEqual(len(aggregate["actual_provenance_fingerprint_sha256"]), 64)
 
             hostile = copy.deepcopy(results)
             hostile[run_pto_cube_system.CUBE_CASES[0]].pop("expected")
@@ -176,7 +179,9 @@ class PtoCubeSystemTests(unittest.TestCase):
 
             hostile = copy.deepcopy(results)
             hostile[run_pto_cube_system.CUBE_CASES[0]]["provenance"]["libc_sha256"] = "d" * 64
-            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+            aggregate = run_pto_cube_system_matrix._aggregate_results(hostile)
+            self.assertFalse(aggregate["result"]["ok"])
+            self.assertIsNone(aggregate["actual_provenance_fingerprint_sha256"])
 
             hostile = copy.deepcopy(results)
             hostile.pop(run_pto_cube_system.CUBE_CASES[0])
