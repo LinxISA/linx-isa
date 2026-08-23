@@ -208,17 +208,43 @@ class PtoCubeSystemTests(unittest.TestCase):
             evidence = root / "evidence"
             evidence.mkdir()
             log = evidence / "qemu.log"
-            libc = root / "libc.so"
-            loader = root / "ld-musl-linx64.so.1"
-            identity_parser = root / "verify_pto_identity.py"
+            sysroot = root / "sysroot"
+            tileop = root / "tileop"
+            libc = sysroot / "lib" / "libc.so"
+            loader = sysroot / "lib" / "ld-musl-linx64.so.1"
+            identity_parser = tileop / "test" / "tileop_api" / "verify_pto_identity.py"
+            libc.parent.mkdir(parents=True)
+            identity_parser.parent.mkdir(parents=True)
             for path in (log, libc, loader, identity_parser):
                 path.write_text(path.name, encoding="utf-8")
+            bindings = {
+                "pto_kernels": root / "pto-kernels",
+                "tileop": tileop,
+                "sysroot": sysroot,
+                "clang": root / "clang",
+                "kernel": root / "vmlinux",
+                "linux": root / "linux",
+                "qemu": root / "qemu-system-linx64",
+                "qemu_source": root / "qemu",
+            }
             case = run_pto_cube_system.CUBE_CASES[0]
             summary = {
                 "selected_cases": [case],
                 "result": {"ok": True, "classification": "runtime_pass"},
                 "expected": run_pto_cube_system_matrix._canonical_expected(),
                 "provenance": {},
+                "paths": {
+                    "pto_kernels_root": str(bindings["pto_kernels"]),
+                    "tileop_root": str(bindings["tileop"]),
+                    "sysroot": str(bindings["sysroot"]),
+                    "clang": str(bindings["clang"]),
+                    "kernel": str(bindings["kernel"]),
+                    "linux_source_root": str(bindings["linux"]),
+                    "qemu": str(bindings["qemu"]),
+                    "qemu_source_root": str(bindings["qemu_source"]),
+                    "pto_build_output": str(root / "build"),
+                    "out_dir": str(evidence),
+                },
                 "needed": {f"{case}.elf": ["libc.so", "libm.so"]},
                 "pto_identity": {
                     "files": {
@@ -228,7 +254,6 @@ class PtoCubeSystemTests(unittest.TestCase):
                     "parser": run_pto_cube_system_matrix._evidence(identity_parser),
                 },
             }
-            summary["pto_identity"]["files"]["libc.so"]["sha256"] = "f" * 64
             (evidence / "summary.json").write_text(
                 json.dumps(summary), encoding="utf-8"
             )
@@ -237,7 +262,38 @@ class PtoCubeSystemTests(unittest.TestCase):
                 "_validate_source_tool_provenance",
                 return_value=True,
             ):
-                row = run_pto_cube_system_matrix._load_case_result(case, evidence, 0)
+                row = run_pto_cube_system_matrix._load_case_result(
+                    case, evidence, 0, bindings
+                )
+            self.assertTrue(row["ok"])
+            self.assertIsNotNone(row["provenance"])
+
+            summary["paths"]["sysroot"] = "/bin"
+            (evidence / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+            with mock.patch.object(
+                run_pto_cube_system_matrix,
+                "_validate_source_tool_provenance",
+                return_value=True,
+            ):
+                row = run_pto_cube_system_matrix._load_case_result(
+                    case, evidence, 0, bindings
+                )
+            self.assertFalse(row["ok"])
+
+            summary["paths"]["sysroot"] = str(bindings["sysroot"])
+            substituted = run_pto_cube_system_matrix._evidence(Path("/bin/ls"))
+            summary["pto_identity"]["files"]["libc.so"] = copy.deepcopy(substituted)
+            summary["pto_identity"]["files"]["ld-musl-linx64.so.1"] = copy.deepcopy(substituted)
+            summary["pto_identity"]["parser"] = copy.deepcopy(substituted)
+            (evidence / "summary.json").write_text(json.dumps(summary), encoding="utf-8")
+            with mock.patch.object(
+                run_pto_cube_system_matrix,
+                "_validate_source_tool_provenance",
+                return_value=True,
+            ):
+                row = run_pto_cube_system_matrix._load_case_result(
+                    case, evidence, 0, bindings
+                )
             self.assertIsNone(row["provenance"])
 
     def test_nonempty_build_output_is_rejected(self) -> None:

@@ -69,32 +69,46 @@ def _provenance_matches_expected(provenance: dict[str, Any],
     return isinstance(clang, dict) and clang.get("expected_commit") == expected.get("llvm")
 
 
-def _validate_source_tool_provenance(provenance: Any) -> bool:
+def _same_path(recorded: Any, authorized: Path) -> bool:
+    return isinstance(recorded, str) and Path(recorded).resolve() == authorized.resolve()
+
+
+def _validate_source_tool_provenance(provenance: Any,
+                                     bindings: dict[str, Path]) -> bool:
     if not isinstance(provenance, dict):
         return False
     expected = _canonical_expected()
     try:
-        for component, allow_same_tree in (
-            ("pto_kernels", False), ("tileop", False),
-            ("linux", True), ("qemu", True),
+        for component, binding, allow_same_tree in (
+            ("pto_kernels", "pto_kernels", False),
+            ("tileop", "tileop", False),
+            ("linux", "linux", True),
+            ("qemu", "qemu_source", True),
         ):
             recorded = provenance[component]
+            if not _same_path(recorded.get("path"), bindings[binding]):
+                return False
             fresh = single._require_git_identity(
-                Path(recorded["path"]), expected[component],
+                bindings[binding], expected[component],
                 allow_same_tree=allow_same_tree,
             )
             if recorded != fresh:
                 return False
-        if provenance["clang"] != single._require_tool_commit(
-            Path(provenance["clang"]["path"]), expected["llvm"]
-        ):
+        if not _same_path(provenance["clang"].get("path"), bindings["clang"]):
             return False
-        for component in ("kernel", "qemu_binary"):
+        if provenance["clang"] != single._require_tool_commit(bindings["clang"], expected["llvm"]):
+            return False
+        for component, binding in (("kernel", "kernel"), ("qemu_binary", "qemu")):
+            if not _same_path(provenance[component].get("path"), bindings[binding]):
+                return False
             if provenance[component] != single._file_evidence(
-                Path(provenance[component]["path"])
+                bindings[binding]
             ):
                 return False
         pto_lock = provenance["pto_lock"]
+        expected_lock = bindings["pto_kernels"] / "PTO_ISA.lock.json"
+        if not _same_path(pto_lock.get("file", {}).get("path"), expected_lock):
+            return False
         if not _valid_evidence(pto_lock.get("file")):
             return False
         if pto_lock.get("identity") != {
@@ -176,14 +190,35 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _load_case_result(case: str, evidence_dir: Path, returncode: int) -> dict[str, Any]:
+def _load_case_result(case: str, evidence_dir: Path, returncode: int,
+                      bindings: dict[str, Path]) -> dict[str, Any]:
     summary_path = evidence_dir / "summary.json"
     log_path = evidence_dir / "qemu.log"
     if not summary_path.is_file() or not log_path.is_file():
         return {"ok": False, "returncode": returncode}
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    expected_paths = {
+        "pto_kernels_root": bindings["pto_kernels"],
+        "tileop_root": bindings["tileop"],
+        "sysroot": bindings["sysroot"],
+        "clang": bindings["clang"],
+        "kernel": bindings["kernel"],
+        "linux_source_root": bindings["linux"],
+        "qemu": bindings["qemu"],
+        "qemu_source_root": bindings["qemu_source"],
+        "pto_build_output": evidence_dir.parent / "build",
+        "out_dir": evidence_dir,
+    }
+    recorded_paths = summary.get("paths")
+    paths_valid = isinstance(recorded_paths, dict) and set(recorded_paths) == set(expected_paths)
+    if paths_valid:
+        paths_valid = all(
+            _same_path(recorded_paths[name], path)
+            for name, path in expected_paths.items()
+        )
     ok = (
         returncode == 0
+        and paths_valid
         and summary.get("selected_cases") == [case]
         and summary.get("result") == {
             "ok": True,
@@ -195,6 +230,15 @@ def _load_case_result(case: str, evidence_dir: Path, returncode: int) -> dict[st
     identity_parser = pto_identity.get("parser") if isinstance(pto_identity, dict) else None
     libc_record = identity_files.get("libc.so")
     loader_record = identity_files.get("ld-musl-linx64.so.1")
+    # The loader is a symlink to libc in the phase-C sysroot. Evidence records
+    # resolved paths, so both authorized paths intentionally resolve to libc.so.
+    authorized_libc = (bindings["sysroot"] / "lib" / "libc.so").resolve()
+    authorized_loader = (
+        bindings["sysroot"] / "lib" / "ld-musl-linx64.so.1"
+    ).resolve()
+    authorized_parser = (
+        bindings["tileop"] / "test" / "tileop_api" / "verify_pto_identity.py"
+    ).resolve()
     runtime_provenance = {
         "source_tool": summary.get("provenance"),
         "libc_sha256": libc_record.get("sha256") if isinstance(libc_record, dict) else None,
@@ -206,7 +250,13 @@ def _load_case_result(case: str, evidence_dir: Path, returncode: int) -> dict[st
     }
     if (
         not isinstance(runtime_provenance["source_tool"], dict)
-        or not _validate_source_tool_provenance(runtime_provenance["source_tool"])
+        or not _validate_source_tool_provenance(runtime_provenance["source_tool"], bindings)
+        or not _same_path(libc_record.get("path") if isinstance(libc_record, dict) else None,
+                          authorized_libc)
+        or not _same_path(loader_record.get("path") if isinstance(loader_record, dict) else None,
+                          authorized_loader)
+        or not _same_path(identity_parser.get("path") if isinstance(identity_parser, dict) else None,
+                          authorized_parser)
         or not _valid_evidence(libc_record)
         or not _valid_evidence(loader_record)
         or not _valid_evidence(identity_parser)
@@ -253,6 +303,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    bindings = {
+        "pto_kernels": Path(args.pto_kernels_root).expanduser().resolve(),
+        "tileop": Path(args.tileop_root).expanduser().resolve(),
+        "sysroot": Path(args.sysroot).expanduser().resolve(),
+        "clang": Path(args.clang).expanduser().resolve(),
+        "kernel": Path(args.kernel).expanduser().resolve(),
+        "linux": Path(args.linux_source_root).expanduser().resolve(),
+        "qemu": Path(args.qemu).expanduser().resolve(),
+        "qemu_source": Path(args.qemu_source_root).expanduser().resolve(),
+    }
+
     out_root = Path(args.out_root).expanduser().resolve()
     if args.reaggregate_existing and not out_root.is_dir():
         parser.error(f"existing output root not found: {out_root}")
@@ -291,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
                 "--out-dir", str(evidence_dir),
             ]
             returncode = subprocess.run(command, check=False).returncode
-        results[case] = _load_case_result(case, evidence_dir, returncode)
+        results[case] = _load_case_result(case, evidence_dir, returncode, bindings)
 
     aggregate = _aggregate_results(results)
     ok = aggregate["result"]["ok"]
