@@ -21,6 +21,13 @@ REQUIRED_COMPONENTS = {
     "tools/Linx-TileOP-API",
     "workloads/pto_kernels",
 }
+RELEASE_0583_COMPONENTS = REQUIRED_COMPONENTS | {
+    "compiler/ptoas",
+    "lib/glibc",
+    "lib/musl",
+    "skills/linx-skills",
+    "tools/model",
+}
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
 REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
 GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
@@ -108,6 +115,14 @@ def validate(
         commit = item.get("commit", "")
         if not SHA_RE.fullmatch(commit):
             errors.append(f"invalid locked commit for {path}: {commit!r}")
+        if path in RELEASE_0583_COMPONENTS:
+            tree = item.get("tree", "")
+            if not SHA_RE.fullmatch(tree):
+                errors.append(f"invalid locked tree for {path}: {tree!r}")
+            if item.get("release") != "0.58.3":
+                errors.append(
+                    f"{path} must record release 0.58.3, got {item.get('release')!r}"
+                )
         if path in REVIEW_ONLY_OPEN_PR_COMPONENTS:
             if item.get("integration_status") != "review_only_open_pr":
                 errors.append(f"{path} must be recorded as a review-only open PR")
