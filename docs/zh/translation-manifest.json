@@ -211,7 +211,7 @@
     },
     "bringup/ALIGNMENT_MATRIX.md": {
       "source_sha256": "c90090c6998637b89a05e6252500fdea93d239794aab10c78993ae6262028791",
-      "translation_sha256": "1bdff28e67bc6edd27f659df24898b15891d0fa9ed352ffb091a80df81f3da10"
+      "translation_sha256": "73c3441745ebf46b91997bfe1b8ff23c6ea29b3d9f0628257d7945baa36ded01"
     },
     "bringup/AVS_CONTRACT.md": {
       "source_sha256": "c2f9e5a6fa25b954fe150b70efe2e273c2cdcb97df71031a38ff18fd292a9fe8",
