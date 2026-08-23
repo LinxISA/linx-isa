@@ -341,7 +341,7 @@ def _run_qemu_bounded(
                 observed.append(line.rstrip())
 
     selector.close()
-    return returncode, timed_out, "\n".join(observed)
+    return (124 if timed_out else returncode), timed_out, "\n".join(observed)
 
 
 def _write_summary(path: Path, summary: dict[str, Any]) -> None:
