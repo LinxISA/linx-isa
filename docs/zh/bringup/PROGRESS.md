@@ -26,12 +26,12 @@ v0.57/v0.58.1 报告、旧 SHA、仅 trace 输出、等待项、跳过项和缺�
 | --- | --- | --- |
 | ISA catalog、Sail、PTO lock | 已验证 | Golden/catalog/manifest；Sail parser、定向语义、coverage、C backend；723/757 权威 |
 | LLVM/LLD | 已合入 | `b7c83f68bf84125e696a70bec4b665c70a3b584d`；MC 55/55；linx32 759/759、linx64 723/723 compile AVS；新鲜 pure-CodeGen（含别名）146/723 |
-| QEMU | 叶仓已合入 | `2ba240fd057c5084f794375326f4cbf389cbc9da`；HL.LUI、CSEL、CUBE 和 ACR2 TLSU CPU-MMU 门禁通过 |
+| QEMU | 叶仓已合入 | `0d2f90de253ab6ccdaddf405da1bda7c3908dcf7`；HL.LUI/LIU/LIS trace metadata、CSEL、CUBE 和 ACR2 TLSU CPU-MMU 门禁通过 |
 | Linx-TileOP-API | 叶仓已合入 | `bd1ecca97ca47da0edc462c1ce19749c6940780e`；compute Zero、transport Null 契约通过 |
 | PTOAS | 已合入 | `cbfaefe6d3a42b6cb3de1482ef01663630d4b39e`；精确 PTO/TileOP pin、源码审查、本地门禁及六个适用的托管 wheel 任务全部通过 |
 | Linux、glibc、musl | 叶仓已合入 | 精确 PTO 身份和最终 LLVM 的干净 `vmlinux` 构建通过；全系统 PTO workload 仍是发布门禁 |
 | VECTOR/CUBE 首次使用 | 架构完成；Linux 默认关闭 | ISA/Sail/QEMU 执行前异常契约通过。跨 ACR EXTCTX ABI 在 root issue 182 与 Linux issue 32 定义前，Linux 保持 V/C 关闭 |
-| Queue-wired model 与 PTO kernels | 已合入并重钉 | Model `5dacc098`；pto-kernels `5f5cf061`；model CTest 12/12，六个 CUBE 程序精确身份编译/链接通过 |
+| Queue-wired model 与 PTO kernels | 已合入并重钉 | Model `bf9d73cf`；pto-kernels `5f5cf061`；最终 HL.LUI/LIU/LIS 语义、model CTest 12/12 以及六个 CUBE 程序精确身份编译/链接通过 |
 | 全系统 PTO CUBE | 冷启动矩阵已验证 | 六个独立 Linux/QEMU 启动 6/6 通过，并共享同一精确组件指纹；aggregate SHA-256 `3328caf983ae9f555b926b818d89795fb8e13650bd13a9ce0c925a6b8a29761a` |
 | 更广的 nightly benchmark | 未关闭 | Nightly 广度与 release-strict 结果/身份门禁分开跟踪 |
 

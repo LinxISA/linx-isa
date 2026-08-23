@@ -5,7 +5,7 @@ v0.58.1 results do not transfer to this release.
 
 | Topic | Spec | Compiler/API | Emulator | Kernel/libc | Model/workload | Current evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| Exact PTO identity | ✅ v0.58.3 lock and ELF descriptor | ✅ LLVM/LLD/TileOP/PTOAS | ✅ loader rejection matrix; QEMU `2ba240fd` | ✅ Linux/glibc/musl exact identity | ✅ model/kernels and root pins | PTO lock, leaf reviews, atomic component lock |
+| Exact PTO identity | ✅ v0.58.3 lock and ELF descriptor | ✅ LLVM/LLD/TileOP/PTOAS | ✅ loader rejection matrix; QEMU `0d2f90de` | ✅ Linux/glibc/musl exact identity | ✅ model/kernels and root pins | PTO lock, leaf reviews, atomic component lock |
 | ISA catalog parity | ✅ 723 mnemonics, 757 forms | ✅ LLVM 723/723 linx64 compile AVS | ✅ 723/757 decode mapping on current candidates | n/a | ✅ model authority leaf | canonical ISA and leaf reports |
 | HL.LUI/HL.LIU/CSEL semantics | ✅ catalog, convention, Sail directed tests | ✅ LLVM encoding/materialization | ✅ reviewed QEMU fixes merged | ✅ clean final-LLVM vmlinux reaches userspace | n/a | Sail gate, QEMU PRs 70/72, Linux r6/r7 |
 | TLSU virtual-memory access | ✅ CPU translation unless IOTCR enables I/O translation | ✅ TileOP pointer surface | ✅ QEMU PR 74 merged | ✅ mapped/faulting ACR2 integration | n/a | issue 73, PR 74, focused differential tests |
