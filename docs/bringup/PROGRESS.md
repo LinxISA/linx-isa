@@ -33,6 +33,7 @@ views; machine-readable locks and fresh run summaries take precedence.
 | Linux, glibc, and musl | Merged leafs | Exact PTO identity and clean final-LLVM `vmlinux` build pass; full-system PTO workload is still a release gate |
 | VECTOR/CUBE first use | Architecture complete; Linux disabled | ISA/Sail/QEMU pre-effect trap contract passes. Linux keeps V/C disabled until the cross-ACR EXTCTX ABI is specified in root issue 182 and Linux issue 32 |
 | Queue-wired model and PTO kernels | Merged and repinned | Model `bf9d73cf`; pto-kernels `5f5cf061`; final HL.LUI/LIU/LIS semantics, model CTest 12/12, and six CUBE programs compile/link with exact identity |
+| Cross-model release-strict | Verified | Final-lock QEMU/reference/compare suite passes 7/7; all three result memories match the independent golden; report SHA-256 `e7d927ba2418866d4352c7fa9bc9fa9670fd759efbcc86cc92e3387e461e486d` |
 | Full-system PTO CUBE | Verified cold-boot matrix | Six independent Linux/QEMU boots pass 6/6 with one exact component fingerprint; aggregate SHA-256 `3328caf983ae9f555b926b818d89795fb8e13650bd13a9ce0c925a6b8a29761a` |
 | Broader nightly benchmarks | Open | Nightly breadth remains separate from the release-strict result and identity gates |
 
@@ -52,9 +53,9 @@ python3 workloads/pto_kernels/scripts/check_supernpu_v058.py
 python3 docs/check_documentation.py --root .
 ```
 
-The final release additionally requires the exact PTO CUBE full-system gate,
-fresh model/cross-stack evidence, green hosted checks on the final root head,
-and equality between reviewed and merged trees.
+The final release additionally requires green hosted checks and independent
+review on the final root head, followed by equality between reviewed and merged
+trees.
 
 The six-child sequential diagnostic is intentionally not a release pass: it
 reproduces cross-process Tile context leakage while Linux keeps first-use

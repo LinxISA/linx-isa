@@ -32,6 +32,7 @@ v0.57/v0.58.1 报告、旧 SHA、仅 trace 输出、等待项、跳过项和缺�
 | Linux、glibc、musl | 叶仓已合入 | 精确 PTO 身份和最终 LLVM 的干净 `vmlinux` 构建通过；全系统 PTO workload 仍是发布门禁 |
 | VECTOR/CUBE 首次使用 | 架构完成；Linux 默认关闭 | ISA/Sail/QEMU 执行前异常契约通过。跨 ACR EXTCTX ABI 在 root issue 182 与 Linux issue 32 定义前，Linux 保持 V/C 关闭 |
 | Queue-wired model 与 PTO kernels | 已合入并重钉 | Model `bf9d73cf`；pto-kernels `5f5cf061`；最终 HL.LUI/LIU/LIS 语义、model CTest 12/12 以及六个 CUBE 程序精确身份编译/链接通过 |
+| 跨模型 release-strict | 已验证 | 最终锁定的 QEMU/reference/compare 套件 7/7 通过；三份结果内存均匹配独立 golden；报告 SHA-256 `e7d927ba2418866d4352c7fa9bc9fa9670fd759efbcc86cc92e3387e461e486d` |
 | 全系统 PTO CUBE | 冷启动矩阵已验证 | 六个独立 Linux/QEMU 启动 6/6 通过，并共享同一精确组件指纹；aggregate SHA-256 `3328caf983ae9f555b926b818d89795fb8e13650bd13a9ce0c925a6b8a29761a` |
 | 更广的 nightly benchmark | 未关闭 | Nightly 广度与 release-strict 结果/身份门禁分开跟踪 |
 
@@ -51,8 +52,8 @@ python3 workloads/pto_kernels/scripts/check_supernpu_v058.py
 python3 docs/check_documentation.py --root .
 ```
 
-最终发布还要求精确 PTO CUBE 全系统门禁、新鲜 model/跨栈证据、最终 root head
-托管检查全绿，以及审查 tree 与合入 tree 完全一致。
+最终发布还要求最终 root head 的托管检查全绿和独立审查，然后验证审查 tree 与
+合入 tree 完全一致。
 
 六子进程连续诊断不属于发布 PASS：在 Linux 关闭首次使用上下文管理时，它会复现
 跨进程 Tile 上下文泄漏。逐用例冷启动证明六个维护程序各自端到端正确；跨进程复用

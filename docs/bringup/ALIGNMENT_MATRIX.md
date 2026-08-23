@@ -11,4 +11,4 @@ v0.58.1 results do not transfer to this release.
 | TLSU virtual-memory access | ✅ CPU translation unless IOTCR enables I/O translation | ✅ TileOP pointer surface | ✅ QEMU PR 74 merged | ✅ mapped/faulting ACR2 integration | n/a | issue 73, PR 74, focused differential tests |
 | CUBE DATR and accumulator path | ✅ per-operation DATR contracts | ✅ TileOP `bd1ecca9` emits compute Zero | ✅ accumulator/compute/publish plus TLSU | ✅ PID1/fork/exec/exit | ✅ six exact kernels pass cold boots | cold matrix SHA `3328caf9…` |
 | VECTOR/CUBE first use | ✅ pre-effect retryable E_INST/EC_PERM | n/a | ✅ directed QEMU behavior | ⚠ V/C disabled pending cross-ACR EXTCTX ABI | n/a | root issue 182, Linux issue 32 |
-| Full release-strict closure | ✅ policy defined | ✅ final merged pins | ✅ QEMU and six-case cold matrix | ✅ exact boot summaries | ⏳ fresh final-lock model report | no promotion until the final model report closes |
+| Full release-strict closure | ✅ policy defined | ✅ final merged pins | ✅ QEMU and six-case cold matrix | ✅ exact boot summaries | ✅ final-lock 7/7 model report | model report SHA `e7d927ba…`; proceed to final root review |
