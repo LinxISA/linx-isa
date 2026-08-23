@@ -183,6 +183,15 @@ function main() : unit -> unit = {
   assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);
   assert(zext8_from8(0x7E) == 0x0000_0000_0000_007E);
 
+  // HL.LUI is a 32-bit upper-half materializer. It does not alias HL.LIS or
+  // HL.LIU, and the low 32 result bits are always zero.
+  exec_hl_lui(0b00001, 0x0001_0000);
+  assert(read_reg5(0b00001) == 0x0001_0000_0000_0000);
+  exec_hl_lui(0b00001, 0x89AB_CDEF);
+  assert(read_reg5(0b00001) == 0x89AB_CDEF_0000_0000);
+  exec_hl_lui(0b00001, 0x0000_0000);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_0000);
+
   // Long block targets are signed, halfword-scaled PC-relative offsets.
   pc = 0x0000_0000_0000_1000;
   assert(decode_block_target42(sail_zeros(42) + 1) == 0x0000_0000_0000_1002);

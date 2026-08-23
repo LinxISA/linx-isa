@@ -197,6 +197,18 @@ assert "Both labels are explicit and independently relocatable" in hl_call["note
 assert "ra" in hl_call["note"]
 sail_execute = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
 sail_state = (ROOT / "isa/sail/model/state/state.sail").read_text(encoding="utf-8")
+semantics_conventions = json.loads(
+    (ROOT / "isa/v0.58/semantics_conventions.json").read_text(encoding="utf-8")
+)
+hl_lui = next(item for item in spec["instructions"] if item["mnemonic"] == "HL.LUI")
+assert "result bits 63:32" in hl_lui["note"]
+assert semantics_conventions["immediate_materialization"]["hl_lui"] == {
+    "imm_kind": "bit-pattern",
+    "rule": "Write(RegDst, ZeroExtend(imm32) << 32)",
+    "note": "The split immediate occupies result bits 63:32; result bits 31:0 are zero.",
+}
+assert "sail_shiftleft(zext32_from32(imm32), 32)" in sail_execute
+assert "write_regdst(RegDst, sext32_from32(imm32))" not in sail_execute
 assert "tile_tlsu_required_sources" in sail_execute
 assert "tile_tlsu_produces_output" in sail_execute
 assert "tile_tma_" not in sail_execute

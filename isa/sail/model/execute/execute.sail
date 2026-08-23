@@ -1414,8 +1414,8 @@ function exec_lui(RegDst : bits(5), imm20 : bits(20)) -> unit = {
 }
 
 function exec_hl_lui(RegDst : bits(5), imm32 : bits(32)) -> unit = {
-  // HL.LUI: load a 32-bit immediate and sign-extend to 64-bit (sail_shiftleft(no, 12)).
-  write_regdst(RegDst, sext32_from32(imm32))
+  // HL.LUI places the split immediate in bits 63:32 and clears bits 31:0.
+  write_regdst(RegDst, sail_shiftleft(zext32_from32(imm32), 32))
 }
 
 function exec_hl_lis(RegDst : bits(5), simm32 : bits(32)) -> unit = {
