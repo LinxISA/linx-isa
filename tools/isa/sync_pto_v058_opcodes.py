@@ -20,7 +20,7 @@ TARGETS = {
     48: PROFILE / "opcodes/lx_hl48.opc",
     64: PROFILE / "opcodes/lx_64_prefix.opc",
 }
-GENERATED_MARKER = "# PTO ISA 0.58.1 canonical scalar and command forms"
+GENERATED_MARKER = "# PTO ISA 0.58.3 canonical scalar and command forms"
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -53,8 +53,10 @@ def classify_owned_instruction(
     source_form_id = str(instruction.get("pto_source_form_id") or "")
     if source_form_id in scalar_form_ids or source_form_id in command_form_ids:
         return "replace"
-    if any(reservation_covers(reservation, instruction) for reservation in reservations):
-        return "preserve"
+    # A PTO reservation withdraws ownership from the common subset; it does
+    # not silently transfer a formerly common mnemonic to Linx. Linx-only
+    # forms must already exist without a PTO source identity and are handled
+    # outside this migration path.
     return "drop"
 
 
@@ -219,7 +221,7 @@ def opcode_line(
         "asm": form["asm"],
         "group": form["semantic_group"],
         "length_bits": form["length_bits"],
-        "note": form.get("semantic_summary", "PTO ISA 0.58.1 canonical form."),
+        "note": form.get("semantic_summary", "PTO ISA 0.58.3 canonical form."),
         "pto_source_constraints": form.get("constraints", []),
     }
     fixed_fields = singleton_pto_fields(form)
@@ -268,11 +270,11 @@ def main() -> int:
         args.source_root / "spec/catalog/extension-encoding-reservations.json"
     )
     if command_catalog.get("form_count") != 74:
-        raise ValueError("PTO 0.58.1 must publish exactly 74 command forms")
-    if scalar_catalog.get("form_count") != 474:
-        raise ValueError("PTO 0.58.1 must publish exactly 474 scalar forms")
-    if reservations.get("reservation_count") != 32:
-        raise ValueError("PTO 0.58.1 must publish exactly 32 extension reservations")
+        raise ValueError("PTO 0.58.3 must publish exactly 74 command forms")
+    if scalar_catalog.get("form_count") != 466:
+        raise ValueError("PTO 0.58.3 must publish exactly 466 scalar forms")
+    if reservations.get("reservation_count") != 40:
+        raise ValueError("PTO 0.58.3 must publish exactly 40 extension reservations")
 
     removals, preserved = current_owned_lines(
         scalar_catalog, command_catalog, reservations

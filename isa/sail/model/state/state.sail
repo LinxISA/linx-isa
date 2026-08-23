@@ -185,8 +185,9 @@ register decoded_biot_raw_shadow : bits(64) = 0x0000_0000_0000_0000
 // PTO/Linx 0.58 absolute-index core-private Shared tile binding.
 register shared_tile_binding_valid : bool = false
 register shared_tile_binding_id : bits(8) = 0x00
+register shared_tile_binding_pe_mode : bits(3) = 0b000
 register shared_tile_binding_pe_mask : bits(4) = 0x0
-register shared_tile_binding_tsize : bits(3) = 0b000
+register shared_tile_binding_size_code : bits(4) = 0x0
 register decoded_tile_datatype_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc0_shadow : bits(5) = 0b00000
 register decoded_bior_regsrc1_shadow : bits(5) = 0b00000
@@ -237,6 +238,8 @@ register bfpatr_row_max_en : bool = false
 register bfpatr_group_max_en : bool = false
 register bfpatr_row_max_init : bool = false
 register bfpatr_max_abs_en : bool = false
+register bfpatr_trans_a : bool = false
+register bfpatr_trans_b : bool = false
 function bcatr_dr() -> bool = { bcatr_raw[26] == 0b1 }
 function bdatr_sat() -> bool = { bdatr_raw[26] == 0b1 }
 
@@ -254,6 +257,9 @@ register tile_effect_family : bits(2) = 0b00 // 1=TLSU, 2=CUBE
 register tile_effect_function : bits(5) = 0b00000
 register tile_effect_datatype : bits(5) = 0b00000
 register tile_effect_iot_count : bits(6) = 0b00_0000
+register tile_effect_pe_mode_valid : bool = false
+register tile_effect_pe_mode : bits(3) = 0b000
+register tile_effect_pe_mask : bits(4) = 0x0
 register tile_effect_source_count : bits(6) = 0b00_0000
 register tile_effect_output_count : bits(6) = 0b00_0000
 register tile_effect_release_count : bits(6) = 0b00_0000
@@ -294,6 +300,9 @@ register tile_acc_k : bits(64) = 0x0000_0000_0000_0000
 
 function tile_effect_reset_descriptors() -> unit = {
   tile_effect_iot_count = 0b00_0000;
+  tile_effect_pe_mode_valid = false;
+  tile_effect_pe_mode = 0b000;
+  tile_effect_pe_mask = 0x0;
   tile_effect_source_count = 0b00_0000;
   tile_effect_output_count = 0b00_0000;
   tile_effect_release_count = 0b00_0000;
@@ -1701,10 +1710,13 @@ function bdesc_reset() -> unit = {
   bfpatr_group_max_en = false;
   bfpatr_row_max_init = false;
   bfpatr_max_abs_en = false;
+  bfpatr_trans_a = false;
+  bfpatr_trans_b = false;
   shared_tile_binding_valid = false;
   shared_tile_binding_id = 0x00;
+  shared_tile_binding_pe_mode = 0b000;
   shared_tile_binding_pe_mask = 0x0;
-  shared_tile_binding_tsize = 0b000;
+  shared_tile_binding_size_code = 0x0;
   clear_ri_bindings();
   tile_effect_reset_descriptors()
 }

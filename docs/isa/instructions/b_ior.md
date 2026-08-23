@@ -26,7 +26,7 @@
 
 ## Description
 
-Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
+Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE u
 
 ## Encoding Notes
 
-- `Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.`
+- `Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.`
 
 ## Full Catalog Forms
 

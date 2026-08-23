@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+LINUX_UAPI_ROOT="${LINUX_UAPI_ROOT:-$ROOT/kernel/linux}"
 
 MODE="phase-b"
 PROFILE="noeh"
@@ -143,10 +144,27 @@ if [[ ! -d "$MUSL_SYSROOT/include" && ! -d "$MUSL_SYSROOT/usr/include" ]]; then
 fi
 
 install_linux_uapi_headers() {
+  if [[ -f "$LINUX_UAPI_ROOT/Makefile" ]]; then
+    local headers_make="${LINUX_HEADERS_MAKE:-make}"
+    if [[ -z "${LINUX_HEADERS_MAKE:-}" && "$(uname -s)" == "Darwin" ]] &&
+       command -v gmake >/dev/null 2>&1; then
+      headers_make=gmake
+    fi
+    local export_root="$OUT_ROOT/linux-uapi-export"
+    rm -rf "$export_root"
+    "$headers_make" -C "$LINUX_UAPI_ROOT" ARCH=linx \
+      INSTALL_HDR_PATH="$export_root" headers_install >/dev/null
+    mkdir -p "$MUSL_SYSROOT/include" "$MUSL_SYSROOT/usr/include"
+    cp -R "$export_root/include/." "$MUSL_SYSROOT/include/"
+    cp -R "$export_root/include/." "$MUSL_SYSROOT/usr/include/"
+    return
+  fi
+
+  # Minimal fixture fallback for isolated script tests without a kernel tree.
   mkdir -p "$MUSL_SYSROOT/include/linux" "$MUSL_SYSROOT/usr/include/linux"
   local header source
   for header in limits.h futex.h; do
-    source="$ROOT/kernel/linux/include/uapi/linux/$header"
+    source="$LINUX_UAPI_ROOT/include/uapi/linux/$header"
     if [[ ! -f "$source" ]]; then
       echo "error: required Linux UAPI header missing: $source" >&2
       exit 2
@@ -415,7 +433,10 @@ if [[ "$MERGE_SYSROOT" == "1" ]]; then
   # archive expected by clang++ when -rtlib=compiler-rt is selected.
   target_arch="${TARGET%%-*}"
   builtins_name="libclang_rt.builtins-${target_arch}.a"
-  builtins_src="$ROOT/out/libc/musl/runtime/$MODE/liblinx_builtin_rt.a"
+  builtins_src="$MUSL_SYSROOT/lib/liblinx_builtin_rt.a"
+  if [[ ! -f "$builtins_src" ]]; then
+    builtins_src="$ROOT/out/libc/musl/runtime/$MODE/liblinx_builtin_rt.a"
+  fi
   if [[ -f "$builtins_src" ]]; then
     install -m 644 "$builtins_src" "$MUSL_SYSROOT/lib/$builtins_name"
     install -m 644 "$builtins_src" "$MUSL_SYSROOT/usr/lib/$builtins_name"
@@ -474,7 +495,7 @@ summary = {
         "install": "${install_log}",
     },
     "merge_sysroot": ${MERGE_SYSROOT},
-    "copied_runtime_libs": [x for x in """${copied_libs[*]}""".split() if x],
+    "copied_runtime_libs": [x for x in """${copied_libs[*]-}""".split() if x],
 }
 
 summary_path = Path("${SUMMARY}")

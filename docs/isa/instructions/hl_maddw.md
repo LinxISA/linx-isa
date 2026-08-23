@@ -26,7 +26,7 @@
 
 ## Description
 
-HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.
+HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus 
 
 ## Encoding Notes
 
-- `HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.`
+- `HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves.`
 
 ## Full Catalog Forms
 

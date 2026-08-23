@@ -5,60 +5,60 @@
 [[inst_b_iot]]
 ==== B.IOT
 
-*Description:* Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+*Description:* Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
 
-[[inst_b_iot_32_36792782e584]]
-===== Form `b_iot_32_36792782e584`
-
-*Syntax:* B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>
-
-*Encoding:*
-
-image::encodings/enc_b_iot_32_36792782e584.svg[B.IOT encoding form b_iot_32_36792782e584,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_b_iot_32_3a493c45ddfa]]
-===== Form `b_iot_32_3a493c45ddfa`
-
-*Syntax:* B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>
-
-*Encoding:*
-
-image::encodings/enc_b_iot_32_3a493c45ddfa.svg[B.IOT encoding form b_iot_32_3a493c45ddfa,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_b_iot_32_437af312f86d]]
-===== Form `b_iot_32_437af312f86d`
-
-*Syntax:* B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>
-
-*Encoding:*
-
-image::encodings/enc_b_iot_32_437af312f86d.svg[B.IOT encoding form b_iot_32_437af312f86d,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_b_iot_32_84944b9c3d19]]
-===== Form `b_iot_32_84944b9c3d19`
-
-*Syntax:* B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>
-
-*Encoding:*
-
-image::encodings/enc_b_iot_32_84944b9c3d19.svg[B.IOT encoding form b_iot_32_84944b9c3d19,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_b_iot_32_f17390877416]]
-===== Form `b_iot_32_f17390877416`
+[[inst_b_iot_32_21bee57b65c0]]
+===== Form `b_iot_32_21bee57b65c0`
 
 *Syntax:* B.IOT SrcTile0, mask=PE_MASK, <last>
 
 *Encoding:*
 
-image::encodings/enc_b_iot_32_f17390877416.svg[B.IOT encoding form b_iot_32_f17390877416,width=800]
+image::encodings/enc_b_iot_32_21bee57b65c0.svg[B.IOT encoding form b_iot_32_21bee57b65c0,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_iot_32_3bc48b48fea2]]
+===== Form `b_iot_32_3bc48b48fea2`
+
+*Syntax:* B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+
+*Encoding:*
+
+image::encodings/enc_b_iot_32_3bc48b48fea2.svg[B.IOT encoding form b_iot_32_3bc48b48fea2,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_iot_32_53c1ffc02364]]
+===== Form `b_iot_32_53c1ffc02364`
+
+*Syntax:* B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>
+
+*Encoding:*
+
+image::encodings/enc_b_iot_32_53c1ffc02364.svg[B.IOT encoding form b_iot_32_53c1ffc02364,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_iot_32_7d0899202df1]]
+===== Form `b_iot_32_7d0899202df1`
+
+*Syntax:* B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>
+
+*Encoding:*
+
+image::encodings/enc_b_iot_32_7d0899202df1.svg[B.IOT encoding form b_iot_32_7d0899202df1,width=800]
+
+*Compression:* L32 (len=32)
+
+[[inst_b_iot_32_cd6ec8181a49]]
+===== Form `b_iot_32_cd6ec8181a49`
+
+*Syntax:* B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+
+*Encoding:*
+
+image::encodings/enc_b_iot_32_cd6ec8181a49.svg[B.IOT encoding form b_iot_32_cd6ec8181a49,width=800]
 
 *Compression:* L32 (len=32)
 

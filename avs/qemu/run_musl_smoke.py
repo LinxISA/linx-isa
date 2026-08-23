@@ -107,6 +107,11 @@ SAMPLES: dict[str, dict[str, str]] = {
         "start": "EBARG_INIT_START",
         "pass": "[linx] EBARG selftest: PASS",
     },
+    "pto_cube": {
+        "src": "linux_musl_pto_cube_init.c",
+        "start": "PTO_CUBE_START count=6",
+        "pass": "PTO_CUBE_PASS count=6",
+    },
 
 }
 
@@ -629,6 +634,36 @@ def main(argv: list[str]) -> int:
         "--out-dir",
         default=str(REPO_ROOT / "avs" / "qemu" / "out" / "musl-smoke"),
     )
+    parser.add_argument(
+        "--pto-kernels-root",
+        default=str(REPO_ROOT / "workloads" / "pto_kernels"),
+        help="Exact pto-kernels checkout used by --sample pto_cube.",
+    )
+    parser.add_argument(
+        "--pto-build-output",
+        default="",
+        help="Fresh/empty output directory for the six pto_cube ELFs.",
+    )
+    parser.add_argument(
+        "--tileop-root",
+        default=str(REPO_ROOT / "tools" / "Linx-TileOP-API"),
+        help="Exact Linx-TileOP-API checkout used by --sample pto_cube.",
+    )
+    parser.add_argument(
+        "--pto-sysroot",
+        default=str(REPO_ROOT / "out" / "libc" / "musl" / "install" / "phase-c"),
+        help="Phase-C sysroot used to build and package --sample pto_cube.",
+    )
+    parser.add_argument(
+        "--qemu-source-root",
+        default=str(REPO_ROOT / "emulator" / "qemu"),
+        help="QEMU source/build root used to prove the pto_cube system binary.",
+    )
+    parser.add_argument(
+        "--linux-source-root",
+        default=str(REPO_ROOT / "kernel" / "linux"),
+        help="Linux source root used to prove the pto_cube vmlinux tree.",
+    )
     args = parser.parse_args(argv)
     disable_timer_irq = args.disable_timer_irq or os.environ.get("LINX_DISABLE_TIMER_IRQ", "").lower() in {
         "1",
@@ -664,6 +699,42 @@ def main(argv: list[str]) -> int:
     args.qemu = str(qemu)
     args.qemu_user = str(qemu_user)
     args.out_dir = str(out_dir)
+
+    if "pto_cube" in selected_samples:
+        if selected_samples != ["pto_cube"]:
+            raise SystemExit("error: --sample pto_cube must run as a focused gate")
+        if args.runner != "system":
+            raise SystemExit("error: --sample pto_cube requires --runner system")
+        if args.mode != "phase-c":
+            raise SystemExit("error: --sample pto_cube requires --mode phase-c")
+        if args.link != "shared":
+            raise SystemExit("error: --sample pto_cube requires --link shared")
+        if not args.kernel:
+            raise SystemExit("error: --sample pto_cube requires an explicit --kernel")
+
+        import run_pto_cube_system
+
+        pto_build_output = (
+            Path(os.path.expanduser(args.pto_build_output)).resolve()
+            if args.pto_build_output
+            else out_dir / "pto-cube-build"
+        )
+        return run_pto_cube_system.main(
+            [
+                "--pto-kernels-root", args.pto_kernels_root,
+                "--pto-build-output", str(pto_build_output),
+                "--tileop-root", args.tileop_root,
+                "--sysroot", args.pto_sysroot,
+                "--clang", str(clang),
+                "--kernel", args.kernel,
+                "--linux-source-root", args.linux_source_root,
+                "--qemu", str(qemu),
+                "--qemu-source-root", args.qemu_source_root,
+                "--out-dir", str(out_dir),
+                "--timeout", str(args.timeout),
+                "--append", args.append,
+            ]
+        )
 
     if args.link == "both":
         return _run_split_link_modes(args, out_dir, selected_samples)

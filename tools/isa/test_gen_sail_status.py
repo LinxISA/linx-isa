@@ -18,7 +18,7 @@ def main() -> int:
         spec.write_text(
             json.dumps(
                 {
-                    "version": "0.58.1",
+                    "version": "0.58.3",
                     "instructions": [
                         {
                             "id": "compiled_dma_identity",

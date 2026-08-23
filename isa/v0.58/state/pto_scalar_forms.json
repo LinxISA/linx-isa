@@ -3,7 +3,7 @@
   "family_constraint_count": 0,
   "family_constraints": [],
   "form_constraint_count": 47,
-  "form_count": 474,
+  "form_count": 466,
   "forms": [
     {
       "asm": "acrc rst_type",
@@ -335,7 +335,7 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "AddToPC",
-      "semantic_summary": "ADDTPC - Add the encoded displacement to the program counter.",
+      "semantic_summary": "ADDTPC - Add a signed 4 KiB page displacement to the current TPC.",
       "status": "accepted"
     },
     {
@@ -738,470 +738,6 @@
       "semantic_group": "SYS",
       "semantic_handler": "ArchitectureAssert",
       "semantic_summary": "ASSERT raises the architecture assertion trap exactly when its snapshotted scalar condition is zero.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.eq SrcL, SrcR, label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00000027",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "simm12",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 7
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 7,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 12
-        }
-      ],
-      "form_id": "b_eq_32_41f00e5abd89",
-      "length_bits": 32,
-      "mnemonic": "B.EQ",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.ge SrcL, SrcR, label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00003027",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "simm12",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 7
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 7,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 12
-        }
-      ],
-      "form_id": "b_ge_32_7bd9050705dc",
-      "length_bits": 32,
-      "mnemonic": "B.GE",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.GE - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.geu SrcL, SrcR, label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00005027",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "simm12",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 7
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 7,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 12
-        }
-      ],
-      "form_id": "b_geu_32_43a6e57dce55",
-      "length_bits": 32,
-      "mnemonic": "B.GEU",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.GEU - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.lt SrcL, SrcR, label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00002027",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "simm12",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 7
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 7,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 12
-        }
-      ],
-      "form_id": "b_lt_32_2ca5ecd25cfb",
-      "length_bits": 32,
-      "mnemonic": "B.LT",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.LT - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.ltu SrcL, SrcR, label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00004027",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "simm12",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 7
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 7,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 12
-        }
-      ],
-      "form_id": "b_ltu_32_f1ea7ad44e37",
-      "length_bits": 32,
-      "mnemonic": "B.LTU",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.LTU - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.ne SrcL, SrcR, label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00001027",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "simm12",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 7
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 7,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 12
-        }
-      ],
-      "form_id": "b_ne_32_831af6a36ff4",
-      "length_bits": 32,
-      "mnemonic": "B.NE",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.NE - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.nz label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00002037",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "simm22",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 17
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 17,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 22
-        }
-      ],
-      "form_id": "b_nz_32_0f583cdd8d4d",
-      "length_bits": 32,
-      "mnemonic": "B.NZ",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands.",
-      "status": "accepted"
-    },
-    {
-      "asm": "b.z label",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0x0000707f",
-          "match": "0x00001037",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "simm22",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 17
-            },
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 17,
-              "width": 5
-            }
-          ],
-          "signedness": "signed",
-          "width": 22
-        }
-      ],
-      "form_id": "b_z_32_753dd3b4fcb6",
-      "length_bits": 32,
-      "mnemonic": "B.Z",
-      "semantic_family": "BRU",
-      "semantic_group": "BRU",
-      "semantic_handler": "BranchRelative",
-      "semantic_summary": "B.Z - Conditionally branch to the PC-relative target after comparing scalar operands.",
       "status": "accepted"
     },
     {
@@ -7757,7 +7293,7 @@
       "semantic_family": "BRU",
       "semantic_group": "BRU",
       "semantic_handler": "AddToPC",
-      "semantic_summary": "HL.ADDTPC - Add the encoded displacement to the program counter.",
+      "semantic_summary": "HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC.",
       "status": "accepted"
     },
     {
@@ -14002,8 +13538,8 @@
       "mnemonic": "HL.LUI",
       "semantic_family": "ALU",
       "semantic_group": "ALU",
-      "semantic_handler": "MaterializeLongSigned",
-      "semantic_summary": "HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.",
+      "semantic_handler": "MaterializeLongUpper",
+      "semantic_summary": "HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0.",
       "status": "accepted"
     },
     {
@@ -16227,7 +15763,7 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "ExecuteScalarMultiplyAddPair",
-      "semantic_summary": "HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.",
+      "semantic_summary": "HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves.",
       "status": "accepted"
     },
     {
@@ -17113,8 +16649,8 @@
       "mnemonic": "HL.REM",
       "semantic_family": "ALU",
       "semantic_group": "ALU",
-      "semantic_handler": "ExecuteScalarDividePair",
-      "semantic_summary": "HL.REM computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.",
+      "semantic_handler": "ExecuteScalarRemainderPair",
+      "semantic_summary": "HL.REM computes a signed XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.",
       "status": "accepted"
     },
     {
@@ -17184,8 +16720,8 @@
       "mnemonic": "HL.REMU",
       "semantic_family": "ALU",
       "semantic_group": "ALU",
-      "semantic_handler": "ExecuteScalarDividePair",
-      "semantic_summary": "HL.REMU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.",
+      "semantic_handler": "ExecuteScalarRemainderPair",
+      "semantic_summary": "HL.REMU computes an unsigned XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.",
       "status": "accepted"
     },
     {
@@ -17255,8 +16791,8 @@
       "mnemonic": "HL.REMUW",
       "semantic_family": "ALU",
       "semantic_group": "ALU",
-      "semantic_handler": "ExecuteScalarDividePairW",
-      "semantic_summary": "HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.",
+      "semantic_handler": "ExecuteScalarRemainderPairW",
+      "semantic_summary": "HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.",
       "status": "accepted"
     },
     {
@@ -17326,8 +16862,8 @@
       "mnemonic": "HL.REMW",
       "semantic_family": "ALU",
       "semantic_group": "ALU",
-      "semantic_handler": "ExecuteScalarDividePairW",
-      "semantic_summary": "HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.",
+      "semantic_handler": "ExecuteScalarRemainderPairW",
+      "semantic_summary": "HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.",
       "status": "accepted"
     },
     {
@@ -34232,8 +33768,8 @@
   ],
   "isa": "PTO Instruction Set Architecture",
   "operand_field_count": 45,
-  "operand_piece_count": 1867,
+  "operand_piece_count": 1839,
   "schema_version": 2,
-  "semantic_handler_count": 70,
+  "semantic_handler_count": 72,
   "source_lock": "isa/v0.58/pto-spec.lock.json"
 }

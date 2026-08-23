@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-- `HL.REMU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.`
+- `HL.REMU computes an unsigned XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.`
 
 ## Full Catalog Forms
 

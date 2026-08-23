@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.58.1 &nbsp;·&nbsp; **765 instruction forms** &nbsp;·&nbsp; **54 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.58.3 &nbsp;·&nbsp; **757 instruction forms** &nbsp;·&nbsp; **54 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -65,7 +65,7 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 
 <div class="group-card-grid">
 [ALU (107)](groups/alu.md){.group-card} [AMO (53)](groups/amo.md){.group-card} [Arithmetic Operation (16)](groups/arithmetic_operation.md){.group-card} [Atomic Operation (24)](groups/atomic_operation.md){.group-card}
-[BRU (66)](groups/bru.md){.group-card} [BSTART (21)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card}
+[BRU (58)](groups/bru.md){.group-card} [BSTART (21)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card}
 [Bundle Argument (3)](groups/bundle_argument.md){.group-card} [Bundle Control Attribute (1)](groups/bundle_control_attribute.md){.group-card} [Bundle Data Attribute (1)](groups/bundle_data_attribute.md){.group-card} [Bundle Dimension (1)](groups/bundle_dimension.md){.group-card}
 [Bundle Fixed-Point PostProcess Attribute (1)](groups/bundle_fixed_point_postprocess_attribute.md){.group-card} [Bundle Hint (2)](groups/bundle_hint.md){.group-card} [Bundle Input & Output (7)](groups/bundle_input_output.md){.group-card} [Bundle Offset (1)](groups/bundle_offset.md){.group-card}
 [Bundle Split (57)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [Compare Instruction (16)](groups/compare_instruction.md){.group-card} [Division (2)](groups/division.md){.group-card}
@@ -103,18 +103,18 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [ADDW](instructions/addw.md) | alu | 32 | 32-bit word integer addition. |
 | [AND](instructions/and.md) | alu | 32 | Bitwise AND of two registers. |
 | [ADDTPC](instructions/addtpc.md) | bru | 32 | PC-relative addition. Adds an immediate to the current PC/TPC and writes the result. |
-| [B.EQ](instructions/b_eq.md) | bru | 32 | Conditional branch taken when SrcL equals SrcR. |
-| [B.GE](instructions/b_ge.md) | bru | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (signed). |
-| [B.GEU](instructions/b_geu.md) | bru | 32 | Conditional branch taken when SrcL is greater than or equal to SrcR (unsigned). |
-| [B.LT](instructions/b_lt.md) | bru | 32 | Conditional branch taken when SrcL is less than SrcR (signed). |
+| [C.CMP.EQI](instructions/c_cmp_eqi.md) | bru | 16 | C.CMP.EQI - Compare scalar operands and write the encoded boolean result. |
+| [C.CMP.NEI](instructions/c_cmp_nei.md) | bru | 16 | C.CMP.NEI - Compare scalar operands and write the encoded boolean result. |
+| [C.SETC.EQ](instructions/c_setc_eq.md) | bru | 16 | [16-bit C.] Sets the block-commit condition. |
+| [C.SETC.NE](instructions/c_setc_ne.md) | bru | 16 | [16-bit C.] Sets the block-commit condition. |
 | [B.CATR](instructions/b_catr.md) | bundle_control_attribute | 32 | Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode. |
 | [B.DATR](instructions/b_datr.md) | bundle_data_attribute | 32 | Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes. |
 | [B.DIM](instructions/b_dim.md) | bundle_argument | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.FPATR](instructions/b_fpatr.md) | bundle_fixed_point_postprocess_attribute | 32 | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
 | [B.HINT](instructions/b_hint.md) | bundle_hint | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
-| [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride. |
-| [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask. |
-| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source. |
+| [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride. |
+| [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
+| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.TEXT](instructions/b_text.md) | bundle_offset | 32 | Sets the out-of-line body entry address for a decoupled bundle. |
 | [BSTART](instructions/bstart.md) | bundle_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART.FP](instructions/bstart_fp.md) | bundle_split | 32 | Terminates the current block and begins the next. |
@@ -313,4 +313,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 765 instruction forms →](instructions/index.md)
+[View all 757 instruction forms →](instructions/index.md)

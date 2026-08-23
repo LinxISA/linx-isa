@@ -27,6 +27,13 @@ The current profile distinguishes block families as follows:
 
 `TMA` is a historical name for TLSU and is not used by the active profile.
 
+A TLSU global-memory address supplied through `B.IOR` is a data virtual
+address in the initiating ACR and uses that task's ordinary CPU translation
+and permission context while `IOTCR` leaves I/O translation disabled. It is
+not implicitly an I/O virtual address. IOMMU translation applies only when
+`IOTCR` explicitly enables the I/O address space. A failed TLSU memory beat reports the original
+virtual address in `TRAPARG0` and follows the normal precise `E_DATA` path.
+
 ## VECTOR/CUBE first-use exception
 
 The first-use mechanism lets an ACR1 kernel allocate and restore VECTOR or CUBE context only when an ACR2 task needs it. It is a precise pre-execution exception.

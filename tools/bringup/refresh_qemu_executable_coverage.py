@@ -31,13 +31,16 @@ import report_qemu_executable_coverage as reporter  # noqa: E402
 
 
 EVIDENCE_ROOT = Path("docs/bringup/gates/evidence/qemu-executable")
-ACTIVE_RELEASE = "0.58.1"
+ACTIVE_RELEASE = "0.58.3"
 SUITE_PREFIXES = {
     "callret": "callret",
     "executable_memory": "executable-memory",
     "executable_scalar": "executable-scalar",
     "executable_integer": "executable-integer",
-    "v057_vector_ops": "v057-vector-ops",
+    "tile_v0583_tlsu": "tile-v0583-tlsu",
+    "tile_v0583_vec": "tile-v0583-vec",
+    "tile_v0583_sfu": "tile-v0583-sfu",
+    "tile_v0583_cube": "tile-v0583-cube",
     "atomic": "atomic-lr-srczero",
     "executable_setc_imm": "executable-setc-imm",
     "executable_maddw_bfi_mi": "executable-maddw-bfi-mi",

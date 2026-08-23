@@ -68,20 +68,8 @@
       "mnemonic": "B.DIM",
       "status": "executable-subset"
     },
-    "b_eq_32_f0f909e9f755": {
-      "mnemonic": "B.EQ",
-      "status": "executable-subset"
-    },
-    "b_fpatr_32_cba93d710148": {
+    "b_fpatr_32_ecbf4a9b6cf0": {
       "mnemonic": "B.FPATR",
-      "status": "executable-subset"
-    },
-    "b_ge_32_4d00af558ba0": {
-      "mnemonic": "B.GE",
-      "status": "executable-subset"
-    },
-    "b_geu_32_7832bac8f1a4": {
-      "mnemonic": "B.GEU",
       "status": "executable-subset"
     },
     "b_hint_32_67e2ad8dd981": {
@@ -96,52 +84,32 @@
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
-    "b_ios_32_11ff57a2e635": {
+    "b_ios_32_0f62f62d6a81": {
       "mnemonic": "B.IOS",
       "status": "executable-subset"
     },
-    "b_iot_32_36792782e584": {
+    "b_iot_32_21bee57b65c0": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_3a493c45ddfa": {
+    "b_iot_32_3bc48b48fea2": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_437af312f86d": {
+    "b_iot_32_53c1ffc02364": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_84944b9c3d19": {
+    "b_iot_32_7d0899202df1": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
-    "b_iot_32_f17390877416": {
+    "b_iot_32_cd6ec8181a49": {
       "mnemonic": "B.IOT",
-      "status": "executable-subset"
-    },
-    "b_lt_32_59c035b9c132": {
-      "mnemonic": "B.LT",
-      "status": "executable-subset"
-    },
-    "b_ltu_32_fe13236f720b": {
-      "mnemonic": "B.LTU",
-      "status": "executable-subset"
-    },
-    "b_ne_32_af79aa13d05a": {
-      "mnemonic": "B.NE",
-      "status": "executable-subset"
-    },
-    "b_nz_32_890ac2de1897": {
-      "mnemonic": "B.NZ",
       "status": "executable-subset"
     },
     "b_text_32_6f2fe6f95841": {
       "mnemonic": "B.TEXT",
-      "status": "executable-subset"
-    },
-    "b_z_32_caa0ef1ffc2e": {
-      "mnemonic": "B.Z",
       "status": "executable-subset"
     },
     "bc_iall_32_27b4ceb9cbaa": {
@@ -3061,6 +3029,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.58.1",
-  "spec_version": "0.58.1"
+  "schema_version": "linx-sail-status-v0.58.3",
+  "spec_version": "0.58.3"
 }

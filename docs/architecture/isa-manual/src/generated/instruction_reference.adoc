@@ -99,19 +99,19 @@
 |`HL.DIVW` |48 |- |`hl.divw SrcL, SrcR, ->Dst0, Dst1` |HL.DIVW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
 |`HL.LIS` |48 |- |`hl.lis simm, ->{t, u, Rd}` |HL.LIS sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
 |`HL.LIU` |48 |- |`hl.liu uimm, ->{t, u, Rd}` |HL.LIU zero-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
-|`HL.LUI` |48 |- |`hl.lui imm, ->{t, u, Rd}` |HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst.
+|`HL.LUI` |48 |- |`hl.lui imm, ->{t, u, Rd}` |HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0.
 |`HL.MADD` |48 |- |`hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADD computes a signed 128-bit product plus a sign-extended XLEN addend and publishes low then high halves.
-|`HL.MADDW` |48 |- |`hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves.
+|`HL.MADDW` |48 |- |`hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` |HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves.
 |`HL.MIADD` |48 |- |`hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}` |HL.MIADD multiplies SrcR by the unsigned 19-bit immediate, adds SrcL modulo 2^PTO_XLEN, and publishes the result.
 |`HL.MISUB` |48 |- |`hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}` |HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result.
 |`HL.MUL` |48 |- |`hl.mul SrcL, SrcR, ->Dst0, Dst1` |HL.MUL computes a signed 128-bit scalar product and publishes its low half followed by its high half.
 |`HL.MULU` |48 |- |`hl.mulu SrcL, SrcR, ->Dst0, Dst1` |HL.MULU computes an unsigned 128-bit scalar product and publishes its low half followed by its high half.
 |`HL.ORI` |48 |- |`hl.ori SrcL, simm, ->{t, u, Rd}` |HL.ORI applies XLEN bitwise inclusive-or to SrcL and a sign-extended 24-bit immediate.
 |`HL.ORIW` |48 |- |`hl.oriw SrcL, simm, ->{t, u, Rd}` |HL.ORIW applies word bitwise inclusive-or to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result.
-|`HL.REM` |48 |- |`hl.rem SrcL, SrcR, ->Dst0, Dst1` |HL.REM computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
-|`HL.REMU` |48 |- |`hl.remu SrcL, SrcR, ->Dst0, Dst1` |HL.REMU computes a unsigned XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
-|`HL.REMUW` |48 |- |`hl.remuw SrcL, SrcR, ->Dst0, Dst1` |HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
-|`HL.REMW` |48 |- |`hl.remw SrcL, SrcR, ->Dst0, Dst1` |HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+|`HL.REM` |48 |- |`hl.rem SrcL, SrcR, ->Dst0, Dst1` |HL.REM computes a signed XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
+|`HL.REMU` |48 |- |`hl.remu SrcL, SrcR, ->Dst0, Dst1` |HL.REMU computes an unsigned XLEN remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
+|`HL.REMUW` |48 |- |`hl.remuw SrcL, SrcR, ->Dst0, Dst1` |HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
+|`HL.REMW` |48 |- |`hl.remw SrcL, SrcR, ->Dst0, Dst1` |HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 |`HL.SUBI` |48 |- |`hl.subi SrcL, uimm, ->{t, u, Rd}` |HL.SUBI applies XLEN subtraction to SrcL and a zero-extended 24-bit immediate.
 |`HL.SUBIW` |48 |- |`hl.subiw SrcL, uimm, ->{t, u, Rd}` |HL.SUBIW applies word subtraction to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result.
 |`HL.XORI` |48 |- |`hl.xori SrcL, simm, ->{t, u, Rd}` |HL.XORI applies XLEN bitwise exclusive-or to SrcL and a sign-extended 24-bit immediate.
@@ -164,15 +164,7 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`ADDTPC` |32 |- |`addtpc simm, ->{t, u, Rd}` |ADDTPC - Add the encoded displacement to the program counter.
-|`B.EQ` |32 |- |`b.eq SrcL, SrcR, label` |B.EQ - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.GE` |32 |- |`b.ge SrcL, SrcR, label` |B.GE - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.GEU` |32 |- |`b.geu SrcL, SrcR, label` |B.GEU - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.LT` |32 |- |`b.lt SrcL, SrcR, label` |B.LT - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.LTU` |32 |- |`b.ltu SrcL, SrcR, label` |B.LTU - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.NE` |32 |- |`b.ne SrcL, SrcR, label` |B.NE - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.NZ` |32 |- |`b.nz label` |B.NZ - Conditionally branch to the PC-relative target after comparing scalar operands.
-|`B.Z` |32 |- |`b.z label` |B.Z - Conditionally branch to the PC-relative target after comparing scalar operands.
+|`ADDTPC` |32 |- |`addtpc simm, ->{t, u, Rd}` |ADDTPC - Add a signed 4 KiB page displacement to the current TPC.
 |`C.CMP.EQI` |16 |- |`c.cmp.eqi t#1, simm, ->t` |C.CMP.EQI - Compare scalar operands and write the encoded boolean result.
 |`C.CMP.NEI` |16 |- |`c.cmp.nei t#1, simm, ->t` |C.CMP.NEI - Compare scalar operands and write the encoded boolean result.
 |`C.SETC.EQ` |16 |- |`c.setc.eq srcL, srcR` |C.SETC.EQ - Compare scalar operands and update the bundle commit condition.
@@ -193,7 +185,7 @@
 |`CMP.NEI` |32 |- |`cmp.nei SrcL, simm, ->{t, u, Rd}` |CMP.NEI - Compare scalar operands and write the encoded boolean result.
 |`CMP.OR` |32 |- |`cmp.or SrcL, SrcR<.sw, .uw, .not>, ->{t, u, Rd}` |CMP.OR - Combine scalar comparison results with the encoded logical operation.
 |`CMP.ORI` |32 |- |`cmp.ori SrcL, simm, ->{t, u, Rd}` |CMP.ORI - Combine scalar comparison results with the encoded logical operation.
-|`HL.ADDTPC` |48 |- |`hl.addtpc imm, ->{t, u, Rd}` |HL.ADDTPC - Add the encoded displacement to the program counter.
+|`HL.ADDTPC` |48 |- |`hl.addtpc imm, ->{t, u, Rd}` |HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC.
 |`HL.CMP.ANDI` |48 |- |`hl.cmp.andi SrcL, simm, ->{t, u, Rd}` |HL.CMP.ANDI - Combine scalar comparison results with the encoded logical operation.
 |`HL.CMP.EQI` |48 |- |`hl.cmp.eqi SrcL, simm, ->{t, u, Rd}` |HL.CMP.EQI - Compare scalar operands and write the encoded boolean result.
 |`HL.CMP.GEI` |48 |- |`hl.cmp.gei SrcL, simm, ->{t, u, Rd}` |HL.CMP.GEI - Compare scalar operands and write the encoded boolean result.
@@ -267,7 +259,7 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
+|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
 |===
 
 [[insnref-bundle-hint]]
@@ -286,13 +278,13 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as logical row stride.
-|`B.IOS` |32 |- |`B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>` |Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mask.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<TSize>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mask; L terminates only that sequence and never releases a source.
+|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
+|`B.IOS` |32 |- |`B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
 |===
 
 [[insnref-bundle-offset]]

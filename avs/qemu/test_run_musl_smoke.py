@@ -12,6 +12,17 @@ import run_musl_smoke
 
 
 class QemuInstructionFailureTests(unittest.TestCase):
+    def test_pto_cube_is_a_focused_system_sample(self) -> None:
+        self.assertEqual(run_musl_smoke._select_samples(["pto_cube"]), ["pto_cube"])
+        self.assertEqual(
+            run_musl_smoke.SAMPLES["pto_cube"],
+            {
+                "src": "linux_musl_pto_cube_init.c",
+                "start": "PTO_CUBE_START count=6",
+                "pass": "PTO_CUBE_PASS count=6",
+            },
+        )
+
     def test_explicit_kernel_overrides_legacy_build_search(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

@@ -31,11 +31,11 @@ LinxISA 把程序组织成一组组块指令。每个块同时说明控制流、
 
 <section class="linx-home-strip" markdown="1">
 <div markdown="1">
-**v0.58**
+**v0.58.3**
 : 当前公开规范版本
 </div>
 <div markdown="1">
-**765**
+**757**
 : 指令形式
 </div>
 <div markdown="1">

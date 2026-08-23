@@ -7,8 +7,8 @@
   ],
   "isa": "LinxISA",
   "notes": [
-    "This directory is the authoritative stable Linx ISA 0.58 profile aligned to PTO ISA 0.58.1.",
-    "PTO-ISA/pto-spec is the sole normative source for 474 scalar forms, 74 command forms, and 109 tile operations; pto-spec.lock.json freezes its exact commit and tree.",
+    "This directory is the authoritative stable Linx ISA 0.58 profile aligned to PTO ISA 0.58.3.",
+    "PTO-ISA/pto-spec is the sole normative source for 466 scalar forms, 74 command forms, and 109 tile operations; pto-spec.lock.json freezes its exact commit and tree.",
     "Linx retains its additive two-level extensions; PTO publishes 32 extension reservations covering their complete encoding space and the nonzero Fixup displacement spaces.",
     "TEPL uses separate Mode and Function fields as the unchanged encoding carrier for VEC and SFU; the legacy TileOpcode and all legacy decode aliases are forbidden.",
     "BSTART.TEPL is the unique compiled carrier identity; BSTART.VEC and BSTART.SFU are accepted assembly aliases with engine-specific canonical output.",
@@ -20,5 +20,5 @@
     "TLSU is the tile load/store encoding family; generic BSTART.TLSU is not a legal textual instruction, and each assigned function has an exact named form."
   ],
   "status": "stable",
-  "version": "0.58.1"
+  "version": "0.58.3"
 }

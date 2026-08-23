@@ -7,7 +7,7 @@
 
 *Syntax:* hl.addtpc imm, ->{t, u, Rd}
 
-*Description:* HL.ADDTPC - Add the encoded displacement to the program counter.
+*Description:* HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC.
 
 *Encoding:*
 

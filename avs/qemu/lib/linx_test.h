@@ -63,6 +63,20 @@ typedef struct {
 static volatile test_result_t *g_test_result = (volatile test_result_t *)TEST_RESULT_LOC;
 
 /*
+ * Standalone Tile-engine suites exercise execution semantics rather than the
+ * VECTOR/CUBE first-use trap contract.  Reset ECONFIG_ACR1 to the same test
+ * baseline used by the system suite so an isolated suite can enter its first
+ * Tile block without requiring an exception handler.
+ */
+static inline void linx_test_disable_extension_first_use(void) {
+    const uint64_t econfig_test_baseline = UINT64_C(0x8);
+    __asm__ volatile("hl.ssrset %0, 0x1f07"
+                     :
+                     : "r"(econfig_test_baseline)
+                     : "memory");
+}
+
+/*
  * Output a character to UART
  */
 static __attribute__((noinline)) void uart_putc(char c) {

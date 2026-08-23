@@ -76,7 +76,7 @@ class OpcodeOwnershipMigrationTest(unittest.TestCase):
         )
         self.assertEqual(action, "replace")
 
-    def test_removed_reserved_command_becomes_linx_owned(self) -> None:
+    def test_removed_reserved_common_form_is_deleted(self) -> None:
         action = sync.classify_owned_instruction(
             instruction("linx-extension", "0x00000002"),
             scalar_form_ids=set(),
@@ -93,7 +93,7 @@ class OpcodeOwnershipMigrationTest(unittest.TestCase):
                 }
             ],
         )
-        self.assertEqual(action, "preserve")
+        self.assertEqual(action, "drop")
 
     def test_removed_unreserved_command_is_deleted(self) -> None:
         action = sync.classify_owned_instruction(

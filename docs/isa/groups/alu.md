@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **ALU** group of the LinxISA v0.58.1 catalog.
+Instructions in the **ALU** group of the LinxISA v0.58.3 catalog.
 
 ## Instructions
 
@@ -66,9 +66,9 @@ Instructions in the **ALU** group of the LinxISA v0.58.1 catalog.
 | [HL.DIVW](../instructions/hl_divw.md) | `hl.divw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.DIVW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder. |
 | [HL.LIS](../instructions/hl_lis.md) | `hl.lis simm, ->{t, u, Rd}` | 48 | — | HL.LIS sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst. |
 | [HL.LIU](../instructions/hl_liu.md) | `hl.liu uimm, ->{t, u, Rd}` | 48 | — | HL.LIU zero-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst. |
-| [HL.LUI](../instructions/hl_lui.md) | `hl.lui imm, ->{t, u, Rd}` | 48 | — | HL.LUI sign-extends its split encoded 32-bit immediate to XLEN and publishes the result through RegDst. |
+| [HL.LUI](../instructions/hl_lui.md) | `hl.lui imm, ->{t, u, Rd}` | 48 | — | HL.LUI places its split 32-bit immediate in result bits 63:32 and clears result bits 31:0. |
 | [HL.MADD](../instructions/hl_madd.md) | `hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | HL.MADD computes a signed 128-bit product plus a sign-extended XLEN addend and publishes low then high halves. |
-| [HL.MADDW](../instructions/hl_maddw.md) | `hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | HL.MADDW sign-extends three low-32-bit sources, computes a 128-bit product plus addend, and publishes low then high halves. |
+| [HL.MADDW](../instructions/hl_maddw.md) | `hl.maddw SrcL, SrcR, SrcD, ->Dst0, Dst1` | 48 | — | HL.MADDW computes a signed 64-bit word multiply-add result and publishes its sign-extended low and high 32-bit halves. |
 | [HL.MIADD](../instructions/hl_miadd.md) | `hl.miadd SrcL, SrcR, uimm, ->{t, u, Rd}` | 48 | — | HL.MIADD multiplies SrcR by the unsigned 19-bit immediate, adds SrcL modulo 2^PTO_XLEN, and publishes the result. |
 | [HL.MISUB](../instructions/hl_misub.md) | `hl.misub SrcL, SrcR, uimm, ->{t, u, Rd}` | 48 | — | HL.MISUB multiplies SrcR by the unsigned 19-bit immediate, subtracts the product from SrcL modulo 2^PTO_XLEN, and publishes the result. |
 | [HL.MUL](../instructions/hl_mul.md) | `hl.mul SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Integer multiply. |
@@ -77,8 +77,8 @@ Instructions in the **ALU** group of the LinxISA v0.58.1 catalog.
 | [HL.ORIW](../instructions/hl_oriw.md) | `hl.oriw SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.ORIW applies word bitwise inclusive-or to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result. |
 | [HL.REM](../instructions/hl_rem.md) | `hl.rem SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Signed integer remainder. |
 | [HL.REMU](../instructions/hl_remu.md) | `hl.remu SrcL, SrcR, ->Dst0, Dst1` | 48 | — | [48-bit HL.] Unsigned integer remainder. |
-| [HL.REMUW](../instructions/hl_remuw.md) | `hl.remuw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder. |
-| [HL.REMW](../instructions/hl_remw.md) | `hl.remw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder. |
+| [HL.REMUW](../instructions/hl_remuw.md) | `hl.remuw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient. |
+| [HL.REMW](../instructions/hl_remw.md) | `hl.remw SrcL, SrcR, ->Dst0, Dst1` | 48 | — | HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient. |
 | [HL.SUBI](../instructions/hl_subi.md) | `hl.subi SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.SUBI applies XLEN subtraction to SrcL and a zero-extended 24-bit immediate. |
 | [HL.SUBIW](../instructions/hl_subiw.md) | `hl.subiw SrcL, uimm, ->{t, u, Rd}` | 48 | — | HL.SUBIW applies word subtraction to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result. |
 | [HL.XORI](../instructions/hl_xori.md) | `hl.xori SrcL, simm, ->{t, u, Rd}` | 48 | — | HL.XORI applies XLEN bitwise exclusive-or to SrcL and a sign-extended 24-bit immediate. |

@@ -6,13 +6,7 @@
 
 The VEC chapter documents the canonical 64-bit vector instruction space (`V.*`) used inside SIMT kernel bodies launched by `BSTART.MPAR` / `BSTART.MSEQ`. This space follows the unified `lx64` rule: if any operand names a per-lane register (`vt`, `vu`, `vm`, `vn`), the instruction executes as `v.*` (per-lane); otherwise it executes as `l.*` (scalar-uniform). Scalar operands are broadcast to all active lanes.
 
-Vector instructions operate on the architectural 64-bit EXEC mask `p`. Inactive lanes (where `p[i] == 0`) either merge the previous destination value or write zero, depending on the block's lane policy. The mask `p` is produced by `V.CMP.* ->p` and consumed by `B.Z` / `B.NZ`.
-
-All `V.*` forms are 64 bits (two 32-bit parts in the encoding catalog).
-
-The VEC chapter documents the canonical 64-bit vector instruction space (`V.*`) used inside SIMT kernel bodies launched by `BSTART.MPAR` / `BSTART.MSEQ`. This space follows the unified `lx64` rule: if any operand names a per-lane register (`vt`, `vu`, `vm`, `vn`), the instruction executes as `v.*` (per-lane); otherwise it executes as `l.*` (scalar-uniform). Scalar operands are broadcast to all active lanes.
-
-Vector instructions operate on the architectural 64-bit EXEC mask `p`. Inactive lanes (where `p[i] == 0`) either merge the previous destination value or write zero, depending on the block's lane policy. The mask `p` is produced by `V.CMP.* ->p` and consumed by `B.Z` / `B.NZ`.
+Vector instructions operate on the architectural 64-bit EXEC mask `p`. Inactive lanes (where `p[i] == 0`) either merge the previous destination value or write zero, depending on the block's lane policy. The mask `p` is produced by `V.CMP.* ->p`. PTO ISA 0.58.3 removes `B.Z` / `B.NZ` and reserves their former encodings.
 
 All `V.*` forms are 64 bits (two 32-bit parts in the encoding catalog).
 

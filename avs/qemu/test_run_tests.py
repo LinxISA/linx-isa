@@ -52,11 +52,50 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
             system_source,
         )
 
-    def test_active_catalog_is_the_exact_v0581_catalog(self) -> None:
+    def test_active_catalog_is_the_exact_v0583_catalog(self) -> None:
         self.assertEqual(run_tests.LLVM_AVS_SPEC, run_tests.REPO_ROOT / "isa/v0.58/linxisa-v0.58.json")
         catalog = json.loads(run_tests.LLVM_AVS_SPEC.read_text())
-        self.assertEqual(catalog["version"], "0.58.1")
-        self.assertEqual(catalog["instruction_count"], 765)
+        self.assertEqual(catalog["version"], "0.58.3")
+        self.assertEqual(catalog["instruction_count"], 757)
+
+    def test_v0583_tile_engine_suites_have_exact_carriers(self) -> None:
+        expected = {
+            "tile_v0583_tlsu": ("28_v0583_tile_tlsu_carrier.S", 0x2A01),
+            "tile_v0583_vec": ("29_v0583_tile_vec_carrier.S", 0x2B01),
+            "tile_v0583_sfu": ("30_v0583_tile_sfu_carrier.S", 0x2C01),
+            "tile_v0583_cube": ("31_v0583_tile_cube_carrier.S", 0x2D01),
+        }
+        for suite, (filename, completion_id) in expected.items():
+            with self.subTest(suite=suite):
+                self.assertIn(suite, run_tests.SUITES)
+                self.assertEqual(
+                    run_tests.EXTRA_SOURCES_BY_SUITE[suite],
+                    [f"avs/qemu/tests/{filename}"],
+                )
+                self.assertTrue((run_tests.SCRIPT_DIR / "tests" / filename).is_file())
+                self.assertEqual(
+                    run_tests.COMPLETION_TEST_IDS_BY_SUITE[suite],
+                    completion_id,
+                )
+                source = (run_tests.SCRIPT_DIR / run_tests.SUITES[suite]["src"]).read_text()
+                self.assertIn("linx_test_disable_extension_first_use();", source)
+
+    def test_v0583_cube_carrier_uses_released_layout_contract(self) -> None:
+        source = (run_tests.SCRIPT_DIR / "tests" / "31_v0583_tile_cube_carrier.S").read_text()
+        for token in (
+            "B.DATR ND2M16, DTYPE_NONE, Null",
+            "B.DATR ND2N8, DTYPE_NONE, Null",
+            "BSTART.TMATMUL U8",
+            "B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0",
+            "B.DATR M162ND, DTYPE_NONE, Null",
+            "BSTART.TSTORE U32",
+            "B.IOT mask=0001, last, ->m<256B>",
+            "B.IOT m#1, n#1, mask=0001, last, ->m<256B>",
+        ):
+            self.assertIn(token, source)
+        for retired in ("B.EQ", "B.NE", "B.LT", "B.GE", "B.Z", "B.NZ"):
+            self.assertNotIn(retired, source)
+        self.assertNotIn("BSTART.TMATMUL U32", source)
 
     def test_v0571_executable_evidence_is_explicitly_archived(self) -> None:
         manifest = json.loads(
@@ -64,13 +103,21 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         )
         self.assertEqual(manifest["release"], "0.57.1")
         self.assertFalse(manifest["active_release"])
-        self.assertEqual(manifest["superseded_by"], "0.58.1")
+        self.assertEqual(manifest["superseded_by"], "0.58.3")
 
     def test_elf_identity_fixture_matrix_is_exact(self) -> None:
+        expected = (
+            b'{"encoding_abi":"pto-isa-0.58.3-mode-function-v1",'
+            b'"encoding_projection_sha256":'
+            b'"8a48b80e04484c70870f155bf9efc79d2a805cf99e809f4e4e8a7e6a7eb34172",'
+            b'"release":"0.58.3"}'
+        )
+        self.assertEqual(elf_identity.IDENTITY, expected)
         self.assertEqual(len(elf_identity.IDENTITY), 165)
         self.assertTrue(elf_identity._note(elf_identity.IDENTITY).startswith(
             b"\x04\x00\x00\x00\xa5\x00\x00\x00\x01\x00\x00\x00PTO\0"
         ))
+        self.assertIn(b'"release":"0.58.1"', elf_identity.OLD_IDENTITY)
         self.assertNotEqual(elf_identity.IDENTITY, elf_identity.OLD_IDENTITY)
 
     def test_evidence_paths_remain_relative_in_repo_and_absolute_outside(self) -> None:

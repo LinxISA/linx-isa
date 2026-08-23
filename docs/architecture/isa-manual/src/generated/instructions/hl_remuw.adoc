@@ -7,7 +7,7 @@
 
 *Syntax:* hl.remuw SrcL, SrcR, ->Dst0, Dst1
 
-*Description:* HL.REMUW computes a unsigned low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+*Description:* HL.REMUW computes an unsigned low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 *Encoding:*
 

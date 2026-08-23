@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import struct
 import subprocess
@@ -11,13 +12,28 @@ import tempfile
 from pathlib import Path
 
 
-IDENTITY = (
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _canonical_identity() -> bytes:
+    lock = json.loads(
+        (REPO_ROOT / "isa/v0.58/pto-spec.lock.json").read_text(encoding="utf-8")
+    )
+    descriptor = {
+        "encoding_abi": lock["encoding_abi"],
+        "encoding_projection_sha256": lock["encoding_projection_sha256"],
+        "release": lock["release"],
+    }
+    return json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode()
+
+
+IDENTITY = _canonical_identity()
+OLD_IDENTITY = (
     b'{"encoding_abi":"pto-isa-0.58.1-mode-function-v1",'
     b'"encoding_projection_sha256":'
     b'"89b872d6eaf0252200bc9349d49b9346e2a69d894cdcc2dcd0fd71911c1e0b8c",'
     b'"release":"0.58.1"}'
 )
-OLD_IDENTITY = IDENTITY.replace(b'"release":"0.58.1"', b'"release":"0.58.0"')
 
 
 def _align4(value: int) -> int:

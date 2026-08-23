@@ -39,8 +39,8 @@ class AtomicLrSrcZeroDecodeTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        if golden.get("version") != "0.58.1":
-            raise AssertionError("atomic decode authority must be PTO ISA 0.58.1")
+        if golden.get("version") != "0.58.3":
+            raise AssertionError("atomic decode authority must be PTO ISA 0.58.3")
         cls.golden = {
             insn["mnemonic"]: insn["encoding"]["parts"][0]
             for insn in golden["instructions"]

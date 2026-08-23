@@ -51,8 +51,8 @@
       "policy": "11_as_00"
     },
     "csel": {
-      "description": "CSEL encodes an optional .neg on SrcR; other SrcRType values are treated as 00.",
-      "policy": "11_as_neg_else_00"
+      "description": "CSEL encodes its optional .neg as SrcRType=10; the canonical unmodified spelling uses SrcRType=11 and every other value is also treated as unmodified.",
+      "policy": "10_as_neg_else_00"
     }
   },
   "shifts": {
@@ -126,9 +126,9 @@
       "rule": "Write(RegDst, SignExtend(imm20) << 12)"
     },
     "hl_lui": {
-      "imm_kind": "signed",
-      "rule": "Write(RegDst, SignExtend(imm32))",
-      "note": "No <<12 in HL.LUI."
+      "imm_kind": "bit-pattern",
+      "rule": "Write(RegDst, ZeroExtend(imm32) << 32)",
+      "note": "The split immediate occupies result bits 63:32; result bits 31:0 are zero."
     },
     "hl_lis": {
       "imm_kind": "signed",

@@ -25,27 +25,42 @@ def main() -> int:
     encoding = record["encoding"]["parts"][0]
     assert encoding["mask"] == "0xf00871ff"
     assert encoding["match"] == "0x00001013"
+    fields = {
+        field["name"]: field["pieces"]
+        for field in encoding["fields"]
+    }
+    assert fields["SharedTID"] == [
+        {"insn_lsb": 20, "insn_msb": 27, "token": "SharedTID", "width": 8}
+    ]
+    assert fields["SizeCode"] == [
+        {"insn_lsb": 15, "insn_msb": 18, "token": "SizeCode", "width": 4}
+    ]
+    assert fields["PEMode"] == [
+        {"insn_lsb": 9, "insn_msb": 11, "token": "PEMode", "width": 3}
+    ]
 
-    syntax = (
-        "B.IOS S<SharedTID>, mask=<PE_MASK>",
-        "B.IOS mask=<PE_MASK>, ->S<SharedTID><TSize>",
-    )
+    syntax = tuple(record["asm"].split(" | "))
     common = syntax + (
         "S0",
         "S255",
-        "PE_MASK=0000",
-        "TSize=0",
-        "TSize=7",
+        "PEMode=000",
+        "PE_MASK",
+        "SizeCode=0",
+        "SizeCode=12",
+        "13..15",
+        "1000",
+        "1111",
+        "b_ios_32_0f62f62d6a81",
         "0xf00871ff",
         "0x00001013",
     )
     require_tokens(
         ROOT / "docs/isa/header/B.IOS.md",
-        common + ("strict no-op", "atomic", "descriptor", "undefined"),
+        common + ("strict no-effect", "atomic", "descriptor", "undefined"),
     )
     require_tokens(
         ROOT / "docs/zh/isa/header/B.IOS.md",
-        common + ("严格 NOP", "原子", "描述符", "未初始化"),
+        common + ("严格无副作用", "原子", "描述符", "未初始化"),
     )
     assert (ROOT / "docs/zh/isa/wavedrom/enc_b_ios.svg").is_file()
 

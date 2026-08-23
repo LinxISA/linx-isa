@@ -364,6 +364,12 @@ ordinary resources.
 
 `TMA` is a historical name for TLSU and is not used by the active profile.
 
+A TLSU global-memory address supplied through `B.IOR` is a data virtual address in the initiating ACR.  While `IOTCR`
+leaves I/O translation disabled, it uses the current task's ordinary CPU translation and permission context.  It is
+not implicitly an I/O virtual address; IOMMU translation applies only when `IOTCR` explicitly enables the I/O address
+space.  A failed TLSU
+memory beat reports the original virtual address in `TRAPARG0` and follows the precise `E_DATA` path.
+
 [[system-extension-first-use]]
 ===== VECTOR/CUBE first-use exception
 

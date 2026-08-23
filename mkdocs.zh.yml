@@ -44,9 +44,10 @@ markdown_extensions:
 nav:
     - v0.58 架构:
         - 架构合约: architecture/v0.58-architecture-contract.md
+        - v0.58.3 发布说明: releases/v0.58.3.md
         - v0.58.1 发布说明: releases/v0.58.1.md
         - v0.58.0 发布说明: releases/v0.58.0.md
-    - LinxCore 架构:
+    - LinxCore 保留的 v0.58.1 实现基线:
         - 概述: architecture/linxcore/overview.md
         - 微架构合约: architecture/linxcore/microarchitecture.md
         - 模块目录: architecture/linxcore/module-catalog.md
@@ -335,14 +336,6 @@ nav:
             - HL.LUI: isa/inst/misa_h/HL.LUI.md
         - 块内跳转:
             - 简介: isa/blockIntro/scainstrs/branch.md
-            - B.EQ: isa/inst/misa_g/B.EQ.md
-            - B.NE: isa/inst/misa_g/B.NE.md
-            - B.LT: isa/inst/misa_g/B.LT.md
-            - B.GE: isa/inst/misa_g/B.GE.md
-            - B.LTU: isa/inst/misa_g/B.LTU.md
-            - B.GEU: isa/inst/misa_g/B.GEU.md
-            - B.Z: isa/inst/misa_g/B.Z.md
-            - B.NZ: isa/inst/misa_g/B.NZ.md
             - J: isa/inst/misa_g/J.md
             - JR: isa/inst/misa_g/JR.md
         - 乘法操作:

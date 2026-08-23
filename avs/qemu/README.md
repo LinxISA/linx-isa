@@ -61,13 +61,15 @@ cd avs/qemu
 
 Active runtime note:
 
-- the live QEMU runtime lane is bound to the root 0.58.1 catalog and includes
+- the live QEMU runtime lane is bound to the root 0.58.3 catalog and includes
   `system`, `callret`, scalar, and compiler-generated SIMT coverage;
+- PTO ISA 0.58.3 Tile runtime coverage is split into `tile_v0583_tlsu`,
+  `tile_v0583_vec`, `tile_v0583_sfu`, and `tile_v0583_cube`;
 - handwritten `v057` and `v04` vector suites are legacy evidence only and are
   not published through `SUITES`, `--all`, or the release gate.
 - `qemu_executable_coverage_manifest.json` preserves audited 0.57.1 evidence
-  as an explicitly archival ledger; it is not active 0.58.1 release evidence.
-- every executable must carry the exact PTO ISA 0.58.1 ELF identity note;
+  as an explicitly archival ledger; it is not active 0.58.3 release evidence.
+- every executable must carry the exact PTO ISA 0.58.3 ELF identity note;
   missing, old, malformed, trailing-NUL, and conflicting identities are
   rejected by QEMU before any guest state is installed.
 
@@ -80,6 +82,32 @@ Run a specific suite:
 ./run_tests.sh --suite jumptable
 ./run_tests.sh --suite varargs
 ```
+
+Run all four PTO ISA 0.58.3 Tile engine suites with bounded execution:
+
+```bash
+python3 avs/qemu/run_tests.py \
+  --suite tile_v0583_tlsu \
+  --suite tile_v0583_vec \
+  --suite tile_v0583_sfu \
+  --suite tile_v0583_cube \
+  --timeout 30 \
+  --no-progress-timeout 15 \
+  --heartbeat-sec 2
+```
+
+| Suite | Architectural check |
+| --- | --- |
+| `tile_v0583_tlsu` | S32 TLOAD/TSTORE copies a nontrivial 4 KiB Local Tile using a byte row stride |
+| `tile_v0583_vec` | FP32 TADD produces `1.0 + 2.0 = 3.0` |
+| `tile_v0583_sfu` | FP32 TEXP produces `exp(0.0) = 1.0` |
+| `tile_v0583_cube` | U8 4x4 identity TMATMUL produces U32 accumulation through ND2M16/ND2N8 and M162ND layouts |
+
+All four use `PEMode=4` (`mask=0001`) so the result oracle observes one
+selected PE without depending on replicated private-GPR state. The CUBE case
+also supplies the required all-zero `B.FPATR`. Every output begins with a
+non-golden sentinel, and the runner verifies the carrier disassembly before
+linking.
 
 Run everything (includes float + atomic):
 
@@ -130,10 +158,10 @@ rm -rf out
 ./run_tests.sh --all --compile-only
 ```
 
-Custom output directory:
+Custom repository-local output directory:
 
 ```bash
-./run_tests.sh --out-dir /tmp/linx-qemu-tests --all --compile-only
+./run_tests.sh --out-dir .codex_logs/avs-qemu --all --compile-only
 ```
 
 ## Outputs
@@ -183,6 +211,40 @@ The pinned `emulator/qemu` checkout in this repository currently exposes only
 `linx32-softmmu` and `linx64-softmmu` targets. Treat `--runner user` as an
 optional external/recovered lane until a Linx linux-user target is added back
 to the fork and validated here.
+
+### PTO 0.58.3 CUBE full-system gate
+
+The active pto-kernels CUBE corpus runs through a focused phase-C initramfs
+lane because the current QEMU line has no Linx linux-user target. The runner
+builds all six exact CUBE programs, validates their PTO identity together with
+the dynamic loader and libc, and runs each allowlisted case in a fresh QEMU
+boot. The release gate requires six exact single-case summaries with zero exit
+status, deterministic markers, consistent provenance, and clean poweroff:
+
+```bash
+python3 avs/qemu/run_pto_cube_system_matrix.py \
+  --pto-kernels-root /private/tmp/linx-pto-kernels-5f5c \
+  --tileop-root /private/tmp/linx-tileop-bd1e \
+  --sysroot /private/tmp/linx-pto0583-final-out/musl/install/phase-c \
+  --clang /private/tmp/linx-pto0583-final-out/toolchain/bin/clang \
+  --kernel /private/tmp/linx-linux-pto0583-b7-build-r2/vmlinux \
+  --linux-source-root /private/tmp/linx-linux-1055-src \
+  --qemu /private/tmp/linx-qemu-2ba-final/build-softmmu/qemu-system-linx64 \
+  --qemu-source-root /private/tmp/linx-qemu-2ba-final \
+  --out-root /private/tmp/linx-pto-cube-system-matrix \
+  --timeout 1200
+```
+
+`run_pto_cube_system.py` without `--case` retains the six-child sequential
+boot as a context-switch diagnostic. It is not the cold-boot release verdict.
+
+Use `--qemu-guest-errors` only for a focused diagnostic rerun; the strict
+six-case gate keeps verbose QEMU guest-error logging disabled by default.
+
+`summary.json` binds the exact pto-kernels, TileOP, LLVM, QEMU, and Linux
+source/tree identities; hashes every executable and runtime artifact; records
+all `DT_NEEDED` entries; and classifies the first missing marker, child exit,
+timeout, or QEMU failure without treating later boot text as a pass.
 
 For the glibc static hello lane, use:
 

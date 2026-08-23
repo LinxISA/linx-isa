@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
-assert spec["version"] == "0.58.1"
-assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 548
+assert spec["version"] == "0.58.3"
+assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 540
 pto_owned_instructions = [
     item
     for item in spec["instructions"]
@@ -21,7 +21,7 @@ linx_only_instructions = [
     for item in spec["instructions"]
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
-assert len(pto_owned_instructions) == 553
+assert len(pto_owned_instructions) == 545
 assert len(linx_only_instructions) == 212
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
@@ -52,7 +52,7 @@ reservations = json.loads(
         encoding="utf-8"
     )
 )["reservations"]
-assert len(reservations) == 32
+assert len(reservations) == 40
 
 
 def encoding_parts(item: dict) -> tuple[tuple[int, int, int], ...]:
@@ -167,10 +167,20 @@ shared = json.loads((ROOT / "isa/v0.58/state/shared_tile_registers.json").read_t
 assert shared["register_count"] == 256
 assert shared["register_names"]["first"] == "S0"
 assert shared["register_names"]["last"] == "S255"
-assert shared["tsize_bytes"] == [None, 128, 256, 512, 1024, 2048, 4096, 8192]
-assert shared["pe_mask"]["owner"] == "B.IOS"
+assert shared["size_code_bytes"]["B.IOT"] == [
+    None, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536
+]
+assert shared["size_code_bytes"]["B.IOS"] == [
+    None, 128, 256, 512, 1024, 2048, 4096, 8192,
+    16384, 32768, 65536, 131072, 262144,
+]
+assert shared["pe_mode"]["owners"] == ["B.IOT", "B.IOS"]
+assert shared["pe_mode"]["decoded_masks"] == [
+    "0000", "1000", "0100", "0010", "0001", "1100", "1110", "1111"
+]
 assert shared["gm_access"]["base_selector"] == "B.IOR.RegSrc0"
 assert shared["gm_access"]["row_stride_selector"] == "B.IOR.RegSrc1"
+assert shared["gm_access"]["row_stride_unit"] == "bytes"
 b_ios_page = (ROOT / "docs/isa/instructions/b_ios.md").read_text(encoding="utf-8")
 b_ior_page = (ROOT / "docs/isa/instructions/b_ior.md").read_text(encoding="utf-8")
 assert "## Description\n\nBinds one ordered absolute Core-private Shared register" in b_ios_page
@@ -187,6 +197,21 @@ assert "Both labels are explicit and independently relocatable" in hl_call["note
 assert "ra" in hl_call["note"]
 sail_execute = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
 sail_state = (ROOT / "isa/sail/model/state/state.sail").read_text(encoding="utf-8")
+semantics_conventions = json.loads(
+    (ROOT / "isa/v0.58/semantics_conventions.json").read_text(encoding="utf-8")
+)
+hl_lui = next(item for item in spec["instructions"] if item["mnemonic"] == "HL.LUI")
+assert "result bits 63:32" in hl_lui["note"]
+assert semantics_conventions["immediate_materialization"]["hl_lui"] == {
+    "imm_kind": "bit-pattern",
+    "rule": "Write(RegDst, ZeroExtend(imm32) << 32)",
+    "note": "The split immediate occupies result bits 63:32; result bits 31:0 are zero.",
+}
+assert "sail_shiftleft(zext32_from32(imm32), 32)" in sail_execute
+assert "write_regdst(RegDst, sext32_from32(imm32))" not in sail_execute
+assert semantics_conventions["srcrtype"]["csel"]["policy"] == "10_as_neg_else_00"
+assert "if SrcRType == 0b10 then sub_bits" in sail_execute
+assert "if SrcRType == 0b11 then sub_bits" not in sail_execute
 assert "tile_tlsu_required_sources" in sail_execute
 assert "tile_tlsu_produces_output" in sail_execute
 assert "tile_tma_" not in sail_execute

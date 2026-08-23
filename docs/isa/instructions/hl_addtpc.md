@@ -26,7 +26,7 @@
 
 ## Description
 
-HL.ADDTPC - Add the encoded displacement to the program counter.
+HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ rd = PC + SignExtend(imm);
 
 ## Encoding Notes
 
-- `HL.ADDTPC - Add the encoded displacement to the program counter.`
+- `HL.ADDTPC - Add a signed 4 KiB page displacement to the current TPC.`
 
 ## Full Catalog Forms
 

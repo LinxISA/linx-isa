@@ -38,7 +38,12 @@ function reset_tile_effect_case() -> unit = {
   ssr_lb0 = 0x0000_0000_0000_0002;
   ssr_lb1 = 0x0000_0000_0000_0003;
   ssr_lb2 = 0x0000_0000_0000_0041;
+  last_e = 0b0;
+  last_argv = 0b0;
   last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  last_bi = 0b0;
   block_marker_strict = false
 }
 
@@ -67,7 +72,30 @@ function reset_first_use_case(base_pc : bits(64)) -> unit = {
   bdesc_reset()
 }
 
+function assert_reserved_branch_word(word : bits(32), at_pc : bits(64)) -> unit = {
+  reset_first_use_case(at_pc);
+  decode_execute32(word);
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(last_cause == 0x000100);
+  assert(last_traparg0 == at_pc);
+  assert(not_bool(barg_valid));
+  assert(not_bool(tile_effect_pending))
+}
+
 function main() : unit -> unit = {
+  // PTO ISA 0.58.3 reserves all eight former standalone conditional branch
+  // encodings. They must reject before the armed first-use profile can fire.
+  assert_reserved_branch_word(0x0000_0027, 0x0000_0000_0000_0700); // B.EQ
+  assert_reserved_branch_word(0x0000_1027, 0x0000_0000_0000_0710); // B.NE
+  assert_reserved_branch_word(0x0000_2027, 0x0000_0000_0000_0720); // B.LT
+  assert_reserved_branch_word(0x0000_3027, 0x0000_0000_0000_0730); // B.GE
+  assert_reserved_branch_word(0x0000_4027, 0x0000_0000_0000_0740); // B.LTU
+  assert_reserved_branch_word(0x0000_5027, 0x0000_0000_0000_0750); // B.GEU
+  assert_reserved_branch_word(0x0000_1037, 0x0000_0000_0000_0760); // B.Z
+  assert_reserved_branch_word(0x0000_2037, 0x0000_0000_0000_0770); // B.NZ
+
   // VECTOR first use is a precise E_INST(EC_PERM) exception before BARG or
   // queue state changes.
   reset_first_use_case(0x0000_0000_0000_0800);
@@ -137,6 +165,19 @@ function main() : unit -> unit = {
   assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
   assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
 
+  // CSEL has a form-specific SrcRType assignment: 11 is the canonical plain
+  // spelling and 10 is .neg. Predicate true always selects SrcL.
+  write_reg5(0b00001, 0x0000_0000_0000_0000); // predicate
+  write_reg5(0b00010, 0x1111_2222_3333_4444); // SrcL
+  write_reg5(0b00011, 0x0000_0000_0000_0007); // SrcR
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
+  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0xFFFF_FFFF_FFFF_FFF9);
+  write_reg5(0b00001, 0x0000_0000_0000_0001);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0x1111_2222_3333_4444);
+
   // LBU host memory is outside this REPL proof boundary: read_mem8/write_mem8
   // require host primops here.  Mirror exec_lbu's executable composition:
   // apply SrcRType first, shift that modifier, add base, then zext8_from8.
@@ -154,6 +195,15 @@ function main() : unit -> unit = {
   assert(zext8_from8(0x42) == 0x0000_0000_0000_0042);
   assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);
   assert(zext8_from8(0x7E) == 0x0000_0000_0000_007E);
+
+  // HL.LUI is a 32-bit upper-half materializer. It does not alias HL.LIS or
+  // HL.LIU, and the low 32 result bits are always zero.
+  exec_hl_lui(0b00001, 0x0001_0000);
+  assert(read_reg5(0b00001) == 0x0001_0000_0000_0000);
+  exec_hl_lui(0b00001, 0x89AB_CDEF);
+  assert(read_reg5(0b00001) == 0x89AB_CDEF_0000_0000);
+  exec_hl_lui(0b00001, 0x0000_0000);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_0000);
 
   // Long block targets are signed, halfword-scaled PC-relative offsets.
   pc = 0x0000_0000_0000_1000;
@@ -225,19 +275,20 @@ function main() : unit -> unit = {
   assert(read_reg5(0b01010) == 0x0000_0000_0000_100A);
 
   // PTO/Linx 0.58 permanently remove the B.IOD spelling and reuse its former
-  // slot for B.IOS. PE_MASK=0000 is a strict no-op; a participating mask binds
-  // the absolute Shared register and per-PE TSize.
+  // slot for B.IOS. PEMode=000 is a strict no-op; a participating mode binds
+  // the absolute Shared register and per-PE SizeCode.
   shared_tile_binding_valid = false;
   last_e = 0b0;
   last_trapnum = sail_zeros(6);
   decode_execute32(0x0000_1013);
   assert(last_e == 0b0);
   assert(not_bool(shared_tile_binding_valid));
-  decode_execute32(0x02A5_9613);
+  decode_execute32(0x02A1_9A13);
   assert(shared_tile_binding_valid);
   assert(shared_tile_binding_id == 0x2A);
-  assert(shared_tile_binding_pe_mask == 0xB);
-  assert(shared_tile_binding_tsize == 0b011);
+  assert(shared_tile_binding_pe_mode == 0b101);
+  assert(shared_tile_binding_pe_mask == 0xC);
+  assert(shared_tile_binding_size_code == 0x3);
 
   // BSTART.PAR is also permanently removed as a spelling, but its historical
   // bits are not reserved: the current catalog assigns this word to
@@ -287,7 +338,8 @@ function main() : unit -> unit = {
 
   // Positive masked gather: one descriptor carries indices+mask and one
   // destination.  Only a successful complete preflight publishes effects and
-  // last-use releases; false mask lanes are recorded as access-suppressing.
+  // PEMode zero is ignored; an effective all-PE binding commits without
+  // interpreting any PEMode bit as a source-lifetime release.
   reset_tile_effect_case();
   bdesc_mark_datr();
   bdesc_mark_ior();
@@ -295,14 +347,59 @@ function main() : unit -> unit = {
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b01, 0b00110);
   tile_effect_append_iot(0x0000_0000_0819_C013);
+  assert(tile_effect_iot_count == 0b00_0000);
+  tile_effect_append_iot(0x0000_0000_0819_CE13);
   assert(tile_effect_finalize());
   assert(tile_effect_commit_seq == 0x0000_0000_0000_0001);
   assert(tile_effect_memory_seq == 0x0000_0000_0000_0001);
   assert(tile_effect_tile_seq == 0x0000_0000_0000_0001);
-  assert(tile_effect_lifetime_releases == 0x0000_0000_0000_0002);
+  assert(tile_effect_lifetime_releases == 0x0000_0000_0000_0000);
   assert(tile_effect_last_masked);
   assert(tile_effect_last_mask_suppresses_access);
   assert(tile_effect_last_pad == 0b01);
+
+  // All effective B.IOT bindings in one block share one decoded PE mask.
+  // A mismatched later mode faults before changing count/source state.
+  reset_tile_effect_case();
+  tile_effect_begin(0b10, 0b10101);
+  tile_effect_append_iot(0x0000_0000_0010_5E13); // source 1, mode 7
+  assert(tile_effect_iot_count == 0b00_0001);
+  assert(tile_effect_pe_mask == 0xF);
+  tile_effect_append_iot(0x0000_0000_0028_5A13); // source 2, mode 5, last
+  assert(not_bool(tile_effect_iot_legal));
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_block_trap());
+  assert(last_cause == 0x000200);
+  assert(last_traparg0 == 0x0000_0000_0000_0305);
+  assert(last_bi == 0b0);
+  assert(tile_effect_iot_count == 0b00_0001);
+  assert(tile_effect_source_count == 0b00_0001);
+  tile_effect_append_iot(0x0000_0000_0038_5E13); // later match: still no mutation
+  assert(tile_effect_iot_count == 0b00_0001);
+  assert(tile_effect_source_count == 0b00_0001);
+
+  // A fifth effective binding is rejected before descriptor mutation. Mode
+  // zero entries remain excluded from both the common-mask and count rules.
+  reset_tile_effect_case();
+  tile_effect_begin(0b10, 0b10101);
+  tile_effect_append_iot(0x0000_0000_0010_5013); // mode zero: no effect
+  assert(tile_effect_iot_count == 0b00_0000);
+  tile_effect_append_iot(0x0000_0000_0010_5E13);
+  tile_effect_append_iot(0x0000_0000_0020_5E13);
+  tile_effect_append_iot(0x0000_0000_0030_5E13);
+  tile_effect_append_iot(0x0000_0000_0040_5E13);
+  assert(tile_effect_iot_count == 0b00_0100);
+  tile_effect_append_iot(0x0000_0000_0058_5E13);
+  assert(not_bool(tile_effect_iot_legal));
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_block_trap());
+  assert(last_cause == 0x000200);
+  assert(last_traparg0 == 0x0000_0000_0000_0105);
+  assert(last_bi == 0b0);
+  assert(tile_effect_iot_count == 0b00_0100);
+  assert(tile_effect_source_count == 0b00_0100);
 
   // Negative/retry path: a failed full access-set preflight reports the first
   // original address and commits no memory, Tile, ACC, or lifetime effect.
@@ -311,7 +408,7 @@ function main() : unit -> unit = {
   bdesc_mark_ior();
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b01, 0b00100);
-  tile_effect_append_iot(0x0000_0000_0019_D013); // one source + dst, size=3
+  tile_effect_append_iot(0x0000_0000_0019_DE13); // one source + dst, size=3, all PEs
   tile_effect_access_set_valid = false;
   tile_effect_fault_address = 0x0000_0000_DEAD_0040;
   assert(not_bool(tile_effect_finalize()));
@@ -348,10 +445,12 @@ function main() : unit -> unit = {
   bdesc_mark_dim();
   decoded_tile_datatype_shadow = 0b00001; // FP32 header/ACC for MX
   tile_effect_begin(0b10, 0b10101);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0810_4013);
-  tile_effect_append_iot(0x0000_0000_1030_4013);
-  tile_effect_append_iot(0x0000_0000_0058_5013);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b1, 0b1);
+  assert(bfpatr_trans_a);
+  assert(bfpatr_trans_b);
+  tile_effect_append_iot(0x0000_0000_0810_4E13);
+  tile_effect_append_iot(0x0000_0000_1030_4E13);
+  tile_effect_append_iot(0x0000_0000_0058_5E13);
   assert(tile_effect_finalize());
   assert(tile_acc_valid);
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0001);
@@ -371,8 +470,8 @@ function main() : unit -> unit = {
   bdesc_mark_dim();
   decoded_tile_datatype_shadow = 0b00001;
   tile_effect_begin(0b10, 0b10010);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0818_4013);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
+  tile_effect_append_iot(0x0000_0000_0818_4E13);
   assert(not_bool(tile_effect_finalize()));
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0000);
   assert(not_bool(tile_acc_valid));
@@ -380,14 +479,14 @@ function main() : unit -> unit = {
   tile_effect_restart_pending = false;
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10000);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0818_4013);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
+  tile_effect_append_iot(0x0000_0000_0818_4E13);
   assert(tile_effect_finalize());
   assert(tile_acc_valid);
   tile_effect_reset_descriptors();
   tile_effect_begin(0b10, 0b10010);
-  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0);
-  tile_effect_append_iot(0x0000_0000_0818_4013);
+  exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b0, 0b0);
+  tile_effect_append_iot(0x0000_0000_0818_4E13);
   assert(tile_effect_finalize());
   assert(tile_effect_acc_seq == 0x0000_0000_0000_0002);
   assert(tile_effect_last_accumulate)

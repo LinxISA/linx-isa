@@ -1,128 +1,103 @@
 # B.IOT
 
-## 说明
+## 功能
 
-**B.IOT(Block Input and Output Tile Register)**
+`B.IOT` 按编码顺序绑定 Local Tile 源和目的寄存器。它只使用
+`T#1..T#16`、`U#1..U#16`、`M#1..M#16` 与 `N#1..N#16` 的相对
+Local 队列空间，不绑定 Shared `S0..S255`。
 
-本指令用于数据块指令块头中按程序顺序定义输入输出的[Tile寄存器](../register/common/tilereg.md)。带输出的形式同时指示输出 Tile 寄存器的大小；纯输入形式不分配输出 Tile。
+机器可读目录 `isa/v0.58/linxisa-v0.58.json` 是编码唯一权威来源。
 
-## 汇编格式
+## 五种规范形式
 
 ```asm
-    B.IOT SrcTile0<.reuse>, SrcTile1<.reuse> <,last>, ->DstTile<Size>
-    B.IOT SrcTile0<.reuse> <,last>, ->DstTile<Size>
-    B.IOT <last>, ->DstTile<Size>
-    B.IOT SrcTile0<.reuse>, SrcTile1<.reuse> <,last>  # v0.57 纯输入
-    B.IOT SrcTile0<.reuse> <,last>                    # v0.57 纯输入
+B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>
+B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0, mask=PE_MASK, <last>
+B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>
 ```
 
-* **SrcTile0, SrcTile1**: 指定两个输入 Tile 寄存器。
-* **reuse**: 输入 Tile 寄存器的可选后缀。当存在时，表示所在块指令提交后，硬件不能释放对应的 Tile 寄存器（该寄存器将被后续指令再次读取）。
-* **last**: 指示本指令是当前块的最后一条 B.IOT 指令。便于处理器判断一个块内的 B.IOT 指令序列是否完整表达了所需信息。
-* **DstTile**: 指定输出 Tile 寄存器的类型：`T`, `U`, `M`, `N` 或 `S`。省略输出时，编码字段固定为 `3b111`，表示无输出。
-* **Size**: 指定输出 Tile 寄存器空间大小的立即数。纯输入形式省略该操作数，并将未使用的 `imm4` 字段规范编码为零。
+不存在 `.reuse` 后缀。`L`/`last` 只终止当前有效 B.IOT 绑定序列，绝不
+释放源寄存器。
 
-输出 Tile 寄存器的大小通过立即数 imm4 指定，计算公式为：`Size = 16 Byte * (2^imm4)`。其中 imm4 的有效取值范围为 0 到 15。
+## 编码字段
 
-| imm4 | Size  | imm4 | Size   | imm4 | Size   | imm4 | Size   |
-| :--- | :---- | :--- | :----- | :--- | :----- | :--- | :----- |
-| 0    | `0B`  | 4    | `256B` | 8    | `4KB`  | 12   | `64KB`  |
-| 1    | `32B` | 5    | `512B` | 9    | `8KB`  | 13   | `128KB` |
-| 2    | `64B` | 6    | `1KB`  | 10   | `16KB` | 14   | `256KB` |
-| 3    | `128B`| 7    | `2KB`  | 11   | `32KB` | 15   | `512KB` |
+| 位 | 字段 | 含义 |
+| --- | --- | --- |
+| 31:26 | `SrcTile1` 或固定零 | 第二个 Local 源 |
+| 25:20 | `SrcTile0` 或固定零 | 第一个 Local 源 |
+| 19 | `L` | 当前有效绑定之后终止序列 |
+| 18:15 | `SizeCode` | 0 为纯源；目的形式使用 1..10 |
+| 14:12 | `Func` | `100` 两源、`101` 一源、`110` 无源 |
+| 11:9 | `PEMode` | 三位参与模式 |
+| 8:7 | `DstTile` | 0 T、1 U、2 M、3 N |
+| 6:0 | 固定 `0010011` | 次编码 |
 
-注意:
+`PEMode` 使用 PTO ISA 0.58.3 的公共固定译码表：
 
-1. 不同处理器实现支持的 Tile 寄存器尺寸范围由系统寄存器 LCFR 定义。
-2. 软件在申请 Tile 寄存器前，必须根据目标处理器的具体实现所支持的 Tile 寄存器大小进行分配。
+| `PEMode` | 语义 mask |
+| --- | --- |
+| 0 | `0000`（无 PE） |
+| 1 | `1000`（PE0） |
+| 2 | `0100`（PE1） |
+| 3 | `0010`（PE2） |
+| 4 | `0001`（PE3） |
+| 5 | `1100`（PE0+PE1） |
+| 6 | `1110`（PE0+PE1+PE2） |
+| 7 | `1111`（四个 PE） |
 
-## 指令编码
+`PEMode=000` 在 placement、duplicate、schema、allocation、descriptor、
+memory 和 downstream fault 检查之前形成严格无副作用路径。
 
-![B.IOT](../../figs/bitfield/svg/BlockHeader_32bit/B.IOT.svg)
+## SizeCode
 
-标志位说明如下：
+纯源形式固定 `SizeCode=0`，不分配目的。目的形式仅允许 1..10：
 
-**Func**字段用于指示有效输入Tile的数量，编码如下：
+| `SizeCode` | 每个参与 PE 的目的容量 |
+| --- | --- |
+| 1 | 128 B |
+| 2 | 256 B |
+| 3 | 512 B |
+| 4 | 1 KiB |
+| 5 | 2 KiB |
+| 6 | 4 KiB |
+| 7 | 8 KiB |
+| 8 | 16 KiB |
+| 9 | 32 KiB |
+| 10 | 64 KiB |
+| 11..15 | 保留，非法指令 |
 
-| Func | 含义 |
-|----------|---------|
-| 3b100 | 两输入：两个源Tile均有效。 |
-| 3b101 | 一输入：仅第一个源Tile有效。 |
-| 3b110 | 无输入：无源Tile，只有目标输出Tile。 |
-| others | 其他编码均视为无效编码 |
+目的容量按参与 PE 计算，core 总分配量为
+`popcount(decoded_mask) * per-PE capacity`，且不得超过 256 KiB。
 
-`Func` 只表示有效输入数量。是否存在输出由 `DstTile` 独立决定：
+## 顺序与异常
 
-- `DstTile=3b111`：无输出，不分配 Tile，不产生 Tile 写回；
-- 其他合法 `DstTile`：存在一个输出，`imm4` 指示其大小。
+- 有效 B.IOT 只能出现在 BSTART 之后、第一条块体指令之前。
+- 一个块最多接受四个有效 Local 绑定，并按编码顺序匹配操作 schema。
+- 所有有效绑定必须具有相同的译码后 PE mask。
+- `L=1` 关闭序列；关闭后出现另一条有效 B.IOT，在产生状态变化之前报
+  Illegal Block Exception。
+- 保留位、保留 SizeCode 或畸形组合在产生架构副作用之前报非法指令。
+- 描述符不兼容、mask 扩展或 schema 角色不匹配在 Tile 状态变化之前
+  报 Fault_TileLegality。
 
-因此，纯输入形式复用 `Func=3b100/3b101`，并固定
-`DstTile=3b111`、`imm4=0`。具体操作是否允许多条纯输入 `B.IOT`
-由该操作的 v0.58 operand schema 决定。
+## 示例
 
-**SrcTile0** 和 **SrcTile1** 字段的编码方式如下：
+两个 Local 源、一个 16 KiB/PE 的 T-hand 目的，四个 PE 参与：
 
-| SrcTile | 寄存器 | SrcTile | 寄存器 | SrcTile | 寄存器 | SrcTile | 寄存器 |
-| ---- | --------| ---- | -------- | ---- | -------- | ---- | -------- |
-| 0   | T#1  | 16 | U#1  | 32 | M#1  | 48 | N#1  |
-| 1   | T#2  | 17 | U#2  | 33 | M#2  | 49 | N#2  |
-| 2   | T#3  | 18 | U#3  | 34 | M#3  | 50 | N#3  |
-| 3   | T#4  | 19 | U#4  | 35 | M#4  | 51 | N#4  |
-| 4   | T#5  | 20 | U#5  | 36 | M#5  | 52 | N#5  |
-| 5   | T#6  | 21 | U#6  | 37 | M#6  | 53 | N#6  |
-| 6   | T#7  | 22 | U#7  | 38 | M#7  | 54 | N#7  |
-| 7   | T#8  | 23 | U#8  | 39 | M#8  | 55 | N#8  |
-| 8   | T#9  | 24 | U#9  | 40 | M#9  | 56 | N#9  |
-| 9   | T#10 | 25 | U#10 | 41 | M#10 | 57 | N#10 |
-| 10  | T#11 | 26 | U#11 | 42 | M#11 | 58 | N#11 |
-| 11  | T#12 | 27 | U#12 | 43 | M#12 | 59 | N#12 |
-| 12  | T#13 | 28 | U#13 | 44 | M#13 | 60 | N#13 |
-| 13  | T#14 | 29 | U#14 | 45 | M#14 | 61 | N#14 |
-| 14  | T#15 | 30 | U#15 | 46 | M#15 | 62 | N#15 |
-| 15  | T#16 | 31 | U#16 | 47 | M#16 | 63 | N#16 |
-
-**S0R(Source0 Reuse)** 和 **S1R(Source1 Reuse)** 字段的含义与编码方式如下表：
-
-| 标志位 | 含义 | 编码方式 |
-|--------|------|--------------|
-| **S0R(Source0 Reuse)** | SrcTile0的 `reuse` 标志位 | 0：无reuse标记；1：有reuse标记。 |
-| **S1R(Source1 Reuse)** | SrcTile1的 `reuse` 标志位 | 0：无reuse标记；1：有reuse标记。 |
-
-**DstTile** 字段编码方式如下：
-
-| DstTile | 寄存器队列 | DstTile | 寄存器队列 |
-| ------- | ----------| ------- | -----------|
-| 0 | 输出到 **T队列** | 4 | 保留 |
-| 1 | 输出到 **U队列** | 5 | 输出到 **S队列** |
-| 2 | 输出到 **M队列** | 6 | 保留 |
-| 3 | 输出到 **N队列** | 7 | 无输出 |
-
-## 汇编示例
-
-示例1：下面是一个三输入一输出的块指令：
 ```asm
-TMATMUL.BIAS <M:xx, N:xx, K:xx> T#1, T#3, U#1, ->T<16KB>
+B.IOT T#1, U#1, mask=1111, last, ->T<8>
 ```
-由于每条B.IOT指令只能编码两输入一输出的Tile 寄存器，因此上述的3个输入Tile 寄存器需要编码在两条指令中：
+
+纯源绑定，PE0 与 PE1 参与：
+
 ```asm
-    B.IOT T#1, T#3                # 编码前两个输入
-    B.IOT U#1, last, ->T<16KB>    # 编码第三个输入和输出，标记last
+B.IOT M#1, mask=1100, last
 ```
 
-示例2：
+零参与严格无副作用：
+
 ```asm
-VPAR T#2, T#3, U#1, U#2, T#1, ->T<4KB>
-# 展开序列：
-BSTART.VPAR
-B.IOT T#2, T#3
-B.IOT U#1, U#2
-B.IOT T#1, last, ->T<4KB>
-...
+B.IOT T#1, mask=0000, last
 ```
-
-## 注意事项
-
-1. 多个B.IOT组合使用时，最后一条B.IOT指令需要标记last。
-2. 一个块中只有一条B.IOT时，需要标记last。
-3. B.IOT中表达的输入输出Tile顺序必须与块指令的操作数顺序保持一致。
-4. 块体中访问了没有通过B.IOT指定的Tile寄存器，硬件应报异常。

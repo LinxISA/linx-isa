@@ -12,12 +12,12 @@
 | | |
 |---|---|
 | **ISA Version** | v0.58 stable |
-| **Instruction Forms** | 765 canonical v0.58 forms |
+| **Instruction Forms** | 757 canonical v0.58 forms |
 | **Instruction Groups** | 54 |
 | **Formats** | 16-bit Compressed · 32-bit Base · 48-bit HL · 64-bit Vector |
 | **Specification** | [v0.58 Contract →](architecture/v0.58-architecture-contract.md) |
 | **Encoding Reference** | [v0.58 Encoding →](isa/encoding.md) |
-| **Release Notes** | [v0.58.1 →](releases/v0.58.1.md) |
+| **Release Notes** | [v0.58.3 →](releases/v0.58.3.md) |
 
 </div>
 
@@ -28,7 +28,7 @@
 <div class="quick-links">
 
 [:fontawesome-solid-microchip: **ISA Reference** — Instruction Reference](isa/index.md) {.quick-link-card}
-: The complete, searchable reference for all 765 instruction forms. Browse by chapter, group, or alphabetically.
+: The complete, searchable reference for all 757 instruction forms. Browse by chapter, group, or alphabetically.
 
 [:fontawesome-solid-book: **Full ISA Manual** — AsciiDoc/PDF](architecture/isa-manual/README.md) {.quick-link-card}
 : The authoritative human-readable manual with narrative chapters, examples, and design rationale.

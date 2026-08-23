@@ -26,7 +26,7 @@
 
 ## Description
 
-HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
+HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapsho
 
 ## Encoding Notes
 
-- `HL.REMW computes a signed low-32-bit quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.`
+- `HL.REMW computes a signed low-32-bit remainder/quotient pair from source snapshots, then publishes remainder followed by quotient.`
 
 ## Full Catalog Forms
 

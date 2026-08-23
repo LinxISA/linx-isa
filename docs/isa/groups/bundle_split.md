@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **Bundle Split** group of the LinxISA v0.58.1 catalog.
+Instructions in the **Bundle Split** group of the LinxISA v0.58.3 catalog.
 
 ## Instructions
 

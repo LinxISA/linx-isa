@@ -21,7 +21,7 @@ Outputs:
 
 ## Release artifacts
 
-- Current stable manual release notes: `docs/releases/v0.58.1.md`
+- Current stable manual release notes: `docs/releases/v0.58.3.md`
 - Latest release page: https://github.com/LinxISA/linx-isa/releases/latest
 
 ## Regenerate generated sections
