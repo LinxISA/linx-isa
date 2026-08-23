@@ -29,9 +29,9 @@ The current profile distinguishes block families as follows:
 
 A TLSU global-memory address supplied through `B.IOR` is a data virtual
 address in the initiating ACR and uses that task's ordinary CPU translation
-and permission context. It is not implicitly an I/O virtual address. An IOMMU
-translation applies only when a future instruction or descriptor explicitly
-selects an I/O address space. A failed TLSU memory beat reports the original
+and permission context while `IOTCR` leaves I/O translation disabled. It is
+not implicitly an I/O virtual address. IOMMU translation applies only when
+`IOTCR` explicitly enables the I/O address space. A failed TLSU memory beat reports the original
 virtual address in `TRAPARG0` and follows the normal precise `E_DATA` path.
 
 ## VECTOR/CUBE first-use exception
