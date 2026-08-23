@@ -1078,8 +1078,8 @@
       "translation_sha256": "54d7c56c074a640d4f531882459d8f19e4febe1960fd8903a59d0e600a325ec0"
     },
     "isa/exception/exception.md": {
-      "source_sha256": "541cc59240e272175e38561bf4f491d598290cb95aaa5575f808c751e34259a2",
-      "translation_sha256": "6e51b9ca5653d6d2b6338856e6dcc4aad05d12e1a3e13385b1a62043e8e9b4bb"
+      "source_sha256": "d60710305678081bba96fec37cd2a1ae7812e1e8c4060bc0ca3c9c74ba935ace",
+      "translation_sha256": "35eb450c8636a56f9b9f8acba0d5b2ec75bf23d0ba0ef919eb84732058beddde"
     },
     "isa/exception/interrupt.md": {
       "source_sha256": "6bae3fc263db421e3051a3e3db2132b5eb14d476922ff4749db6b848cf3b9826",
