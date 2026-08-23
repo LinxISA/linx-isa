@@ -42,6 +42,9 @@ jobs:
           python3 tools/isa/gen_sail_decode.py --check
           python3 tools/isa/gen_sail_status.py --check
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest \
+            emulator.qemu.tests.linxisa.test_v0583_contract \
+            emulator.qemu.tests.linxisa.test_v058_hardware_numeric_vectors
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest \
             emulator.qemu.tests.linxisa.test_first_use_exception
       - name: Enforce canonical v0.58 release guard
         run: python3 tools/isa/check_canonical_v058.py --root .

@@ -106,10 +106,18 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         self.assertEqual(manifest["superseded_by"], "0.58.3")
 
     def test_elf_identity_fixture_matrix_is_exact(self) -> None:
+        expected = (
+            b'{"encoding_abi":"pto-isa-0.58.3-mode-function-v1",'
+            b'"encoding_projection_sha256":'
+            b'"8a48b80e04484c70870f155bf9efc79d2a805cf99e809f4e4e8a7e6a7eb34172",'
+            b'"release":"0.58.3"}'
+        )
+        self.assertEqual(elf_identity.IDENTITY, expected)
         self.assertEqual(len(elf_identity.IDENTITY), 165)
         self.assertTrue(elf_identity._note(elf_identity.IDENTITY).startswith(
             b"\x04\x00\x00\x00\xa5\x00\x00\x00\x01\x00\x00\x00PTO\0"
         ))
+        self.assertIn(b'"release":"0.58.1"', elf_identity.OLD_IDENTITY)
         self.assertNotEqual(elf_identity.IDENTITY, elf_identity.OLD_IDENTITY)
 
     def test_evidence_paths_remain_relative_in_repo_and_absolute_outside(self) -> None:
