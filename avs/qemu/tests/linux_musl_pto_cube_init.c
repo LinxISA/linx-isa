@@ -7,15 +7,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static const char *const cases[] = {
-	"tmatmul_acc_fp32_32x32x32",
-	"tmatmul_bias_fp16_32x64x64",
-	"tmatmul_bias_fp32_32x32x32",
-	"tmatmul_fp16_16x32x32",
-	"tmatmul_fp16_32x64x64",
-	"tmatmul_fp32_32x32x32",
-};
-
 static void setup_console(void)
 {
 	int fd = open("/dev/console", O_RDWR);
@@ -66,21 +57,6 @@ static void emit_case_marker(const char *kind, const char *name, int value)
 	write_text("\n");
 }
 
-static void make_case_path(char *path, const char *name)
-{
-	const char *prefix = "/pto_cube/";
-	const char *suffix = ".elf";
-	size_t offset = 0;
-
-	while (*prefix)
-		path[offset++] = *prefix++;
-	while (*name)
-		path[offset++] = *name++;
-	while (*suffix)
-		path[offset++] = *suffix++;
-	path[offset] = '\0';
-}
-
 static void poweroff_now(void)
 {
 	sync();
@@ -89,50 +65,72 @@ static void poweroff_now(void)
 		pause();
 }
 
-int main(void)
+static void run_case(const char *path, const char *name,
+		     const char *start_marker, const char *pass_marker)
 {
-	size_t index;
+	pid_t child;
+	pid_t waited;
+	int status = 0;
 
-	setup_console();
-	(void)syscall(SYS_write, STDOUT_FILENO, "PTO_CUBE_START count=6\n", 23);
+	write_text(start_marker);
+	child = fork();
+	if (child < 0) {
+		emit_case_marker("FAIL_FORK", name, errno);
+		poweroff_now();
+	}
+	if (child == 0) {
+		char *const argv[] = { (char *)path, NULL };
+		char *const envp[] = { NULL };
 
-	for (index = 0; index < sizeof(cases) / sizeof(cases[0]); ++index) {
-		char path[160];
-		pid_t child;
-		pid_t waited;
-		int status = 0;
-
-		make_case_path(path, cases[index]);
-		emit_case_marker("START", cases[index], -1);
-		child = fork();
-		if (child < 0) {
-			emit_case_marker("FAIL_FORK", cases[index], errno);
-			poweroff_now();
-		}
-		if (child == 0) {
-			char *const argv[] = { path, NULL };
-			char *const envp[] = { NULL };
-
-			execve(path, argv, envp);
-			emit_case_marker("FAIL_EXEC", cases[index], errno);
-			_exit(126);
-		}
-
-		waited = waitpid(child, &status, 0);
-		if (waited != child) {
-			emit_case_marker("FAIL_WAIT", cases[index], errno);
-			poweroff_now();
-		}
-		if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-			int value = WIFEXITED(status) ? WEXITSTATUS(status) :
-				    (WIFSIGNALED(status) ? 128 + WTERMSIG(status) : 255);
-
-			emit_case_marker("FAIL_EXIT", cases[index], value);
-			poweroff_now();
-		}
-		emit_case_marker("PASS", cases[index], 0);
+		execve(path, argv, envp);
+		emit_case_marker("FAIL_EXEC", name, errno);
+		_exit(126);
 	}
 
-	(void)syscall(SYS_write, STDOUT_FILENO, "PTO_CUBE_PASS count=6\n", 22);
+	waited = waitpid(child, &status, 0);
+	if (waited != child) {
+		emit_case_marker("FAIL_WAIT", name, errno);
+		poweroff_now();
+	}
+	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+		int value = WIFEXITED(status) ? WEXITSTATUS(status) :
+			    (WIFSIGNALED(status) ? 128 + WTERMSIG(status) : 255);
+
+		emit_case_marker("FAIL_EXIT", name, value);
+		poweroff_now();
+	}
+	write_text(pass_marker);
+}
+
+int main(void)
+{
+	setup_console();
+	write_text("PTO_CUBE_START count=6\n");
+	run_case("/pto_cube/tmatmul_acc_fp32_32x32x32.elf",
+		 "tmatmul_acc_fp32_32x32x32",
+		 "PTO_CUBE_CASE_START tmatmul_acc_fp32_32x32x32\n",
+		 "PTO_CUBE_CASE_PASS tmatmul_acc_fp32_32x32x32 value=0\n");
+	run_case("/pto_cube/tmatmul_bias_fp16_32x64x64.elf",
+		 "tmatmul_bias_fp16_32x64x64",
+		 "PTO_CUBE_CASE_START tmatmul_bias_fp16_32x64x64\n",
+		 "PTO_CUBE_CASE_PASS tmatmul_bias_fp16_32x64x64 value=0\n");
+	run_case("/pto_cube/tmatmul_bias_fp32_32x32x32.elf",
+		 "tmatmul_bias_fp32_32x32x32",
+		 "PTO_CUBE_CASE_START tmatmul_bias_fp32_32x32x32\n",
+		 "PTO_CUBE_CASE_PASS tmatmul_bias_fp32_32x32x32 value=0\n");
+	run_case("/pto_cube/tmatmul_fp16_16x32x32.elf",
+		 "tmatmul_fp16_16x32x32",
+		 "PTO_CUBE_CASE_START tmatmul_fp16_16x32x32\n",
+		 "PTO_CUBE_CASE_PASS tmatmul_fp16_16x32x32 value=0\n");
+	run_case("/pto_cube/tmatmul_fp16_32x64x64.elf",
+		 "tmatmul_fp16_32x64x64",
+		 "PTO_CUBE_CASE_START tmatmul_fp16_32x64x64\n",
+		 "PTO_CUBE_CASE_PASS tmatmul_fp16_32x64x64 value=0\n");
+	run_case("/pto_cube/tmatmul_fp32_32x32x32.elf",
+		 "tmatmul_fp32_32x32x32",
+		 "PTO_CUBE_CASE_START tmatmul_fp32_32x32x32\n",
+		 "PTO_CUBE_CASE_PASS tmatmul_fp32_32x32x32 value=0\n");
+
+	write_text("PTO_CUBE_PASS count=6\n");
 	poweroff_now();
 }

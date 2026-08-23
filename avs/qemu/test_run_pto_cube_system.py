@@ -58,6 +58,9 @@ class PtoCubeSystemTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertNotIn("snprintf", source)
         self.assertNotIn("printf(", source)
+        self.assertNotIn("struct cube_case", source)
+        self.assertNotIn("cases[]", source)
+        self.assertEqual(source.count("run_case(\"/pto_cube/"), 6)
 
     def test_timeout_reports_completed_case_count(self) -> None:
         text = "\n".join(
