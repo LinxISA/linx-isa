@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import copy
+import json
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -127,10 +129,7 @@ class PtoCubeSystemTests(unittest.TestCase):
     def test_cold_boot_matrix_is_exact_six_case_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            expected = {
-                "pto_kernels": "p", "tileop": "t", "llvm": "c",
-                "qemu": "q", "linux": "l",
-            }
+            expected = run_pto_cube_system_matrix._canonical_expected()
             source_tool = {
                 component: {"expected_commit": expected[component]}
                 for component in ("pto_kernels", "tileop", "linux", "qemu")
@@ -184,6 +183,14 @@ class PtoCubeSystemTests(unittest.TestCase):
             self.assertIsNone(aggregate["actual_provenance_fingerprint_sha256"])
 
             hostile = copy.deepcopy(results)
+            for row in hostile.values():
+                row["expected"]["qemu"] = "f" * 40
+                row["provenance"]["source_tool"]["qemu"]["expected_commit"] = "f" * 40
+            aggregate = run_pto_cube_system_matrix._aggregate_results(hostile)
+            self.assertFalse(aggregate["result"]["ok"])
+            self.assertIsNone(aggregate["expected_fingerprint_sha256"])
+
+            hostile = copy.deepcopy(results)
             hostile.pop(run_pto_cube_system.CUBE_CASES[0])
             self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
 
@@ -194,6 +201,44 @@ class PtoCubeSystemTests(unittest.TestCase):
             hostile = copy.deepcopy(results)
             Path(hostile[run_pto_cube_system.CUBE_CASES[0]]["log"]["path"]).unlink()
             self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+    def test_case_loader_rehashes_sysroot_identity_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            evidence = root / "evidence"
+            evidence.mkdir()
+            log = evidence / "qemu.log"
+            libc = root / "libc.so"
+            loader = root / "ld-musl-linx64.so.1"
+            identity_parser = root / "verify_pto_identity.py"
+            for path in (log, libc, loader, identity_parser):
+                path.write_text(path.name, encoding="utf-8")
+            case = run_pto_cube_system.CUBE_CASES[0]
+            summary = {
+                "selected_cases": [case],
+                "result": {"ok": True, "classification": "runtime_pass"},
+                "expected": run_pto_cube_system_matrix._canonical_expected(),
+                "provenance": {},
+                "needed": {f"{case}.elf": ["libc.so", "libm.so"]},
+                "pto_identity": {
+                    "files": {
+                        "libc.so": run_pto_cube_system_matrix._evidence(libc),
+                        "ld-musl-linx64.so.1": run_pto_cube_system_matrix._evidence(loader),
+                    },
+                    "parser": run_pto_cube_system_matrix._evidence(identity_parser),
+                },
+            }
+            summary["pto_identity"]["files"]["libc.so"]["sha256"] = "f" * 64
+            (evidence / "summary.json").write_text(
+                json.dumps(summary), encoding="utf-8"
+            )
+            with mock.patch.object(
+                run_pto_cube_system_matrix,
+                "_validate_source_tool_provenance",
+                return_value=True,
+            ):
+                row = run_pto_cube_system_matrix._load_case_result(case, evidence, 0)
+            self.assertIsNone(row["provenance"])
 
     def test_nonempty_build_output_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

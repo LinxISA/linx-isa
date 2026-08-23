@@ -14,6 +14,16 @@ from typing import Any
 import run_pto_cube_system as single
 
 
+def _canonical_expected() -> dict[str, str]:
+    return {
+        "pto_kernels": single.PTO_KERNELS_COMMIT,
+        "tileop": single.TILEOP_COMMIT,
+        "llvm": single.LLVM_COMMIT,
+        "qemu": single.QEMU_COMMIT,
+        "linux": single.LINUX_COMMIT,
+    }
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -59,10 +69,50 @@ def _provenance_matches_expected(provenance: dict[str, Any],
     return isinstance(clang, dict) and clang.get("expected_commit") == expected.get("llvm")
 
 
+def _validate_source_tool_provenance(provenance: Any) -> bool:
+    if not isinstance(provenance, dict):
+        return False
+    expected = _canonical_expected()
+    try:
+        for component, allow_same_tree in (
+            ("pto_kernels", False), ("tileop", False),
+            ("linux", True), ("qemu", True),
+        ):
+            recorded = provenance[component]
+            fresh = single._require_git_identity(
+                Path(recorded["path"]), expected[component],
+                allow_same_tree=allow_same_tree,
+            )
+            if recorded != fresh:
+                return False
+        if provenance["clang"] != single._require_tool_commit(
+            Path(provenance["clang"]["path"]), expected["llvm"]
+        ):
+            return False
+        for component in ("kernel", "qemu_binary"):
+            if provenance[component] != single._file_evidence(
+                Path(provenance[component]["path"])
+            ):
+                return False
+        pto_lock = provenance["pto_lock"]
+        if not _valid_evidence(pto_lock.get("file")):
+            return False
+        if pto_lock.get("identity") != {
+            "release": single.PTO_RELEASE,
+            "encoding_projection_sha256": single.PTO_PROJECTION,
+            "content_sha256": single.PTO_CONTENT,
+        }:
+            return False
+    except (KeyError, OSError, TypeError, single.GateError, subprocess.CalledProcessError):
+        return False
+    return True
+
+
 def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
     required_cases = set(single.CUBE_CASES)
     exact_case_keys = set(results) == required_cases
     rows_valid = True
+    validated_passed = 0
     expected_values: set[str] = set()
     provenance_values: set[str] = set()
 
@@ -79,19 +129,27 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
             and row.get("classification") == "runtime_pass"
             and row.get("selected_cases") == [case]
             and isinstance(expected, dict)
+            and expected == _canonical_expected()
             and isinstance(provenance, dict)
             and _valid_evidence(row.get("summary"))
             and _valid_evidence(row.get("log"))
         )
         if row_valid:
             row_valid = _provenance_matches_expected(provenance, expected)
+        if row_valid:
+            validated_passed += 1
         rows_valid &= row_valid
         if isinstance(expected, dict):
             expected_values.add(json.dumps(expected, sort_keys=True))
         if isinstance(provenance, dict):
             provenance_values.add(json.dumps(provenance, sort_keys=True))
 
-    expected_consistent = len(expected_values) == 1 and len(results) == len(required_cases)
+    canonical_expected_json = json.dumps(_canonical_expected(), sort_keys=True)
+    expected_consistent = (
+        len(expected_values) == 1
+        and next(iter(expected_values)) == canonical_expected_json
+        and len(results) == len(required_cases)
+    )
     provenance_consistent = len(provenance_values) == 1 and len(results) == len(required_cases)
     expected_fingerprint = (
         hashlib.sha256(next(iter(expected_values)).encode("utf-8")).hexdigest()
@@ -101,10 +159,7 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
         hashlib.sha256(next(iter(provenance_values)).encode("utf-8")).hexdigest()
         if provenance_consistent else None
     )
-    passed = sum(
-        1 for case in single.CUBE_CASES
-        if isinstance(results.get(case), dict) and results[case].get("ok") is True
-    )
+    passed = validated_passed
     ok = exact_case_keys and rows_valid and expected_consistent and provenance_consistent
     return {
         "schema_version": "pto-cube-system-matrix-v1",
@@ -138,10 +193,12 @@ def _load_case_result(case: str, evidence_dir: Path, returncode: int) -> dict[st
     pto_identity = summary.get("pto_identity")
     identity_files = pto_identity.get("files", {}) if isinstance(pto_identity, dict) else {}
     identity_parser = pto_identity.get("parser") if isinstance(pto_identity, dict) else None
+    libc_record = identity_files.get("libc.so")
+    loader_record = identity_files.get("ld-musl-linx64.so.1")
     runtime_provenance = {
         "source_tool": summary.get("provenance"),
-        "libc_sha256": identity_files.get("libc.so", {}).get("sha256"),
-        "loader_sha256": identity_files.get("ld-musl-linx64.so.1", {}).get("sha256"),
+        "libc_sha256": libc_record.get("sha256") if isinstance(libc_record, dict) else None,
+        "loader_sha256": loader_record.get("sha256") if isinstance(loader_record, dict) else None,
         "identity_parser_sha256": (
             identity_parser.get("sha256") if isinstance(identity_parser, dict) else None
         ),
@@ -149,6 +206,10 @@ def _load_case_result(case: str, evidence_dir: Path, returncode: int) -> dict[st
     }
     if (
         not isinstance(runtime_provenance["source_tool"], dict)
+        or not _validate_source_tool_provenance(runtime_provenance["source_tool"])
+        or not _valid_evidence(libc_record)
+        or not _valid_evidence(loader_record)
+        or not _valid_evidence(identity_parser)
         or not all(
             isinstance(runtime_provenance[key], str) and len(runtime_provenance[key]) == 64
             for key in ("libc_sha256", "loader_sha256", "identity_parser_sha256")
