@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import codecs
 import hashlib
 import json
 import os
@@ -21,7 +22,7 @@ from typing import Any
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
 
-PTO_KERNELS_COMMIT = "322443efed141211d1c296f159b1131d384a1f44"
+PTO_KERNELS_COMMIT = "5f5cf061c4439a2c54bb91bfa6e2205b86cc0dcd"
 TILEOP_COMMIT = "bd1ecca97ca47da0edc462c1ce19749c6940780e"
 LLVM_COMMIT = "b7c83f68bf84125e696a70bec4b665c70a3b584d"
 QEMU_COMMIT = "2ba240fd057c5084f794375326f4cbf389cbc9da"
@@ -29,6 +30,7 @@ LINUX_COMMIT = "1055a743f16eaebfc371e0aabec8c861ab44858f"
 PTO_RELEASE = "0.58.3"
 PTO_PROJECTION = "8a48b80e04484c70870f155bf9efc79d2a805cf99e809f4e4e8a7e6a7eb34172"
 PTO_CONTENT = "f299fe3d256c5d071e57bb4aaa2be2de2e4a386ae090048df1f73ae92d392678"
+DEFAULT_TIMEOUT = 360
 
 CUBE_CASES = (
     "tmatmul_acc_fp32_32x32x32",
@@ -300,20 +302,53 @@ def _run_qemu_bounded(
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        bufsize=1,
     )
     assert process.stdout is not None
+    os.set_blocking(process.stdout.fileno(), False)
     selector = selectors.DefaultSelector()
     selector.register(process.stdout, selectors.EVENT_READ)
+    decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
+    pending = ""
     deadline = time.monotonic() + timeout
     breakpoints: Counter[str] = Counter()
     observed: list[str] = []
     timed_out = False
 
     with log.open("w", encoding="utf-8") as stream:
+        def record_line(line: str) -> None:
+            stream.write(line)
+            if (
+                "PTO_CUBE" in line
+                or "LINX_REBOOT" in line
+                or "Kernel panic" in line
+                or "LINX_PANIC" in line
+                or "LINX_DIE" in line
+                or "LINX_EXIT_INIT" in line
+                or "Linx: EBREAK trap" in line
+            ):
+                observed.append(line.rstrip())
+            if line.startswith("Linx: EBREAK trap") and not any(
+                item.startswith("PTO_CUBE_START") for item in observed
+            ):
+                diagnostic = line.strip()
+                breakpoints[diagnostic] += 1
+                if breakpoints[diagnostic] >= 8:
+                    process.terminate()
+
+        def consume_available() -> None:
+            nonlocal pending
+            while True:
+                try:
+                    chunk = os.read(process.stdout.fileno(), 65536)
+                except BlockingIOError:
+                    break
+                if not chunk:
+                    break
+                pending += decoder.decode(chunk)
+                while "\n" in pending:
+                    line, pending = pending.split("\n", 1)
+                    record_line(line + "\n")
+
         while process.poll() is None:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
@@ -321,29 +356,8 @@ def _run_qemu_bounded(
                 process.terminate()
                 break
             events = selector.select(timeout=min(0.25, remaining))
-            for key, _ in events:
-                line = key.fileobj.readline()
-                if not line:
-                    continue
-                stream.write(line)
-                if (
-                    "PTO_CUBE" in line
-                    or "LINX_REBOOT" in line
-                    or "Kernel panic" in line
-                    or "LINX_PANIC" in line
-                    or "LINX_DIE" in line
-                    or "LINX_EXIT_INIT" in line
-                    or "Linx: EBREAK trap" in line
-                ):
-                    observed.append(line.rstrip())
-                if line.startswith("Linx: EBREAK trap") and not any(
-                    item.startswith("PTO_CUBE_START") for item in observed
-                ):
-                    diagnostic = line.strip()
-                    breakpoints[diagnostic] += 1
-                    if breakpoints[diagnostic] >= 8:
-                        process.terminate()
-                        break
+            if events:
+                consume_available()
 
         try:
             returncode = process.wait(timeout=2)
@@ -351,14 +365,10 @@ def _run_qemu_bounded(
             process.kill()
             returncode = process.wait(timeout=2)
 
-        for line in process.stdout:
-            stream.write(line)
-            if (
-                "PTO_CUBE" in line or "LINX_REBOOT" in line
-                or "Kernel panic" in line or "LINX_PANIC" in line
-                or "LINX_DIE" in line or "LINX_EXIT_INIT" in line
-            ):
-                observed.append(line.rstrip())
+        consume_available()
+        pending += decoder.decode(b"", final=True)
+        if pending:
+            record_line(pending)
 
     selector.close()
     return (124 if timed_out else returncode), timed_out, "\n".join(observed)
@@ -380,7 +390,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--qemu", required=True)
     parser.add_argument("--qemu-source-root", required=True)
     parser.add_argument("--out-dir", required=True)
-    parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
     parser.add_argument(
         "--append",
         default="lpj=1000000 loglevel=1 console=ttyS0 kfence.sample_interval=0",

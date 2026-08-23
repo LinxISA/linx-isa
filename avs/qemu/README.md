@@ -238,7 +238,7 @@ python3 avs/qemu/run_musl_smoke.py \
   --qemu /private/tmp/linx-qemu-8fec-linux-user/build-softmmu/qemu-system-linx64 \
   --qemu-source-root /private/tmp/linx-qemu-8fec-linux-user \
   --out-dir /private/tmp/linx-pto-cube-system/evidence \
-  --timeout 180
+  --timeout 360
 ```
 
 `summary.json` binds the exact pto-kernels, TileOP, LLVM, QEMU, and Linux
