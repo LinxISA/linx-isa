@@ -405,7 +405,7 @@ def main(argv: list[str] | None = None) -> int:
     paths = {
         name: Path(value).expanduser().resolve()
         for name, value in vars(args).items()
-        if name not in {"timeout", "append"}
+        if name not in {"timeout", "qemu_guest_errors", "append"}
     }
     out_dir = paths["out_dir"]
     out_dir.mkdir(parents=True, exist_ok=True)

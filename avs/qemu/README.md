@@ -228,7 +228,7 @@ python3 avs/qemu/run_musl_smoke.py \
   --mode phase-c \
   --link shared \
   --runner system \
-  --pto-kernels-root /private/tmp/linx-pto0583-kernels-322443ef \
+  --pto-kernels-root /private/tmp/linx-pto-kernels-5f5c \
   --pto-build-output /private/tmp/linx-pto-cube-system/build \
   --tileop-root /private/tmp/linx-tileop-1e637054 \
   --pto-sysroot /private/tmp/linx-pto0583-final-out/musl/install/phase-c \

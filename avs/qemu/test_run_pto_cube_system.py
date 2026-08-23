@@ -20,6 +20,7 @@ class PtoCubeSystemTests(unittest.TestCase):
         self.assertNotIn("key.fileobj.readline()", source)
         self.assertIn('if args.qemu_guest_errors:', source)
         self.assertNotIn('"-no-reboot", "-d", "guest_errors"', source)
+        self.assertIn('"timeout", "qemu_guest_errors", "append"', source)
 
     def test_runtime_requires_every_case_and_clean_shutdown(self) -> None:
         lines = ["PTO_CUBE_START count=6"]
