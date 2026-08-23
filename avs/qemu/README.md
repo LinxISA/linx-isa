@@ -241,6 +241,9 @@ python3 avs/qemu/run_musl_smoke.py \
   --timeout 360
 ```
 
+Use `--qemu-guest-errors` only for a focused diagnostic rerun; the strict
+six-case gate keeps verbose QEMU guest-error logging disabled by default.
+
 `summary.json` binds the exact pto-kernels, TileOP, LLVM, QEMU, and Linux
 source/tree identities; hashes every executable and runtime artifact; records
 all `DT_NEEDED` entries; and classifies the first missing marker, child exit,

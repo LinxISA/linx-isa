@@ -392,6 +392,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
     parser.add_argument(
+        "--qemu-guest-errors",
+        action="store_true",
+        help="enable verbose QEMU guest-error diagnostics for a focused rerun",
+    )
+    parser.add_argument(
         "--append",
         default="lpj=1000000 loglevel=1 console=ttyS0 kfence.sample_interval=0",
     )
@@ -502,9 +507,11 @@ def main(argv: list[str] | None = None) -> int:
 
         qemu_cmd = [
             str(paths["qemu"]), "-machine", "virt", "-nographic", "-monitor", "none",
-            "-no-reboot", "-d", "guest_errors", "-kernel", str(paths["kernel"]),
-            "-initrd", str(initramfs), "-append", args.append, "-bios", "none",
+            "-no-reboot", "-kernel", str(paths["kernel"]), "-initrd", str(initramfs),
+            "-append", args.append, "-bios", "none",
         ]
+        if args.qemu_guest_errors:
+            qemu_cmd[7:7] = ["-d", "guest_errors"]
         qemu_log = out_dir / "qemu.log"
         returncode, timed_out, text = _run_qemu_bounded(qemu_cmd, qemu_log, args.timeout)
         ok, classification, detail = _classify_runtime(text, returncode, timed_out)
