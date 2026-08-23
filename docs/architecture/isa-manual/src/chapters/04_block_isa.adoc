@@ -195,7 +195,7 @@ The bring-up profile constrains certain combinations (examples):
 
 Block types beyond the scalar core use named TLSU and CUBE direct forms plus VEC/SFU aliases over the unchanged TEPL
 Mode/Function carrier.
-Selector space not explicitly assigned by the PTO ISA 0.58.1 catalog is reserved and must not acquire ad hoc semantics.
+Selector space not explicitly assigned by the PTO ISA 0.58.3 catalog is reserved and must not acquire ad hoc semantics.
 
 [[blockisa-tile]]
 === Tile blocks (TAU)

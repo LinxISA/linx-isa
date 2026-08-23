@@ -42,7 +42,7 @@ nav:
   - Architecture:
       - Architecture documentation: architecture/README.md
       - v0.58 architecture contract: architecture/v0.58-architecture-contract.md
-      - LinxCore:
+      - LinxCore retained v0.58.1 baseline:
           - Overview: architecture/linxcore/overview.md
           - Microarchitecture: architecture/linxcore/microarchitecture.md
           - Interfaces: architecture/linxcore/interfaces.md

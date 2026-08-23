@@ -47,7 +47,7 @@ nav:
         - v0.58.3 发布说明: releases/v0.58.3.md
         - v0.58.1 发布说明: releases/v0.58.1.md
         - v0.58.0 发布说明: releases/v0.58.0.md
-    - LinxCore 架构:
+    - LinxCore 保留的 v0.58.1 实现基线:
         - 概述: architecture/linxcore/overview.md
         - 微架构合约: architecture/linxcore/microarchitecture.md
         - 模块目录: architecture/linxcore/module-catalog.md
