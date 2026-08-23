@@ -27,6 +27,8 @@ class RuntimeBuildScriptTest(unittest.TestCase):
             2,
             "Linux UAPI headers must be installed before configure and after sysroot merge",
         )
+        self.assertIn("headers_install", script)
+        self.assertIn("linux-uapi-export", script)
 
     def test_no_merge_empty_copied_libs_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -144,6 +144,23 @@ if [[ ! -d "$MUSL_SYSROOT/include" && ! -d "$MUSL_SYSROOT/usr/include" ]]; then
 fi
 
 install_linux_uapi_headers() {
+  if [[ -f "$LINUX_UAPI_ROOT/Makefile" ]]; then
+    local headers_make="${LINUX_HEADERS_MAKE:-make}"
+    if [[ -z "${LINUX_HEADERS_MAKE:-}" && "$(uname -s)" == "Darwin" ]] &&
+       command -v gmake >/dev/null 2>&1; then
+      headers_make=gmake
+    fi
+    local export_root="$OUT_ROOT/linux-uapi-export"
+    rm -rf "$export_root"
+    "$headers_make" -C "$LINUX_UAPI_ROOT" ARCH=linx \
+      INSTALL_HDR_PATH="$export_root" headers_install >/dev/null
+    mkdir -p "$MUSL_SYSROOT/include" "$MUSL_SYSROOT/usr/include"
+    cp -R "$export_root/include/." "$MUSL_SYSROOT/include/"
+    cp -R "$export_root/include/." "$MUSL_SYSROOT/usr/include/"
+    return
+  fi
+
+  # Minimal fixture fallback for isolated script tests without a kernel tree.
   mkdir -p "$MUSL_SYSROOT/include/linux" "$MUSL_SYSROOT/usr/include/linux"
   local header source
   for header in limits.h futex.h; do
