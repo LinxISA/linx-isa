@@ -212,6 +212,40 @@ The pinned `emulator/qemu` checkout in this repository currently exposes only
 optional external/recovered lane until a Linx linux-user target is added back
 to the fork and validated here.
 
+### PTO 0.58.3 CUBE full-system gate
+
+The active pto-kernels CUBE corpus runs through a focused phase-C initramfs
+lane because the current QEMU line has no Linx linux-user target. The runner
+builds all six exact CUBE programs into a required fresh output directory,
+validates their PTO identity together with the dynamic loader and libc, then
+boots a PID1 that forks and executes each program sequentially. Success
+requires six zero exit statuses, deterministic per-case markers, the aggregate
+pass marker, and a clean kernel poweroff:
+
+```bash
+python3 avs/qemu/run_musl_smoke.py \
+  --sample pto_cube \
+  --mode phase-c \
+  --link shared \
+  --runner system \
+  --pto-kernels-root /private/tmp/linx-pto0583-kernels-322443ef \
+  --pto-build-output /private/tmp/linx-pto-cube-system/build \
+  --tileop-root /private/tmp/linx-tileop-1e637054 \
+  --pto-sysroot /private/tmp/linx-pto0583-final-out/musl/install/phase-c \
+  --clang /private/tmp/linx-pto0583-final-out/toolchain/bin/clang \
+  --kernel /private/tmp/linx-linux-pto0583-build/vmlinux \
+  --linux-source-root /Users/zhoubot/.codex/worktrees/linx-isa/pto-0583-linux \
+  --qemu /private/tmp/linx-qemu-8fec-linux-user/build-softmmu/qemu-system-linx64 \
+  --qemu-source-root /private/tmp/linx-qemu-8fec-linux-user \
+  --out-dir /private/tmp/linx-pto-cube-system/evidence \
+  --timeout 180
+```
+
+`summary.json` binds the exact pto-kernels, TileOP, LLVM, QEMU, and Linux
+source/tree identities; hashes every executable and runtime artifact; records
+all `DT_NEEDED` entries; and classifies the first missing marker, child exit,
+timeout, or QEMU failure without treating later boot text as a pass.
+
 For the glibc static hello lane, use:
 
 ```bash
