@@ -32,7 +32,7 @@ make pdf
 
 ## 发布工件
 
-- 当前发行说明：`docs/zh/releases/v0.58.1.md`
+- 当前发行说明：`docs/zh/releases/v0.58.3.md`
 - 最新发布页面：https://github.com/灵犀指令集/linx-isa/releases/latest
 
 ## 重新生成生成的部分

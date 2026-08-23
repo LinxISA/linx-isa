@@ -44,6 +44,7 @@ markdown_extensions:
 nav:
     - v0.58 架构:
         - 架构合约: architecture/v0.58-architecture-contract.md
+        - v0.58.3 发布说明: releases/v0.58.3.md
         - v0.58.1 发布说明: releases/v0.58.1.md
         - v0.58.0 发布说明: releases/v0.58.0.md
     - LinxCore 架构:

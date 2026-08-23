@@ -17,7 +17,7 @@
 | **Formats** | 16-bit Compressed · 32-bit Base · 48-bit HL · 64-bit Vector |
 | **Specification** | [v0.58 Contract →](architecture/v0.58-architecture-contract.md) |
 | **Encoding Reference** | [v0.58 Encoding →](isa/encoding.md) |
-| **Release Notes** | [v0.58.1 →](releases/v0.58.1.md) |
+| **Release Notes** | [v0.58.3 →](releases/v0.58.3.md) |
 
 </div>
 
