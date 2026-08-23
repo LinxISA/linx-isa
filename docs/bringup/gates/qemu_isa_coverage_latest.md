@@ -1,18 +1,18 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-08-16 23:31:50Z`
+- Generated (UTC): `2026-08-23 05:26:24Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `unavailable`
 - L3 semantic oracle: `unavailable`
 - Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
-- Spec unique mnemonics: `731`
-- QEMU unique decode mnemonics (non-internal): `845`
-- QEMU mapped spec mnemonics: `731`
-- L1 mnemonic mapping: `731/731` (`100.0%`)
-- Spec legal forms: `765`
-- QEMU mapped spec forms: `765`
-- L1 form mapping: `765/765` (`100.0%`)
+- Spec unique mnemonics: `723`
+- QEMU unique decode mnemonics (non-internal): `837`
+- QEMU mapped spec mnemonics: `723`
+- L1 mnemonic mapping: `723/723` (`100.0%`)
+- Spec legal forms: `757`
+- QEMU mapped spec forms: `757`
+- L1 form mapping: `757/757` (`100.0%`)
 - Missing spec mnemonics: `0`
 - Missing spec forms: `0`
 - Reserved spec forms: `1`
@@ -32,7 +32,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `17`
+- `B`: `9`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
@@ -201,7 +201,7 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `24`
+- `B`: `16`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
