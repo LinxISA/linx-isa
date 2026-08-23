@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import copy
 import sys
 import tempfile
 import unittest
@@ -124,11 +125,70 @@ class PtoCubeSystemTests(unittest.TestCase):
         self.assertEqual(sum(line.startswith("file /pto_cube/") for line in lines), 1)
 
     def test_cold_boot_matrix_is_exact_six_case_fail_closed(self) -> None:
-        source = Path(run_pto_cube_system_matrix.__file__).read_text(encoding="utf-8")
-        self.assertIn("for case in single.CUBE_CASES:", source)
-        self.assertIn('"--case", case', source)
-        self.assertIn("passed == len(single.CUBE_CASES)", source)
-        self.assertIn("len(exact_expected) == 1", source)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            expected = {
+                "pto_kernels": "p", "tileop": "t", "llvm": "c",
+                "qemu": "q", "linux": "l",
+            }
+            source_tool = {
+                component: {"expected_commit": expected[component]}
+                for component in ("pto_kernels", "tileop", "linux", "qemu")
+            }
+            source_tool["clang"] = {"expected_commit": expected["llvm"]}
+            provenance = {
+                "source_tool": source_tool,
+                "libc_sha256": "a" * 64,
+                "loader_sha256": "b" * 64,
+                "identity_parser_sha256": "c" * 64,
+                "needed": {"case.elf": ["libc.so", "libm.so"]},
+            }
+            results = {}
+            for case in run_pto_cube_system.CUBE_CASES:
+                summary = root / f"{case}.summary.json"
+                log = root / f"{case}.log"
+                summary.write_text("{}\n", encoding="utf-8")
+                log.write_text("PASS\n", encoding="utf-8")
+                results[case] = {
+                    "ok": True,
+                    "returncode": 0,
+                    "classification": "runtime_pass",
+                    "selected_cases": [case],
+                    "summary": run_pto_cube_system_matrix._evidence(summary),
+                    "log": run_pto_cube_system_matrix._evidence(log),
+                    "expected": copy.deepcopy(expected),
+                    "provenance": copy.deepcopy(provenance),
+                }
+
+            self.assertTrue(run_pto_cube_system_matrix._aggregate_results(results)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            hostile[run_pto_cube_system.CUBE_CASES[0]].pop("expected")
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            hostile[run_pto_cube_system.CUBE_CASES[0]].pop("provenance")
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            hostile[run_pto_cube_system.CUBE_CASES[0]]["provenance"]["source_tool"]["qemu"]["binary"] = "mismatch"
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            hostile[run_pto_cube_system.CUBE_CASES[0]]["provenance"]["libc_sha256"] = "d" * 64
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            hostile.pop(run_pto_cube_system.CUBE_CASES[0])
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            hostile["extra"] = copy.deepcopy(next(iter(results.values())))
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+
+            hostile = copy.deepcopy(results)
+            Path(hostile[run_pto_cube_system.CUBE_CASES[0]]["log"]["path"]).unlink()
+            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
 
     def test_nonempty_build_output_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

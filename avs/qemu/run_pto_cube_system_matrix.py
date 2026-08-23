@@ -30,6 +30,134 @@ def _evidence(path: Path) -> dict[str, Any]:
     }
 
 
+def _valid_evidence(record: Any) -> bool:
+    if not isinstance(record, dict):
+        return False
+    try:
+        path = Path(record["path"])
+        return (
+            path.is_file()
+            and record["size_bytes"] == path.stat().st_size
+            and isinstance(record["sha256"], str)
+            and len(record["sha256"]) == 64
+            and record["sha256"] == _sha256(path)
+        )
+    except (KeyError, OSError, TypeError):
+        return False
+
+
+def _provenance_matches_expected(provenance: dict[str, Any],
+                                 expected: dict[str, Any]) -> bool:
+    source_tool = provenance.get("source_tool")
+    if not isinstance(source_tool, dict):
+        return False
+    for component in ("pto_kernels", "tileop", "linux", "qemu"):
+        record = source_tool.get(component)
+        if not isinstance(record, dict) or record.get("expected_commit") != expected.get(component):
+            return False
+    clang = source_tool.get("clang")
+    return isinstance(clang, dict) and clang.get("expected_commit") == expected.get("llvm")
+
+
+def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
+    required_cases = set(single.CUBE_CASES)
+    exact_case_keys = set(results) == required_cases
+    rows_valid = True
+    expected_values: set[str] = set()
+    provenance_values: set[str] = set()
+
+    for case in single.CUBE_CASES:
+        row = results.get(case)
+        if not isinstance(row, dict):
+            rows_valid = False
+            continue
+        expected = row.get("expected")
+        provenance = row.get("provenance")
+        row_valid = (
+            row.get("ok") is True
+            and row.get("returncode") == 0
+            and row.get("classification") == "runtime_pass"
+            and row.get("selected_cases") == [case]
+            and isinstance(expected, dict)
+            and isinstance(provenance, dict)
+            and _valid_evidence(row.get("summary"))
+            and _valid_evidence(row.get("log"))
+        )
+        if row_valid:
+            row_valid = _provenance_matches_expected(provenance, expected)
+        rows_valid &= row_valid
+        if isinstance(expected, dict):
+            expected_values.add(json.dumps(expected, sort_keys=True))
+        if isinstance(provenance, dict):
+            provenance_values.add(json.dumps(provenance, sort_keys=True))
+
+    expected_consistent = len(expected_values) == 1 and len(results) == len(required_cases)
+    provenance_consistent = len(provenance_values) == 1 and len(results) == len(required_cases)
+    passed = sum(
+        1 for case in single.CUBE_CASES
+        if isinstance(results.get(case), dict) and results[case].get("ok") is True
+    )
+    ok = exact_case_keys and rows_valid and expected_consistent and provenance_consistent
+    return {
+        "schema_version": "pto-cube-system-matrix-v1",
+        "mode": "fresh-boot-per-case",
+        "cases": results,
+        "passed": passed,
+        "total": len(single.CUBE_CASES),
+        "exact_case_keys": exact_case_keys,
+        "expected_consistent": expected_consistent,
+        "actual_provenance_consistent": provenance_consistent,
+        "result": {"ok": ok, "classification": "runtime_pass" if ok else "runtime_failure"},
+    }
+
+
+def _load_case_result(case: str, evidence_dir: Path, returncode: int) -> dict[str, Any]:
+    summary_path = evidence_dir / "summary.json"
+    log_path = evidence_dir / "qemu.log"
+    if not summary_path.is_file() or not log_path.is_file():
+        return {"ok": False, "returncode": returncode}
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    ok = (
+        returncode == 0
+        and summary.get("selected_cases") == [case]
+        and summary.get("result") == {
+            "ok": True,
+            "classification": "runtime_pass",
+        }
+    )
+    pto_identity = summary.get("pto_identity")
+    identity_files = pto_identity.get("files", {}) if isinstance(pto_identity, dict) else {}
+    identity_parser = pto_identity.get("parser") if isinstance(pto_identity, dict) else None
+    runtime_provenance = {
+        "source_tool": summary.get("provenance"),
+        "libc_sha256": identity_files.get("libc.so", {}).get("sha256"),
+        "loader_sha256": identity_files.get("ld-musl-linx64.so.1", {}).get("sha256"),
+        "identity_parser_sha256": (
+            identity_parser.get("sha256") if isinstance(identity_parser, dict) else None
+        ),
+        "needed": summary.get("needed"),
+    }
+    if (
+        not isinstance(runtime_provenance["source_tool"], dict)
+        or not all(
+            isinstance(runtime_provenance[key], str) and len(runtime_provenance[key]) == 64
+            for key in ("libc_sha256", "loader_sha256", "identity_parser_sha256")
+        )
+        or not isinstance(runtime_provenance["needed"], dict)
+    ):
+        runtime_provenance = None
+    return {
+        "ok": ok,
+        "returncode": returncode,
+        "classification": summary.get("result", {}).get("classification"),
+        "selected_cases": summary.get("selected_cases"),
+        "summary": _evidence(summary_path),
+        "log": _evidence(log_path),
+        "expected": summary.get("expected"),
+        "provenance": runtime_provenance,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pto-kernels-root", required=True)
@@ -47,10 +175,17 @@ def main(argv: list[str] | None = None) -> int:
         default="lpj=1000000 loglevel=1 console=ttyS0 kfence.sample_interval=0",
     )
     parser.add_argument("--qemu-guest-errors", action="store_true")
+    parser.add_argument(
+        "--reaggregate-existing",
+        action="store_true",
+        help="revalidate existing per-case summaries without launching QEMU",
+    )
     args = parser.parse_args(argv)
 
     out_root = Path(args.out_root).expanduser().resolve()
-    if out_root.exists() and any(out_root.iterdir()):
+    if args.reaggregate_existing and not out_root.is_dir():
+        parser.error(f"existing output root not found: {out_root}")
+    if not args.reaggregate_existing and out_root.exists() and any(out_root.iterdir()):
         parser.error(f"output root must be absent or empty: {out_root}")
     out_root.mkdir(parents=True, exist_ok=True)
 
@@ -74,53 +209,22 @@ def main(argv: list[str] | None = None) -> int:
     for case in single.CUBE_CASES:
         case_root = out_root / case
         evidence_dir = case_root / "evidence"
-        command = [
-            sys.executable,
-            str(runner),
-            *common,
-            "--case", case,
-            "--pto-build-output", str(case_root / "build"),
-            "--out-dir", str(evidence_dir),
-        ]
-        completed = subprocess.run(command, check=False)
-        summary_path = evidence_dir / "summary.json"
-        if not summary_path.is_file():
-            results[case] = {"ok": False, "returncode": completed.returncode}
-            continue
-        summary = json.loads(summary_path.read_text(encoding="utf-8"))
-        ok = (
-            completed.returncode == 0
-            and summary.get("selected_cases") == [case]
-            and summary.get("result") == {
-                "ok": True,
-                "classification": "runtime_pass",
-            }
-        )
-        results[case] = {
-            "ok": ok,
-            "returncode": completed.returncode,
-            "classification": summary.get("result", {}).get("classification"),
-            "summary": _evidence(summary_path),
-            "log": _evidence(evidence_dir / "qemu.log"),
-            "expected": summary.get("expected"),
-        }
+        returncode = 0
+        if not args.reaggregate_existing:
+            command = [
+                sys.executable,
+                str(runner),
+                *common,
+                "--case", case,
+                "--pto-build-output", str(case_root / "build"),
+                "--out-dir", str(evidence_dir),
+            ]
+            returncode = subprocess.run(command, check=False).returncode
+        results[case] = _load_case_result(case, evidence_dir, returncode)
 
-    passed = sum(bool(result.get("ok")) for result in results.values())
-    exact_expected = {
-        json.dumps(result.get("expected"), sort_keys=True)
-        for result in results.values()
-        if result.get("expected") is not None
-    }
-    ok = passed == len(single.CUBE_CASES) and len(exact_expected) == 1
-    aggregate = {
-        "schema_version": "pto-cube-system-matrix-v1",
-        "mode": "fresh-boot-per-case",
-        "cases": results,
-        "passed": passed,
-        "total": len(single.CUBE_CASES),
-        "exact_provenance_consistent": len(exact_expected) == 1,
-        "result": {"ok": ok, "classification": "runtime_pass" if ok else "runtime_failure"},
-    }
+    aggregate = _aggregate_results(results)
+    ok = aggregate["result"]["ok"]
+    passed = aggregate["passed"]
     aggregate_path = out_root / "aggregate_summary.json"
     aggregate_path.write_text(
         json.dumps(aggregate, indent=2, sort_keys=True) + "\n",
