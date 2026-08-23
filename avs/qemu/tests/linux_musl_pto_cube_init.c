@@ -7,6 +7,16 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#ifndef PTO_CUBE_CASE_INDEX
+#define PTO_CUBE_CASE_INDEX -1
+#endif
+
+#if PTO_CUBE_CASE_INDEX < 0
+#define PTO_CUBE_COUNT_TEXT "6"
+#else
+#define PTO_CUBE_COUNT_TEXT "1"
+#endif
+
 static void setup_console(void)
 {
 	int fd = open("/dev/console", O_RDWR);
@@ -105,32 +115,44 @@ static void run_case(const char *path, const char *name,
 int main(void)
 {
 	setup_console();
-	write_text("PTO_CUBE_START count=6\n");
+	write_text("PTO_CUBE_START count=" PTO_CUBE_COUNT_TEXT "\n");
+#if PTO_CUBE_CASE_INDEX < 0 || PTO_CUBE_CASE_INDEX == 0
 	run_case("/pto_cube/tmatmul_acc_fp32_32x32x32.elf",
 		 "tmatmul_acc_fp32_32x32x32",
 		 "PTO_CUBE_CASE_START tmatmul_acc_fp32_32x32x32\n",
 		 "PTO_CUBE_CASE_PASS tmatmul_acc_fp32_32x32x32 value=0\n");
+#endif
+#if PTO_CUBE_CASE_INDEX < 0 || PTO_CUBE_CASE_INDEX == 1
 	run_case("/pto_cube/tmatmul_bias_fp16_32x64x64.elf",
 		 "tmatmul_bias_fp16_32x64x64",
 		 "PTO_CUBE_CASE_START tmatmul_bias_fp16_32x64x64\n",
 		 "PTO_CUBE_CASE_PASS tmatmul_bias_fp16_32x64x64 value=0\n");
+#endif
+#if PTO_CUBE_CASE_INDEX < 0 || PTO_CUBE_CASE_INDEX == 2
 	run_case("/pto_cube/tmatmul_bias_fp32_32x32x32.elf",
 		 "tmatmul_bias_fp32_32x32x32",
 		 "PTO_CUBE_CASE_START tmatmul_bias_fp32_32x32x32\n",
 		 "PTO_CUBE_CASE_PASS tmatmul_bias_fp32_32x32x32 value=0\n");
+#endif
+#if PTO_CUBE_CASE_INDEX < 0 || PTO_CUBE_CASE_INDEX == 3
 	run_case("/pto_cube/tmatmul_fp16_16x32x32.elf",
 		 "tmatmul_fp16_16x32x32",
 		 "PTO_CUBE_CASE_START tmatmul_fp16_16x32x32\n",
 		 "PTO_CUBE_CASE_PASS tmatmul_fp16_16x32x32 value=0\n");
+#endif
+#if PTO_CUBE_CASE_INDEX < 0 || PTO_CUBE_CASE_INDEX == 4
 	run_case("/pto_cube/tmatmul_fp16_32x64x64.elf",
 		 "tmatmul_fp16_32x64x64",
 		 "PTO_CUBE_CASE_START tmatmul_fp16_32x64x64\n",
 		 "PTO_CUBE_CASE_PASS tmatmul_fp16_32x64x64 value=0\n");
+#endif
+#if PTO_CUBE_CASE_INDEX < 0 || PTO_CUBE_CASE_INDEX == 5
 	run_case("/pto_cube/tmatmul_fp32_32x32x32.elf",
 		 "tmatmul_fp32_32x32x32",
 		 "PTO_CUBE_CASE_START tmatmul_fp32_32x32x32\n",
 		 "PTO_CUBE_CASE_PASS tmatmul_fp32_32x32x32 value=0\n");
+#endif
 
-	write_text("PTO_CUBE_PASS count=6\n");
+	write_text("PTO_CUBE_PASS count=" PTO_CUBE_COUNT_TEXT "\n");
 	poweroff_now();
 }

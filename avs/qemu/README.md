@@ -216,30 +216,27 @@ to the fork and validated here.
 
 The active pto-kernels CUBE corpus runs through a focused phase-C initramfs
 lane because the current QEMU line has no Linx linux-user target. The runner
-builds all six exact CUBE programs into a required fresh output directory,
-validates their PTO identity together with the dynamic loader and libc, then
-boots a PID1 that forks and executes each program sequentially. Success
-requires six zero exit statuses, deterministic per-case markers, the aggregate
-pass marker, and a clean kernel poweroff:
+builds all six exact CUBE programs, validates their PTO identity together with
+the dynamic loader and libc, and runs each allowlisted case in a fresh QEMU
+boot. The release gate requires six exact single-case summaries with zero exit
+status, deterministic markers, consistent provenance, and clean poweroff:
 
 ```bash
-python3 avs/qemu/run_musl_smoke.py \
-  --sample pto_cube \
-  --mode phase-c \
-  --link shared \
-  --runner system \
+python3 avs/qemu/run_pto_cube_system_matrix.py \
   --pto-kernels-root /private/tmp/linx-pto-kernels-5f5c \
-  --pto-build-output /private/tmp/linx-pto-cube-system/build \
-  --tileop-root /private/tmp/linx-tileop-1e637054 \
-  --pto-sysroot /private/tmp/linx-pto0583-final-out/musl/install/phase-c \
+  --tileop-root /private/tmp/linx-tileop-bd1e \
+  --sysroot /private/tmp/linx-pto0583-final-out/musl/install/phase-c \
   --clang /private/tmp/linx-pto0583-final-out/toolchain/bin/clang \
-  --kernel /private/tmp/linx-linux-pto0583-build/vmlinux \
-  --linux-source-root /Users/zhoubot/.codex/worktrees/linx-isa/pto-0583-linux \
-  --qemu /private/tmp/linx-qemu-8fec-linux-user/build-softmmu/qemu-system-linx64 \
-  --qemu-source-root /private/tmp/linx-qemu-8fec-linux-user \
-  --out-dir /private/tmp/linx-pto-cube-system/evidence \
+  --kernel /private/tmp/linx-linux-pto0583-b7-build-r2/vmlinux \
+  --linux-source-root /private/tmp/linx-linux-1055-src \
+  --qemu /private/tmp/linx-qemu-2ba-final/build-softmmu/qemu-system-linx64 \
+  --qemu-source-root /private/tmp/linx-qemu-2ba-final \
+  --out-root /private/tmp/linx-pto-cube-system-matrix \
   --timeout 1200
 ```
+
+`run_pto_cube_system.py` without `--case` retains the six-child sequential
+boot as a context-switch diagnostic. It is not the cold-boot release verdict.
 
 Use `--qemu-guest-errors` only for a focused diagnostic rerun; the strict
 six-case gate keeps verbose QEMU guest-error logging disabled by default.

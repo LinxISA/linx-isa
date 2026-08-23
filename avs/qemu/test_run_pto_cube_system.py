@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import run_pto_cube_system
+import run_pto_cube_system_matrix
 
 
 class PtoCubeSystemTests(unittest.TestCase):
@@ -20,7 +21,7 @@ class PtoCubeSystemTests(unittest.TestCase):
         self.assertNotIn("key.fileobj.readline()", source)
         self.assertIn('if args.qemu_guest_errors:', source)
         self.assertNotIn('"-no-reboot", "-d", "guest_errors"', source)
-        self.assertIn('"timeout", "qemu_guest_errors", "append"', source)
+        self.assertIn('"timeout", "case", "qemu_guest_errors", "append"', source)
 
     def test_runtime_requires_every_case_and_clean_shutdown(self) -> None:
         lines = ["PTO_CUBE_START count=6"]
@@ -42,6 +43,22 @@ class PtoCubeSystemTests(unittest.TestCase):
                 False,
             ),
             (False, "runtime_case_failure", "PTO_CUBE_CASE_FAIL_EXIT case value=4"),
+        )
+
+    def test_single_case_runtime_requires_selected_case_and_shutdown(self) -> None:
+        name = run_pto_cube_system.CUBE_CASES[2]
+        text = "\n".join(
+            [
+                "PTO_CUBE_START count=1",
+                f"PTO_CUBE_CASE_START {name}",
+                f"PTO_CUBE_CASE_PASS {name} value=0",
+                "PTO_CUBE_PASS count=1",
+                "LINX_REBOOT lisc_shutdown",
+            ]
+        )
+        self.assertEqual(
+            run_pto_cube_system._classify_runtime(text, 0, False, (name,)),
+            (True, "runtime_pass", "all 1 cases passed and powered off"),
         )
 
     def test_pre_pid1_breakpoint_is_not_reported_as_timeout(self) -> None:
@@ -71,6 +88,7 @@ class PtoCubeSystemTests(unittest.TestCase):
         self.assertNotIn("struct cube_case", source)
         self.assertNotIn("cases[]", source)
         self.assertEqual(source.count("run_case(\"/pto_cube/"), 6)
+        self.assertIn("PTO_CUBE_CASE_INDEX", source)
 
     def test_timeout_reports_completed_case_count(self) -> None:
         text = "\n".join(
@@ -96,6 +114,21 @@ class PtoCubeSystemTests(unittest.TestCase):
             "file /lib/ld-musl-linx64.so.1 /sysroot/lib/libc.so 0755 0 0",
             lines,
         )
+
+    def test_initramfs_can_package_one_allowlisted_case(self) -> None:
+        case = run_pto_cube_system.CUBE_CASES[0]
+        lines = run_pto_cube_system._initramfs_lines(
+            Path("/build/init"), [Path("/build") / f"{case}.elf"],
+            Path("/sysroot/lib/libc.so"),
+        )
+        self.assertEqual(sum(line.startswith("file /pto_cube/") for line in lines), 1)
+
+    def test_cold_boot_matrix_is_exact_six_case_fail_closed(self) -> None:
+        source = Path(run_pto_cube_system_matrix.__file__).read_text(encoding="utf-8")
+        self.assertIn("for case in single.CUBE_CASES:", source)
+        self.assertIn('"--case", case', source)
+        self.assertIn("passed == len(single.CUBE_CASES)", source)
+        self.assertIn("len(exact_expected) == 1", source)
 
     def test_nonempty_build_output_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

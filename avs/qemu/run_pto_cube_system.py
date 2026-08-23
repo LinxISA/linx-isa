@@ -213,12 +213,14 @@ def _compile_init(
     clang: Path,
     sysroot: Path,
     out_dir: Path,
+    case_index: int = -1,
 ) -> dict[str, Any]:
     obj = out_dir / "pto_cube_init.o"
     runtime = sysroot / "lib" / "liblinx_builtin_rt.a"
     compile_cmd = [
         str(clang), "-target", "linx64-unknown-linux-musl", "--sysroot", str(sysroot),
-        "-fPIE", "-O2", "-c", str(source), "-o", str(obj),
+        "-fPIE", "-O2", f"-DPTO_CUBE_CASE_INDEX={case_index}",
+        "-c", str(source), "-o", str(obj),
     ]
     link_cmd = [
         str(clang), "-target", "linx64-unknown-linux-musl", "--sysroot", str(sysroot),
@@ -255,10 +257,16 @@ def _initramfs_lines(init: Path, elves: list[Path], libc: Path) -> list[str]:
     return lines
 
 
-def _classify_runtime(text: str, returncode: int, timed_out: bool) -> tuple[bool, str, str]:
-    start = "PTO_CUBE_START count=6" in text
-    passed = "PTO_CUBE_PASS count=6" in text
-    case_passes = sum(f"PTO_CUBE_CASE_PASS {name} value=0" in text for name in CUBE_CASES)
+def _classify_runtime(
+    text: str,
+    returncode: int,
+    timed_out: bool,
+    cases: tuple[str, ...] = CUBE_CASES,
+) -> tuple[bool, str, str]:
+    expected_count = len(cases)
+    start = f"PTO_CUBE_START count={expected_count}" in text
+    passed = f"PTO_CUBE_PASS count={expected_count}" in text
+    case_passes = sum(f"PTO_CUBE_CASE_PASS {name} value=0" in text for name in cases)
     fail_line = next((line for line in text.splitlines() if line.startswith("PTO_CUBE_CASE_FAIL")), "")
     breakpoint_line = next(
         (line for line in text.splitlines() if line.startswith("Linx: EBREAK trap")),
@@ -283,13 +291,13 @@ def _classify_runtime(text: str, returncode: int, timed_out: bool) -> tuple[bool
         return False, "runtime_timeout", f"timeout: start={start} case_passes={case_passes} pass={passed}"
     if returncode != 0:
         return False, "runtime_qemu_exit_failure", f"qemu_rc={returncode} case_passes={case_passes}"
-    if not start or not passed or case_passes != len(CUBE_CASES):
+    if not start or not passed or case_passes != expected_count:
         return False, "runtime_missing_marker", (
-            f"start={start} case_passes={case_passes}/{len(CUBE_CASES)} pass={passed}"
+            f"start={start} case_passes={case_passes}/{expected_count} pass={passed}"
         )
     if "LINX_REBOOT lisc_shutdown" not in text:
         return False, "runtime_missing_shutdown", "pass markers observed without LINX_REBOOT lisc_shutdown"
-    return True, "runtime_pass", f"all {len(CUBE_CASES)} cases passed and powered off"
+    return True, "runtime_pass", f"all {expected_count} cases passed and powered off"
 
 
 def _run_qemu_bounded(
@@ -391,6 +399,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--qemu-source-root", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
+    parser.add_argument("--case", choices=CUBE_CASES)
     parser.add_argument(
         "--qemu-guest-errors",
         action="store_true",
@@ -405,13 +414,15 @@ def main(argv: list[str] | None = None) -> int:
     paths = {
         name: Path(value).expanduser().resolve()
         for name, value in vars(args).items()
-        if name not in {"timeout", "qemu_guest_errors", "append"}
+        if name not in {"timeout", "case", "qemu_guest_errors", "append"}
     }
+    selected_cases = (args.case,) if args.case else CUBE_CASES
     out_dir = paths["out_dir"]
     out_dir.mkdir(parents=True, exist_ok=True)
     summary_path = out_dir / "summary.json"
     summary: dict[str, Any] = {
         "schema_version": "pto-cube-system-v1",
+        "selected_cases": list(selected_cases),
         "result": {"ok": False, "classification": "not_run"},
         "paths": {name: str(path) for name, path in paths.items()},
         "expected": {
@@ -485,6 +496,7 @@ def main(argv: list[str] | None = None) -> int:
             paths["clang"],
             paths["sysroot"],
             out_dir,
+            CUBE_CASES.index(args.case) if args.case else -1,
         )
         summary["init_identity"] = _validate_pto_identity(
             identity_parser, [init], out_dir, log_name="pto_init_identity.log"
@@ -496,7 +508,11 @@ def main(argv: list[str] | None = None) -> int:
             raise GateError(f"kernel-matched gen_init_cpio not found: {gen_init_cpio}")
         initramfs_list = out_dir / "initramfs.list"
         initramfs = out_dir / "initramfs.cpio"
-        initramfs_list.write_text("\n".join(_initramfs_lines(init, elves, libc)), encoding="utf-8")
+        selected_elves = [path for path in elves if path.stem in selected_cases]
+        initramfs_list.write_text(
+            "\n".join(_initramfs_lines(init, selected_elves, libc)),
+            encoding="utf-8",
+        )
         _run(
             [str(gen_init_cpio), "-o", str(initramfs), str(initramfs_list)],
             cwd=out_dir,
@@ -514,7 +530,9 @@ def main(argv: list[str] | None = None) -> int:
             qemu_cmd[7:7] = ["-d", "guest_errors"]
         qemu_log = out_dir / "qemu.log"
         returncode, timed_out, text = _run_qemu_bounded(qemu_cmd, qemu_log, args.timeout)
-        ok, classification, detail = _classify_runtime(text, returncode, timed_out)
+        ok, classification, detail = _classify_runtime(
+            text, returncode, timed_out, selected_cases
+        )
         summary["runtime"] = {
             "command": shlex.join(qemu_cmd),
             "returncode": returncode,
