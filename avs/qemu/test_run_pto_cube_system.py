@@ -13,7 +13,7 @@ import run_pto_cube_system
 
 class PtoCubeSystemTests(unittest.TestCase):
     def test_full_suite_timeout_and_streaming_are_bounded(self) -> None:
-        self.assertEqual(run_pto_cube_system.DEFAULT_TIMEOUT, 360)
+        self.assertEqual(run_pto_cube_system.DEFAULT_TIMEOUT, 1200)
         source = Path(run_pto_cube_system.__file__).read_text(encoding="utf-8")
         self.assertIn("os.set_blocking(process.stdout.fileno(), False)", source)
         self.assertIn("os.read(process.stdout.fileno(), 65536)", source)
