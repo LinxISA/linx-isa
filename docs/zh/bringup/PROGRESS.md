@@ -26,13 +26,13 @@ v0.57/v0.58.1 报告、旧 SHA、仅 trace 输出、等待项、跳过项和缺�
 | --- | --- | --- |
 | ISA catalog、Sail、PTO lock | 已验证 | Golden/catalog/manifest；Sail parser、定向语义、coverage、C backend；723/757 权威 |
 | LLVM/LLD | 已合入 | `b7c83f68bf84125e696a70bec4b665c70a3b584d`；MC 55/55；linx32 759/759、linx64 723/723 compile AVS |
-| QEMU | 集成中 | v0.58.3 基线及已审查 HL.LUI/CSEL 修复已合入；TLSU CPU-MMU PR 与 CUBE issue 75 尚未进入最终 pin |
-| Linx-TileOP-API | 集成中 | 精确 API/link 门禁通过；PR 27 将 CUBE compute PadValue 修正为 PTO 要求的 Zero |
+| QEMU | 叶仓已合入 | `2ba240fd057c5084f794375326f4cbf389cbc9da`；HL.LUI、CSEL、CUBE 和 ACR2 TLSU CPU-MMU 门禁通过 |
+| Linx-TileOP-API | 叶仓已合入 | `bd1ecca97ca47da0edc462c1ce19749c6940780e`；compute Zero、transport Null 契约通过 |
 | PTOAS | 集成中 | PR 8 源码审查和本地门禁通过；合入前仍需刷新最终 TileOP pin 和托管交付任务 |
 | Linux、glibc、musl | 叶仓已合入 | 精确 PTO 身份和最终 LLVM 的干净 `vmlinux` 构建通过；全系统 PTO workload 仍是发布门禁 |
 | VECTOR/CUBE 首次使用 | 架构完成；Linux 默认关闭 | ISA/Sail/QEMU 执行前异常契约通过。跨 ACR EXTCTX ABI 在 root issue 182 与 Linux issue 32 定义前，Linux 保持 V/C 关闭 |
 | Queue-wired model 与 PTO kernels | 叶仓已合入，等待 root repin | Model `eee8fd57`；pto-kernels `322443ef`；六个 CUBE 程序精确身份编译/链接通过 |
-| 全系统 PTO CUBE | 进行中 | r8 已到 PID1、fork/exec、三个 TLOAD source 和合法 CUBE preflight；下一分歧由 QEMU issue 75 跟踪 |
+| 全系统 PTO CUBE | 冷启动矩阵已验证 | 六个独立 Linux/QEMU 启动 6/6 通过，并共享同一精确组件指纹；aggregate SHA-256 `3328caf983ae9f555b926b818d89795fb8e13650bd13a9ce0c925a6b8a29761a` |
 | 更广的 nightly benchmark | 未关闭 | Nightly 广度与 release-strict 结果/身份门禁分开跟踪 |
 
 ## 规范命令
@@ -53,3 +53,7 @@ python3 docs/check_documentation.py --root .
 
 最终发布还要求精确 PTO CUBE 全系统门禁、新鲜 model/跨栈证据、最终 root head
 托管检查全绿，以及审查 tree 与合入 tree 完全一致。
+
+六子进程连续诊断不属于发布 PASS：在 Linux 关闭首次使用上下文管理时，它会复现
+跨进程 Tile 上下文泄漏。逐用例冷启动证明六个维护程序各自端到端正确；跨进程复用
+继续由 root issue 182 和 Linux issue 32 跟踪。

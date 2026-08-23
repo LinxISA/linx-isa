@@ -210,8 +210,8 @@
       "translation_sha256": "ac906ca7fa565897747fdbf2117a393755580598746e0eda25389d8010039650"
     },
     "bringup/ALIGNMENT_MATRIX.md": {
-      "source_sha256": "cc0a8a0bec2e3b8ce2f07024b896669be1511a8633611c9e9a3bc1d874ce49f8",
-      "translation_sha256": "a4a552a40ef2185d7fa26476e02091367b4e2492bfba06822b52c0100d061853"
+      "source_sha256": "bede7f76e27e4bdc39a3e19da9c96d9f79deaa9bc80e26b899e5bdc26e238a94",
+      "translation_sha256": "1bdff28e67bc6edd27f659df24898b15891d0fa9ed352ffb091a80df81f3da10"
     },
     "bringup/AVS_CONTRACT.md": {
       "source_sha256": "c2f9e5a6fa25b954fe150b70efe2e273c2cdcb97df71031a38ff18fd292a9fe8",
@@ -242,8 +242,8 @@
       "translation_sha256": "900c546670f0c22d80d7d8e01bdff8d4ee2987a41f3516254abcb01011648313"
     },
     "bringup/PROGRESS.md": {
-      "source_sha256": "1190f12351671b68b043a120f9cc19bdcc57d14c72bc5ce64e51768139b184ec",
-      "translation_sha256": "9ff835baaa331b23956ca46230a4e4edbd5baecda9fb8292578e7132c316e1ec"
+      "source_sha256": "64cd18bb845b7cace5c31afc28150495bd16cebeb8a5c4175f2ea0e1e0feb58f",
+      "translation_sha256": "f670a6d52af439f5ff4b0fb072c1eceb87cb972394b2fb971f9a634308acbc47"
     },
     "bringup/README.md": {
       "source_sha256": "5828c2818d24287582376ebf4788b8a2c1022fcb6bc34976335f6cc70cc2e7b5",
@@ -8050,8 +8050,8 @@
       "translation_sha256": "3d206f232f77774e0d03ae3416b8c11631e0e09b1a95d4993314856a14b9cfb1"
     },
     "releases/v0.58.3.md": {
-      "source_sha256": "906d353a975e29955d12b570270b0622b392da440bec6f62b9ed99ea47bd463b",
-      "translation_sha256": "be1097c6bd03dc19a30d1330683f51d7d39057e5dba44bf3ccc1eb5b3cd37d67"
+      "source_sha256": "c130ae010d1d7fcbc478e872514060a3b16de569ff67ac41a8c7b44ddee35a31",
+      "translation_sha256": "9c64d925cf0ec57f6231e00df392da8879abc611192e72af780457a2befc61d7"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",
