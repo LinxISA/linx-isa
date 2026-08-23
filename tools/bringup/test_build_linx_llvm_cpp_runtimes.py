@@ -29,6 +29,7 @@ class RuntimeBuildScriptTest(unittest.TestCase):
         )
         self.assertIn("headers_install", script)
         self.assertIn("linux-uapi-export", script)
+        self.assertIn('$MUSL_SYSROOT/lib/liblinx_builtin_rt.a', script)
 
     def test_no_merge_empty_copied_libs_writes_summary(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

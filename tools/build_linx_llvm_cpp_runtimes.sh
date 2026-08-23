@@ -433,7 +433,10 @@ if [[ "$MERGE_SYSROOT" == "1" ]]; then
   # archive expected by clang++ when -rtlib=compiler-rt is selected.
   target_arch="${TARGET%%-*}"
   builtins_name="libclang_rt.builtins-${target_arch}.a"
-  builtins_src="$ROOT/out/libc/musl/runtime/$MODE/liblinx_builtin_rt.a"
+  builtins_src="$MUSL_SYSROOT/lib/liblinx_builtin_rt.a"
+  if [[ ! -f "$builtins_src" ]]; then
+    builtins_src="$ROOT/out/libc/musl/runtime/$MODE/liblinx_builtin_rt.a"
+  fi
   if [[ -f "$builtins_src" ]]; then
     install -m 644 "$builtins_src" "$MUSL_SYSROOT/lib/$builtins_name"
     install -m 644 "$builtins_src" "$MUSL_SYSROOT/usr/lib/$builtins_name"
