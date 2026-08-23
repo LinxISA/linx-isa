@@ -129,6 +129,8 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
     validated_passed = 0
     expected_values: set[str] = set()
     provenance_values: set[str] = set()
+    expected_contributors = 0
+    provenance_contributors = 0
 
     for case in single.CUBE_CASES:
         row = results.get(case)
@@ -154,17 +156,24 @@ def _aggregate_results(results: dict[str, Any]) -> dict[str, Any]:
             validated_passed += 1
         rows_valid &= row_valid
         if isinstance(expected, dict):
+            expected_contributors += 1
             expected_values.add(json.dumps(expected, sort_keys=True))
         if isinstance(provenance, dict):
+            provenance_contributors += 1
             provenance_values.add(json.dumps(provenance, sort_keys=True))
 
     canonical_expected_json = json.dumps(_canonical_expected(), sort_keys=True)
     expected_consistent = (
         len(expected_values) == 1
         and next(iter(expected_values)) == canonical_expected_json
+        and expected_contributors == len(required_cases)
         and len(results) == len(required_cases)
     )
-    provenance_consistent = len(provenance_values) == 1 and len(results) == len(required_cases)
+    provenance_consistent = (
+        len(provenance_values) == 1
+        and provenance_contributors == len(required_cases)
+        and len(results) == len(required_cases)
+    )
     expected_fingerprint = (
         hashlib.sha256(next(iter(expected_values)).encode("utf-8")).hexdigest()
         if expected_consistent else None

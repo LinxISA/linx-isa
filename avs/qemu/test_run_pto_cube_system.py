@@ -166,11 +166,17 @@ class PtoCubeSystemTests(unittest.TestCase):
 
             hostile = copy.deepcopy(results)
             hostile[run_pto_cube_system.CUBE_CASES[0]].pop("expected")
-            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+            aggregate = run_pto_cube_system_matrix._aggregate_results(hostile)
+            self.assertFalse(aggregate["result"]["ok"])
+            self.assertFalse(aggregate["expected_consistent"])
+            self.assertIsNone(aggregate["expected_fingerprint_sha256"])
 
             hostile = copy.deepcopy(results)
             hostile[run_pto_cube_system.CUBE_CASES[0]].pop("provenance")
-            self.assertFalse(run_pto_cube_system_matrix._aggregate_results(hostile)["result"]["ok"])
+            aggregate = run_pto_cube_system_matrix._aggregate_results(hostile)
+            self.assertFalse(aggregate["result"]["ok"])
+            self.assertFalse(aggregate["actual_provenance_consistent"])
+            self.assertIsNone(aggregate["actual_provenance_fingerprint_sha256"])
 
             hostile = copy.deepcopy(results)
             hostile[run_pto_cube_system.CUBE_CASES[0]]["provenance"]["source_tool"]["qemu"]["binary"] = "mismatch"
