@@ -1,5 +1,9 @@
 # LinxISA v0.58 Component Release Train Design
 
+> Archive status: historical v0.58.0/v0.58.1 release-train design. This file is
+> non-normative and must not be used to infer current v0.58.3 component pins,
+> identities, semantics, or release gates.
+
 ## 1. Objective
 
 Upgrade every component governed by `docs/bringup/component-lock.v0.58.json`
