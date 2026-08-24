@@ -106,6 +106,34 @@ class ComponentLockTests(unittest.TestCase):
 
         self.assertTrue(any("must not have release metadata" in e for e in errors), errors)
 
+    def test_every_component_requires_tree_and_role_provenance(self) -> None:
+        checker = load_checker()
+        path = "lib/mesa3d"
+        lock = {
+            "schema_version": 1,
+            "profile": "v0.58",
+            "components": [
+                {
+                    "path": path,
+                    "url": "https://github.com/LinxISA/mesa3d.git",
+                    "branch": "main",
+                    "commit": "4" * 40,
+                }
+            ],
+        }
+        modules = {
+            path: {
+                "url": "https://github.com/LinxISA/mesa3d.git",
+                "branch": "main",
+                "update": "checkout",
+            }
+        }
+
+        errors = checker.validate(lock, modules, {path: "4" * 40})
+
+        self.assertTrue(any("invalid locked tree" in error for error in errors), errors)
+        self.assertTrue(any("role must be non-empty" in error for error in errors), errors)
+
 
 if __name__ == "__main__":
     unittest.main()

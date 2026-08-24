@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PROFILE = Path("isa/v0.58")
 GIT_OID = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
+EXTENSION_RESERVATION_COUNT = 40
 
 
 def load(root: Path, relative: str) -> dict[str, Any]:
@@ -182,6 +183,79 @@ def compiled_constraint_key(
     )
 
 
+def validate_extension_reservation_cardinality(
+    meta: Any,
+    release: Any,
+    lock: Any,
+    reservations: Any,
+) -> list[str]:
+    errors: list[str] = []
+
+    def require_object(value: Any, label: str) -> dict[str, Any]:
+        if isinstance(value, dict):
+            return value
+        errors.append(f"{label} must be a JSON object")
+        return {}
+
+    meta_object = require_object(meta, "v0.58 metadata")
+    release_object = require_object(release, "v0.58 release manifest")
+    lock_object = require_object(lock, "v0.58 PTO lock")
+    reservation_object = require_object(
+        reservations, "v0.58 extension reservation projection"
+    )
+    meta_cardinality = require_object(
+        meta_object.get("cardinality"), "v0.58 metadata cardinality"
+    )
+    release_cardinality = require_object(
+        release_object.get("cardinality"), "v0.58 release manifest cardinality"
+    )
+    lock_catalogs = require_object(
+        lock_object.get("catalogs"), "v0.58 PTO lock catalogs"
+    )
+    reservation_catalog = require_object(
+        lock_catalogs.get("extension_encoding_reservations"),
+        "v0.58 PTO lock extension reservation catalog",
+    )
+    reservation_inventory = reservation_object.get("reservations")
+    if not isinstance(reservation_inventory, list):
+        errors.append("v0.58 extension reservation inventory must be a JSON array")
+        reservation_inventory = []
+
+    cardinalities = {
+        "meta": meta_cardinality.get("extension_encoding_reservations"),
+        "release manifest": release_cardinality.get(
+            "extension_encoding_reservations"
+        ),
+        "PTO lock": reservation_catalog.get("count"),
+        "reservation projection": reservation_object.get("reservation_count"),
+        "reservation inventory": len(reservation_inventory),
+    }
+    if any(
+        count != EXTENSION_RESERVATION_COUNT for count in cardinalities.values()
+    ):
+        details = ", ".join(
+            f"{source}={count!r}" for source, count in cardinalities.items()
+        )
+        errors.append(
+            "v0.58 extension reservation cardinalities must agree at "
+            f"{EXTENSION_RESERVATION_COUNT}: {details}"
+        )
+
+    expected_note = (
+        f"PTO publishes {EXTENSION_RESERVATION_COUNT} extension reservations"
+    )
+    notes = meta_object.get("notes")
+    if not isinstance(notes, list) or not all(isinstance(note, str) for note in notes):
+        errors.append("v0.58 metadata notes must be a JSON array of strings")
+        notes = []
+    if not any(expected_note in note for note in notes):
+        errors.append(
+            "v0.58 metadata notes must state the canonical extension reservation "
+            f"cardinality ({EXTENSION_RESERVATION_COUNT})"
+        )
+    return errors
+
+
 def validate(root: Path) -> list[str]:
     errors: list[str] = []
     paths = {
@@ -192,6 +266,7 @@ def validate(root: Path) -> list[str]:
         "reservations": "isa/v0.58/state/extension_encoding_reservations.json",
         "shared": "isa/v0.58/state/shared_tile_registers.json",
         "release": "isa/v0.58/release_manifest.json",
+        "meta": "isa/v0.58/meta.json",
         "spec": "isa/v0.58/linxisa-v0.58.json",
     }
     missing = [relative for relative in paths.values() if not (root / relative).is_file()]
@@ -199,6 +274,9 @@ def validate(root: Path) -> list[str]:
         return [f"missing PTO/Linx 0.58 artifact: {relative}" for relative in missing]
     docs = {name: load(root, relative) for name, relative in paths.items()}
     lock = docs["lock"]
+    errors.extend(validate_extension_reservation_cardinality(
+        docs["meta"], docs["release"], lock, docs["reservations"]
+    ))
     if lock.get("release") != "0.58.3" or lock.get("encoding_abi") != "pto-isa-0.58.3-mode-function-v1":
         errors.append("PTO lock has the wrong 0.58.3 release/ABI identity")
     if not GIT_OID.fullmatch(str(lock.get("source", {}).get("commit", ""))):
@@ -209,7 +287,7 @@ def validate(root: Path) -> list[str]:
         "scalar_forms": 466,
         "command_forms": 74,
         "tile_operations": 109,
-        "extension_encoding_reservations": 40,
+        "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
     }
     for name, count in expected_catalogs.items():
         entry = lock.get("catalogs", {}).get(name, {})
@@ -348,8 +426,14 @@ def validate(root: Path) -> list[str]:
         errors.append("BSTART.VEC/SFU aliases must not create additional decode identities")
     reservations = docs["reservations"].get("reservations", [])
     reservation_by_name = {str(item.get("mnemonic")): item for item in reservations}
-    if len(reservations) != 40 or len(reservation_by_name) != 40:
-        errors.append("PTO must publish exactly 40 unique extension encoding reservations")
+    if (
+        len(reservations) != EXTENSION_RESERVATION_COUNT
+        or len(reservation_by_name) != EXTENSION_RESERVATION_COUNT
+    ):
+        errors.append(
+            "PTO must publish exactly "
+            f"{EXTENSION_RESERVATION_COUNT} unique extension encoding reservations"
+        )
     uncovered = sorted(
         str(item.get("asm") or item.get("mnemonic"))
         for item in linx_only

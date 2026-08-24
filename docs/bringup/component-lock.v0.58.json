@@ -53,6 +53,7 @@
       "url": "https://github.com/LinxISA/mesa3d.git",
       "branch": "main",
       "commit": "11c1663090d31ee744059281c4fa8f347e10e023",
+      "tree": "430ece93484269dade688d173d75f10197aa837f",
       "role": "graphics stack"
     },
     {
@@ -69,6 +70,7 @@
       "url": "https://github.com/LinxISA/LinxCore.git",
       "branch": "main",
       "commit": "aedec9de2b7ecf765ea34b7bb7f12305850fac79",
+      "tree": "6218500b54b9743ff515f6eb916aa1b34cd5d6bd",
       "role": "RTL implementation"
     },
     {
@@ -94,9 +96,10 @@
       "url": "https://github.com/LinxISA/LinxCoreModel.git",
       "branch": "main",
       "commit": "2b16fe22140ec6b6d41ea35becfe9e932d3170f3",
+      "tree": "e81704d8295539a47e727d5ab3b272b9eec4e8c7",
       "role": "C++ core model",
       "integration_status": "review_only_open_pr",
-      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/36"
+      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/37"
     },
     {
       "path": "tools/model",
@@ -112,6 +115,7 @@
       "url": "https://github.com/LinxISA/pyCircuit.git",
       "branch": "main",
       "commit": "2087c00f0e8297044123753e8430d6b950badf67",
+      "tree": "4a6f3fbadb904e460ff88a1689529a6d0f60bac3",
       "role": "pyCircuit model"
     },
     {

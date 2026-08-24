@@ -17,8 +17,13 @@ from pathlib import Path
 from typing import Any
 
 VALID_GATE_STATUS = {"pass", "fail", "partial", "not_run"}
+VALID_REGISTRY_PROFILES = {"dev", "release-strict"}
+VALID_REGISTRY_TIERS = {"pr", "nightly"}
 ID_RE = re.compile(r"\bID:\s*([A-Z0-9][A-Z0-9_-]*)\b")
 GATE_KEY_RE = re.compile(r"^[^:\n]+::[^\n]+$")
+FLOW_GATE_RE = re.compile(
+    r"(?:^|\s)--gate(?:=|\s+)(?:'([^']+)'|\"([^\"]+)\"|([^\s]+))"
+)
 UTC_FMT = "%Y-%m-%d %H:%M:%SZ"
 
 EXIT_OK = 0
@@ -122,11 +127,318 @@ def _collect_checklist_ids(checklists_root: Path) -> tuple[dict[str, list[str]],
     return found, dups
 
 
+def _registry_gate_map(
+    registry: dict[str, Any], *, errors: list[dict[str, Any]]
+) -> dict[str, dict[str, Any]]:
+    if registry.get("schema_version") != 1:
+        _err(
+            errors,
+            "E_GATE_REGISTRY_VERSION",
+            "gate registry schema_version must be 1",
+            schema_version=registry.get("schema_version"),
+        )
+
+    owners_raw = registry.get("owners")
+    owners: set[str] = set()
+    if not isinstance(owners_raw, list) or not owners_raw:
+        _err(
+            errors,
+            "E_GATE_REGISTRY_OWNERS",
+            "gate registry owners must be a non-empty list",
+        )
+    else:
+        for owner in owners_raw:
+            if not isinstance(owner, str) or not owner.strip():
+                _err(
+                    errors,
+                    "E_GATE_REGISTRY_OWNER_VALUE",
+                    "gate registry owner entries must be non-empty strings",
+                    owner=owner,
+                )
+                continue
+            owner_norm = owner.strip()
+            if owner_norm in owners:
+                _err(
+                    errors,
+                    "E_GATE_REGISTRY_OWNER_DUP",
+                    "gate registry owner entries must be unique",
+                    owner=owner_norm,
+                )
+            owners.add(owner_norm)
+
+    gates = registry.get("gates")
+    if not isinstance(gates, list) or not gates:
+        _err(errors, "E_GATE_REGISTRY_GATES", "gate registry gates must be a non-empty list")
+        return {}
+
+    gate_map: dict[str, dict[str, Any]] = {}
+    for index, gate in enumerate(gates):
+        if not isinstance(gate, dict):
+            _err(
+                errors,
+                "E_GATE_REGISTRY_GATE_TYPE",
+                "gate registry entry must be an object",
+                index=index,
+            )
+            continue
+        gate_key = str(gate.get("gate_key", "")).strip()
+        domain = str(gate.get("domain", "")).strip()
+        if not gate_key or not GATE_KEY_RE.match(gate_key):
+            _err(
+                errors,
+                "E_GATE_REGISTRY_GATE_KEY",
+                "gate registry gate_key must use Domain::Gate format",
+                index=index,
+                gate_key=gate_key,
+            )
+            continue
+        if gate_key in gate_map:
+            _err(
+                errors,
+                "E_GATE_REGISTRY_GATE_DUP",
+                "gate registry gate_key must be unique",
+                gate_key=gate_key,
+            )
+            continue
+        if gate_key.split("::", 1)[0].strip() != domain:
+            _err(
+                errors,
+                "E_GATE_REGISTRY_DOMAIN",
+                "gate registry domain must match gate_key domain",
+                gate_key=gate_key,
+                domain=domain,
+            )
+
+        owner = gate.get("owner")
+        if not isinstance(owner, str) or not owner.strip():
+            _err(
+                errors,
+                "E_GATE_REGISTRY_GATE_OWNER",
+                "gate registry gate owner must be a non-empty string",
+                gate_key=gate_key,
+                owner=owner,
+            )
+        elif owners and owner.strip() not in owners:
+            _err(
+                errors,
+                "E_GATE_REGISTRY_GATE_OWNER_UNKNOWN",
+                "gate registry gate owner must be declared in registry owners",
+                gate_key=gate_key,
+                owner=owner.strip(),
+            )
+
+        command = gate.get("command")
+        if not isinstance(command, str) or not command.strip():
+            _err(
+                errors,
+                "E_GATE_REGISTRY_COMMAND",
+                "gate registry command must be a non-empty string",
+                gate_key=gate_key,
+            )
+
+        if not isinstance(gate.get("required"), bool):
+            _err(
+                errors,
+                "E_GATE_REGISTRY_REQUIRED",
+                "gate registry required must be a boolean",
+                gate_key=gate_key,
+                required=gate.get("required"),
+            )
+
+        for field in ("profiles", "tiers"):
+            values = gate.get(field)
+            if not isinstance(values, list) or not values:
+                _err(
+                    errors,
+                    f"E_GATE_REGISTRY_{field.upper()}",
+                    f"gate registry {field} must be a non-empty list",
+                    gate_key=gate_key,
+                )
+                continue
+            normalized: list[str] = []
+            for value in values:
+                if not isinstance(value, str) or not value.strip():
+                    _err(
+                        errors,
+                        f"E_GATE_REGISTRY_{field.upper()}_VALUE",
+                        f"gate registry {field} entries must be non-empty strings",
+                        gate_key=gate_key,
+                        value=value,
+                    )
+                    continue
+                normalized.append(value.strip())
+            if len(normalized) != len(set(normalized)):
+                _err(
+                    errors,
+                    f"E_GATE_REGISTRY_{field.upper()}_DUP",
+                    f"gate registry {field} entries must be unique",
+                    gate_key=gate_key,
+                )
+            valid_values = (
+                VALID_REGISTRY_PROFILES if field == "profiles" else VALID_REGISTRY_TIERS
+            )
+            invalid_values = sorted(set(normalized) - valid_values)
+            if invalid_values:
+                _err(
+                    errors,
+                    f"E_GATE_REGISTRY_{field.upper()}_UNKNOWN",
+                    f"gate registry {field} contains unsupported values",
+                    gate_key=gate_key,
+                    invalid_values=invalid_values,
+                )
+
+        artifacts = gate.get("artifacts")
+        if not isinstance(artifacts, list):
+            _err(
+                errors,
+                "E_GATE_REGISTRY_ARTIFACTS",
+                "gate registry artifacts must be a list",
+                gate_key=gate_key,
+            )
+        else:
+            normalized_artifacts: list[str] = []
+            for artifact in artifacts:
+                artifact_norm = _repo_relative_path(
+                    artifact,
+                    field=f"gate_registry[{gate_key}].artifacts",
+                    errors=errors,
+                )
+                if artifact_norm is not None:
+                    normalized_artifacts.append(artifact_norm)
+            if len(normalized_artifacts) != len(set(normalized_artifacts)):
+                _err(
+                    errors,
+                    "E_GATE_REGISTRY_ARTIFACT_DUP",
+                    "gate registry artifacts must be unique",
+                    gate_key=gate_key,
+                )
+
+        freshness = gate.get("freshness_hours")
+        if (
+            isinstance(freshness, bool)
+            or not isinstance(freshness, (int, float))
+            or freshness <= 0
+        ):
+            _err(
+                errors,
+                "E_GATE_REGISTRY_FRESHNESS",
+                "gate registry freshness_hours must be a positive number",
+                gate_key=gate_key,
+                freshness_hours=freshness,
+            )
+
+        enabled_if_env = gate.get("enabled_if_env")
+        if enabled_if_env is not None and (
+            not isinstance(enabled_if_env, str) or not enabled_if_env.strip()
+        ):
+            _err(
+                errors,
+                "E_GATE_REGISTRY_ENABLED_IF_ENV",
+                "gate registry enabled_if_env must be a non-empty string when present",
+                gate_key=gate_key,
+            )
+        gate_map[gate_key] = gate
+    return gate_map
+
+
+def _validate_phase_registry_alignment(
+    phase_name: str,
+    *,
+    phase_gate_requirements: dict[str, dict[str, Any]],
+    assignment_map: dict[str, dict[str, Any]],
+    registry_gate_map: dict[str, dict[str, Any]],
+    errors: list[dict[str, Any]],
+) -> None:
+    phase_req = phase_gate_requirements.get(phase_name, {})
+    phase_keys = phase_req.get("required_gate_keys", [])
+    for gate_key in phase_keys:
+        assignment = assignment_map.get(gate_key)
+        if assignment is None:
+            _err(
+                errors,
+                "E_PHASE_GATE_ASSIGNMENT_MISSING",
+                "phase gate must exist exactly in manifest assignments",
+                phase=phase_name,
+                gate_key=gate_key,
+            )
+            continue
+        registry_gate = registry_gate_map.get(gate_key)
+        if registry_gate is None:
+            _err(
+                errors,
+                "E_PHASE_GATE_NOT_REGISTERED",
+                "phase gate must exist exactly in gate registry",
+                phase=phase_name,
+                gate_key=gate_key,
+            )
+            continue
+        assigned_agent = str(assignment.get("agent", "")).strip()
+        registry_owner = str(registry_gate.get("owner", "")).strip()
+        if assigned_agent and registry_owner and assigned_agent != registry_owner:
+            _err(
+                errors,
+                "E_PHASE_GATE_OWNER_DRIFT",
+                "phase assignment agent must match gate registry owner",
+                phase=phase_name,
+                gate_key=gate_key,
+                assignment_agent=assigned_agent,
+                registry_owner=registry_owner,
+            )
+
+
+def _flow_gate_references(flow: dict[str, Any]) -> list[dict[str, str]]:
+    references: list[dict[str, str]] = []
+    stages = flow.get("stages", [])
+    if not isinstance(stages, list):
+        return references
+    for stage in stages:
+        if not isinstance(stage, dict):
+            continue
+        stage_id = str(stage.get("id", "")).strip()
+        commands = stage.get("commands", [])
+        if not isinstance(commands, list):
+            continue
+        for command in commands:
+            if not isinstance(command, dict):
+                continue
+            command_text = str(command.get("command", ""))
+            if "run_gates.py" not in command_text:
+                continue
+            command_id = str(command.get("id", "")).strip()
+            for match in FLOW_GATE_RE.finditer(command_text):
+                gate_key = next(group for group in match.groups() if group is not None)
+                references.append(
+                    {
+                        "stage_id": stage_id,
+                        "command_id": command_id,
+                        "gate_key": gate_key.strip(),
+                    }
+                )
+    return references
+
+
+def _validate_flow_gate_references(
+    flow: dict[str, Any],
+    registry_gate_map: dict[str, dict[str, Any]],
+    *,
+    errors: list[dict[str, Any]],
+) -> None:
+    for reference in _flow_gate_references(flow):
+        if reference["gate_key"] not in registry_gate_map:
+            _err(
+                errors,
+                "E_BENCHMARK_FLOW_GATE_UNKNOWN",
+                "benchmark flow --gate reference is absent from gate registry",
+                **reference,
+            )
+
+
 def _validate_benchmark_flow_policy(
     *,
     manifest: dict[str, Any],
     root: Path,
     agents: dict[str, Any],
+    registry_gate_map: dict[str, dict[str, Any]],
     errors: list[dict[str, Any]],
 ) -> dict[str, Any]:
     stats = {
@@ -221,6 +533,12 @@ def _validate_benchmark_flow_policy(
                             )
                             continue
                         flow_stages.append(stage)
+
+                _validate_flow_gate_references(
+                    flow,
+                    registry_gate_map,
+                    errors=errors,
+                )
 
     if runner_rel and not (root / runner_rel).exists():
         _err(
@@ -370,6 +688,7 @@ def _validate_benchmark_flow_policy(
 def _validate_static(
     manifest: dict[str, Any],
     waivers_doc: dict[str, Any],
+    registry: dict[str, Any],
     checklists_root: Path,
     *,
     root: Path,
@@ -377,6 +696,7 @@ def _validate_static(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     errors: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
+    registry_gate_map = _registry_gate_map(registry, errors=errors)
 
     if manifest.get("version") != 1:
         _err(errors, "E_MANIFEST_VERSION", "manifest.version must be 1")
@@ -774,6 +1094,7 @@ def _validate_static(
         manifest=manifest,
         root=root,
         agents=agents,
+        registry_gate_map=registry_gate_map,
         errors=errors,
     )
 
@@ -994,6 +1315,25 @@ def _validate_static(
             phase_gate_requirements[phase_name_norm] = {
                 "required_gate_keys": required_gate_keys,
             }
+
+    registry_enforced_phases = {active_phase, "WORKLOAD-RUNTIME"} - {""}
+    for phase_name in sorted(registry_enforced_phases):
+        _validate_phase_registry_alignment(
+            phase_name,
+            phase_gate_requirements=phase_gate_requirements,
+            assignment_map=assignment_map,
+            registry_gate_map=registry_gate_map,
+            errors=errors,
+        )
+
+    for gate_key in sorted(assignment_map):
+        if gate_key.startswith("Workloads::") and gate_key not in registry_gate_map:
+            _err(
+                errors,
+                "E_WORKLOAD_ASSIGNMENT_NOT_REGISTERED",
+                "Workloads assignment must exist exactly in gate registry",
+                gate_key=gate_key,
+            )
     waivers_version = waivers_doc.get("version")
     if waivers_version != 1:
         _err(errors, "E_WAIVER_VERSION", "waivers.version must be 1", version=waivers_version)
@@ -1188,6 +1528,7 @@ def _validate_static(
             "require_phase_bound_waivers": require_phase_bound_waivers,
         },
         "phase_gate_requirements": phase_gate_requirements,
+        "registry_gates": registry_gate_map,
         "stats": stats,
     }
 
@@ -1473,6 +1814,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description="Strict multi-agent gate/checklist validator")
     ap.add_argument("--manifest", default="docs/bringup/agent_runs/manifest.yaml")
     ap.add_argument("--waivers", default="docs/bringup/agent_runs/waivers.yaml")
+    ap.add_argument("--registry", default="docs/bringup/gate_registry.json")
     ap.add_argument("--checklists-root", default="docs/bringup/agent_runs/checklists")
     ap.add_argument("--strict-always", action="store_true", help="enforce strict_always policy")
     ap.add_argument("--mode", choices=["static", "runtime"], required=True)
@@ -1486,6 +1828,7 @@ def main(argv: list[str]) -> int:
     root = Path(".").resolve()
     manifest_path = (root / args.manifest).resolve()
     waivers_path = (root / args.waivers).resolve()
+    registry_path = (root / args.registry).resolve()
     checklists_root = (root / args.checklists_root).resolve()
 
     if args.mode == "runtime" and (not args.lane or not args.run_id):
@@ -1508,9 +1851,16 @@ def main(argv: list[str]) -> int:
         print(f"error: failed to load waivers: {exc}", file=sys.stderr)
         return EXIT_USAGE
 
+    try:
+        registry = _load_mapping(registry_path)
+    except Exception as exc:
+        print(f"error: failed to load gate registry: {exc}", file=sys.stderr)
+        return EXIT_USAGE
+
     static_errors, static_warnings, state = _validate_static(
         manifest,
         waivers_doc,
+        registry,
         checklists_root,
         root=root,
         strict_always=bool(args.strict_always),
@@ -1534,6 +1884,14 @@ def main(argv: list[str]) -> int:
                     active_phase=active_override,
                     phases=sorted(phase_set),
                 )
+        if args.mode == "runtime" and not errors:
+            _validate_phase_registry_alignment(
+                active_override,
+                phase_gate_requirements=state.get("phase_gate_requirements", {}),
+                assignment_map=state.get("assignments", {}),
+                registry_gate_map=state.get("registry_gates", {}),
+                errors=errors,
+            )
 
     if args.mode == "runtime" and not errors:
         report_path = (root / args.report).resolve()
@@ -1588,6 +1946,7 @@ def main(argv: list[str]) -> int:
         "checked_at_utc": _utc_now_str(),
         "manifest": str(manifest_path),
         "waivers": str(waivers_path),
+        "registry": str(registry_path),
         "checklists_root": str(checklists_root),
         "errors": errors,
         "warnings": warnings,

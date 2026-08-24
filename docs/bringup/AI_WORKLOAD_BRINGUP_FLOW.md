@@ -12,6 +12,12 @@ python3 tools/bringup/run_ai_workload_flow.py --profile smoke --run-id <run-id>
 ```
 
 Artifacts are written below `workloads/generated/<run-id>/ai-bringup/`.
+`--list` is read-only and creates no run directory. `--dry-run` skips toolchain,
+QEMU, and model execution, but still writes the run manifest, report, logs, and
+summary artifacts. A dry-run records the configured or default QEMU candidate
+path even when no binary exists. A real run with valid exact-pin evidence keeps
+the strict HEAD-matched clean-QEMU selection requirement; invalid exact pins
+hard-break at `source-contract` before QEMU resolution can hide the mismatch.
 
 ## Architecture boundary
 
@@ -27,6 +33,13 @@ v0.58 inputs. Their historical QEMU sources live under
 [issue 169](https://github.com/LinxISA/linx-isa/issues/169); archived evidence
 does not satisfy that issue.
 
+The current tier-0 smoke inventory is the nested, active VEC
+`tadd_fp32_16x16`, TLSU `tload_fp32_16x16`, and Local CELL CUBE
+`tmatmul_fp16_32x64x64` cases. Discovery accepts the active microbenchmark
+`compile.all` files' guarded `run_case <testcase>` rows as the equivalent
+single-case `make TESTCASE=<testcase>` command; arbitrary shell calls are not
+accepted as manifest rows.
+
 ## Required component checks
 
 ```bash
@@ -40,7 +53,12 @@ They do not turn missing QEMU or model execution into a pass.
 
 ## Stages
 
-1. `source-contract` validates concrete nested `compile.all` rows and hashes.
+1. `source-contract` first requires every `.gitmodules` checkout SHA to match
+   both the superproject gitlink and its `component-lock.v0.58.json` entry, and
+   requires the checkout tree plus `.gitmodules` URL/branch to match a complete
+   lock entry with URL, branch, role, and tree. Missing or dirty checkouts,
+   incomplete metadata, and any non-`landed` integration status fail closed
+   before validating nested `compile.all` rows and hashes.
 2. `compiler-contract` builds with pinned Linx LLVM and Linx-TileOP-API.
 3. `qemu-execution` requires a fresh ELF and explicit terminal oracle.
 4. `model-build-smoke` proves the current LinxCoreModel binary.

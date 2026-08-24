@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
+import os
 import struct
 import subprocess
 import sys
@@ -16,6 +18,325 @@ import run_model_diff_suite
 
 
 class AiWorkloadFlowTests(unittest.TestCase):
+    @staticmethod
+    def git(cwd: Path, *args: str) -> str:
+        return subprocess.check_output(
+            ["git", "-C", str(cwd), *args], text=True
+        ).strip()
+
+    def exact_pin_fixture(self, root: Path) -> tuple[str, str]:
+        component_rel = "components/example"
+        component = root / component_rel
+        component.mkdir(parents=True)
+        self.git(component, "init", "-b", "main")
+        self.git(component, "config", "user.name", "Test")
+        self.git(component, "config", "user.email", "test@example.com")
+        (component / "README").write_text("component\n", encoding="utf-8")
+        self.git(component, "add", "README")
+        self.git(component, "commit", "-m", "component")
+        component_sha = self.git(component, "rev-parse", "HEAD")
+        component_tree = self.git(component, "rev-parse", "HEAD^{tree}")
+
+        self.git(root, "init", "-b", "main")
+        self.git(root, "config", "user.name", "Test")
+        self.git(root, "config", "user.email", "test@example.com")
+        (root / ".gitmodules").write_text(
+            '[submodule "example"]\n'
+            f"\tpath = {component_rel}\n"
+            "\turl = https://example.invalid/example.git\n"
+            "\tbranch = main\n",
+            encoding="utf-8",
+        )
+        lock = root / run_ai_workload_flow.COMPONENT_LOCK_REL
+        lock.parent.mkdir(parents=True)
+        lock.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "profile": "v0.58",
+                    "components": [
+                        {
+                            "path": component_rel,
+                            "url": "https://example.invalid/example.git",
+                            "branch": "main",
+                            "commit": component_sha,
+                            "tree": component_tree,
+                            "role": "test component",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        self.git(root, "add", ".gitmodules", str(run_ai_workload_flow.COMPONENT_LOCK_REL))
+        self.git(
+            root,
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            f"160000,{component_sha},{component_rel}",
+        )
+        self.git(root, "commit", "-m", "superproject pin")
+        return component_rel, component_sha
+
+    def test_exact_pin_evidence_records_matching_checkout_gitlink_and_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, component_sha = self.exact_pin_fixture(root)
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertTrue(evidence["valid"])
+        self.assertEqual(evidence["errors"], [])
+        self.assertEqual(evidence["superproject"]["branch"], "main")
+        self.assertFalse(evidence["superproject"]["dirty"])
+        component = evidence["components"][component_rel]
+        self.assertEqual(component["checkout"]["sha"], component_sha)
+        self.assertEqual(component["checkout"]["branch"], "main")
+        self.assertFalse(component["checkout"]["dirty"])
+        self.assertEqual(component["gitlink_expected_sha"], component_sha)
+        self.assertEqual(component["gitmodules_entry"]["branch"], "main")
+        self.assertEqual(
+            component["gitmodules_entry"]["url"],
+            "https://example.invalid/example.git",
+        )
+        self.assertEqual(component["component_lock_sha"], component_sha)
+        self.assertEqual(component["component_lock_entry"]["role"], "test component")
+        self.assertTrue(component["matches"]["checkout_gitlink"])
+        self.assertTrue(component["matches"]["gitlink_component_lock"])
+        self.assertTrue(component["matches"]["checkout_tree_component_lock"])
+        self.assertTrue(component["matches"]["gitmodules_url_component_lock"])
+        self.assertTrue(component["matches"]["gitmodules_branch_component_lock"])
+        self.assertRegex(evidence["component_lock"]["sha256"], r"^[0-9a-f]{64}$")
+
+    def test_exact_pin_evidence_rejects_gitlink_component_lock_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, _ = self.exact_pin_fixture(root)
+            lock_path = root / run_ai_workload_flow.COMPONENT_LOCK_REL
+            lock = json.loads(lock_path.read_text(encoding="utf-8"))
+            lock["components"][0]["commit"] = "0" * 40
+            lock_path.write_text(json.dumps(lock), encoding="utf-8")
+            self.git(root, "add", str(run_ai_workload_flow.COMPONENT_LOCK_REL))
+            self.git(root, "commit", "-m", "mismatched lock")
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertIn(
+            f"gitlink/component-lock mismatch: {component_rel}",
+            "\n".join(evidence["errors"]),
+        )
+
+    def test_exact_pin_evidence_rejects_checkout_gitlink_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, _ = self.exact_pin_fixture(root)
+            component = root / component_rel
+            (component / "README").write_text("new checkout revision\n", encoding="utf-8")
+            self.git(component, "add", "README")
+            self.git(component, "commit", "-m", "unreviewed checkout revision")
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertIn(
+            f"checkout/gitlink mismatch: {component_rel}",
+            "\n".join(evidence["errors"]),
+        )
+
+    def test_exact_pin_evidence_rejects_invalid_component_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, _ = self.exact_pin_fixture(root)
+            lock_path = root / run_ai_workload_flow.COMPONENT_LOCK_REL
+            lock = json.loads(lock_path.read_text(encoding="utf-8"))
+            lock["components"][0]["tree"] = "not-a-tree"
+            lock_path.write_text(json.dumps(lock), encoding="utf-8")
+            self.git(root, "add", str(run_ai_workload_flow.COMPONENT_LOCK_REL))
+            self.git(root, "commit", "-m", "invalid component tree")
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertIn(
+            f"missing or invalid component-lock tree: {component_rel}",
+            evidence["errors"],
+        )
+
+    def test_exact_pin_evidence_reports_missing_component_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.exact_pin_fixture(root)
+            (root / run_ai_workload_flow.COMPONENT_LOCK_REL).unlink()
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertEqual(len(evidence["errors"]), 1)
+        self.assertIn("component lock is missing", evidence["errors"][0])
+        self.assertEqual(
+            evidence["component_lock"]["read_error"], evidence["errors"][0]
+        )
+        self.assertIsNone(evidence["component_lock"]["sha256"])
+
+    def test_exact_pin_evidence_reports_unreadable_component_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.exact_pin_fixture(root)
+            with mock.patch.object(
+                Path, "read_bytes", side_effect=PermissionError("test denied")
+            ):
+                evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertEqual(len(evidence["errors"]), 1)
+        self.assertIn("component lock is unreadable", evidence["errors"][0])
+        self.assertIn("PermissionError: test denied", evidence["errors"][0])
+        self.assertEqual(
+            evidence["component_lock"]["read_error"], evidence["errors"][0]
+        )
+
+    def test_exact_pin_evidence_reports_malformed_component_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.exact_pin_fixture(root)
+            lock_path = root / run_ai_workload_flow.COMPONENT_LOCK_REL
+            lock_path.write_text('{"components": [', encoding="utf-8")
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertEqual(len(evidence["errors"]), 1)
+        self.assertIn("component lock is malformed", evidence["errors"][0])
+        self.assertEqual(
+            evidence["component_lock"]["read_error"], evidence["errors"][0]
+        )
+        self.assertRegex(evidence["component_lock"]["sha256"], r"^[0-9a-f]{64}$")
+
+    def test_exact_pin_evidence_rejects_dirty_component(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, _ = self.exact_pin_fixture(root)
+            (root / component_rel / "dirty.txt").write_text("dirty\n", encoding="utf-8")
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertFalse(evidence["valid"])
+        self.assertIn(
+            f"component checkout is dirty: {component_rel}", evidence["errors"]
+        )
+
+    def test_exact_pin_evidence_rejects_non_landed_and_metadata_mismatches(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, _ = self.exact_pin_fixture(root)
+            gitmodules = root / ".gitmodules"
+            gitmodules.write_text(
+                '[submodule "example"]\n'
+                f"\tpath = {component_rel}\n"
+                "\turl = https://example.invalid/other.git\n"
+                "\tbranch = topic\n",
+                encoding="utf-8",
+            )
+            lock_path = root / run_ai_workload_flow.COMPONENT_LOCK_REL
+            lock = json.loads(lock_path.read_text(encoding="utf-8"))
+            entry = lock["components"][0]
+            entry["tree"] = "0" * 40
+            entry["role"] = ""
+            entry["integration_status"] = "review_only_open_pr"
+            lock_path.write_text(json.dumps(lock), encoding="utf-8")
+            self.git(root, "add", ".gitmodules", str(run_ai_workload_flow.COMPONENT_LOCK_REL))
+            self.git(root, "commit", "-m", "invalid exact-pin metadata")
+
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        errors = "\n".join(evidence["errors"])
+        self.assertFalse(evidence["valid"])
+        self.assertIn(f".gitmodules/component-lock URL mismatch: {component_rel}", errors)
+        self.assertIn(
+            f".gitmodules/component-lock branch mismatch: {component_rel}", errors
+        )
+        self.assertIn(f"missing component-lock role: {component_rel}", errors)
+        self.assertIn(
+            f"checkout tree/component-lock mismatch: {component_rel}", errors
+        )
+        self.assertIn(
+            f"component-lock integration_status is not landed: {component_rel}",
+            errors,
+        )
+
+    def test_manifest_embeds_exact_pin_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            self.exact_pin_fixture(root)
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+            out_dir = root / "artifacts"
+            missing = str(root / "missing-tool")
+            paths = {
+                "clang": missing,
+                "clangxx": missing,
+                "lld": missing,
+                "llvm_objdump": missing,
+                "llvm_objcopy": missing,
+                "qemu": missing,
+                "model_root": str(root / "missing-model"),
+                "gfsim": missing,
+            }
+
+            run_ai_workload_flow.write_manifest(
+                root,
+                out_dir,
+                flow={"flow_id": "test-flow"},
+                profile="smoke",
+                tiers={0},
+                dry_run=True,
+                paths=paths,
+                cases=[],
+                revisions=evidence,
+            )
+            manifest = json.loads(
+                (out_dir / "manifest.json").read_text(encoding="utf-8")
+            )
+
+        self.assertEqual(manifest["schema_version"], 2)
+        self.assertEqual(manifest["revisions"], evidence)
+
+    def test_source_contract_fails_closed_on_exact_pin_error(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            source = root / "case.cpp"
+            source.write_text("source\n", encoding="utf-8")
+            case = run_ai_workload_flow.Case(
+                id="pin-test",
+                kind="supernpu",
+                suite="pin-test",
+                tier=0,
+                source_paths=[source],
+                manifest_path=None,
+                workdir=root,
+                compile_command=None,
+                qemu_command=None,
+                model_eligible=False,
+                produces_elf=False,
+                expected="fail closed",
+                metadata={},
+            )
+            state = run_ai_workload_flow.CaseState(
+                case=case, case_dir=root / "output" / case.id
+            )
+
+            rows = run_ai_workload_flow.source_contract(
+                root,
+                [state],
+                dry_run=True,
+                revisions={"errors": ["checkout/gitlink mismatch: component"]},
+            )
+
+        self.assertEqual(rows[0]["status"], "fail")
+        self.assertEqual(rows[0]["owner"], "integration")
+        self.assertIn("exact-pin validation failed", rows[0]["evidence"])
+
     @staticmethod
     def set_elf_symbol_value(elf_path: Path, symbol_name: str, value: int) -> None:
         elf = bytearray(elf_path.read_bytes())
@@ -304,6 +625,24 @@ class AiWorkloadFlowTests(unittest.TestCase):
         )
         self.assertEqual([case.id for case in selected], ["supernpu-tileop_api-TSub"])
 
+    def test_parse_compile_all_line_accepts_guarded_run_case(self) -> None:
+        self.assertEqual(
+            run_ai_workload_flow.parse_compile_all_line(
+                "run_case tadd_fp32_16x16"
+            ),
+            (
+                "make TESTCASE=tadd_fp32_16x16",
+                {"TESTCASE": "tadd_fp32_16x16"},
+            ),
+        )
+
+    def test_parse_compile_all_line_rejects_guarded_run_case_with_extra_args(self) -> None:
+        self.assertIsNone(
+            run_ai_workload_flow.parse_compile_all_line(
+                "run_case tadd_fp32_16x16 unexpected"
+            )
+        )
+
     def test_execution_stage_prefix_accepts_full_profile(self) -> None:
         flow = self.flow()
         stages = run_ai_workload_flow.selected_stages(flow, "smoke", [], None, None)
@@ -419,6 +758,184 @@ class AiWorkloadFlowTests(unittest.TestCase):
 
             self.assertFalse(out_dir.exists())
 
+    def test_list_is_read_only_and_skips_exact_pin_capture(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            out_dir = Path(td) / "must-not-exist"
+            case = self.case("list-only")
+            case.tier = 0
+            with mock.patch.object(
+                run_ai_workload_flow, "discover_cases", return_value=[case]
+            ), mock.patch.object(
+                run_ai_workload_flow, "exact_pin_evidence"
+            ) as exact_pin:
+                self.assertEqual(
+                    run_ai_workload_flow.main(
+                        ["--profile", "smoke", "--list", "--out-dir", str(out_dir)]
+                    ),
+                    0,
+                )
+
+            exact_pin.assert_not_called()
+            self.assertFalse(out_dir.exists())
+
+    def test_execution_reports_exact_pin_failure_before_empty_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            out_dir = Path(td) / "must-not-exist"
+            exact_pin = mock.Mock(
+                return_value={
+                    "errors": [
+                        "component checkout is not initialized: workloads/pto_kernels"
+                    ]
+                }
+            )
+
+            def discover_after_exact_pin(_root: Path) -> list[run_ai_workload_flow.Case]:
+                self.assertTrue(exact_pin.called)
+                return []
+
+            with mock.patch.object(
+                run_ai_workload_flow, "exact_pin_evidence", exact_pin
+            ), mock.patch.object(
+                run_ai_workload_flow,
+                "discover_cases",
+                side_effect=discover_after_exact_pin,
+            ):
+                with self.assertRaisesRegex(
+                    SystemExit,
+                    r"exact-pin validation failed.*workloads/pto_kernels",
+                ):
+                    run_ai_workload_flow.main(
+                        ["--profile", "smoke", "--dry-run", "--out-dir", str(out_dir)]
+                    )
+
+            exact_pin.assert_called_once()
+            self.assertFalse(out_dir.exists())
+
+    def test_execution_reports_missing_lock_as_exact_pin_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            out_dir = Path(td) / "must-not-exist"
+            missing_lock = Path("docs/bringup/missing-component-lock.json")
+            with mock.patch.object(
+                run_ai_workload_flow, "COMPONENT_LOCK_REL", missing_lock
+            ), mock.patch.object(
+                run_ai_workload_flow, "discover_cases", return_value=[]
+            ):
+                with self.assertRaisesRegex(
+                    SystemExit,
+                    r"exact-pin validation failed.*component lock is missing",
+                ):
+                    run_ai_workload_flow.main(
+                        ["--profile", "smoke", "--dry-run", "--out-dir", str(out_dir)]
+                    )
+
+            self.assertFalse(out_dir.exists())
+
+    def test_invalid_exact_pin_fails_before_strict_qemu_selection(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            out_dir = temp / "run"
+            case = self.case("exact-pin-before-qemu")
+            case.tier = 0
+            case.workdir = temp
+            case.source_paths = [temp / "missing-is-not-read-before-exact-pin.cpp"]
+            revisions = {
+                "valid": False,
+                "errors": ["component checkout is not initialized: emulator/qemu"],
+            }
+            with mock.patch.object(
+                run_ai_workload_flow, "exact_pin_evidence", return_value=revisions
+            ), mock.patch.object(
+                run_ai_workload_flow, "discover_cases", return_value=[case]
+            ), mock.patch.object(
+                run_ai_workload_flow,
+                "default_qemu_binary",
+                side_effect=AssertionError("strict QEMU selection ran too early"),
+            ):
+                self.assertEqual(
+                    run_ai_workload_flow.main(
+                        [
+                            "--profile",
+                            "smoke",
+                            "--stop-after",
+                            "source-contract",
+                            "--out-dir",
+                            str(out_dir),
+                        ]
+                    ),
+                    1,
+                )
+
+            report = json.loads((out_dir / "report.json").read_text(encoding="utf-8"))
+            source_result = report["stages"][0]["result"][0]
+            self.assertEqual(source_result["status"], "fail")
+            self.assertIn("exact-pin validation failed", source_result["evidence"])
+
+    def test_dry_run_records_qemu_candidate_without_requiring_binary(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            temp = Path(td)
+            out_dir = temp / "run"
+            source = temp / "case.cpp"
+            source.write_text("source\n", encoding="utf-8")
+            case = self.case("dry-run-without-qemu")
+            case.tier = 0
+            case.workdir = temp
+            case.source_paths = [source]
+            revisions = {"valid": True, "errors": []}
+            with mock.patch.object(
+                run_ai_workload_flow, "exact_pin_evidence", return_value=revisions
+            ), mock.patch.object(
+                run_ai_workload_flow, "discover_cases", return_value=[case]
+            ), mock.patch.object(
+                run_ai_workload_flow,
+                "default_qemu_binary",
+                side_effect=AssertionError("dry-run required a QEMU binary"),
+            ), mock.patch.dict(
+                os.environ,
+                {"QEMU": "", "QEMU_CLEAN_OUT_DIR": str(temp / "missing-qemu")},
+                clear=False,
+            ):
+                self.assertEqual(
+                    run_ai_workload_flow.main(
+                        [
+                            "--profile",
+                            "smoke",
+                            "--dry-run",
+                            "--stop-after",
+                            "source-contract",
+                            "--out-dir",
+                            str(out_dir),
+                        ]
+                    ),
+                    0,
+                )
+
+            manifest = json.loads(
+                (out_dir / "manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertFalse(manifest["tools"]["qemu"]["exists"])
+
+    def test_valid_execution_keeps_strict_qemu_selection(self) -> None:
+        args = argparse.Namespace(
+            clang="",
+            clangxx="",
+            lld="",
+            llvm_objdump="",
+            llvm_objcopy="",
+            qemu="",
+            model_root="",
+            gfsim="",
+        )
+        selected = Path("/tmp/head-matched-qemu")
+        with mock.patch.object(
+            run_ai_workload_flow, "default_qemu_binary", return_value=selected
+        ) as default_qemu:
+            paths = run_ai_workload_flow.tool_paths(
+                Path("/repo"), args, strict_qemu=True
+            )
+
+        default_qemu.assert_called_once_with(Path("/repo"))
+        self.assertEqual(paths["qemu"], str(selected))
+
     def test_empty_execution_profile_fails_before_discovery_or_output(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             temp_dir = Path(td)
@@ -503,7 +1020,7 @@ class AiWorkloadFlowTests(unittest.TestCase):
         expected = {
             "supernpu-microbenchmark-vector-tadd_fp32_16x16",
             "supernpu-microbenchmark-memory-tload_fp32_16x16",
-            "supernpu-microbenchmark-cube-tmatmul_fp16_64x64x64",
+            "supernpu-microbenchmark-cube-tmatmul_fp16_32x64x64",
         }
         discovered = {case.id for case in cases if case.tier == 0 and case.kind == "supernpu"}
         self.assertTrue(expected <= discovered, discovered)
