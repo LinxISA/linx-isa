@@ -83,30 +83,32 @@
   完成意味着：奇偶校验运行器报告 `ok=true` 并且生成的最新 markdown/json 工件与当前固定通道一致。
   状态： ✅ PASS (2026-04-18) - 最新的规范运行记录 `Regression::PTO kernel parity` 为 pass。
 
-- [x] ID：INT-021 针对固定的 B 阶段 sysroot，保持基准工作负载回归绿色。
+- [ ] ID：INT-021 针对固定的 B 阶段 sysroot，保持基准工作负载回归绿色。
   命令：`LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --json-out workloads/generated/benchmarks_result.json`
   完成意味着：基准回归成功完成并写入规范的 JSON 工件。
-  状态： ✅ PASS (2026-04-18) - 最新的pin-lane运行记录`Regression::Workload benchmarks`为`pass`。
+  状态：当前 v0.58.3 pin 尚未运行；2026-04-18 的 `Regression::Workload benchmarks` 仅为历史证据。
 
-- [x] ID：INT-022 针对固定的 B 阶段系统根，保持 PolyBench 工作负载回归绿色。
-  命令：`LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_polybench.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --json-out workloads/generated/polybench_result.json`
-  完成意味着：PolyBench 回归成功完成并写入规范的 JSON 工件。
-  状态： ✅ PASS (2026-04-18) - 最新的pin-lane运行记录`Regression::Workload polybench`为`pass`。
+- [ ] ID：INT-022 针对固定的 B 阶段系统根，保持 PolyBench 工作负载回归绿色。
+  命令：`LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_polybench.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --cflag=-DMINI_DATASET --json-out workloads/generated/polybench_result.json`
+  完成意味着：有界 `MINI_DATASET` PolyBench smoke 成功完成并写入规范 JSON；更大数据集仅作为性能诊断。
+  状态：当前 v0.58.3 pin 尚未运行；2026-04-18 的 `Regression::Workload polybench` 仅为历史证据。
 
-- [x] ID：INT-023 针对固定的 b 阶段 sysroot，保持投资组合工作负载回归绿色。
+- [ ] ID：INT-023 针对固定的 b 阶段 sysroot，保持投资组合工作负载回归绿色。
   命令：`LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_portfolio.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --polybench --ctuning-limit 5 --json-out workloads/generated/portfolio_report.json`
   完成意味着：投资组合回归成功完成并写入规范的 JSON 工件。
-  状态： ✅ PASS (2026-04-18) - 最新的pin-lane运行记录`Regression::Workload portfolio`为`pass`。
+  状态：当前 v0.58.3 pin 尚未运行；2026-04-18 的 `Regression::Workload portfolio` 仅为历史证据。
 
-- [x] ID：INT-024 将固定工作负载通道中的策划调整子集保持为绿色。
+- [ ] ID：INT-024 将固定工作负载通道中的策划调整子集保持为绿色。
   命令：`python3 workloads/ctuning/run_milepost_codelets.py --ctuning-root workloads/ctuning --target linx64-unknown-linux-musl --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --limit 5 --run --summary-json workloads/generated/ctuning_result.json`
   完成意味着：策划的 ctuning 子集在 QEMU 下完成并写入规范的摘要 JSON。
-  状态： ✅ PASS (2026-04-18) - 最新的pin-lane运行记录`Regression::ctuning curated subset`为`pass`。- [x] ID：INT-025 在所需的通行楼层保持 TSVC 严格编译覆盖率绿色。
-  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --no-run-qemu --out-dir workloads/generated`
+  状态：当前 v0.58.3 pin 尚未运行；2026-04-18 的 `Regression::ctuning curated subset` 仅为历史证据。
+
+- [ ] ID：INT-025 在所需的通过下限保持 TSVC 严格编译覆盖率绿色。
+  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v058 --no-run-qemu --out-dir workloads/generated`
   完成意味着：仅编译 TSVC 通道完成并满足严格的通行楼层，无需 QEMU 运行时。
-  状态： ✅ PASS (2026-04-18) - 最新的 pin-lane 运行记录 `Regression::TSVC strict coverage gate` 在 `148/151` 为 `pass`。
+  状态：当前 v0.58.3 pin 尚未运行；2026-04-18 的 v0.57 `148/151` 结果仅为历史证据。
 
 - [ ] ID：INT-026 在运行时传递层保持 TSVC 严格 QEMU 回归绿色。
-  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --out-dir workloads/generated`
+  命令：`python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v058 --out-dir workloads/generated`
   Done 表示：TSVC 通道在 QEMU 下完成并满足配置的严格通行楼层。
-  状态： ❌ 失败 (2026-05-15) - 不存在规范的运行时通行证。最新的诊断严格重新运行（`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`）仅在跳过 BusyBox rootfs 时才达到 TSVC，然后在 `tsvc.auto.elf` 上 240 秒后超时； 4 月 18 日的规范报告仍然证明仅编译严格报道。
+  状态：当前 v0.58.3 pin 尚未运行。最新的历史 v0.57 诊断严格重跑（`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`）仅在跳过 BusyBox rootfs 时到达 TSVC，随后在 `tsvc.auto.elf` 上 240 秒超时；4 月 18 日报告只证明历史的仅编译覆盖。

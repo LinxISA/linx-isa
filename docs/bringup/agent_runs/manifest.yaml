@@ -53,7 +53,8 @@
       "Integration": ["superproject", "skills/linx-skills", "docs"],
       "SPEC": ["workloads/spec2017"],
       "Model": ["tools/model", "tools/pyCircuit", "emulator/qemu", "superproject"],
-      "Regression": ["superproject", "workloads/spec2017"]
+      "Regression": ["superproject", "workloads/spec2017"],
+      "Workloads": ["superproject", "workloads/spec2017"]
     }
   },
   "phase_policy": {
@@ -112,10 +113,10 @@
     },
     "LINUX-RUNTIME": {
       "required_gate_keys": [
-        "Compiler::AVS compile suites (linx64)",
-        "Compiler::Coverage 100% (linx64)",
-        "Compiler::AVS compile suites (linx32)",
-        "Compiler::Coverage 100% (linx32)",
+        "Compiler::AVS compile suites linx64",
+        "Compiler::Coverage 100% linx64",
+        "Compiler::AVS compile suites linx32",
+        "Compiler::Coverage 100% linx32",
         "Compiler::LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)",
         "Emulator::QEMU pinned binary build",
         "Emulator::QEMU strict system",
@@ -138,22 +139,22 @@
     },
     "WORKLOAD-RUNTIME": {
       "required_gate_keys": [
-        "Regression::Workload benchmarks",
-        "Regression::Workload polybench",
-        "Regression::Workload portfolio",
-        "Regression::Linx TileOP API v0.58",
-        "Regression::Nested SuperNPU v0.58 corpus",
-        "Regression::SPECint fast test/train gate"
+        "Workloads::benchmarks",
+        "Workloads::polybench",
+        "Workloads::portfolio",
+        "Workloads::Linx TileOP API v0.58",
+        "Workloads::nested SuperNPU v0.58 corpus",
+        "Workloads::SPECint fast test/train gate"
       ]
     },
     "PROMOTION": {
       "required_gate_keys": [
         "Architecture::LinxCore architecture contract lint",
         "Architecture::mkdocs architecture nav/docs",
-        "Compiler::AVS compile suites (linx64)",
-        "Compiler::Coverage 100% (linx64)",
-        "Compiler::AVS compile suites (linx32)",
-        "Compiler::Coverage 100% (linx32)",
+        "Compiler::AVS compile suites linx64",
+        "Compiler::Coverage 100% linx64",
+        "Compiler::AVS compile suites linx32",
+        "Compiler::Coverage 100% linx32",
         "Compiler::LLVM auxiliary tool suite (`llvm-ar`/`llvm-nm`/`llvm-readelf`/`llvm-strip`)",
         "Emulator::QEMU pinned binary build",
         "Emulator::QEMU strict system",
@@ -168,13 +169,13 @@
         "Library::glibc G1b shared libc.so",
         "Library::glibc runtime dynamic hello",
         "Integration::Pinned workspace build closure",
-        "Regression::Workload benchmarks",
-        "Regression::Workload polybench",
-        "Regression::Workload portfolio",
-        "Regression::Linx TileOP API v0.58",
-        "Regression::Nested SuperNPU v0.58 corpus",
-        "Regression::SPECint fast test/train gate",
-        "Regression::SPECint nightly test/train gate",
+        "Workloads::benchmarks",
+        "Workloads::polybench",
+        "Workloads::portfolio",
+        "Workloads::Linx TileOP API v0.58",
+        "Workloads::nested SuperNPU v0.58 corpus",
+        "Workloads::SPECint fast test/train gate",
+        "Workloads::SPECint nightly test/train gate",
         "LinxCore::stage/connectivity lint",
         "LinxCore::opcode parity",
         "LinxCore::runner protocol",
@@ -315,22 +316,22 @@
       "checklist_ids": ["ARCH-001"]
     },
     {
-      "gate_key": "Compiler::AVS compile suites (linx64)",
+      "gate_key": "Compiler::AVS compile suites linx64",
       "agent": "llvm",
       "checklist_ids": ["LLVM-001"]
     },
     {
-      "gate_key": "Compiler::Coverage 100% (linx64)",
+      "gate_key": "Compiler::Coverage 100% linx64",
       "agent": "llvm",
       "checklist_ids": ["LLVM-002"]
     },
     {
-      "gate_key": "Compiler::AVS compile suites (linx32)",
+      "gate_key": "Compiler::AVS compile suites linx32",
       "agent": "llvm",
       "checklist_ids": ["LLVM-001"]
     },
     {
-      "gate_key": "Compiler::Coverage 100% (linx32)",
+      "gate_key": "Compiler::Coverage 100% linx32",
       "agent": "llvm",
       "checklist_ids": ["LLVM-002"]
     },
@@ -540,42 +541,42 @@
       "checklist_ids": ["INT-020"]
     },
     {
-      "gate_key": "Regression::Workload benchmarks",
+      "gate_key": "Workloads::benchmarks",
       "agent": "integration",
       "checklist_ids": ["INT-021"]
     },
     {
-      "gate_key": "Regression::Workload polybench",
+      "gate_key": "Workloads::polybench",
       "agent": "integration",
       "checklist_ids": ["INT-022"]
     },
     {
-      "gate_key": "Regression::Workload portfolio",
+      "gate_key": "Workloads::portfolio",
       "agent": "integration",
       "checklist_ids": ["INT-023"]
     },
     {
-      "gate_key": "Regression::Linx TileOP API v0.58",
+      "gate_key": "Workloads::Linx TileOP API v0.58",
       "agent": "integration",
       "checklist_ids": ["INT-020"]
     },
     {
-      "gate_key": "Regression::Nested SuperNPU v0.58 corpus",
+      "gate_key": "Workloads::nested SuperNPU v0.58 corpus",
       "agent": "integration",
       "checklist_ids": ["INT-020", "INT-023"]
     },
     {
-      "gate_key": "Regression::SPECint fast test/train gate",
+      "gate_key": "Workloads::SPECint fast test/train gate",
       "agent": "spec",
       "checklist_ids": ["SPEC-M05"]
     },
     {
-      "gate_key": "Regression::SPECint nightly test/train gate",
+      "gate_key": "Workloads::SPECint nightly test/train gate",
       "agent": "spec",
       "checklist_ids": ["SPEC-M06"]
     },
     {
-      "gate_key": "Regression::ctuning curated subset",
+      "gate_key": "Workloads::ctuning curated subset",
       "agent": "integration",
       "checklist_ids": ["INT-024"]
     },

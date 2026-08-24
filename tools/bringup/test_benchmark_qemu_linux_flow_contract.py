@@ -13,16 +13,21 @@ import time
 import unittest
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import check_multi_agent_gates
+
 
 ROOT = Path(__file__).resolve().parents[2]
 FLOW = ROOT / "docs" / "bringup" / "benchmark_qemu_linux_flow.json"
 RUNNER = ROOT / "tools" / "bringup" / "run_benchmark_linux_flow.py"
+REGISTRY = ROOT / "docs" / "bringup" / "gate_registry.json"
 
 
 class BenchmarkFlowContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.flow = json.loads(FLOW.read_text(encoding="utf-8"))
+        cls.registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
         cls.stages = {stage["id"]: stage for stage in cls.flow["stages"]}
 
     def test_spec_lanes_attest_before_runtime(self) -> None:
@@ -123,6 +128,31 @@ class BenchmarkFlowContractTests(unittest.TestCase):
         commands = self.stages["source-contract"]["commands"]
         self.assertEqual(commands[1]["id"], "linux-source-completeness")
         self.assertIn("check_linux_source_completeness.py", commands[1]["command"])
+
+    def test_flow_gate_references_are_exact_registry_keys(self) -> None:
+        registry = {gate["gate_key"]: gate for gate in self.registry["gates"]}
+        references = check_multi_agent_gates._flow_gate_references(self.flow)
+        self.assertTrue(references)
+        for reference in references:
+            with self.subTest(**reference):
+                self.assertIn(reference["gate_key"], registry)
+
+    def test_flow_gate_validator_rejects_unregistered_reference(self) -> None:
+        flow = json.loads(json.dumps(self.flow))
+        flow["stages"][0]["commands"][2]["command"] += " --gate 'ISA::missing'"
+        registry = {gate["gate_key"]: gate for gate in self.registry["gates"]}
+        errors = []
+        check_multi_agent_gates._validate_flow_gate_references(
+            flow, registry, errors=errors
+        )
+        self.assertIn("E_BENCHMARK_FLOW_GATE_UNKNOWN", {row["code"] for row in errors})
+
+    def test_tsvc_hard_break_uses_active_v058_source_policy(self) -> None:
+        commands = self.stages["tsvc-qemu-hardbreak"]["commands"]
+        for command in commands:
+            with self.subTest(command=command["id"]):
+                self.assertIn("--source-policy linx-v058", command["command"])
+                self.assertNotIn("linx-v057", command["command"])
 
     def test_linux_stage_builds_smp_head_before_vmlinux(self) -> None:
         commands = self.stages["linux-userspace-entry"]["commands"]

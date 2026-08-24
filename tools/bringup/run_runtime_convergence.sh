@@ -614,7 +614,7 @@ fi
 
 run_gate \
   "Compiler" \
-  "AVS compile suites (linx64)" \
+  "AVS compile suites linx64" \
   "cd $ROOT/avs/compiler/linx-llvm/tests && CLANG=$CLANG_BIN TARGET=linx64-linx-none-elf OUT_DIR=$ROOT/avs/compiler/linx-llvm/tests/out-linx64 ./run.sh" \
   "compile_pass_linx64" \
   "compile_fail_linx64" \
@@ -622,7 +622,7 @@ run_gate \
 
 run_gate \
   "Compiler" \
-  "Coverage 100% (linx64)" \
+  "Coverage 100% linx64" \
   "python3 $ROOT/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir $ROOT/avs/compiler/linx-llvm/tests/out-linx64 --fail-under 100" \
   "mnemonic_coverage_100_linx64" \
   "mnemonic_coverage_under_100_linx64" \
@@ -631,7 +631,7 @@ run_gate \
 if clang_supports_arch linx32; then
   run_gate \
     "Compiler" \
-    "AVS compile suites (linx32)" \
+    "AVS compile suites linx32" \
     "cd $ROOT/avs/compiler/linx-llvm/tests && CLANG=$CLANG_BIN TARGET=linx32-linx-none-elf OUT_DIR=$ROOT/avs/compiler/linx-llvm/tests/out-linx32 ./run.sh" \
     "compile_pass_linx32" \
     "compile_fail_linx32" \
@@ -639,7 +639,7 @@ if clang_supports_arch linx32; then
 
   run_gate \
     "Compiler" \
-    "Coverage 100% (linx32)" \
+    "Coverage 100% linx32" \
     "python3 $ROOT/avs/compiler/linx-llvm/tests/analyze_coverage.py --out-dir $ROOT/avs/compiler/linx-llvm/tests/out-linx32 --fail-under 100" \
     "mnemonic_coverage_100_linx32" \
     "mnemonic_coverage_under_100_linx32" \
@@ -953,31 +953,31 @@ run_gate \
   "lib_glibc_runtime"
 
 run_gate \
-  "Regression" \
-  "Workload benchmarks" \
+  "Workloads" \
+  "benchmarks" \
   "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_benchmarks.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/benchmarks_result.json" \
   "workload_benchmarks_pass" \
   "workload_benchmarks_fail" \
   "workload_benchmarks"
 
 run_gate \
-  "Regression" \
-  "Workload polybench" \
-  "LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
+  "Workloads" \
+  "polybench" \
+  "LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --cflag=-DMINI_DATASET --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
   "workload_polybench_pass" \
   "workload_polybench_fail" \
   "workload_polybench"
 
 run_gate \
-  "Regression" \
-  "Workload portfolio" \
+  "Workloads" \
+  "portfolio" \
   "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_portfolio.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --polybench --ctuning-limit ${LINX_CTUNING_LIMIT:-5} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/portfolio_report.json" \
   "workload_portfolio_pass" \
   "workload_portfolio_fail" \
   "workload_portfolio"
 
 run_gate \
-  "Regression" \
+  "Workloads" \
   "Linx TileOP API v0.58" \
   "make -C $ROOT/tools/Linx-TileOP-API check" \
   "linx_tileop_api_pass" \
@@ -985,8 +985,8 @@ run_gate \
   "linx_tileop_api"
 
 run_gate \
-  "Regression" \
-  "Nested SuperNPU v0.58 corpus" \
+  "Workloads" \
+  "nested SuperNPU v0.58 corpus" \
   "python3 $ROOT/workloads/pto_kernels/scripts/check_supernpu_v058.py" \
   "supernpu_v058_pass" \
   "supernpu_v058_fail" \
@@ -994,7 +994,7 @@ run_gate \
 
 if [[ -n "${CTUNING_ROOT:-}" && -d "${CTUNING_ROOT}/program" ]]; then
   run_gate \
-    "Regression" \
+    "Workloads" \
     "ctuning curated subset" \
     "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root $CTUNING_ROOT --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --limit ${LINX_CTUNING_LIMIT:-5} --run --summary-json ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/ctuning_result.json" \
     "workload_ctuning_pass" \
@@ -1002,7 +1002,7 @@ if [[ -n "${CTUNING_ROOT:-}" && -d "${CTUNING_ROOT}/program" ]]; then
     "workload_ctuning"
 else
   record_skipped_gate \
-    "Regression" \
+    "Workloads" \
     "ctuning curated subset" \
     "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root \$CTUNING_ROOT ..." \
     "CTUNING_ROOT is not an explicit Milepost source tree" \
@@ -1012,7 +1012,7 @@ fi
 
 if [[ "${RUN_SPEC_PR_GATES:-0}" == "1" ]]; then
   run_gate \
-    "Regression" \
+    "Workloads" \
     "SPECint fast test/train gate" \
     "python3 $ROOT/tools/bringup/run_specint_fast_gate.py --profile ${SPECINT_FAST_PROFILE:-pr} --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --qemu $QEMU_BIN --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/specint-fast-gate --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-50000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-120}\"" \
     "workload_specint_fast_pass" \
@@ -1020,7 +1020,7 @@ if [[ "${RUN_SPEC_PR_GATES:-0}" == "1" ]]; then
     "workload_specint_fast"
 else
   record_skipped_gate \
-    "Regression" \
+    "Workloads" \
     "SPECint fast test/train gate" \
     "python3 $ROOT/tools/bringup/run_specint_fast_gate.py --profile ${SPECINT_FAST_PROFILE:-pr} --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --qemu $QEMU_BIN --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/specint-fast-gate --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-50000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-120}\"" \
     "RUN_SPEC_PR_GATES=0" \
@@ -1030,7 +1030,7 @@ fi
 
 if [[ "$LINX_GATE_TIER" == "nightly" ]]; then
   run_gate \
-    "Regression" \
+    "Workloads" \
     "SPECint nightly test/train gate" \
     "python3 $ROOT/tools/bringup/run_specint_fast_gate.py --profile nightly --spec-dir ${LINX_SPEC_DIR:-$ROOT/workloads/spec2017/cpu2017v118_x64_gcc12_avx2} --qemu $QEMU_BIN --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --out-dir ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/specint-nightly-test-train --append-extra \"${SPEC_APPEND_EXTRA:-norandmaps}\" --guest-heartbeat-sec \"${SPEC_GUEST_HEARTBEAT_SEC:-0}\" --heartbeat-sec \"${SPEC_HEARTBEAT_SEC:-30}\" --qemu-heartbeat-interval \"${SPEC_QEMU_HEARTBEAT_INTERVAL:-50000000}\" --no-progress-timeout \"${SPEC_NO_PROGRESS_TIMEOUT:-120}\" --continue-on-fail" \
     "workload_specint_nightly_pass" \

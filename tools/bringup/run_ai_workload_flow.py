@@ -40,6 +40,7 @@ FINISHER_RESET_LOW8 = 0x77
 PTO_KERNELS_REL = Path("workloads/pto_kernels")
 SUPER_NPU_REL = PTO_KERNELS_REL / "benchmarks/supernpu"
 LINX_TILEOP_API_REL = Path("tools/Linx-TileOP-API")
+COMPONENT_LOCK_REL = Path("docs/bringup/component-lock.v0.58.json")
 LINX_DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
   text PT_LOAD FLAGS(5);
@@ -202,18 +203,283 @@ def executable(path: Path) -> bool:
     return path.is_file() and os.access(path, os.X_OK)
 
 
-def submodule_sha(root: Path, rel: str) -> str | None:
-    path = root / rel
-    if not path.exists():
-        return None
+def git_output(cwd: Path, *args: str) -> str | None:
     try:
         return subprocess.check_output(
-            ["git", "-C", str(path), "rev-parse", "HEAD"],
+            ["git", "-C", str(cwd), *args],
             text=True,
             stderr=subprocess.DEVNULL,
         ).strip()
     except (OSError, subprocess.CalledProcessError):
         return None
+
+
+def checkout_revision(path: Path) -> dict[str, Any]:
+    if not (path / ".git").exists():
+        return {
+            "initialized": False,
+            "sha": None,
+            "tree": None,
+            "branch": None,
+            "detached": None,
+            "dirty": None,
+        }
+    sha = git_output(path, "rev-parse", "HEAD")
+    tree = git_output(path, "rev-parse", "HEAD^{tree}") if sha else None
+    branch = git_output(path, "symbolic-ref", "--quiet", "--short", "HEAD")
+    status = git_output(path, "status", "--porcelain", "--untracked-files=normal")
+    return {
+        "initialized": sha is not None,
+        "sha": sha,
+        "tree": tree,
+        "branch": branch,
+        "detached": branch is None if sha is not None else None,
+        "dirty": bool(status) if status is not None else None,
+    }
+
+
+def gitlink_sha(root: Path, rel: str) -> str | None:
+    row = git_output(root, "ls-tree", "HEAD", "--", rel)
+    if not row:
+        return None
+    fields = row.split(None, 3)
+    if len(fields) < 3 or fields[0] != "160000" or fields[1] != "commit":
+        return None
+    return fields[2]
+
+
+def declared_submodules(root: Path) -> dict[str, dict[str, str | None]]:
+    gitmodules = root / ".gitmodules"
+    if not gitmodules.is_file():
+        raise SystemExit(f"error: missing submodule topology: {gitmodules}")
+    try:
+        output = subprocess.check_output(
+            [
+                "git",
+                "config",
+                "-f",
+                str(gitmodules),
+                "--get-regexp",
+                r"^submodule\..*\.(path|url|branch)$",
+            ],
+            text=True,
+            stderr=subprocess.PIPE,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise SystemExit(f"error: cannot read submodule topology: {gitmodules}") from exc
+    by_name: dict[str, dict[str, str]] = {}
+    for line in output.splitlines():
+        key, value = line.split(None, 1)
+        name_and_field = key.removeprefix("submodule.")
+        name, field = name_and_field.rsplit(".", 1)
+        by_name.setdefault(name, {})[field] = value.strip()
+    topology: dict[str, dict[str, str | None]] = {}
+    for name, fields in by_name.items():
+        path = fields.get("path")
+        if not path:
+            raise SystemExit(f"error: submodule {name} is missing path: {gitmodules}")
+        if path in topology:
+            raise SystemExit(f"error: duplicate submodule path: {path}")
+        topology[path] = {
+            "name": name,
+            "path": path,
+            "url": fields.get("url"),
+            "branch": fields.get("branch"),
+        }
+    if not topology:
+        raise SystemExit(f"error: submodule topology is empty: {gitmodules}")
+    return dict(sorted(topology.items()))
+
+
+def load_component_lock(lock_path: Path) -> tuple[dict[str, Any] | None, str | None, str | None]:
+    try:
+        raw = lock_path.read_bytes()
+    except FileNotFoundError:
+        return None, None, f"component lock is missing: {lock_path}"
+    except OSError as exc:
+        return (
+            None,
+            None,
+            f"component lock is unreadable: {lock_path}: {exc.__class__.__name__}: {exc}",
+        )
+    digest = hashlib.sha256(raw).hexdigest()
+    try:
+        lock = json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return None, digest, f"component lock is malformed: {lock_path}: {exc}"
+    if not isinstance(lock, dict):
+        return None, digest, f"component lock root must be an object: {lock_path}"
+    return lock, digest, None
+
+
+def exact_pin_evidence(root: Path) -> dict[str, Any]:
+    lock_path = root / COMPONENT_LOCK_REL
+    lock, lock_digest, lock_error = load_component_lock(lock_path)
+    if lock_error:
+        return {
+            "superproject": checkout_revision(root),
+            "component_lock": {
+                "path": COMPONENT_LOCK_REL.as_posix(),
+                "sha256": lock_digest,
+                "schema_version": None,
+                "profile": None,
+                "read_error": lock_error,
+            },
+            "topology": {
+                "path": ".gitmodules",
+                "sha256": (
+                    sha256_file(root / ".gitmodules")
+                    if (root / ".gitmodules").is_file()
+                    else None
+                ),
+            },
+            "components": {},
+            "valid": False,
+            "errors": [lock_error],
+        }
+    assert lock is not None
+    entries = lock.get("components")
+    if not isinstance(entries, list):
+        raise SystemExit(f"error: component lock has no components array: {lock_path}")
+    lock_by_path: dict[str, dict[str, Any]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
+            raise SystemExit(f"error: invalid component lock entry: {lock_path}")
+        rel = entry["path"]
+        if rel in lock_by_path:
+            raise SystemExit(f"error: duplicate component lock path: {rel}")
+        lock_by_path[rel] = entry
+
+    topology = declared_submodules(root)
+    declared = sorted(topology)
+    errors: list[str] = []
+    for rel in sorted(set(lock_by_path) - set(declared)):
+        errors.append(f"component lock path is not declared by .gitmodules: {rel}")
+
+    components: dict[str, dict[str, Any]] = {}
+    for rel in declared:
+        checkout = checkout_revision(root / rel)
+        expected_gitlink = gitlink_sha(root, rel)
+        topology_entry = topology[rel]
+        lock_entry = lock_by_path.get(rel)
+        lock_commit = lock_entry.get("commit") if lock_entry else None
+        lock_tree = lock_entry.get("tree") if lock_entry else None
+        lock_url = lock_entry.get("url") if lock_entry else None
+        lock_branch = lock_entry.get("branch") if lock_entry else None
+        lock_role = lock_entry.get("role") if lock_entry else None
+        components[rel] = {
+            "checkout": checkout,
+            "gitlink_expected_sha": expected_gitlink,
+            "gitmodules_entry": topology_entry,
+            "component_lock_sha": lock_commit,
+            "component_lock_tree": lock_tree,
+            "component_lock_entry": lock_entry,
+            "matches": {
+                "checkout_gitlink": bool(
+                    checkout["sha"] and checkout["sha"] == expected_gitlink
+                ),
+                "gitlink_component_lock": bool(
+                    expected_gitlink and expected_gitlink == lock_commit
+                ),
+                "checkout_tree_component_lock": bool(
+                    checkout["tree"] and checkout["tree"] == lock_tree
+                ),
+                "gitmodules_url_component_lock": bool(
+                    topology_entry["url"] and topology_entry["url"] == lock_url
+                ),
+                "gitmodules_branch_component_lock": bool(
+                    topology_entry["branch"]
+                    and topology_entry["branch"] == lock_branch
+                ),
+            },
+        }
+        if lock_entry is None:
+            errors.append(f"missing component lock entry: {rel}")
+        if expected_gitlink is None:
+            errors.append(f"missing gitlink at superproject HEAD: {rel}")
+        if not topology_entry["url"]:
+            errors.append(f"missing .gitmodules URL: {rel}")
+        if not topology_entry["branch"]:
+            errors.append(f"missing .gitmodules branch: {rel}")
+        if lock_entry is not None:
+            if not isinstance(lock_url, str) or not lock_url:
+                errors.append(f"missing component-lock URL: {rel}")
+            elif topology_entry["url"] != lock_url:
+                errors.append(
+                    f".gitmodules/component-lock URL mismatch: {rel} "
+                    f"gitmodules={topology_entry['url']} lock={lock_url}"
+                )
+            if not isinstance(lock_branch, str) or not lock_branch:
+                errors.append(f"missing component-lock branch: {rel}")
+            elif topology_entry["branch"] != lock_branch:
+                errors.append(
+                    f".gitmodules/component-lock branch mismatch: {rel} "
+                    f"gitmodules={topology_entry['branch']} lock={lock_branch}"
+                )
+            if not isinstance(lock_role, str) or not lock_role.strip():
+                errors.append(f"missing component-lock role: {rel}")
+            if not isinstance(lock_tree, str) or not re.fullmatch(r"[0-9a-f]{40}", lock_tree):
+                errors.append(f"missing or invalid component-lock tree: {rel}")
+            elif checkout["tree"] is not None and checkout["tree"] != lock_tree:
+                errors.append(
+                    f"checkout tree/component-lock mismatch: {rel} "
+                    f"checkout={checkout['tree']} lock={lock_tree}"
+                )
+            integration_status = lock_entry.get("integration_status")
+            if integration_status is not None and integration_status != "landed":
+                errors.append(
+                    f"component-lock integration_status is not landed: {rel} "
+                    f"status={integration_status}"
+                )
+        if not checkout["initialized"]:
+            errors.append(f"component checkout is not initialized: {rel}")
+        elif checkout["dirty"] is None:
+            errors.append(f"cannot determine component dirty state: {rel}")
+        elif checkout["dirty"]:
+            errors.append(f"component checkout is dirty: {rel}")
+        if (
+            checkout["initialized"]
+            and expected_gitlink is not None
+            and checkout["sha"] != expected_gitlink
+        ):
+            errors.append(
+                f"checkout/gitlink mismatch: {rel} "
+                f"checkout={checkout['sha']} gitlink={expected_gitlink}"
+            )
+        if (
+            lock_entry is not None
+            and expected_gitlink is not None
+            and expected_gitlink != lock_commit
+        ):
+            errors.append(
+                f"gitlink/component-lock mismatch: {rel} "
+                f"gitlink={expected_gitlink} lock={lock_commit}"
+            )
+
+    superproject = checkout_revision(root)
+    if not superproject["initialized"]:
+        errors.append("superproject checkout is not initialized")
+    elif superproject["dirty"] is None:
+        errors.append("cannot determine superproject dirty state")
+    elif superproject["dirty"]:
+        errors.append("superproject checkout is dirty")
+    return {
+        "superproject": superproject,
+        "component_lock": {
+            "path": COMPONENT_LOCK_REL.as_posix(),
+            "sha256": lock_digest,
+            "schema_version": lock.get("schema_version"),
+            "profile": lock.get("profile"),
+            "read_error": None,
+        },
+        "topology": {
+            "path": ".gitmodules",
+            "sha256": sha256_file(root / ".gitmodules"),
+        },
+        "components": components,
+        "valid": not errors,
+        "errors": errors,
+    }
 
 
 def load_flow(path: Path) -> dict[str, Any]:
@@ -348,7 +614,14 @@ def parse_compile_all_line(line: str) -> tuple[str, dict[str, str]] | None:
         tokens = shlex.split(command)
     except ValueError:
         return None
-    if not tokens or tokens[0] != "make":
+    if not tokens:
+        return None
+    if tokens[0] == "run_case":
+        if len(tokens) != 2 or "=" in tokens[1]:
+            return None
+        testcase = tokens[1]
+        return f"make TESTCASE={shlex.quote(testcase)}", {"TESTCASE": testcase}
+    if tokens[0] != "make":
         return None
     vars_out: dict[str, str] = {}
     for token in tokens[1:]:
@@ -367,7 +640,7 @@ def supernpu_tier(suite_rel: str, make_vars: dict[str, str]) -> int:
     v058_smoke = {
         "microbenchmark/vector/tadd_fp32_16x16",
         "microbenchmark/memory/tload_fp32_16x16",
-        "microbenchmark/cube/tmatmul_fp16_64x64x64",
+        "microbenchmark/cube/tmatmul_fp16_32x64x64",
     }
     if f"{suite_rel}/{testcase}" in v058_smoke:
         return 0
@@ -636,9 +909,26 @@ def case_matches_pattern(case: Case, pattern: str) -> bool:
     return pattern in case.id or pattern in case.suite or pattern in case.kind
 
 
-def tool_paths(root: Path, args: argparse.Namespace) -> dict[str, str]:
+def unresolved_qemu_candidate(args: argparse.Namespace) -> Path:
+    if args.qemu:
+        return Path(args.qemu).expanduser().resolve()
+    explicit = os.environ.get("QEMU")
+    if explicit:
+        return Path(explicit).expanduser().resolve()
+    out_dir = Path(os.environ.get("QEMU_CLEAN_OUT_DIR", "/tmp/linx-qemu-clean-build"))
+    return (out_dir / "qemu-system-linx64").expanduser().resolve()
+
+
+def tool_paths(
+    root: Path, args: argparse.Namespace, *, strict_qemu: bool = True
+) -> dict[str, str]:
     llvm_bin = root / "compiler" / "llvm" / "build-linxisa-clang" / "bin"
-    qemu_default = default_qemu_binary(root)
+    if args.qemu:
+        qemu = Path(args.qemu).expanduser().resolve()
+    elif strict_qemu:
+        qemu = default_qemu_binary(root)
+    else:
+        qemu = unresolved_qemu_candidate(args)
     model_root = Path(args.model_root).expanduser().resolve() if args.model_root else root / "tools" / "LinxCoreModel"
     gfsim = Path(args.gfsim).expanduser().resolve() if args.gfsim else model_root / "bin" / "gfsim"
     return {
@@ -655,7 +945,7 @@ def tool_paths(root: Path, args: argparse.Namespace) -> dict[str, str]:
             if args.llvm_objcopy
             else llvm_bin / "llvm-objcopy"
         ),
-        "qemu": str(Path(args.qemu).expanduser().resolve() if args.qemu else qemu_default),
+        "qemu": str(qemu),
         "model_root": str(model_root),
         "gfsim": str(gfsim),
     }
@@ -889,8 +1179,26 @@ def case_can_enter(state: CaseState, previous_stage: str) -> bool:
     return row is not None and row["status"] in PASS_STATUSES
 
 
-def source_contract(root: Path, states: list[CaseState], dry_run: bool) -> list[dict[str, Any]]:
+def source_contract(
+    root: Path,
+    states: list[CaseState],
+    dry_run: bool,
+    revisions: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
+    revision_errors = list((revisions or {}).get("errors", []))
+    if revision_errors:
+        for state in states:
+            rows.append(
+                stage_row(
+                    state,
+                    "source-contract",
+                    "fail",
+                    owner="integration",
+                    evidence="exact-pin validation failed: " + "; ".join(revision_errors),
+                )
+            )
+        return rows
     for state in states:
         case = state.case
         case_source_dir = state.case_dir / "source"
@@ -2080,18 +2388,10 @@ def write_manifest(
     dry_run: bool,
     paths: dict[str, str],
     cases: list[Case],
+    revisions: dict[str, Any],
 ) -> None:
-    submodules = [
-        "compiler/llvm",
-        "emulator/qemu",
-        "tools/LinxCoreModel",
-        "tools/model",
-        "tools/Linx-TileOP-API",
-        "workloads/pto_kernels",
-        "skills/linx-skills",
-    ]
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at_utc": utc_now(),
         "flow_id": flow.get("flow_id"),
         "profile": profile,
@@ -2099,7 +2399,7 @@ def write_manifest(
         "dry_run": dry_run,
         "repo_root": str(root),
         "tools": tool_manifest(paths),
-        "submodules": {rel: submodule_sha(root, rel) for rel in submodules},
+        "revisions": revisions,
         "cases": [
             {
                 "id": case.id,
@@ -2218,7 +2518,11 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--start-at", default=None)
     ap.add_argument("--stop-after", default=None)
     ap.add_argument("--list", action="store_true")
-    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Do not execute toolchain/model commands; still write manifest, report, logs, and summary artifacts.",
+    )
     ap.add_argument("--continue-on-fail", action="store_true")
     ap.add_argument("--run-id", default=default_run_id())
     ap.add_argument("--out-dir", default="")
@@ -2245,18 +2549,32 @@ def main(argv: list[str]) -> int:
     if not args.list:
         validate_execution_stage_prefix(flow, args.profile, args.stage, stages)
     tiers = profile_tiers(flow, args.profile, args.tier)
+
+    revisions: dict[str, Any] | None = None
+    if not args.list:
+        revisions = exact_pin_evidence(root)
     all_cases = discover_cases(root)
     cases = filter_cases(all_cases, tiers, args.kind, args.case, args.limit)
     if not cases:
+        if revisions and revisions["errors"]:
+            raise SystemExit(
+                "error: exact-pin validation failed before workload discovery: "
+                + "; ".join(revisions["errors"])
+            )
         raise SystemExit("error: no cases selected")
 
     if args.list:
         print_stage_list(stages, cases)
         return 0
 
+    assert revisions is not None
     out_dir = Path(args.out_dir).expanduser().resolve() if args.out_dir else root / "workloads" / "generated" / args.run_id / "ai-bringup"
     out_dir.mkdir(parents=True, exist_ok=True)
-    paths = tool_paths(root, args)
+    paths = tool_paths(
+        root,
+        args,
+        strict_qemu=not args.dry_run and bool(revisions["valid"]),
+    )
     states = [CaseState(case=case, case_dir=out_dir / "cases" / case.id) for case in cases]
     write_manifest(
         root,
@@ -2267,6 +2585,7 @@ def main(argv: list[str]) -> int:
         dry_run=args.dry_run,
         paths=paths,
         cases=cases,
+        revisions=revisions,
     )
 
     stage_reports: list[dict[str, Any]] = []
@@ -2278,7 +2597,9 @@ def main(argv: list[str]) -> int:
         stage_id = stage["id"]
         print(f"== {stage_id} ({stage.get('owner', 'unknown')})")
         if stage_id == "source-contract":
-            rows: list[dict[str, Any]] | dict[str, Any] = source_contract(root, states, args.dry_run)
+            rows: list[dict[str, Any]] | dict[str, Any] = source_contract(
+                root, states, args.dry_run, revisions
+            )
         elif stage_id == "compiler-contract":
             rows = compiler_contract(root, states, paths, args.dry_run, args.compile_timeout)
         elif stage_id == "qemu-execution":

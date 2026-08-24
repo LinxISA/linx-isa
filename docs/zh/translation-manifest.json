@@ -270,8 +270,8 @@
       "translation_sha256": "1b5a4616aba7fe6d18feccd2d7c8658620d7a5d739c3080c38868ebe261556c6"
     },
     "bringup/agent_runs/checklists/integration_release.md": {
-      "source_sha256": "51b90000b9c2ccc3633dd64d42dba14a31e0759ab55d55bcf7f904264f302cf2",
-      "translation_sha256": "286240d81b1765949da90b73bddc3a3e979d958738cd88b878b7da4a322f87f0"
+      "source_sha256": "6ae2f51b062eb4e3d15029ec4d7d651432db93422c22c2edeee99b8cd412dc42",
+      "translation_sha256": "3a4a5fbeabaae117a3a798bf5397010904e13c319e4055ea9e6d9f82427a0df9"
     },
     "bringup/agent_runs/checklists/kernel_linux.md": {
       "source_sha256": "6f9c7119746bd9fc83ee5d216a839508296ddca97c55de8e4721ac21cfa187dc",

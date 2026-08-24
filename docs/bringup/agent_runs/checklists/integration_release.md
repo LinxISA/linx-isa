@@ -93,30 +93,30 @@
   Done means: the parity runner reports `ok=true` and the generated latest markdown/json artifacts agree with the current pinned lane.
   Status: ✅ PASS (2026-04-18) - the latest canonical run records `Regression::PTO kernel parity` as pass.
 
-- [x] ID: INT-021 Keep benchmark workload regression green against the pinned phase-b sysroot.
+- [ ] ID: INT-021 Keep benchmark workload regression green against the pinned phase-b sysroot.
   Command: `LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_benchmarks.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --json-out workloads/generated/benchmarks_result.json`
   Done means: the benchmark regression finishes successfully and writes the canonical JSON artifact.
-  Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::Workload benchmarks` as `pass`.
+  Status: NOT RUN for the current v0.58.3 pins; the 2026-04-18 `Regression::Workload benchmarks` result is historical evidence only.
 
-- [x] ID: INT-022 Keep PolyBench workload regression green against the pinned phase-b sysroot.
-  Command: `LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_polybench.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --json-out workloads/generated/polybench_result.json`
-  Done means: the PolyBench regression finishes successfully and writes the canonical JSON artifact.
-  Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::Workload polybench` as `pass`.
+- [ ] ID: INT-022 Keep PolyBench workload regression green against the pinned phase-b sysroot.
+  Command: `LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_polybench.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --cflag=-DMINI_DATASET --json-out workloads/generated/polybench_result.json`
+  Done means: the bounded `MINI_DATASET` PolyBench smoke finishes successfully and writes the canonical JSON artifact; larger datasets remain performance diagnostics rather than this bring-up gate.
+  Status: NOT RUN for the current v0.58.3 pins; the 2026-04-18 `Regression::Workload polybench` result is historical evidence only.
 
-- [x] ID: INT-023 Keep portfolio workload regression green against the pinned phase-b sysroot.
+- [ ] ID: INT-023 Keep portfolio workload regression green against the pinned phase-b sysroot.
   Command: `LINX_CLANG=compiler/llvm/build-linxisa-clang/bin/clang LINX_SYSROOT=out/libc/musl/install/phase-b python3 workloads/run_portfolio.py --cc tools/spec2017/linx_cc.sh --target linx64-unknown-linux-musl --sysroot out/libc/musl/install/phase-b --polybench --ctuning-limit 5 --json-out workloads/generated/portfolio_report.json`
   Done means: the portfolio regression finishes successfully and writes the canonical JSON artifact.
-  Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::Workload portfolio` as `pass`.
+  Status: NOT RUN for the current v0.58.3 pins; the 2026-04-18 `Regression::Workload portfolio` result is historical evidence only.
 
-- [x] ID: INT-024 Keep the curated ctuning subset green in the pinned workload lane.
+- [ ] ID: INT-024 Keep the curated ctuning subset green in the pinned workload lane.
   Command: `python3 workloads/ctuning/run_milepost_codelets.py --ctuning-root workloads/ctuning --target linx64-unknown-linux-musl --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --limit 5 --run --summary-json workloads/generated/ctuning_result.json`
   Done means: the curated ctuning subset completes under QEMU and writes the canonical summary JSON.
-  Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::ctuning curated subset` as `pass`.
+  Status: NOT RUN for the current v0.58.3 pins; the 2026-04-18 `Regression::ctuning curated subset` result is historical evidence only.
 
-- [x] ID: INT-025 Keep TSVC strict compile coverage green at the required pass floor.
-  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --no-run-qemu --out-dir workloads/generated`
+- [ ] ID: INT-025 Keep TSVC strict compile coverage green at the required pass floor.
+  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --vector-mode auto --strict-fail-under 148 --source-policy linx-v058 --no-run-qemu --out-dir workloads/generated`
   Done means: the compile-only TSVC lane completes and meets the strict pass floor without requiring QEMU runtime.
-  Status: ✅ PASS (2026-04-18) - the latest pin-lane run records `Regression::TSVC strict coverage gate` as `pass` at `148/151`.
+  Status: NOT RUN for the current v0.58.3 pins; the 2026-04-18 v0.57 result at `148/151` is historical evidence only.
 
 - [x] ID: INT-027 Keep ISA-LLVM-QEMU coverage coherence visible as one machine-readable artifact.
   Command: `python3 tools/bringup/report_isa_llvm_qemu_coverage.py --compiler-analyzer avs/compiler/linx-llvm/tests/analyze_coverage.py --compiler-out-dir avs/compiler/linx-llvm/tests/out-linx64 --qemu-isa-report docs/bringup/gates/qemu_isa_coverage_latest.json --qemu-translation-report docs/bringup/gates/qemu_translation_coverage_latest.json --report-out docs/bringup/gates/isa_llvm_qemu_coverage_latest.json --out-md docs/bringup/gates/isa_llvm_qemu_coverage_latest.md --require-coherent`
@@ -124,6 +124,6 @@
   Status: ✅ PASS (2026-05-21) - the combined report now reconciles the canonical ISA set cleanly: LLVM, QEMU implementation, and QEMU AVS translation each cover `710/710` canonical mnemonics.
 
 - [ ] ID: INT-026 Keep TSVC strict QEMU regression green at the runtime pass floor.
-  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v057 --out-dir workloads/generated`
+  Command: `python3 workloads/tsvc/run_tsvc.py --clang compiler/llvm/build-linxisa-clang/bin/clang --lld compiler/llvm/build-linxisa-clang/bin/ld.lld --qemu emulator/qemu/build/qemu-system-linx64 --vector-mode auto --strict-fail-under 148 --source-policy linx-v058 --out-dir workloads/generated`
   Done means: the TSVC lane completes under QEMU and meets the configured strict pass floor.
-  Status: ❌ FAIL (2026-05-15) - no canonical runtime pass exists. The latest diagnostic strict rerun (`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`) reaches TSVC only when BusyBox rootfs is skipped and then times out after 240 seconds on `tsvc.auto.elf`; the canonical April 18 report still proves only compile-only strict coverage.
+  Status: NOT RUN for the current v0.58.3 pins. The latest historical v0.57 diagnostic strict rerun (`docs/bringup/gates/logs/2026-04-17-r7-pin-recovery/pin/reg_strict_cross_repo.log`) reaches TSVC only when BusyBox rootfs is skipped and then times out after 240 seconds on `tsvc.auto.elf`; the canonical April 18 report proves only historical compile-only coverage.

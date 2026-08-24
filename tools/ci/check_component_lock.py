@@ -115,10 +115,12 @@ def validate(
         commit = item.get("commit", "")
         if not SHA_RE.fullmatch(commit):
             errors.append(f"invalid locked commit for {path}: {commit!r}")
+        tree = item.get("tree", "")
+        if not SHA_RE.fullmatch(tree):
+            errors.append(f"invalid locked tree for {path}: {tree!r}")
+        if not item.get("role", "").strip():
+            errors.append(f"component lock role must be non-empty for {path}")
         if path in RELEASE_0583_COMPONENTS:
-            tree = item.get("tree", "")
-            if not SHA_RE.fullmatch(tree):
-                errors.append(f"invalid locked tree for {path}: {tree!r}")
             if item.get("release") != "0.58.3":
                 errors.append(
                     f"{path} must record release 0.58.3, got {item.get('release')!r}"
