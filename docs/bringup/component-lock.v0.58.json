@@ -114,8 +114,8 @@
       "path": "tools/pyCircuit",
       "url": "https://github.com/LinxISA/pyCircuit.git",
       "branch": "main",
-      "commit": "2087c00f0e8297044123753e8430d6b950badf67",
-      "tree": "4a6f3fbadb904e460ff88a1689529a6d0f60bac3",
+      "commit": "47e156bf8c2778f6aea81e8ce77a0b91417bd0e8",
+      "tree": "4c8059554e63c9065e82751c794e11cad42ad1d4",
       "role": "pyCircuit model"
     },
     {
