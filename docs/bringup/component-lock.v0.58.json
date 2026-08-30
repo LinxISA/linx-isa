@@ -105,8 +105,8 @@
       "path": "tools/pto-spec",
       "url": "https://github.com/PTO-ISA/pto-spec.git",
       "branch": "main",
-      "commit": "d5729550c4586ebd01cc5837e420a147d8d023fb",
-      "tree": "d0f397fa98bdc226754002d728c8baa5ec8d72a1",
+      "commit": "ce644e3e1b4a37acc0c69d4ab00763797c2df4c0",
+      "tree": "2fda0b4e52ee849980c54dee1aa5d070d3a7512c",
       "role": "PTO ISA 0.58.5 normative source and generated functional-model producer",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/PTO-ISA/pto-spec/pull/183"
