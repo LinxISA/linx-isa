@@ -73,3 +73,8 @@
 	url = https://github.com/PTO-ISA/pto-spec.git
 	branch = main
 	update = checkout
+[submodule "tools/SuperScalarModel"]
+	path = tools/SuperScalarModel
+	url = https://github.com/LinxISA/SuperScalarModel.git
+	branch = main
+	update = checkout
