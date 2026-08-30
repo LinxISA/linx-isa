@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_profile_hooks_lock.v1.json",
   "common_pto_lock": "isa/v0.58/pto-spec.lock.json",
-  "common_pto_lock_sha256": "9a42a2c4b0f25a2563861e4127543b51b711713b3f12aa98a07f650e850fe6bc",
+  "common_pto_lock_sha256": "af164ee476ab3d0ad26469ae64acd555f180e2084be5ea72969f10c15df718ed",
   "common_pto_release": "0.58.5",
   "profile_hooks": {
     "extension_first_use": {
@@ -10,11 +10,11 @@
       "linx_mapping_sha256": "69cd0e30b7923f6ea31d9e5a54cbac387b45c2026be770e55a9c4325138e7f0d",
       "profile_id": "PTO-ARCH-EXTENSION-FIRST-USE-PROFILE-001",
       "source": {
-        "commit": "512dd74f9a3520152bb208579b2c743b0c2c008f",
+        "commit": "fcce2c77d1f8da49dc328926273e37754bb2ab29",
         "path": "asl/arch/profile/extension-first-use.asl",
         "repository": "https://github.com/PTO-ISA/pto-spec.git",
         "sha256": "ef0bbe915fc5fd01cc93cca2a176844dcbdcb6d48af9bf36404c0bfa897615f3",
-        "tree": "72fbd2aef61fdbe1fe303a716c820f2a9fd93193"
+        "tree": "7583e4801125d37f34b8f3cf3f05c92ca8880911"
       }
     }
   }
