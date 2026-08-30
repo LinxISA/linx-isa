@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_functional_model_lock.v1.json",
+  "schema_version": 1,
+  "release": "0.58.5",
+  "architecture": {
+    "repository": "https://github.com/PTO-ISA/pto-spec.git",
+    "path": "tools/pto-spec",
+    "commit": "82f21ec39cedf11600670c1ec131aae05bdf6053",
+    "tree": "8177612afaf19e9cbf8281ef18f770fcafa82f52",
+    "pto_lock": "isa/v0.58/pto-spec.lock.json",
+    "pto_lock_sha256": "abcc2b9ad64e7961c20e80778839015f372c9d61ee66b6e00fa3391d8ed87a71",
+    "release_manifest_sha256": "4a3e89bebf6404891c20203efda7ad85df8ee697f007f16b75aaf10c8b6f35d2"
+  },
+  "model": {
+    "repository": "https://github.com/LinxISA/SuperScalarModel.git",
+    "path": "tools/SuperScalarModel",
+    "commit": "411ae88ed4fb5e4c4810b370a5b8413def098f2d",
+    "tree": "3fd8593d72a54e1d2cf66a665bd1dc8fd23f9252",
+    "ndf": "docs/pto-asl-functional-model-ndf-v1.json",
+    "ndf_sha256": "6decbaec7df4fc958c5c0fd92372eb09d74e51fd88ce0061ad5d07ae5b1b7533"
+  },
+  "interfaces": {
+    "model_descriptor_sha256": "4abe82abd25853c566e23c41690c8cc0b405df31f7265f1b3d2f9295cef9c073",
+    "experimental_c_abi_version": 262144,
+    "pto_mir_schema": "pto-mir-v1",
+    "snapshot_schema": "pto-functional-model-snapshot-v1",
+    "snapshot_schema_version": 1,
+    "bundle_tile_summary_schema": "pto-bundle-tile-state-sha256-v1"
+  },
+  "corpus": {
+    "schema": "pto-functional-model-corpus-index-v1",
+    "manifest_sha256": "92a15d05160e1ec0dfd288a79c53ba1a34e5eb570028bf27d2b360afce033d07"
+  }
+}
