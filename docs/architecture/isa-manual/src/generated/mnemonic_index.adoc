@@ -3,7 +3,7 @@
 [[mnemonic-index]]
 === Mnemonic index
 
-This table lists unique mnemonics in the v0.58.3 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
+This table lists unique mnemonics in the v0.58.5 catalog. Each mnemonic may have multiple encodable forms (different lengths, operand layouts, or suffix variants).
 
 [cols="2,3,1,1",options="header"]
 |===
@@ -20,6 +20,7 @@ This table lists unique mnemonics in the v0.58.3 catalog. Each mnemonic may have
 |`ANDIW` |ALU |32 |1
 |`ANDW` |ALU |32 |1
 |`ASSERT` |SYS |32 |1
+|`B.ASSEMBLE` |Bundle Range Modifier |32 |1
 |`B.CATR` |Bundle Control Attribute |32 |1
 |`B.DATR` |Bundle Data Attribute |32 |1
 |`B.DIM` |Bundle Argument |32 |3
@@ -28,6 +29,7 @@ This table lists unique mnemonics in the v0.58.3 catalog. Each mnemonic may have
 |`B.IOR` |Bundle Input & Output |32 |1
 |`B.IOS` |Bundle Input & Output |32 |1
 |`B.IOT` |Bundle Input & Output |32 |5
+|`B.SUBVIEW` |Bundle Range Modifier |32 |1
 |`B.TEXT` |Bundle Offset |32 |1
 |`BC.IALL` |SYS |32 |1
 |`BC.IVA` |SYS |32 |1
@@ -63,9 +65,9 @@ This table lists unique mnemonics in the v0.58.3 catalog. Each mnemonic may have
 |`BSTART.TMATMULMX` |Bundle Split |32 |1
 |`BSTART.TMATMULMX.ACC` |Bundle Split |32 |1
 |`BSTART.TMATMULMX.BIAS` |Bundle Split |32 |1
-|`BSTART.TMOV` |Bundle Split |32 |5
+|`BSTART.TMOV` |Bundle Split |32 |1
 |`BSTART.TPREFETCH` |Bundle Split |32 |1
-|`BSTART.TSTORE` |Bundle Split |32 |2
+|`BSTART.TSTORE` |Bundle Split |32 |1
 |`BSTART.VPAR` |Block Split |32 |1
 |`BSTART.VSEQ` |Block Split |32 |1
 |`BSTOP` |Bundle Split |32 |1

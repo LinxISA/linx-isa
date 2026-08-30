@@ -17,14 +17,9 @@
 
 <div class="enc-diagram">
 
-<figure id="encoding-bstart_tstore_32_6bed4bf0e415">
-<img src="../wavedrom/enc_bstart_tstore_32_6bed4bf0e415.svg" alt="BSTART.TSTORE encoding form bstart_tstore_32_6bed4bf0e415" width="100%" />
-<figcaption><code>bstart_tstore_32_6bed4bf0e415</code> — <code>BSTART.TSTORE DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
-<figure id="encoding-bstart_tstore_32_d592de9e15a8">
-<img src="../wavedrom/enc_bstart_tstore_32_d592de9e15a8.svg" alt="BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8" width="100%" />
-<figcaption><code>bstart_tstore_32_d592de9e15a8</code> — <code>BSTART.TSTORE DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure>
+<img src="../wavedrom/enc_bstart_tstore.svg" alt="BSTART.TSTORE encoding" width="100%" />
+<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
 </figure>
 
 </div>
@@ -45,10 +40,9 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Full Catalog Forms
 
-| Form ID | Assembly | Length | Decode | Encoding |
-|---------|----------|--------|--------|----------|
-| `bstart_tstore_32_6bed4bf0e415` | `BSTART.TSTORE DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tstore_32_6bed4bf0e415.svg) |
-| `bstart_tstore_32_d592de9e15a8` | `BSTART.TSTORE DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tstore_32_d592de9e15a8.svg) |
+| Assembly | Length | Decode |
+|----------|--------|--------|
+| `BSTART.TSTORE DataType` | 32 | — |
 
 <div class="insn-nav">
 

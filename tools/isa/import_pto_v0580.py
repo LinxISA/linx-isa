@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import the canonical PTO ISA 0.58.3 release into the Linx v0.58 profile."""
+"""Import the canonical PTO ISA 0.58.5 release into the Linx v0.58 profile."""
 
 from __future__ import annotations
 
@@ -16,11 +16,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = ROOT / "isa" / "v0.58"
 LOCK_PATH = PROFILE / "pto-spec.lock.json"
-RELEASE = "0.58.3"
-EXPECTED_ABI = "pto-isa-0.58.3-mode-function-v1"
-VECTOR_BASENAME = "pto-isa-0583-hardware-numeric-vectors.json"
+RELEASE = "0.58.5"
+EXPECTED_ABI = "pto-isa-0.58.5-mode-function-v1"
+VECTOR_BASENAME = "pto-isa-0585-hardware-numeric-vectors.json"
 SCALAR_FORM_COUNT = 466
-EXTENSION_RESERVATION_COUNT = 40
+COMMAND_FORM_COUNT = 76
+TILE_OPERATION_COUNT = 107
+EXTENSION_RESERVATION_COUNT = 46
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -59,22 +61,22 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     docs = {name: load_json(path) for name, path in paths.items()}
     manifest = docs["manifest"]
     if manifest.get("release") != RELEASE or manifest.get("encoding_abi") != EXPECTED_ABI:
-        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.3 contract")
+        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.5 contract")
     counts = manifest.get("catalog_counts") or {}
     expected = {
-        "tile_operations_total": 109,
-        "command_forms": 74,
+        "tile_operations_total": TILE_OPERATION_COUNT,
+        "command_forms": COMMAND_FORM_COUNT,
         "scalar_forms": SCALAR_FORM_COUNT,
         "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
     }
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
     if Counter(item["family"] for item in docs["tiles"]["operations"]) != Counter(
-        {"TEPL": 87, "TLSU": 10, "CUBE": 12}
+        {"TEPL": 85, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
     if Counter(item["engine"] for item in docs["tiles"]["operations"]) != Counter(
-        {"VEC": 31, "SFU": 56, "TLSU": 10, "CUBE": 12}
+        {"VEC": 31, "SFU": 54, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 semantic engine counts")
     if Counter(item["classification"] for item in docs["tiles"]["operations"]) != Counter(
@@ -84,13 +86,13 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
             "reduce-and-expand": 28,
             "memory-and-data-movement": 9,
             "matrix-and-matrix-vector": 12,
-            "layout-and-rearrangement": 7,
-            "irregular-and-complex": 13,
+            "layout-and-rearrangement": 9,
+            "irregular-and-complex": 9,
         }
     ):
         raise ValueError("unexpected PTO 0.58 tile classification counts")
     if Counter(item["semantic_family"] for item in docs["commands"]["forms"]) != Counter(
-        {"CMD": 69, "BBD": 5}
+        {"CMD": 71, "BBD": 5}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
     if (
@@ -129,9 +131,9 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
     manifest = docs["manifest"]
     catalogs = {}
     for name, relative, count in (
-        ("command_forms", "spec/catalog/command-forms.json", 74),
+        ("command_forms", "spec/catalog/command-forms.json", COMMAND_FORM_COUNT),
         ("scalar_forms", "spec/catalog/scalar-forms.json", SCALAR_FORM_COUNT),
-        ("tile_operations", "spec/catalog/tile-operations.json", 109),
+        ("tile_operations", "spec/catalog/tile-operations.json", TILE_OPERATION_COUNT),
         (
             "extension_encoding_reservations",
             "spec/catalog/extension-encoding-reservations.json",
@@ -315,7 +317,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "selector_formula": "(mode << 5) | function",
         "mode_field_bits": [0, 1],
         "function_field_bits": [0, 4],
-        "accepted_selector_count": 87,
+        "accepted_selector_count": 85,
         "reserved_selector_ranges": tiles["reserved"]["tepl_selector_ranges"],
         "migration_aliases": {},
         "ops": tepl_ops,
@@ -348,8 +350,8 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "physical_contiguity": "required",
     }
     current["shared_tile_registers"] = {
-        "registers_per_core": 256,
-        "assembly_names": "S0..S255",
+        "registers_per_core": 64,
+        "assembly_names": "S0..S63",
         "addressing": "absolute-index",
         "sharing_domain": "one bank private to each core and shared by its four PEs",
         "quarter_selection": "B.IOS 3-bit PEMode decoded to the fixed four-PE mask; zero means NOP",
@@ -368,8 +370,8 @@ def shared_register_state() -> dict[str, Any]:
         "profile": "v0.58",
         "version": RELEASE,
         "source_lock": "isa/v0.58/pto-spec.lock.json",
-        "register_count": 256,
-        "register_names": {"first": "S0", "last": "S255", "syntax": "S<absolute-index>"},
+        "register_count": 64,
+        "register_names": {"first": "S0", "last": "S63", "syntax": "S<absolute-index>"},
         "scope": {"private_to": "core", "shared_by": "four PEs in that core"},
         "semantics": {
             "atomicity": "descriptor-and-payload read-modify-write",

@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.58.3 &nbsp;·&nbsp; **757 instruction forms** &nbsp;·&nbsp; **54 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.58.5 &nbsp;·&nbsp; **754 instruction forms** &nbsp;·&nbsp; **55 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -68,16 +68,16 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 [BRU (58)](groups/bru.md){.group-card} [BSTART (21)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card}
 [Bundle Argument (3)](groups/bundle_argument.md){.group-card} [Bundle Control Attribute (1)](groups/bundle_control_attribute.md){.group-card} [Bundle Data Attribute (1)](groups/bundle_data_attribute.md){.group-card} [Bundle Dimension (1)](groups/bundle_dimension.md){.group-card}
 [Bundle Fixed-Point PostProcess Attribute (1)](groups/bundle_fixed_point_postprocess_attribute.md){.group-card} [Bundle Hint (2)](groups/bundle_hint.md){.group-card} [Bundle Input & Output (7)](groups/bundle_input_output.md){.group-card} [Bundle Offset (1)](groups/bundle_offset.md){.group-card}
-[Bundle Split (57)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [Compare Instruction (16)](groups/compare_instruction.md){.group-card} [Division (2)](groups/division.md){.group-card}
-[FSU (30)](groups/fsu.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Format Convert (4)](groups/format_convert.md){.group-card} [General (3)](groups/general.md){.group-card}
-[General Manager (2)](groups/general_manager.md){.group-card} [LDA (11)](groups/lda.md){.group-card} [LDA/BASE_IMM (9)](groups/lda_base_imm.md){.group-card} [LDA/BASE_REG (8)](groups/lda_base_reg.md){.group-card}
-[LDA/LONG (12)](groups/lda_long.md){.group-card} [LDA/PAIR (19)](groups/lda_pair.md){.group-card} [LDA/PC_REL (7)](groups/lda_pc_rel.md){.group-card} [LDA/POST_INDEX (19)](groups/lda_post_index.md){.group-card}
-[LDA/PRE_INDEX (19)](groups/lda_pre_index.md){.group-card} [LDA/UNSCALED (6)](groups/lda_unscaled.md){.group-card} [Load Immediate Offset (14)](groups/load_immediate_offset.md){.group-card} [Load Register Offset (14)](groups/load_register_offset.md){.group-card}
-[Load UnScaled (10)](groups/load_unscaled.md){.group-card} [Multi-Cycle ALU (2)](groups/multi_cycle_alu.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card} [STA (4)](groups/sta.md){.group-card}
-[STA/BASE_IMM (9)](groups/sta_base_imm.md){.group-card} [STA/BASE_REG (7)](groups/sta_base_reg.md){.group-card} [STA/LONG (7)](groups/sta_long.md){.group-card} [STA/PAIR (14)](groups/sta_pair.md){.group-card}
-[STA/PC_REL (4)](groups/sta_pc_rel.md){.group-card} [STA/POST_INDEX (14)](groups/sta_post_index.md){.group-card} [STA/PRE_INDEX (14)](groups/sta_pre_index.md){.group-card} [SYS (35)](groups/sys.md){.group-card}
-[Shuffle (8)](groups/shuffle.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card} [Store Register Offset (14)](groups/store_register_offset.md){.group-card} [Three Source Integer (2)](groups/three_source_integer.md){.group-card}
-[Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
+[Bundle Range Modifier (2)](groups/bundle_range_modifier.md){.group-card} [Bundle Split (52)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [Compare Instruction (16)](groups/compare_instruction.md){.group-card}
+[Division (2)](groups/division.md){.group-card} [FSU (30)](groups/fsu.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Format Convert (4)](groups/format_convert.md){.group-card}
+[General (3)](groups/general.md){.group-card} [General Manager (2)](groups/general_manager.md){.group-card} [LDA (11)](groups/lda.md){.group-card} [LDA/BASE_IMM (9)](groups/lda_base_imm.md){.group-card}
+[LDA/BASE_REG (8)](groups/lda_base_reg.md){.group-card} [LDA/LONG (12)](groups/lda_long.md){.group-card} [LDA/PAIR (19)](groups/lda_pair.md){.group-card} [LDA/PC_REL (7)](groups/lda_pc_rel.md){.group-card}
+[LDA/POST_INDEX (19)](groups/lda_post_index.md){.group-card} [LDA/PRE_INDEX (19)](groups/lda_pre_index.md){.group-card} [LDA/UNSCALED (6)](groups/lda_unscaled.md){.group-card} [Load Immediate Offset (14)](groups/load_immediate_offset.md){.group-card}
+[Load Register Offset (14)](groups/load_register_offset.md){.group-card} [Load UnScaled (10)](groups/load_unscaled.md){.group-card} [Multi-Cycle ALU (2)](groups/multi_cycle_alu.md){.group-card} [Reduce Operation with Register (9)](groups/reduce_operation_with_register.md){.group-card}
+[STA (4)](groups/sta.md){.group-card} [STA/BASE_IMM (9)](groups/sta_base_imm.md){.group-card} [STA/BASE_REG (7)](groups/sta_base_reg.md){.group-card} [STA/LONG (7)](groups/sta_long.md){.group-card}
+[STA/PAIR (14)](groups/sta_pair.md){.group-card} [STA/PC_REL (4)](groups/sta_pc_rel.md){.group-card} [STA/POST_INDEX (14)](groups/sta_post_index.md){.group-card} [STA/PRE_INDEX (14)](groups/sta_pre_index.md){.group-card}
+[SYS (35)](groups/sys.md){.group-card} [Shuffle (8)](groups/shuffle.md){.group-card} [Store Offset (14)](groups/store_offset.md){.group-card} [Store Register Offset (14)](groups/store_register_offset.md){.group-card}
+[Three Source Integer (2)](groups/three_source_integer.md){.group-card} [Three-Source Floating Point (8)](groups/three_source_floating_point.md){.group-card} [Two-Source Floating Point (12)](groups/two_source_floating_point.md){.group-card}
 
 </div>
 
@@ -107,13 +107,15 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [C.CMP.NEI](instructions/c_cmp_nei.md) | bru | 16 | C.CMP.NEI - Compare scalar operands and write the encoded boolean result. |
 | [C.SETC.EQ](instructions/c_setc_eq.md) | bru | 16 | [16-bit C.] Sets the block-commit condition. |
 | [C.SETC.NE](instructions/c_setc_ne.md) | bru | 16 | [16-bit C.] Sets the block-commit condition. |
+| [B.ASSEMBLE](instructions/b_assemble.md) | bundle_range_modifier | 32 | Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
+| [B.SUBVIEW](instructions/b_subview.md) | bundle_range_modifier | 32 | Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
 | [B.CATR](instructions/b_catr.md) | bundle_control_attribute | 32 | Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode. |
 | [B.DATR](instructions/b_datr.md) | bundle_data_attribute | 32 | Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes. |
 | [B.DIM](instructions/b_dim.md) | bundle_argument | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.FPATR](instructions/b_fpatr.md) | bundle_fixed_point_postprocess_attribute | 32 | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
 | [B.HINT](instructions/b_hint.md) | bundle_hint | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
 | [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride. |
-| [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
+| [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
 | [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.TEXT](instructions/b_text.md) | bundle_offset | 32 | Sets the out-of-line body entry address for a decoupled bundle. |
 | [BSTART](instructions/bstart.md) | bundle_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
@@ -152,7 +154,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [FABS](instructions/fabs.md) | fsu | 32 | Floating-point absolute value. |
 | [FADD](instructions/fadd.md) | fsu | 32 | Floating-point addition. |
 | [FCVT](instructions/fcvt.md) | fsu | 32 | Floating-point format conversion. |
-| [FCVTA](instructions/fcvta.md) | fsu | 32 | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode. |
+| [FCVTA](instructions/fcvta.md) | fsu | 32 | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode. |
 | [FCVTM](instructions/fcvtm.md) | fsu | 32 | FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode. |
 | [HL.LB.PCR](instructions/hl_lb_pcr.md) | lda_pc_rel | 48 | HL.LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
 | [HL.LBU.PCR](instructions/hl_lbu_pcr.md) | lda_pc_rel | 48 | HL.LBU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
@@ -313,4 +315,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 757 instruction forms →](instructions/index.md)
+[View all 754 instruction forms →](instructions/index.md)

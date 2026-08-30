@@ -5,7 +5,7 @@
 [[inst_b_fpatr]]
 ==== B.FPATR
 
-*Syntax:* B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB
+*Syntax:* B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn
 
 *Description:* Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
 

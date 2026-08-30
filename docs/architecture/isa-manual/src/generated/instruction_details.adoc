@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.3 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.5 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-sys]]
 ==== SYS
@@ -6077,6 +6077,65 @@ off = (ZeroExtend(imm20) << 1)
 ra = base + off
 ----
 
+[[insndesc-bundle-range-modifier]]
+==== Bundle Range Modifier
+
+[[insndesc-bundle-range-modifier-b-assemble]]
+===== B.ASSEMBLE
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
+
+Encoding::
++
+.`b_assemble_32_058abbee219d` — `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
+image::encodings/enc_b_assemble.svg[B.ASSEMBLE encoding form b_assemble_32_058abbee219d,align="center"]
+
+
+Encoding notes (informative)::
++
+* Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bundle-range-modifier-b-subview]]
+===== B.SUBVIEW
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode`
+
+Encoding::
++
+.`b_subview_32_48f114b5d12b` — `B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode`
+image::encodings/enc_b_subview.svg[B.SUBVIEW encoding form b_subview_32_48f114b5d12b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
 [[insndesc-bundle-control-attribute]]
 ==== Bundle Control Attribute
 
@@ -6188,12 +6247,12 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
+* `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn`
 
 Encoding::
 +
-.`b_fpatr_32_ecbf4a9b6cf0` — `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
-image::encodings/enc_b_fpatr.svg[B.FPATR encoding form b_fpatr_32_ecbf4a9b6cf0,align="center"]
+.`b_fpatr_32_12243b200432` — `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn`
+image::encodings/enc_b_fpatr.svg[B.FPATR encoding form b_fpatr_32_12243b200432,align="center"]
 
 
 Encoding notes (informative)::
@@ -6281,17 +6340,17 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
+* `B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
 
 Encoding::
 +
-.`b_ios_32_0f62f62d6a81` — `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
-image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_0f62f62d6a81,align="center"]
+.`b_ios_32_2f2d1ab83761` — `B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_2f2d1ab83761,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+* Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
 
 Operation (informative)::
 +
@@ -7160,7 +7219,7 @@ BeginNextBlock(/* type/kind/target as encoded */)
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 5 form(s) (32 bits).
+Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -7169,15 +7228,7 @@ Assembly forms::
 Encoding::
 +
 .`bstart_tmov_32_3079328b98d6` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_3079328b98d6.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,align="center"]
-.`bstart_tmov_32_34d0ab432974` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_34d0ab432974.svg[BSTART.TMOV encoding form bstart_tmov_32_34d0ab432974,align="center"]
-.`bstart_tmov_32_472804576301` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_472804576301.svg[BSTART.TMOV encoding form bstart_tmov_32_472804576301,align="center"]
-.`bstart_tmov_32_d96181e99f01` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_d96181e99f01.svg[BSTART.TMOV encoding form bstart_tmov_32_d96181e99f01,align="center"]
-.`bstart_tmov_32_efe5c49fcb78` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_efe5c49fcb78.svg[BSTART.TMOV encoding form bstart_tmov_32_efe5c49fcb78,align="center"]
+image::encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,align="center"]
 
 
 Encoding notes (informative)::
@@ -7226,7 +7277,7 @@ BeginNextBlock(/* type/kind/target as encoded */)
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 2 form(s) (32 bits).
+Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -7234,10 +7285,8 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tstore_32_6bed4bf0e415` — `BSTART.TSTORE DataType`
-image::encodings/enc_bstart_tstore_32_6bed4bf0e415.svg[BSTART.TSTORE encoding form bstart_tstore_32_6bed4bf0e415,align="center"]
 .`bstart_tstore_32_d592de9e15a8` — `BSTART.TSTORE DataType`
-image::encodings/enc_bstart_tstore_32_d592de9e15a8.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,align="center"]
+image::encodings/enc_bstart_tstore.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,align="center"]
 
 
 Encoding notes (informative)::
@@ -10461,7 +10510,7 @@ image::encodings/enc_fcvta.svg[FCVTA encoding form fcvta_32_e40944328b8e,align="
 
 Encoding notes (informative)::
 +
-* FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.
+* FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.
 
 Operation (informative)::
 +

@@ -159,6 +159,7 @@ MANUAL_CHAPTERS: dict[str, tuple[int, str]] = {
                                       (17, "CMD — Command and Control"),
     "Bundle Hint":                   (17, "CMD — Command and Control"),
     "Bundle Input & Output":         (4,  "Block ISA — Block-structured Control Flow"),
+    "Bundle Range Modifier":         (4,  "Block ISA — Block-structured Control Flow"),
     "Bundle Offset":                 (4,  "Block ISA — Block-structured Control Flow"),
     "C.UNARY":                      (12, "ALU — Arithmetic Logic Unit"),
     "C.TINST":                      (19, "SYS — System Operations"),
