@@ -179,6 +179,17 @@ class AnalyzeCoverageTest(unittest.TestCase):
             self.assertEqual(report["missing_mnemonics"], ["BSTART"])
             self.assertEqual(report["mapped_by_test"]["tepl"], ["BSTART.TEPL"])
 
+    def test_vec_projection_also_covers_tepl_carrier(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            spec_data = coverage.load_isa_spec(self.write_spec(root, "BSTART.TEPL"))
+            self.write_objdump(root / "out", "vec", "BSTART.VEC")
+
+            report = coverage.analyze_coverage(spec_data, root / "out")
+
+            self.assertEqual(report["covered_spec_mnemonics"], 1)
+            self.assertEqual(report["missing_mnemonics"], [])
+
     def test_frame_vector_seed_uses_legal_minimum_stack_size(self) -> None:
         for mnemonic in ("FENTRY", "FEXIT", "FRET.RA", "FRET.STK"):
             self.assertEqual(
