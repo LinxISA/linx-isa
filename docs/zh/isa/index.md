@@ -11,12 +11,12 @@
 
 前者承担主要公开叙事结构，后者承担精确的助记符、分组、编码与逐条指令检索。
 
-**ISA 版本：** v0.58.3 · **757 个指令形式** · **54 个分组** · **4 种编码格式**
+**ISA 版本：** v0.58.5 · **754 个指令形式** · **55 个分组** · **4 种编码格式**
 
-v0.58.3 以 PTO ISA 0.58.3 的 466 个标量形式、74 个 block command 和 109 个 Tile
+v0.58.5 以 PTO ISA 0.58.5 的 466 个标量形式、76 个 block command 和 107 个 Tile
 操作为共同基线；Linx 只额外定义 V.* 与 VPAR/VSEQ 向量块。TLSU 保留
 MGATHER.MASK、MSCATTER.MASK 和 MGATHER.CAS，并采用显式 CUBE 目的 Tile。
-PTO 0.58.3 删除八个独立 `B.*` 条件分支形式，并将原编码加入 extension
+PTO 0.58.5 保持删除八个独立 `B.*` 条件分支形式，并发布 46 个 extension
 reservation；条件控制使用 `SETC.*` 与 `BSTART COND`。
 
 </div>
