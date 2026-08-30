@@ -22,7 +22,7 @@
       "count": 46
     }
   },
-  "content_sha256": "6276beb1602841200aeeeb4d5dc42c7abcadeaf1c2c4e2e28d784bab987afc7a",
+  "content_sha256": "2d2a530f241528a93303d7b336f950239532b1b8da200cca39f6d1d41e77471b",
   "encoding_abi": "pto-isa-0.58.5-mode-function-v1",
   "encoding_projection_sha256": "c4a0188f4c9087388fe6239e4ec2da6550b81c87bb1466e6157d69a9aa45f747",
   "hardware_conformance_profile": {
@@ -37,11 +37,11 @@
   "release": "0.58.5",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "056d0b8bcda1fade12623bca8b085e5af262fd52cc615e0da2855f5d3525bb41"
+    "sha256": "82827d501f44c6e21aa72976b7fa713ca6100f4e4665fa46674e559c9e74415b"
   },
   "source": {
-    "commit": "512dd74f9a3520152bb208579b2c743b0c2c008f",
-    "tree": "72fbd2aef61fdbe1fe303a716c820f2a9fd93193",
+    "commit": "fcce2c77d1f8da49dc328926273e37754bb2ab29",
+    "tree": "7583e4801125d37f34b8f3cf3f05c92ca8880911",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }
