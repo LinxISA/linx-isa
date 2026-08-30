@@ -224,6 +224,16 @@
 |`SETRET` |32 |- |`setret uimm, ->Ra` |SETRET - Write the architectural return address.
 |===
 
+[[insnref-bundle-range-modifier]]
+=== Bundle Range Modifier
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.ASSEMBLE` |32 |- |`B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode` |Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+|`B.SUBVIEW` |32 |- |`B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode` |Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+|===
+
 [[insnref-bundle-control-attribute]]
 === Bundle Control Attribute
 
@@ -259,7 +269,7 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
+|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
 |===
 
 [[insnref-bundle-hint]]
@@ -279,7 +289,7 @@
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
 |`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
-|`B.IOS` |32 |- |`B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+|`B.IOS` |32 |- |`B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
@@ -338,12 +348,7 @@
 |`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Starts CUBE Function 6 for the TMATMUL_MX_ACC Matrix-matrix complete-bundle operation.
 |`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Starts CUBE Function 5 for the TMATMUL_MX_BIAS Matrix-matrix complete-bundle operation.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Starts a destination-free, four-PE TLSU prefetch block with an explicit element data type.
-|`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTOP` |32 |- |`BSTOP` |Commits the current bundle and transfers to its selected continuation.
 |`C.BSTART` |16 |- |`C.BSTART DIRECT, label` |Starts a compressed standard block with a PC-relative direct or conditional candidate target.
@@ -528,7 +533,7 @@
 |`FABS` |32 |- |`fabs.{T} SrcL, ->{t, u, Rd}` |FABS clears the sign bit of the selected FP64 or FP32 carrier, preserves every other carrier bit, and publishes no numeric flags.
 |`FADD` |32 |- |`fadd.{T} SrcL, SrcR, ->{t, u, Rd}` |FADD adds two selected FP64 or FP32 carriers through the active numeric profile and publishes its sticky flags.
 |`FCVT` |32 |- |`fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.
-|`FCVTA` |32 |- |`fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.
+|`FCVTA` |32 |- |`fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.
 |`FCVTM` |32 |- |`fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.
 |`FCVTN` |32 |- |`fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.
 |`FCVTP` |32 |- |`fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.

@@ -11,7 +11,7 @@ This is the canonical navigation contract for contributors and agents.
 - `emulator/` — upstream QEMU submodule (`emulator/qemu`)
 - `kernel/` — upstream Linux submodule (`kernel/linux`)
 - `rtl/` — LinxCore submodule (`rtl/LinxCore`) + rtl notes
-- `tools/` — generators, regression, models, and the Linx TileOP API submodule
+- `tools/` — generators, regression, models, the Linx TileOP API, and the exact PTO-SPEC source submodule
 - `workloads/` — benchmark runners + generated artifacts + PTO kernels submodule
 - `isa/` — ISA source of truth and generated catalogs
 - `docs/` — architecture, bring-up, migration, project references
@@ -36,6 +36,7 @@ This is the canonical navigation contract for contributors and agents.
 - Freestanding libc support used by AVS/tests: `avs/runtime/freestanding/`
 - Linux libc source forks: `lib/glibc/`, `lib/musl/`
 - PTO assembler fork: `compiler/ptoas/`
+- PTO normative source and generated functional-model producer: `tools/pto-spec/`
 - PTO kernels and maintained SuperNPU workloads (submodule): `workloads/pto_kernels/`
 - SuperNPU active root: `workloads/pto_kernels/benchmarks/supernpu/`
 - Linx v0.58 TileOP API include root: `tools/Linx-TileOP-API/include/`

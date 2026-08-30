@@ -5022,7 +5022,7 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.",
+      "semantic_summary": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.",
       "status": "accepted"
     },
     {

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "profile": "v0.58",
-  "description": "Exact reviewed component pins for the LinxISA and PTO ISA v0.58.3 superproject integration surface.",
+  "description": "Exact component pins for the PTO ISA 0.58.5 review integration over the existing LinxISA v0.58.3 leaf baseline.",
   "components": [
     {
       "path": "compiler/llvm",
@@ -100,6 +100,16 @@
       "role": "C++ core model",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/37"
+    },
+    {
+      "path": "tools/pto-spec",
+      "url": "https://github.com/PTO-ISA/pto-spec.git",
+      "branch": "main",
+      "commit": "d5729550c4586ebd01cc5837e420a147d8d023fb",
+      "tree": "d0f397fa98bdc226754002d728c8baa5ec8d72a1",
+      "role": "PTO ISA 0.58.5 normative source and generated functional-model producer",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/PTO-ISA/pto-spec/pull/183"
     },
     {
       "path": "tools/model",

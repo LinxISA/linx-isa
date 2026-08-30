@@ -68,3 +68,8 @@
 	url = https://github.com/LinxISA/Linx-TileOP-API.git
 	branch = linx
 	update = checkout
+[submodule "tools/pto-spec"]
+	path = tools/pto-spec
+	url = https://github.com/PTO-ISA/pto-spec.git
+	branch = main
+	update = checkout

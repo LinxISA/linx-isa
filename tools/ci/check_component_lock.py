@@ -19,9 +19,10 @@ REQUIRED_COMPONENTS = {
     "emulator/qemu",
     "kernel/linux",
     "tools/Linx-TileOP-API",
+    "tools/pto-spec",
     "workloads/pto_kernels",
 }
-RELEASE_0583_COMPONENTS = REQUIRED_COMPONENTS | {
+RELEASE_0583_COMPONENTS = (REQUIRED_COMPONENTS - {"tools/pto-spec"}) | {
     "compiler/ptoas",
     "lib/glibc",
     "lib/musl",
@@ -29,7 +30,7 @@ RELEASE_0583_COMPONENTS = REQUIRED_COMPONENTS | {
     "tools/model",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
-REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
+REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel", "tools/pto-spec"}
 GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
 
 

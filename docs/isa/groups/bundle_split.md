@@ -5,12 +5,12 @@
 <span class="ch-tag ch-tag-04">Ch 04</span>
 &nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Bundle Split &nbsp;|&nbsp;
-**Forms:** 57 &nbsp;|&nbsp;
+**Forms:** 52 &nbsp;|&nbsp;
 **Unique mnemonics:** 42
 
 </div>
 
-Instructions in the **Bundle Split** group of the LinxISA v0.58.3 catalog.
+Instructions in the **Bundle Split** group of the LinxISA v0.58.5 catalog.
 
 ## Instructions
 

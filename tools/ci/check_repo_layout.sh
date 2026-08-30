@@ -115,6 +115,7 @@ expected_submodules=(
   "tools/LinxCoreModel"
   "tools/Linx-TileOP-API"
   "tools/model"
+  "tools/pto-spec"
   "tools/pyCircuit"
   "workloads/pto_kernels"
 )

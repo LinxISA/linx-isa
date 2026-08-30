@@ -39,6 +39,12 @@
           7
         ]
       },
+      "CScaleEn": {
+        "namespace": "operand",
+        "widths": [
+          1
+        ]
+      },
       "Canonicalize": {
         "namespace": "operand",
         "widths": [
@@ -110,6 +116,12 @@
           4
         ]
       },
+      "INIT": {
+        "namespace": "operand",
+        "widths": [
+          1
+        ]
+      },
       "L": {
         "namespace": "operand",
         "widths": [
@@ -117,6 +129,12 @@
         ]
       },
       "L/UL": {
+        "namespace": "operand",
+        "widths": [
+          1
+        ]
+      },
+      "LAST": {
         "namespace": "operand",
         "widths": [
           1
@@ -200,6 +218,17 @@
         "namespace": "operand",
         "widths": [
           2
+        ]
+      },
+      "ParentSizeCode": {
+        "namespace": "selector",
+        "reserved_values": [
+          13,
+          14,
+          15
+        ],
+        "widths": [
+          4
         ]
       },
       "PreQuantMode": {
@@ -361,10 +390,10 @@
           1
         ]
       },
-      "SharedTID": {
+      "SharedTileID": {
         "namespace": "register-or-identifier",
         "widths": [
-          8
+          6
         ]
       },
       "SizeCode": {
@@ -433,6 +462,13 @@
           2
         ]
       },
+      "SrcSelect": {
+        "namespace": "selector",
+        "reserved_values": [],
+        "widths": [
+          1
+        ]
+      },
       "SrcTile0": {
         "namespace": "register-or-identifier",
         "widths": [
@@ -457,6 +493,18 @@
         "namespace": "register-or-identifier",
         "widths": [
           5
+        ]
+      },
+      "SubviewSizeCode": {
+        "namespace": "selector",
+        "reserved_values": [
+          0,
+          13,
+          14,
+          15
+        ],
+        "widths": [
+          4
         ]
       },
       "TransA": {
@@ -736,6 +784,14 @@
           12
         ]
       },
+      "uimm11": {
+        "namespace": "immediate",
+        "scale": 1,
+        "signed": false,
+        "widths": [
+          11
+        ]
+      },
       "uimm12": {
         "namespace": "immediate",
         "scale": 1,
@@ -791,7 +847,7 @@
       "Selector reserved_values and reserved_ranges enumerate rejected selector codes when known. Reserved fields declare their canonical allowed_values; reserve accepts only zero."
     ]
   },
-  "instruction_count": 757,
+  "instruction_count": 754,
   "instructions": [
     {
       "asm": "acrc rst_type",
@@ -2304,6 +2360,276 @@
       "uop_group": "SYS"
     },
     {
+      "asm": "B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "constraints": [
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "24"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "25"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "26"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "27"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "28"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "31"
+              },
+              {
+                "field": "ParentSizeCode",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "ParentSizeCode",
+                "op": "!=",
+                "value": "14"
+              },
+              {
+                "field": "ParentSizeCode",
+                "op": "!=",
+                "value": "15"
+              }
+            ],
+            "fields": [
+              {
+                "name": "INIT",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 31,
+                    "token": "INIT",
+                    "width": 1
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "LAST",
+                "pieces": [
+                  {
+                    "insn_lsb": 11,
+                    "insn_msb": 11,
+                    "token": "LAST",
+                    "width": 1
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "ParentSizeCode",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 10,
+                    "token": "ParentSizeCode",
+                    "width": 4
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 19,
+                    "token": "RegSrc",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "uimm11",
+                "pieces": [
+                  {
+                    "insn_lsb": 20,
+                    "insn_msb": 30,
+                    "token": "uimm11",
+                    "width": 11
+                  }
+                ],
+                "signed": false
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000707f",
+            "match": "0x00001053",
+            "pattern": ".................001.....1010011",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Range Modifier",
+      "id": "b_assemble_32_058abbee219d",
+      "length_bits": 32,
+      "mnemonic": "B.ASSEMBLE",
+      "note": "Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 31,
+              "token": "INIT",
+              "width": 1
+            },
+            {
+              "lsb": 20,
+              "msb": 30,
+              "token": "uimm11",
+              "width": 11
+            },
+            {
+              "lsb": 15,
+              "msb": 19,
+              "token": "RegSrc",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 3
+              },
+              "lsb": 12,
+              "msb": 14,
+              "token": "3'b001",
+              "width": 3
+            },
+            {
+              "lsb": 11,
+              "msb": 11,
+              "token": "LAST",
+              "width": 1
+            },
+            {
+              "lsb": 7,
+              "msb": 10,
+              "token": "ParentSizeCode",
+              "width": 4
+            },
+            {
+              "const": {
+                "value": 83,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b1010011",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "INIT",
+          "operator": "one-of",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "field": "RegSrc",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "field": "ParentSizeCode",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ]
+        }
+      ],
+      "pto_source_form_id": "b_assemble_32_122000000002",
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 342
+      },
+      "uid": "058abbee219d",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_IO",
+        "note": "PTO 0.58.5 common block range contract",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    },
+    {
       "asm": "B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}",
       "encoding": {
         "length_bits": 32,
@@ -3435,7 +3761,7 @@
       "uop_group": "CMD"
     },
     {
-      "asm": "B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB",
+      "asm": "B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -3679,6 +4005,18 @@
             ],
             "fields": [
               {
+                "name": "CScaleEn",
+                "pieces": [
+                  {
+                    "insn_lsb": 9,
+                    "insn_msb": 9,
+                    "token": "CScaleEn",
+                    "width": 1
+                  }
+                ],
+                "signed": null
+              },
+              {
                 "name": "GroupMaxEn",
                 "pieces": [
                   {
@@ -3788,16 +4126,16 @@
               }
             ],
             "index": 0,
-            "mask": "0x00007e7f",
+            "mask": "0x00007c7f",
             "match": "0x00002023",
-            "pattern": ".................010000..0100011",
+            "pattern": ".................01000...0100011",
             "width_bits": 32
           }
         ]
       },
       "encoding_kind": "L32",
       "group": "Bundle Fixed-Point PostProcess Attribute",
-      "id": "b_fpatr_32_ecbf4a9b6cf0",
+      "id": "b_fpatr_32_12243b200432",
       "length_bits": 32,
       "mnemonic": "B.FPATR",
       "note": "Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.",
@@ -3848,13 +4186,19 @@
             },
             {
               "const": {
-                "value": 16,
-                "width": 6
+                "value": 8,
+                "width": 5
               },
-              "lsb": 9,
+              "lsb": 10,
               "msb": 14,
-              "token": "6'b010000",
-              "width": 6
+              "token": "5'b01000",
+              "width": 5
+            },
+            {
+              "lsb": 9,
+              "msb": 9,
+              "token": "CScaleEn",
+              "width": 1
             },
             {
               "lsb": 8,
@@ -4005,6 +4349,14 @@
           ]
         },
         {
+          "field": "CScaleEn",
+          "operator": "one-of",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
           "field": "Reserved",
           "operator": "one-of",
           "values": [
@@ -4047,7 +4399,7 @@
         {
           "name": "Reserved",
           "value": 0,
-          "width": 2
+          "width": 1
         },
         {
           "name": "Opc1",
@@ -4068,9 +4420,9 @@
       "pto_source_form_id": "b_fpatr_32_30c307e06d4a",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 345
+        "line": 340
       },
-      "uid": "ecbf4a9b6cf0",
+      "uid": "12243b200432",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "DESC_B_FPATR",
@@ -4731,7 +5083,7 @@
       "uop_group": "CMD"
     },
     {
-      "asm": "B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>",
+      "asm": "B.IOS S<SharedTileID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>",
       "encoding": {
         "length_bits": 32,
         "parts": [
@@ -4767,13 +5119,13 @@
                 "signed": null
               },
               {
-                "name": "SharedTID",
+                "name": "SharedTileID",
                 "pieces": [
                   {
                     "insn_lsb": 20,
-                    "insn_msb": 27,
-                    "token": "SharedTID",
-                    "width": 8
+                    "insn_msb": 25,
+                    "token": "SharedTileID",
+                    "width": 6
                   }
                 ],
                 "signed": null
@@ -4792,37 +5144,37 @@
               }
             ],
             "index": 0,
-            "mask": "0xf00871ff",
+            "mask": "0xfc0871ff",
             "match": "0x00001013",
-            "pattern": "0000........0....001...000010011",
+            "pattern": "000000......0....001...000010011",
             "width_bits": 32
           }
         ]
       },
       "encoding_kind": "L32",
       "group": "Bundle Input & Output",
-      "id": "b_ios_32_0f62f62d6a81",
+      "id": "b_ios_32_2f2d1ab83761",
       "length_bits": 32,
       "mnemonic": "B.IOS",
-      "note": "Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.",
+      "note": "Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.",
       "parts": [
         {
           "segments": [
             {
               "const": {
                 "value": 0,
-                "width": 4
+                "width": 6
               },
-              "lsb": 28,
+              "lsb": 26,
               "msb": 31,
-              "token": "4'b0000",
-              "width": 4
+              "token": "6'b000000",
+              "width": 6
             },
             {
               "lsb": 20,
-              "msb": 27,
-              "token": "SharedTID",
-              "width": 8
+              "msb": 25,
+              "token": "SharedTileID",
+              "width": 6
             },
             {
               "const": {
@@ -4908,9 +5260,9 @@
       "pto_source_form_id": "b_ios_32_4ba5ef98fdaa",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 335
+        "line": 330
       },
-      "uid": "0f62f62d6a81",
+      "uid": "2f2d1ab83761",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_IO",
@@ -5987,6 +6339,262 @@
       "uop_class": {
         "cmd_kind": "BLOCK_IO",
         "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    },
+    {
+      "asm": "B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "constraints": [
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "24"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "25"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "26"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "27"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "28"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "RegSrc",
+                "op": "!=",
+                "value": "31"
+              },
+              {
+                "field": "SubviewSizeCode",
+                "op": "!=",
+                "value": "0"
+              },
+              {
+                "field": "SubviewSizeCode",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "SubviewSizeCode",
+                "op": "!=",
+                "value": "14"
+              },
+              {
+                "field": "SubviewSizeCode",
+                "op": "!=",
+                "value": "15"
+              }
+            ],
+            "fields": [
+              {
+                "name": "RegSrc",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 19,
+                    "token": "RegSrc",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "SrcSelect",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 31,
+                    "token": "SrcSelect",
+                    "width": 1
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "SubviewSizeCode",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 10,
+                    "token": "SubviewSizeCode",
+                    "width": 4
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "uimm11",
+                "pieces": [
+                  {
+                    "insn_lsb": 20,
+                    "insn_msb": 30,
+                    "token": "uimm11",
+                    "width": 11
+                  }
+                ],
+                "signed": false
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000787f",
+            "match": "0x00000053",
+            "pattern": ".................0000....1010011",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Range Modifier",
+      "id": "b_subview_32_48f114b5d12b",
+      "length_bits": 32,
+      "mnemonic": "B.SUBVIEW",
+      "note": "Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 31,
+              "token": "SrcSelect",
+              "width": 1
+            },
+            {
+              "lsb": 20,
+              "msb": 30,
+              "token": "uimm11",
+              "width": 11
+            },
+            {
+              "lsb": 15,
+              "msb": 19,
+              "token": "RegSrc",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 4
+              },
+              "lsb": 11,
+              "msb": 14,
+              "token": "4'b0000",
+              "width": 4
+            },
+            {
+              "lsb": 7,
+              "msb": 10,
+              "token": "SubviewSizeCode",
+              "width": 4
+            },
+            {
+              "const": {
+                "value": 83,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b1010011",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [
+        {
+          "field": "SrcSelect",
+          "operator": "one-of",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "field": "RegSrc",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "field": "SubviewSizeCode",
+          "operator": "one-of",
+          "values": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ]
+        }
+      ],
+      "pto_source_form_id": "b_subview_32_122000000001",
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 341
+      },
+      "uid": "48f114b5d12b",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_IO",
+        "note": "PTO 0.58.5 common block range contract",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -7440,7 +8048,7 @@
       "pto_source_form_id": "bstart_gmov_32_6c21e223eaa7",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 330
+        "line": 326
       },
       "uid": "ccfcf9904850",
       "uop_big_kind": "CMD",
@@ -10974,434 +11582,6 @@
       "uop_group": "CMD"
     },
     {
-      "asm": "BSTART.TMOV DataType",
-      "encoding": {
-        "length_bits": 32,
-        "parts": [
-          {
-            "fields": [
-              {
-                "name": "DataType",
-                "pieces": [
-                  {
-                    "insn_lsb": 27,
-                    "insn_msb": 31,
-                    "token": "DataType",
-                    "width": 5
-                  }
-                ],
-                "signed": null
-              }
-            ],
-            "index": 0,
-            "mask": "0x07ffffff",
-            "match": "0x00a11181",
-            "pattern": ".....000101000010001000110000001",
-            "width_bits": 32
-          }
-        ]
-      },
-      "encoding_kind": "L32",
-      "group": "Bundle Split",
-      "id": "bstart_tmov_32_34d0ab432974",
-      "length_bits": 32,
-      "mnemonic": "BSTART.TMOV",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
-      "parts": [
-        {
-          "segments": [
-            {
-              "lsb": 27,
-              "msb": 31,
-              "token": "DataType",
-              "width": 5
-            },
-            {
-              "const": {
-                "value": 10555777,
-                "width": 27
-              },
-              "lsb": 0,
-              "msb": 26,
-              "token": "27'b000101000010001000110000001",
-              "width": 27
-            }
-          ],
-          "width_bits": 32
-        }
-      ],
-      "pto_source_constraints": [
-        {
-          "field": "DataType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            16,
-            17,
-            18,
-            19,
-            20,
-            24,
-            25,
-            26,
-            27,
-            28,
-            31
-          ]
-        }
-      ],
-      "pto_source_form_variant": "TMOV.L2S.PUBLISH",
-      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
-      "source": {
-        "file": "opcodes/lx_32.opc",
-        "line": 327
-      },
-      "uid": "34d0ab432974",
-      "uop_big_kind": "CMD",
-      "uop_class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "uop_group": "CMD"
-    },
-    {
-      "asm": "BSTART.TMOV DataType",
-      "encoding": {
-        "length_bits": 32,
-        "parts": [
-          {
-            "fields": [
-              {
-                "name": "DataType",
-                "pieces": [
-                  {
-                    "insn_lsb": 27,
-                    "insn_msb": 31,
-                    "token": "DataType",
-                    "width": 5
-                  }
-                ],
-                "signed": null
-              }
-            ],
-            "index": 0,
-            "mask": "0x07ffffff",
-            "match": "0x00c11181",
-            "pattern": ".....000110000010001000110000001",
-            "width_bits": 32
-          }
-        ]
-      },
-      "encoding_kind": "L32",
-      "group": "Bundle Split",
-      "id": "bstart_tmov_32_472804576301",
-      "length_bits": 32,
-      "mnemonic": "BSTART.TMOV",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
-      "parts": [
-        {
-          "segments": [
-            {
-              "lsb": 27,
-              "msb": 31,
-              "token": "DataType",
-              "width": 5
-            },
-            {
-              "const": {
-                "value": 12652929,
-                "width": 27
-              },
-              "lsb": 0,
-              "msb": 26,
-              "token": "27'b000110000010001000110000001",
-              "width": 27
-            }
-          ],
-          "width_bits": 32
-        }
-      ],
-      "pto_source_constraints": [
-        {
-          "field": "DataType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            16,
-            17,
-            18,
-            19,
-            20,
-            24,
-            25,
-            26,
-            27,
-            28,
-            31
-          ]
-        }
-      ],
-      "pto_source_form_variant": "TMOV.S2L.EXTRACT",
-      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
-      "source": {
-        "file": "opcodes/lx_32.opc",
-        "line": 329
-      },
-      "uid": "472804576301",
-      "uop_big_kind": "CMD",
-      "uop_class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "uop_group": "CMD"
-    },
-    {
-      "asm": "BSTART.TMOV DataType",
-      "encoding": {
-        "length_bits": 32,
-        "parts": [
-          {
-            "fields": [
-              {
-                "name": "DataType",
-                "pieces": [
-                  {
-                    "insn_lsb": 27,
-                    "insn_msb": 31,
-                    "token": "DataType",
-                    "width": 5
-                  }
-                ],
-                "signed": null
-              }
-            ],
-            "index": 0,
-            "mask": "0x07ffffff",
-            "match": "0x00b11181",
-            "pattern": ".....000101100010001000110000001",
-            "width_bits": 32
-          }
-        ]
-      },
-      "encoding_kind": "L32",
-      "group": "Bundle Split",
-      "id": "bstart_tmov_32_d96181e99f01",
-      "length_bits": 32,
-      "mnemonic": "BSTART.TMOV",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
-      "parts": [
-        {
-          "segments": [
-            {
-              "lsb": 27,
-              "msb": 31,
-              "token": "DataType",
-              "width": 5
-            },
-            {
-              "const": {
-                "value": 11604353,
-                "width": 27
-              },
-              "lsb": 0,
-              "msb": 26,
-              "token": "27'b000101100010001000110000001",
-              "width": 27
-            }
-          ],
-          "width_bits": 32
-        }
-      ],
-      "pto_source_constraints": [
-        {
-          "field": "DataType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            16,
-            17,
-            18,
-            19,
-            20,
-            24,
-            25,
-            26,
-            27,
-            28,
-            31
-          ]
-        }
-      ],
-      "pto_source_form_variant": "TMOV.S2L.BROADCAST",
-      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
-      "source": {
-        "file": "opcodes/lx_32.opc",
-        "line": 328
-      },
-      "uid": "d96181e99f01",
-      "uop_big_kind": "CMD",
-      "uop_class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "uop_group": "CMD"
-    },
-    {
-      "asm": "BSTART.TMOV DataType",
-      "encoding": {
-        "length_bits": 32,
-        "parts": [
-          {
-            "fields": [
-              {
-                "name": "DataType",
-                "pieces": [
-                  {
-                    "insn_lsb": 27,
-                    "insn_msb": 31,
-                    "token": "DataType",
-                    "width": 5
-                  }
-                ],
-                "signed": null
-              }
-            ],
-            "index": 0,
-            "mask": "0x07ffffff",
-            "match": "0x00911181",
-            "pattern": ".....000100100010001000110000001",
-            "width_bits": 32
-          }
-        ]
-      },
-      "encoding_kind": "L32",
-      "group": "Bundle Split",
-      "id": "bstart_tmov_32_efe5c49fcb78",
-      "length_bits": 32,
-      "mnemonic": "BSTART.TMOV",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
-      "parts": [
-        {
-          "segments": [
-            {
-              "lsb": 27,
-              "msb": 31,
-              "token": "DataType",
-              "width": 5
-            },
-            {
-              "const": {
-                "value": 9507201,
-                "width": 27
-              },
-              "lsb": 0,
-              "msb": 26,
-              "token": "27'b000100100010001000110000001",
-              "width": 27
-            }
-          ],
-          "width_bits": 32
-        }
-      ],
-      "pto_source_constraints": [
-        {
-          "field": "DataType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            16,
-            17,
-            18,
-            19,
-            20,
-            24,
-            25,
-            26,
-            27,
-            28,
-            31
-          ]
-        }
-      ],
-      "pto_source_form_variant": "TMOV.L2S.INSERT",
-      "pto_source_form_variant_of": "bstart_tmov_32_211446509efb",
-      "source": {
-        "file": "opcodes/lx_32.opc",
-        "line": 326
-      },
-      "uid": "efe5c49fcb78",
-      "uop_big_kind": "CMD",
-      "uop_class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "uop_group": "CMD"
-    },
-    {
       "asm": "BSTART.TPREFETCH DataType",
       "encoding": {
         "length_bits": 32,
@@ -11531,119 +11711,13 @@
       "pto_source_form_id": "bstart_tprefetch_32_d5f83e5aadf6",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 331
+        "line": 327
       },
       "uid": "3c9e83c5a42f",
       "uop_big_kind": "CMD",
       "uop_class": {
         "cmd_kind": "BLOCK_SPLIT",
         "note": "PTO ISA 0.58 TLSU Function=3; TLOAD address/memory contract without destination side effects",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "uop_group": "CMD"
-    },
-    {
-      "asm": "BSTART.TSTORE DataType",
-      "encoding": {
-        "length_bits": 32,
-        "parts": [
-          {
-            "fields": [
-              {
-                "name": "DataType",
-                "pieces": [
-                  {
-                    "insn_lsb": 27,
-                    "insn_msb": 31,
-                    "token": "DataType",
-                    "width": 5
-                  }
-                ],
-                "signed": null
-              }
-            ],
-            "index": 0,
-            "mask": "0x07ffffff",
-            "match": "0x00e11181",
-            "pattern": ".....000111000010001000110000001",
-            "width_bits": 32
-          }
-        ]
-      },
-      "encoding_kind": "L32",
-      "group": "Bundle Split",
-      "id": "bstart_tstore_32_6bed4bf0e415",
-      "length_bits": 32,
-      "mnemonic": "BSTART.TSTORE",
-      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
-      "parts": [
-        {
-          "segments": [
-            {
-              "lsb": 27,
-              "msb": 31,
-              "token": "DataType",
-              "width": 5
-            },
-            {
-              "const": {
-                "value": 14750081,
-                "width": 27
-              },
-              "lsb": 0,
-              "msb": 26,
-              "token": "27'b000111000010001000110000001",
-              "width": 27
-            }
-          ],
-          "width_bits": 32
-        }
-      ],
-      "pto_source_constraints": [
-        {
-          "field": "DataType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            16,
-            17,
-            18,
-            19,
-            20,
-            24,
-            25,
-            26,
-            27,
-            28
-          ]
-        }
-      ],
-      "pto_source_form_variant": "TSTORE.SPART",
-      "pto_source_form_variant_of": "bstart_tstore_32_4048b6e8b0f4",
-      "source": {
-        "file": "opcodes/lx_32.opc",
-        "line": 333
-      },
-      "uid": "6bed4bf0e415",
-      "uop_big_kind": "CMD",
-      "uop_class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "User corrected to A",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -11779,7 +11853,7 @@
       "pto_source_form_id": "bstart_tstore_32_4048b6e8b0f4",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 332
+        "line": 328
       },
       "uid": "d592de9e15a8",
       "uop_big_kind": "CMD",
@@ -12115,7 +12189,7 @@
       "pto_source_form_id": "bstop_32_d25b09fdd59c",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 334
+        "line": 329
       },
       "uid": "1c80341ebaa2",
       "uop_big_kind": "CMD",
@@ -20726,7 +20800,7 @@
       "pto_source_form_id": "ercov_32_dc0be14a2d8b",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 336
+        "line": 331
       },
       "uid": "9b0c74795df0",
       "uop_big_kind": "CMD",
@@ -20845,7 +20919,7 @@
       "pto_source_form_id": "esave_32_4c4f79fe3171",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 337
+        "line": 332
       },
       "uid": "c85cb830dc0b",
       "uop_big_kind": "CMD",
@@ -21622,7 +21696,7 @@
       "id": "fcvta_32_e40944328b8e",
       "length_bits": 32,
       "mnemonic": "FCVTA",
-      "note": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.",
+      "note": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.",
       "parts": [
         {
           "segments": [
@@ -23423,7 +23497,7 @@
       "pto_source_form_id": "fentry_32_a47584ec13b6",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 338
+        "line": 333
       },
       "uid": "74a07f46d846",
       "uop_big_kind": "CMD",
@@ -24051,7 +24125,7 @@
       "pto_source_form_id": "fexit_32_37b663f2a34d",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 339
+        "line": 334
       },
       "uid": "6492f41b2239",
       "uop_big_kind": "CMD",
@@ -26866,7 +26940,7 @@
       "pto_source_form_id": "fret_ra_32_659c886221c1",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 340
+        "line": 335
       },
       "uid": "b6f13adb3ea1",
       "uop_big_kind": "CMD",
@@ -27078,7 +27152,7 @@
       "pto_source_form_id": "fret_stk_32_4fe246bd8241",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 341
+        "line": 336
       },
       "uid": "4084c4c88e89",
       "uop_big_kind": "CMD",
@@ -69203,7 +69277,7 @@
       "pto_source_form_id": "mcopy_32_4fc4a803e995",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 342
+        "line": 337
       },
       "uid": "10262506ace5",
       "uop_big_kind": "CMD",
@@ -69791,7 +69865,7 @@
       "pto_source_form_id": "mset_32_0b932f291932",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 343
+        "line": 338
       },
       "uid": "7a5f3c26ac6b",
       "uop_big_kind": "CMD",
@@ -143952,7 +144026,7 @@
       "pto_source_form_id": "xb_32_40ad190a0a7f",
       "source": {
         "file": "opcodes/lx_32.opc",
-        "line": 344
+        "line": 339
       },
       "uid": "1c3043ef6fa8",
       "uop_big_kind": "CMD",
@@ -145246,14 +145320,19 @@
       "TALLOC",
       "TAXPY",
       "TDEINTERLEAVE",
+      "TFILLPAD",
       "TFMOD",
       "TFMODS",
       "TFREE",
       "TGATHERB",
       "TINTERLEAVE",
       "TLRELU",
+      "TPARTADD",
       "TPARTARGMAX",
       "TPARTARGMIN",
+      "TPARTMAX",
+      "TPARTMIN",
+      "TPARTMUL",
       "TPOP",
       "TPRELU",
       "TPUSH",
@@ -145261,7 +145340,8 @@
       "TSUBC",
       "TSUBSC",
       "TRANDOM",
-      "TSORT32"
+      "TSORT32",
+      "TTRANS"
     ],
     "entries": [],
     "migration_only_source_aliases": {},
@@ -146580,7 +146660,7 @@
       "profile": "v0.58",
       "semantic_engine_counts": {
         "CUBE": 12,
-        "SFU": 56,
+        "SFU": 54,
         "TLSU": 10,
         "VEC": 31
       },
@@ -146588,17 +146668,17 @@
         "access": "all four PEs may access all shared registers and independently select tile offsets",
         "addressing": "absolute-index",
         "allocation": "compiler-managed",
-        "assembly_names": "S0..S255",
+        "assembly_names": "S0..S63",
         "initial_state": "uninitialized; reads behave like undefined-register reads",
         "ordering": "no architectural order beyond atomicity; software prevents conflicting code/offset accesses",
         "quarter_selection": "B.IOS 3-bit PEMode decoded to the fixed four-PE mask; zero means NOP",
-        "registers_per_core": 256,
+        "registers_per_core": 64,
         "sharing_domain": "one bank private to each core and shared by its four PEs",
         "write_atomicity": "atomic descriptor-and-payload read-modify-write"
       },
       "source_lock": "isa/v0.58/pto-spec.lock.json",
       "tepl": {
-        "accepted_selector_count": 87,
+        "accepted_selector_count": 85,
         "function_field_bits": [
           0,
           4
@@ -149041,40 +149121,6 @@
             ]
           },
           {
-            "classification": "layout-and-rearrangement",
-            "effect_contract": "TFILLPAD",
-            "engine": "SFU",
-            "fault_contract": "ExecuteTileInstruction",
-            "function": 5,
-            "legality_handler": "TileOperandsLegal_TFILLPAD",
-            "logical_selector": 101,
-            "mode": 3,
-            "name": "TFILLPAD",
-            "operands": [
-              {
-                "field": "destination0",
-                "role": "destination"
-              },
-              {
-                "field": "source0",
-                "role": "source"
-              },
-              {
-                "field": "scalar0",
-                "role": "padding"
-              }
-            ],
-            "profile": "v0.58",
-            "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "TFILLPAD",
-            "semantic_status": "reviewed-complete",
-            "state_effects": [
-              "operand:destination0:destination",
-              "operand:source0:source",
-              "operand:scalar0:padding"
-            ]
-          },
-          {
             "classification": "irregular-and-complex",
             "effect_contract": "TCI",
             "engine": "SFU",
@@ -149360,35 +149406,6 @@
             ]
           },
           {
-            "classification": "layout-and-rearrangement",
-            "effect_contract": "TTRANS",
-            "engine": "SFU",
-            "fault_contract": "ExecuteTileInstruction",
-            "function": 14,
-            "legality_handler": "TileOperandsLegal_TTRANS",
-            "logical_selector": 110,
-            "mode": 3,
-            "name": "TTRANS",
-            "operands": [
-              {
-                "field": "destination0",
-                "role": "destination"
-              },
-              {
-                "field": "source0",
-                "role": "source"
-              }
-            ],
-            "profile": "v0.58",
-            "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "TTRANS",
-            "semantic_status": "reviewed-complete",
-            "state_effects": [
-              "operand:destination0:destination",
-              "operand:source0:source"
-            ]
-          },
-          {
             "classification": "irregular-and-complex",
             "effect_contract": "TGATHER",
             "engine": "SFU",
@@ -149459,147 +149476,154 @@
             ]
           },
           {
-            "classification": "irregular-and-complex",
-            "effect_contract": "ExecuteTilePartial",
+            "classification": "layout-and-rearrangement",
+            "effect_contract": "TPERMUTE",
             "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
-            "function": 17,
-            "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-            "logical_selector": 113,
+            "function": 21,
+            "legality_handler": "TileOperandsLegal_TPERMUTE",
+            "logical_selector": 117,
             "mode": 3,
-            "name": "TPARTADD",
+            "name": "TPERMUTE",
             "operands": [
               {
                 "field": "destination0",
-                "role": "new Local union destination"
+                "role": "destination"
               },
               {
                 "field": "source0",
-                "role": "persistent Local left source anchored at origin"
+                "role": "source0"
               },
               {
                 "field": "source1",
-                "role": "persistent Local right source anchored at origin"
+                "role": "source1"
+              },
+              {
+                "field": "source2",
+                "role": "indices"
               }
             ],
             "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "ExecuteTilePartial",
+            "semantic_handler": "TPERMUTE",
             "semantic_status": "reviewed-complete",
             "state_effects": [
-              "operand:destination0:new-local-union-destination",
-              "operand:source0:persistent-origin-anchored-left-source",
-              "operand:source1:persistent-origin-anchored-right-source",
-              "runtime:NumericStatusFlags:overlap-operation-status",
-              "runtime:TilePad_Null:physical-padding"
+              "operand:destination0:destination",
+              "operand:source0:source0",
+              "operand:source1:source1",
+              "operand:source2:indices"
             ]
           },
           {
-            "classification": "irregular-and-complex",
-            "effect_contract": "ExecuteTilePartial",
+            "classification": "layout-and-rearrangement",
+            "effect_contract": "TSHUF",
             "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
-            "function": 18,
-            "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-            "logical_selector": 114,
+            "function": 22,
+            "legality_handler": "TileOperandsLegal_TSHUF",
+            "logical_selector": 118,
             "mode": 3,
-            "name": "TPARTMUL",
+            "name": "TSHUF",
             "operands": [
               {
                 "field": "destination0",
-                "role": "new Local union destination"
+                "role": "destination"
               },
               {
                 "field": "source0",
-                "role": "persistent Local left source anchored at origin"
+                "role": "source"
               },
               {
                 "field": "source1",
-                "role": "persistent Local right source anchored at origin"
+                "role": "controls"
+              },
+              {
+                "field": "scalar0",
+                "role": "shuffle-control"
               }
             ],
             "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "ExecuteTilePartial",
+            "semantic_handler": "TSHUF",
             "semantic_status": "reviewed-complete",
             "state_effects": [
-              "operand:destination0:new-local-union-destination",
-              "operand:source0:persistent-origin-anchored-left-source",
-              "operand:source1:persistent-origin-anchored-right-source",
-              "runtime:NumericStatusFlags:overlap-operation-status",
-              "runtime:TilePad_Null:physical-padding"
+              "operand:destination0:destination",
+              "operand:source0:source",
+              "operand:source1:controls",
+              "operand:scalar0:shuffle-control"
             ]
           },
           {
-            "classification": "irregular-and-complex",
-            "effect_contract": "ExecuteTilePartial",
+            "classification": "layout-and-rearrangement",
+            "effect_contract": "TPACK",
             "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
-            "function": 19,
-            "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-            "logical_selector": 115,
+            "function": 23,
+            "legality_handler": "TileOperandsLegal_TPACK",
+            "logical_selector": 119,
             "mode": 3,
-            "name": "TPARTMAX",
+            "name": "TPACK",
             "operands": [
               {
                 "field": "destination0",
-                "role": "new Local union destination"
+                "role": "destination"
               },
               {
                 "field": "source0",
-                "role": "persistent Local left source anchored at origin"
+                "role": "source0"
               },
               {
                 "field": "source1",
-                "role": "persistent Local right source anchored at origin"
+                "role": "source1"
+              },
+              {
+                "field": "scalar0",
+                "role": "pack-control"
               }
             ],
             "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "ExecuteTilePartial",
+            "semantic_handler": "TPACK",
             "semantic_status": "reviewed-complete",
             "state_effects": [
-              "operand:destination0:new-local-union-destination",
-              "operand:source0:persistent-origin-anchored-left-source",
-              "operand:source1:persistent-origin-anchored-right-source",
-              "runtime:NumericStatusFlags:overlap-operation-status",
-              "runtime:TilePad_Null:physical-padding"
+              "operand:destination0:destination",
+              "operand:source0:source0",
+              "operand:source1:source1",
+              "operand:scalar0:pack-control"
             ]
           },
           {
-            "classification": "irregular-and-complex",
-            "effect_contract": "ExecuteTilePartial",
+            "classification": "layout-and-rearrangement",
+            "effect_contract": "TUNPACK",
             "engine": "SFU",
             "fault_contract": "ExecuteTileInstruction",
-            "function": 20,
-            "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-            "logical_selector": 116,
+            "function": 24,
+            "legality_handler": "TileOperandsLegal_TUNPACK",
+            "logical_selector": 120,
             "mode": 3,
-            "name": "TPARTMIN",
+            "name": "TUNPACK",
             "operands": [
               {
                 "field": "destination0",
-                "role": "new Local union destination"
+                "role": "destination"
               },
               {
                 "field": "source0",
-                "role": "persistent Local left source anchored at origin"
+                "role": "source"
               },
               {
-                "field": "source1",
-                "role": "persistent Local right source anchored at origin"
+                "field": "scalar0",
+                "role": "unpack-control"
               }
             ],
             "profile": "v0.58",
             "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-            "semantic_handler": "ExecuteTilePartial",
+            "semantic_handler": "TUNPACK",
             "semantic_status": "reviewed-complete",
             "state_effects": [
-              "operand:destination0:new-local-union-destination",
-              "operand:source0:persistent-origin-anchored-left-source",
-              "operand:source1:persistent-origin-anchored-right-source",
-              "runtime:NumericStatusFlags:overlap-operation-status",
-              "runtime:TilePad_Null:physical-padding"
+              "operand:destination0:destination",
+              "operand:source0:source",
+              "operand:scalar0:unpack-control"
             ]
           }
         ],
@@ -149645,11 +149669,23 @@
             "0x061"
           ],
           [
+            "0x065",
+            "0x065"
+          ],
+          [
             "0x069",
             "0x069"
           ],
           [
-            "0x075",
+            "0x06E",
+            "0x06E"
+          ],
+          [
+            "0x071",
+            "0x074"
+          ],
+          [
+            "0x079",
             "0x07F"
           ]
         ],
@@ -149866,12 +149902,12 @@
           ]
         ]
       },
-      "version": "0.58.3"
+      "version": "0.58.5"
     },
     "extension_encoding_reservations": {
       "isa": "PTO Instruction Set Architecture",
-      "release": "0.58.3",
-      "reservation_count": 40,
+      "release": "0.58.5",
+      "reservation_count": 46,
       "reservations": [
         {
           "encoding": [
@@ -151322,6 +151358,96 @@
           "mnemonic": "B.NZ",
           "owner": "PTO reserved two-level block-body conditional branch extension space",
           "status": "reserved-in-pto"
+        },
+        {
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x000fffff",
+              "match": "0x6519181",
+              "width_bits": 32
+            }
+          ],
+          "fields": [],
+          "length_bits": 32,
+          "mnemonic": "BSTART.TEPL selector 0x065",
+          "owner": "PTO reserved deleted TEPL selector space",
+          "status": "reserved-in-pto"
+        },
+        {
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x000fffff",
+              "match": "0x6e19181",
+              "width_bits": 32
+            }
+          ],
+          "fields": [],
+          "length_bits": 32,
+          "mnemonic": "BSTART.TEPL selector 0x06E",
+          "owner": "PTO reserved deleted TEPL selector space",
+          "status": "reserved-in-pto"
+        },
+        {
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x000fffff",
+              "match": "0x7119181",
+              "width_bits": 32
+            }
+          ],
+          "fields": [],
+          "length_bits": 32,
+          "mnemonic": "BSTART.TEPL selector 0x071",
+          "owner": "PTO reserved deleted TEPL selector space",
+          "status": "reserved-in-pto"
+        },
+        {
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x000fffff",
+              "match": "0x7219181",
+              "width_bits": 32
+            }
+          ],
+          "fields": [],
+          "length_bits": 32,
+          "mnemonic": "BSTART.TEPL selector 0x072",
+          "owner": "PTO reserved deleted TEPL selector space",
+          "status": "reserved-in-pto"
+        },
+        {
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x000fffff",
+              "match": "0x7319181",
+              "width_bits": 32
+            }
+          ],
+          "fields": [],
+          "length_bits": 32,
+          "mnemonic": "BSTART.TEPL selector 0x073",
+          "owner": "PTO reserved deleted TEPL selector space",
+          "status": "reserved-in-pto"
+        },
+        {
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x000fffff",
+              "match": "0x7419181",
+              "width_bits": 32
+            }
+          ],
+          "fields": [],
+          "length_bits": 32,
+          "mnemonic": "BSTART.TEPL selector 0x074",
+          "owner": "PTO reserved deleted TEPL selector space",
+          "status": "reserved-in-pto"
         }
       ],
       "schema_version": 1,
@@ -151562,8 +151688,8 @@
       ]
     },
     "pto_command_forms": {
-      "form_constraint_count": 81,
-      "form_count": 74,
+      "form_constraint_count": 88,
+      "form_count": 76,
       "forms": [
         {
           "asm": "B.CATR {trap, atomic, <aq, rl, aqrl>, far, dr}",
@@ -154787,56 +154913,6 @@
             }
           ],
           "encoding_kind": "L32",
-          "encoding_variants": [
-            {
-              "encoding": [
-                {
-                  "index": 0,
-                  "mask": "0x07ffffff",
-                  "match": "0x00911181",
-                  "width_bits": 32
-                }
-              ],
-              "function": 9,
-              "name": "TMOV.L2S.INSERT"
-            },
-            {
-              "encoding": [
-                {
-                  "index": 0,
-                  "mask": "0x07ffffff",
-                  "match": "0x00a11181",
-                  "width_bits": 32
-                }
-              ],
-              "function": 10,
-              "name": "TMOV.L2S.PUBLISH"
-            },
-            {
-              "encoding": [
-                {
-                  "index": 0,
-                  "mask": "0x07ffffff",
-                  "match": "0x00b11181",
-                  "width_bits": 32
-                }
-              ],
-              "function": 11,
-              "name": "TMOV.S2L.BROADCAST"
-            },
-            {
-              "encoding": [
-                {
-                  "index": 0,
-                  "mask": "0x07ffffff",
-                  "match": "0x00c11181",
-                  "width_bits": 32
-                }
-              ],
-              "function": 12,
-              "name": "TMOV.S2L.EXTRACT"
-            }
-          ],
           "fields": [
             {
               "name": "DataType",
@@ -155038,20 +155114,6 @@
             }
           ],
           "encoding_kind": "L32",
-          "encoding_variants": [
-            {
-              "encoding": [
-                {
-                  "index": 0,
-                  "mask": "0x07ffffff",
-                  "match": "0x00e11181",
-                  "width_bits": 32
-                }
-              ],
-              "function": 14,
-              "name": "TSTORE.SPART"
-            }
-          ],
           "fields": [
             {
               "name": "DataType",
@@ -155098,7 +155160,7 @@
           "status": "accepted"
         },
         {
-          "asm": "B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>",
+          "asm": "B.IOS S<SharedTileID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>",
           "constraints": [
             {
               "field": "SizeCode",
@@ -155137,7 +155199,7 @@
           "encoding": [
             {
               "index": 0,
-              "mask": "0xf00871ff",
+              "mask": "0xfc0871ff",
               "match": "0x00001013",
               "width_bits": 32
             }
@@ -155145,16 +155207,16 @@
           "encoding_kind": "L32",
           "fields": [
             {
-              "name": "SharedTID",
+              "name": "SharedTileID",
               "pieces": [
                 {
                   "instruction_lsb": 20,
                   "value_lsb": 0,
-                  "width": 8
+                  "width": 6
                 }
               ],
               "signedness": "encoding-defined",
-              "width": 8
+              "width": 6
             },
             {
               "name": "SizeCode",
@@ -155187,7 +155249,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleSharedIO",
-          "semantic_summary": "Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.",
+          "semantic_summary": "Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.",
           "status": "accepted"
         },
         {
@@ -156696,7 +156758,7 @@
           "status": "accepted"
         },
         {
-          "asm": "B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB",
+          "asm": "B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn",
           "constraints": [
             {
               "field": "PreQuantMode",
@@ -156820,6 +156882,14 @@
               ]
             },
             {
+              "field": "CScaleEn",
+              "operator": "one-of",
+              "values": [
+                0,
+                1
+              ]
+            },
+            {
               "field": "Reserved",
               "operator": "one-of",
               "values": [
@@ -156851,7 +156921,7 @@
           "encoding": [
             {
               "index": 0,
-              "mask": "0x00007e7f",
+              "mask": "0x00007c7f",
               "match": "0x00002023",
               "width_bits": 32
             }
@@ -156991,16 +157061,28 @@
               "width": 1
             },
             {
-              "name": "Reserved",
+              "name": "CScaleEn",
               "pieces": [
                 {
                   "instruction_lsb": 9,
                   "value_lsb": 0,
-                  "width": 2
+                  "width": 1
                 }
               ],
               "signedness": "encoding-defined",
-              "width": 2
+              "width": 1
+            },
+            {
+              "name": "Reserved",
+              "pieces": [
+                {
+                  "instruction_lsb": 10,
+                  "value_lsb": 0,
+                  "width": 1
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 1
             },
             {
               "name": "Opc1",
@@ -157047,21 +157129,290 @@
           "semantic_handler": "SetBundleFixedPointAttributes",
           "semantic_summary": "Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.",
           "status": "accepted"
+        },
+        {
+          "asm": "B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode",
+          "constraints": [
+            {
+              "field": "SrcSelect",
+              "operator": "one-of",
+              "values": [
+                0,
+                1
+              ]
+            },
+            {
+              "field": "RegSrc",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23
+              ]
+            },
+            {
+              "field": "SubviewSizeCode",
+              "operator": "one-of",
+              "values": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+              ]
+            }
+          ],
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x0000787f",
+              "match": "0x00000053",
+              "width_bits": 32
+            }
+          ],
+          "encoding_kind": "L32",
+          "fields": [
+            {
+              "name": "SrcSelect",
+              "pieces": [
+                {
+                  "instruction_lsb": 31,
+                  "value_lsb": 0,
+                  "width": 1
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 1
+            },
+            {
+              "name": "uimm11",
+              "pieces": [
+                {
+                  "instruction_lsb": 20,
+                  "value_lsb": 0,
+                  "width": 11
+                }
+              ],
+              "signedness": "unsigned",
+              "width": 11
+            },
+            {
+              "name": "RegSrc",
+              "pieces": [
+                {
+                  "instruction_lsb": 15,
+                  "value_lsb": 0,
+                  "width": 5
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 5
+            },
+            {
+              "name": "SubviewSizeCode",
+              "pieces": [
+                {
+                  "instruction_lsb": 7,
+                  "value_lsb": 0,
+                  "width": 4
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 4
+            }
+          ],
+          "form_id": "b_subview_32_122000000001",
+          "length_bits": 32,
+          "mnemonic": "B.SUBVIEW",
+          "semantic_family": "CMD",
+          "semantic_group": "Bundle Range Modifier",
+          "semantic_handler": "ApplyBundleSubview",
+          "semantic_summary": "Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.",
+          "status": "accepted"
+        },
+        {
+          "asm": "B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode",
+          "constraints": [
+            {
+              "field": "INIT",
+              "operator": "one-of",
+              "values": [
+                0,
+                1
+              ]
+            },
+            {
+              "field": "RegSrc",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23
+              ]
+            },
+            {
+              "field": "ParentSizeCode",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+              ]
+            }
+          ],
+          "encoding": [
+            {
+              "index": 0,
+              "mask": "0x0000707f",
+              "match": "0x00001053",
+              "width_bits": 32
+            }
+          ],
+          "encoding_kind": "L32",
+          "fields": [
+            {
+              "name": "INIT",
+              "pieces": [
+                {
+                  "instruction_lsb": 31,
+                  "value_lsb": 0,
+                  "width": 1
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 1
+            },
+            {
+              "name": "uimm11",
+              "pieces": [
+                {
+                  "instruction_lsb": 20,
+                  "value_lsb": 0,
+                  "width": 11
+                }
+              ],
+              "signedness": "unsigned",
+              "width": 11
+            },
+            {
+              "name": "RegSrc",
+              "pieces": [
+                {
+                  "instruction_lsb": 15,
+                  "value_lsb": 0,
+                  "width": 5
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 5
+            },
+            {
+              "name": "LAST",
+              "pieces": [
+                {
+                  "instruction_lsb": 11,
+                  "value_lsb": 0,
+                  "width": 1
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 1
+            },
+            {
+              "name": "ParentSizeCode",
+              "pieces": [
+                {
+                  "instruction_lsb": 7,
+                  "value_lsb": 0,
+                  "width": 4
+                }
+              ],
+              "signedness": "encoding-defined",
+              "width": 4
+            }
+          ],
+          "form_id": "b_assemble_32_122000000002",
+          "length_bits": 32,
+          "mnemonic": "B.ASSEMBLE",
+          "semantic_family": "CMD",
+          "semantic_group": "Bundle Range Modifier",
+          "semantic_handler": "ApplyBundleAssemble",
+          "semantic_summary": "Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.",
+          "status": "accepted"
         }
       ],
       "isa": "PTO Instruction Set Architecture",
-      "operand_field_count": 71,
-      "operand_piece_count": 162,
+      "operand_field_count": 78,
+      "operand_piece_count": 172,
       "reviewed_encoding_overlaps": [
         {
           "broad_form_id": "b_iot_32_10db6db84f5d",
           "narrow_form_id": "b_iot_32_c11eb189dd83",
-          "reason": "source-only form fixes SizeCode to zero; destination form requires SizeCode 1..10 and a 2-bit DstTile"
+          "reason": "source-only form fixes SizeCode to zero; destination form requires SizeCode 1..12 and a 2-bit DstTile"
         },
         {
           "broad_form_id": "b_iot_32_8b8bce6bffe8",
           "narrow_form_id": "b_iot_32_2c07e7177fad",
-          "reason": "source-only form fixes SizeCode to zero; destination form requires SizeCode 1..10 and a 2-bit DstTile"
+          "reason": "source-only form fixes SizeCode to zero; destination form requires SizeCode 1..12 and a 2-bit DstTile"
         },
         {
           "broad_form_id": "c_bstart_std_16_8b40f078c14a",
@@ -157070,7 +157421,7 @@
         }
       ],
       "schema_version": 2,
-      "semantic_handler_count": 22,
+      "semantic_handler_count": 24,
       "source_lock": "isa/v0.58/pto-spec.lock.json",
       "surface": "command-and-boundary"
     },
@@ -157078,8 +157429,8 @@
       "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_encoding_map.v1.json",
       "classification_counts": {
         "elementwise-tile-tile": 25,
-        "irregular-and-complex": 13,
-        "layout-and-rearrangement": 7,
+        "irregular-and-complex": 9,
+        "layout-and-rearrangement": 9,
         "matrix-and-matrix-vector": 12,
         "memory-and-data-movement": 9,
         "reduce-and-expand": 28,
@@ -157087,7 +157438,7 @@
       },
       "engine_counts": {
         "CUBE": 12,
-        "SFU": 56,
+        "SFU": 54,
         "TLSU": 10,
         "VEC": 31
       },
@@ -157957,18 +158308,6 @@
           "selector": "0x064"
         },
         {
-          "classification": "layout-and-rearrangement",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "disposition": "accepted-direct-operation",
-          "engine": "SFU",
-          "family": "TEPL",
-          "function": 5,
-          "mode": 3,
-          "name": "TFILLPAD",
-          "selector": "0x065"
-        },
-        {
           "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
@@ -158053,18 +158392,6 @@
           "selector": "0x06D"
         },
         {
-          "classification": "layout-and-rearrangement",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "disposition": "accepted-direct-operation",
-          "engine": "SFU",
-          "family": "TEPL",
-          "function": 14,
-          "mode": 3,
-          "name": "TTRANS",
-          "selector": "0x06E"
-        },
-        {
           "classification": "irregular-and-complex",
           "command_mnemonic": "BSTART.TEPL",
           "contract_status": "reviewed-complete",
@@ -158087,54 +158414,6 @@
           "mode": 3,
           "name": "TSCATTER",
           "selector": "0x070"
-        },
-        {
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "disposition": "accepted-direct-operation",
-          "engine": "SFU",
-          "family": "TEPL",
-          "function": 17,
-          "mode": 3,
-          "name": "TPARTADD",
-          "selector": "0x071"
-        },
-        {
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "disposition": "accepted-direct-operation",
-          "engine": "SFU",
-          "family": "TEPL",
-          "function": 18,
-          "mode": 3,
-          "name": "TPARTMUL",
-          "selector": "0x072"
-        },
-        {
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "disposition": "accepted-direct-operation",
-          "engine": "SFU",
-          "family": "TEPL",
-          "function": 19,
-          "mode": 3,
-          "name": "TPARTMAX",
-          "selector": "0x073"
-        },
-        {
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "disposition": "accepted-direct-operation",
-          "engine": "SFU",
-          "family": "TEPL",
-          "function": 20,
-          "mode": 3,
-          "name": "TPARTMIN",
-          "selector": "0x074"
         },
         {
           "classification": "memory-and-data-movement",
@@ -158399,12 +158678,60 @@
           "mode": null,
           "name": "TGEMV_MX_ACC",
           "selector": null
+        },
+        {
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "engine": "SFU",
+          "family": "TEPL",
+          "function": 21,
+          "mode": 3,
+          "name": "TPERMUTE",
+          "selector": "0x075"
+        },
+        {
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "engine": "SFU",
+          "family": "TEPL",
+          "function": 22,
+          "mode": 3,
+          "name": "TSHUF",
+          "selector": "0x076"
+        },
+        {
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "engine": "SFU",
+          "family": "TEPL",
+          "function": 23,
+          "mode": 3,
+          "name": "TPACK",
+          "selector": "0x077"
+        },
+        {
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "engine": "SFU",
+          "family": "TEPL",
+          "function": 24,
+          "mode": 3,
+          "name": "TUNPACK",
+          "selector": "0x078"
         }
       ],
-      "entry_count": 109,
+      "entry_count": 107,
       "family_counts": {
         "CUBE": 12,
-        "TEPL": 87,
+        "TEPL": 85,
         "TLSU": 10
       },
       "migration_aliases": {},
@@ -158416,14 +158743,14 @@
       },
       "profile": "v0.58",
       "source_lock": "isa/v0.58/pto-spec.lock.json",
-      "version": "0.58.3"
+      "version": "0.58.5"
     },
     "pto_ops": {
       "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_ops.v1.json",
       "classification_counts": {
         "elementwise-tile-tile": 25,
-        "irregular-and-complex": 13,
-        "layout-and-rearrangement": 7,
+        "irregular-and-complex": 9,
+        "layout-and-rearrangement": 9,
         "matrix-and-matrix-vector": 12,
         "memory-and-data-movement": 9,
         "reduce-and-expand": 28,
@@ -158436,14 +158763,19 @@
         "TALLOC",
         "TAXPY",
         "TDEINTERLEAVE",
+        "TFILLPAD",
         "TFMOD",
         "TFMODS",
         "TFREE",
         "TGATHERB",
         "TINTERLEAVE",
         "TLRELU",
+        "TPARTADD",
         "TPARTARGMAX",
         "TPARTARGMIN",
+        "TPARTMAX",
+        "TPARTMIN",
+        "TPARTMUL",
         "TPOP",
         "TPRELU",
         "TPUSH",
@@ -158451,20 +158783,21 @@
         "TSUBC",
         "TSUBSC",
         "TRANDOM",
-        "TSORT32"
+        "TSORT32",
+        "TTRANS"
       ],
       "engine_counts": {
         "CUBE": 12,
-        "SFU": 56,
+        "SFU": 54,
         "TLSU": 10,
         "VEC": 31
       },
       "family_counts": {
         "CUBE": 12,
-        "TEPL": 87,
+        "TEPL": 85,
         "TLSU": 10
       },
-      "operation_count": 109,
+      "operation_count": 107,
       "operations": [
         {
           "arguments": [
@@ -162505,59 +162838,6 @@
               "operand": "destination0"
             },
             {
-              "operand": "source0"
-            },
-            {
-              "operand": "scalar0"
-            }
-          ],
-          "classification": "layout-and-rearrangement",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "datr_contract": {
-            "allowed_nonzero_fields": [
-              "Layout"
-            ],
-            "pad_union": "must-zero"
-          },
-          "disposition": "accepted-direct-operation",
-          "effect_contract": "TFILLPAD",
-          "engine": "SFU",
-          "family": "TEPL",
-          "fault_contract": "ExecuteTileInstruction",
-          "function": 5,
-          "legality_handler": "TileOperandsLegal_TFILLPAD",
-          "mode": 3,
-          "name": "TFILLPAD",
-          "operands": [
-            {
-              "field": "destination0",
-              "role": "destination"
-            },
-            {
-              "field": "source0",
-              "role": "source"
-            },
-            {
-              "field": "scalar0",
-              "role": "padding"
-            }
-          ],
-          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x065",
-          "semantic_handler": "TFILLPAD",
-          "state_effects": [
-            "operand:destination0:destination",
-            "operand:source0:source",
-            "operand:scalar0:padding"
-          ]
-        },
-        {
-          "arguments": [
-            {
-              "operand": "destination0"
-            },
-            {
               "operand": "scalar0"
             },
             {
@@ -162997,51 +163277,6 @@
             },
             {
               "operand": "source0"
-            }
-          ],
-          "classification": "layout-and-rearrangement",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "datr_contract": {
-            "allowed_nonzero_fields": [
-              "Layout"
-            ],
-            "pad_union": "must-zero"
-          },
-          "disposition": "accepted-direct-operation",
-          "effect_contract": "TTRANS",
-          "engine": "SFU",
-          "family": "TEPL",
-          "fault_contract": "ExecuteTileInstruction",
-          "function": 14,
-          "legality_handler": "TileOperandsLegal_TTRANS",
-          "mode": 3,
-          "name": "TTRANS",
-          "operands": [
-            {
-              "field": "destination0",
-              "role": "destination"
-            },
-            {
-              "field": "source0",
-              "role": "source"
-            }
-          ],
-          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x06E",
-          "semantic_handler": "TTRANS",
-          "state_effects": [
-            "operand:destination0:destination",
-            "operand:source0:source"
-          ]
-        },
-        {
-          "arguments": [
-            {
-              "operand": "destination0"
-            },
-            {
-              "operand": "source0"
             },
             {
               "operand": "source1"
@@ -163141,230 +163376,6 @@
             "operand:source0:persistent-value-source",
             "operand:source1:persistent-row-index-source",
             "runtime:typed-zero:unselected-valid-and-padding"
-          ]
-        },
-        {
-          "arguments": [
-            {
-              "constant": "TilePartial_ADD"
-            },
-            {
-              "operand": "destination0"
-            },
-            {
-              "operand": "source0"
-            },
-            {
-              "operand": "source1"
-            }
-          ],
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "datr_contract": {
-            "allowed_nonzero_fields": [],
-            "pad_union": "must-zero"
-          },
-          "disposition": "accepted-direct-operation",
-          "effect_contract": "ExecuteTilePartial",
-          "engine": "SFU",
-          "family": "TEPL",
-          "fault_contract": "ExecuteTileInstruction",
-          "function": 17,
-          "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-          "mode": 3,
-          "name": "TPARTADD",
-          "operands": [
-            {
-              "field": "destination0",
-              "role": "new Local union destination"
-            },
-            {
-              "field": "source0",
-              "role": "persistent Local left source anchored at origin"
-            },
-            {
-              "field": "source1",
-              "role": "persistent Local right source anchored at origin"
-            }
-          ],
-          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x071",
-          "semantic_handler": "ExecuteTilePartial",
-          "state_effects": [
-            "operand:destination0:new-local-union-destination",
-            "operand:source0:persistent-origin-anchored-left-source",
-            "operand:source1:persistent-origin-anchored-right-source",
-            "runtime:NumericStatusFlags:overlap-operation-status",
-            "runtime:TilePad_Null:physical-padding"
-          ]
-        },
-        {
-          "arguments": [
-            {
-              "constant": "TilePartial_MUL"
-            },
-            {
-              "operand": "destination0"
-            },
-            {
-              "operand": "source0"
-            },
-            {
-              "operand": "source1"
-            }
-          ],
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "datr_contract": {
-            "allowed_nonzero_fields": [],
-            "pad_union": "must-zero"
-          },
-          "disposition": "accepted-direct-operation",
-          "effect_contract": "ExecuteTilePartial",
-          "engine": "SFU",
-          "family": "TEPL",
-          "fault_contract": "ExecuteTileInstruction",
-          "function": 18,
-          "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-          "mode": 3,
-          "name": "TPARTMUL",
-          "operands": [
-            {
-              "field": "destination0",
-              "role": "new Local union destination"
-            },
-            {
-              "field": "source0",
-              "role": "persistent Local left source anchored at origin"
-            },
-            {
-              "field": "source1",
-              "role": "persistent Local right source anchored at origin"
-            }
-          ],
-          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x072",
-          "semantic_handler": "ExecuteTilePartial",
-          "state_effects": [
-            "operand:destination0:new-local-union-destination",
-            "operand:source0:persistent-origin-anchored-left-source",
-            "operand:source1:persistent-origin-anchored-right-source",
-            "runtime:NumericStatusFlags:overlap-operation-status",
-            "runtime:TilePad_Null:physical-padding"
-          ]
-        },
-        {
-          "arguments": [
-            {
-              "constant": "TilePartial_MAX"
-            },
-            {
-              "operand": "destination0"
-            },
-            {
-              "operand": "source0"
-            },
-            {
-              "operand": "source1"
-            }
-          ],
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "datr_contract": {
-            "allowed_nonzero_fields": [],
-            "pad_union": "must-zero"
-          },
-          "disposition": "accepted-direct-operation",
-          "effect_contract": "ExecuteTilePartial",
-          "engine": "SFU",
-          "family": "TEPL",
-          "fault_contract": "ExecuteTileInstruction",
-          "function": 19,
-          "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-          "mode": 3,
-          "name": "TPARTMAX",
-          "operands": [
-            {
-              "field": "destination0",
-              "role": "new Local union destination"
-            },
-            {
-              "field": "source0",
-              "role": "persistent Local left source anchored at origin"
-            },
-            {
-              "field": "source1",
-              "role": "persistent Local right source anchored at origin"
-            }
-          ],
-          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x073",
-          "semantic_handler": "ExecuteTilePartial",
-          "state_effects": [
-            "operand:destination0:new-local-union-destination",
-            "operand:source0:persistent-origin-anchored-left-source",
-            "operand:source1:persistent-origin-anchored-right-source",
-            "runtime:NumericStatusFlags:overlap-operation-status",
-            "runtime:TilePad_Null:physical-padding"
-          ]
-        },
-        {
-          "arguments": [
-            {
-              "constant": "TilePartial_MIN"
-            },
-            {
-              "operand": "destination0"
-            },
-            {
-              "operand": "source0"
-            },
-            {
-              "operand": "source1"
-            }
-          ],
-          "classification": "irregular-and-complex",
-          "command_mnemonic": "BSTART.TEPL",
-          "contract_status": "reviewed-complete",
-          "datr_contract": {
-            "allowed_nonzero_fields": [],
-            "pad_union": "must-zero"
-          },
-          "disposition": "accepted-direct-operation",
-          "effect_contract": "ExecuteTilePartial",
-          "engine": "SFU",
-          "family": "TEPL",
-          "fault_contract": "ExecuteTileInstruction",
-          "function": 20,
-          "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-          "mode": 3,
-          "name": "TPARTMIN",
-          "operands": [
-            {
-              "field": "destination0",
-              "role": "new Local union destination"
-            },
-            {
-              "field": "source0",
-              "role": "persistent Local left source anchored at origin"
-            },
-            {
-              "field": "source1",
-              "role": "persistent Local right source anchored at origin"
-            }
-          ],
-          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-          "selector": "0x074",
-          "semantic_handler": "ExecuteTilePartial",
-          "state_effects": [
-            "operand:destination0:new-local-union-destination",
-            "operand:source0:persistent-origin-anchored-left-source",
-            "operand:source1:persistent-origin-anchored-right-source",
-            "runtime:NumericStatusFlags:overlap-operation-status",
-            "runtime:TilePad_Null:physical-padding"
           ]
         },
         {
@@ -164729,6 +164740,242 @@
             "operand:source3:right-matrix",
             "operand:source4:column-scale"
           ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "operand": "source2"
+            }
+          ],
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "Layout"
+            ],
+            "pad_union": "must-zero"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "TPERMUTE",
+          "engine": "SFU",
+          "family": "TEPL",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 21,
+          "legality_handler": "TileOperandsLegal_TPERMUTE",
+          "mode": 3,
+          "name": "TPERMUTE",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "source0",
+              "role": "source0"
+            },
+            {
+              "field": "source1",
+              "role": "source1"
+            },
+            {
+              "field": "source2",
+              "role": "indices"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "selector": "0x075",
+          "semantic_handler": "TPERMUTE",
+          "state_effects": [
+            "operand:destination0:destination",
+            "operand:source0:source0",
+            "operand:source1:source1",
+            "operand:source2:indices"
+          ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "operand": "scalar0"
+            }
+          ],
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "Layout"
+            ],
+            "pad_union": "must-zero"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "TSHUF",
+          "engine": "SFU",
+          "family": "TEPL",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 22,
+          "legality_handler": "TileOperandsLegal_TSHUF",
+          "mode": 3,
+          "name": "TSHUF",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "source0",
+              "role": "source"
+            },
+            {
+              "field": "source1",
+              "role": "controls"
+            },
+            {
+              "field": "scalar0",
+              "role": "shuffle-control"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "selector": "0x076",
+          "semantic_handler": "TSHUF",
+          "state_effects": [
+            "operand:destination0:destination",
+            "operand:source0:source",
+            "operand:source1:controls",
+            "operand:scalar0:shuffle-control"
+          ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "operand": "scalar0"
+            }
+          ],
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "Layout"
+            ],
+            "pad_union": "must-zero"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "TPACK",
+          "engine": "SFU",
+          "family": "TEPL",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 23,
+          "legality_handler": "TileOperandsLegal_TPACK",
+          "mode": 3,
+          "name": "TPACK",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "source0",
+              "role": "source0"
+            },
+            {
+              "field": "source1",
+              "role": "source1"
+            },
+            {
+              "field": "scalar0",
+              "role": "pack-control"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "selector": "0x077",
+          "semantic_handler": "TPACK",
+          "state_effects": [
+            "operand:destination0:destination",
+            "operand:source0:source0",
+            "operand:source1:source1",
+            "operand:scalar0:pack-control"
+          ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "scalar0"
+            }
+          ],
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "Layout"
+            ],
+            "pad_union": "must-zero"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "TUNPACK",
+          "engine": "SFU",
+          "family": "TEPL",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 24,
+          "legality_handler": "TileOperandsLegal_TUNPACK",
+          "mode": 3,
+          "name": "TUNPACK",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "source0",
+              "role": "source"
+            },
+            {
+              "field": "scalar0",
+              "role": "unpack-control"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "selector": "0x078",
+          "semantic_handler": "TUNPACK",
+          "state_effects": [
+            "operand:destination0:destination",
+            "operand:source0:source",
+            "operand:scalar0:unpack-control"
+          ]
         }
       ],
       "profile": "v0.58",
@@ -164795,11 +165042,23 @@
             "0x061"
           ],
           [
+            "0x065",
+            "0x065"
+          ],
+          [
             "0x069",
             "0x069"
           ],
           [
-            "0x075",
+            "0x06E",
+            "0x06E"
+          ],
+          [
+            "0x071",
+            "0x074"
+          ],
+          [
+            "0x079",
             "0x07F"
           ]
         ],
@@ -164811,7 +165070,7 @@
         ]
       },
       "source_lock": "isa/v0.58/pto-spec.lock.json",
-      "version": "0.58.3"
+      "version": "0.58.5"
     },
     "pto_scalar_forms": {
       "family_constraint_application_count": 0,
@@ -169837,7 +170096,7 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.",
+          "semantic_summary": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.",
           "status": "accepted"
         },
         {
@@ -198665,10 +198924,10 @@
         "zero_behavior": "strict-no-effect-before-downstream-checks"
       },
       "profile": "v0.58",
-      "register_count": 256,
+      "register_count": 64,
       "register_names": {
         "first": "S0",
-        "last": "S255",
+        "last": "S63",
         "syntax": "S<absolute-index>"
       },
       "scope": {
@@ -198713,7 +198972,7 @@
         ]
       },
       "source_lock": "isa/v0.58/pto-spec.lock.json",
-      "version": "0.58.3"
+      "version": "0.58.5"
     },
     "system_registers": {
       "debug_ssr": {
@@ -199382,5 +199641,5 @@
       "xlen_bits": 64
     }
   },
-  "version": "0.58.3"
+  "version": "0.58.5"
 }

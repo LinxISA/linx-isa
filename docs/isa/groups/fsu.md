@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **FSU** group of the LinxISA v0.58.3 catalog.
+Instructions in the **FSU** group of the LinxISA v0.58.5 catalog.
 
 ## Instructions
 
@@ -19,7 +19,7 @@ Instructions in the **FSU** group of the LinxISA v0.58.3 catalog.
 | [FABS](../instructions/fabs.md) | `fabs.{T} SrcL, ->{t, u, Rd}` | 32 | — | Floating-point absolute value. |
 | [FADD](../instructions/fadd.md) | `fadd.{T} SrcL, SrcR, ->{t, u, Rd}` | 32 | — | Floating-point addition. |
 | [FCVT](../instructions/fcvt.md) | `fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | Floating-point format conversion. |
-| [FCVTA](../instructions/fcvta.md) | `fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode. |
+| [FCVTA](../instructions/fcvta.md) | `fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode. |
 | [FCVTM](../instructions/fcvtm.md) | `fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode. |
 | [FCVTN](../instructions/fcvtn.md) | `fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode. |
 | [FCVTP](../instructions/fcvtp.md) | `fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` | 32 | — | FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode. |

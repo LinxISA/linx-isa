@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **757** instruction forms in the LinxISA v0.58.3 catalog.
+Complete alphabetical index of all **754** instruction forms in the LinxISA v0.58.5 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -27,6 +27,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
+| [B.ASSEMBLE](b_assemble.md) | [Bundle Range Modifier](../groups/bundle_range_modifier.md) | 32 | Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
 | [B.CATR](b_catr.md) | [Bundle Control Attribute](../groups/bundle_control_attribute.md) | 32 | Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode. |
 | [B.DATR](b_datr.md) | [Bundle Data Attribute](../groups/bundle_data_attribute.md) | 32 | Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes. |
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
@@ -36,12 +37,13 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
 | [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
 | [B.IOR](b_ior.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride. |
-| [B.IOS](b_ios.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
+| [B.IOS](b_ios.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.SUBVIEW](b_subview.md) | [Bundle Range Modifier](../groups/bundle_range_modifier.md) | 32 | Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
 | [B.TEXT](b_text.md) | [Bundle Offset](../groups/bundle_offset.md) | 32 | Sets the out-of-line body entry address for a decoupled bundle. |
 | [BC.IALL](bc_iall.md) | [SYS](../groups/sys.md) | 32 | Branch-predictor cache invalidate all entries. |
 | [BC.IVA](bc_iva.md) | [SYS](../groups/sys.md) | 32 | Branch-predictor cache invalidate by address. |
@@ -87,12 +89,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BSTART.TMATMULMX.ACC](bstart_tmatmulmx_acc.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TMATMULMX.BIAS](bstart_tmatmulmx_bias.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TMOV](bstart_tmov.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.TPREFETCH](bstart_tprefetch.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
-| [BSTART.TSTORE](bstart_tstore.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Stores a register value to memory. |
 | [BSTART.TSTORE](bstart_tstore.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Stores a register value to memory. |
 | [BSTART.VPAR](bstart_vpar.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.VSEQ](bstart_vseq.md) | [Block Split](../groups/block_split.md) | 32 | Terminates the current block and begins the next. |
@@ -202,7 +199,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [FABS](fabs.md) | [FSU](../groups/fsu.md) | 32 | Floating-point absolute value. |
 | [FADD](fadd.md) | [FSU](../groups/fsu.md) | 32 | Floating-point addition. |
 | [FCVT](fcvt.md) | [FSU](../groups/fsu.md) | 32 | Floating-point format conversion. |
-| [FCVTA](fcvta.md) | [FSU](../groups/fsu.md) | 32 | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode. |
+| [FCVTA](fcvta.md) | [FSU](../groups/fsu.md) | 32 | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode. |
 | [FCVTM](fcvtm.md) | [FSU](../groups/fsu.md) | 32 | FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode. |
 | [FCVTN](fcvtn.md) | [FSU](../groups/fsu.md) | 32 | FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode. |
 | [FCVTP](fcvtp.md) | [FSU](../groups/fsu.md) | 32 | FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode. |
