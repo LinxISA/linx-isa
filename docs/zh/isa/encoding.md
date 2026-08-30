@@ -1,12 +1,12 @@
 # 指令编码格式
 
-> **ISA 版本：** v0.58.3 |  **ISA 手册第 03 章**
+> **ISA 版本：** v0.58.5 |  **ISA 手册第 03 章**
 
-灵犀指令集 v0.58.3 支持小端字节序的四种指令长度
+灵犀指令集 v0.58.5 支持小端字节序的四种指令长度
 面向半字的模型。位位置显示为 `[msb:0]`
 （MSB 最左边，LSB 最右边），匹配 ARM 和 RISC-V 约定。
 
-v0.58.3 的标量、block command 和 Tile 编码以 PTO ISA 0.58.3 为共同基线。TLSU
+v0.58.5 的标量、block command 和 Tile 编码以 PTO ISA 0.58.5 为共同基线。TLSU
 使用 `BSTART.TLOAD`、`BSTART.TSTORE`、`BSTART.TMOV`、
 `BSTART.MGATHER.MASK`、`BSTART.MGATHER.CAS` 等命名块头；Linx 的额外
 编码仅用于 V.* 与 VPAR/VSEQ 向量扩展，并避开 PTO 保留区间。
