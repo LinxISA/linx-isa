@@ -159,11 +159,13 @@ def map_emitted_to_spec(emitted_mnem: str, spec_mnemonics: Set[str]) -> Optional
     if cur in spec_mnemonics:
         return cur
     # TEPL has one raw carrier form in the architectural catalog while the
-    # disassembler prints the selected direct operation (for example,
-    # BSTART.TDIVS).  Those friendly spellings are execution evidence for the
-    # BSTART.TEPL carrier, not for the unrelated generic BSTART form reached by
-    # suffix stripping.
-    if cur.startswith("BSTART.T") and "BSTART.TEPL" in spec_mnemonics:
+    # disassembler prints a friendly engine or direct-operation projection
+    # (for example, BSTART.VEC or BSTART.TDIVS). Those spellings are execution
+    # evidence for the BSTART.TEPL carrier, not for the unrelated generic
+    # BSTART form reached by suffix stripping.
+    if (
+        cur in {"BSTART.VEC", "BSTART.SFU"} or cur.startswith("BSTART.T")
+    ) and "BSTART.TEPL" in spec_mnemonics:
         return "BSTART.TEPL"
     while "." in cur:
         cur = cur.rsplit(".", 1)[0]
