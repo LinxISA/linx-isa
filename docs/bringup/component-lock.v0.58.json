@@ -77,8 +77,8 @@
       "path": "skills/linx-skills",
       "url": "https://github.com/LinxISA/linx-skills.git",
       "branch": "main",
-      "commit": "0fc0dfaec025f1019505b43bd4389aa36b2c89d3",
-      "tree": "44365f4ba0b3a0079c9750fba2b4a6e72e3abb87",
+      "commit": "fdbf72915439bbf285089bebc73b77a0bf6f3c41",
+      "tree": "2fe966015d3ecf5152be9264e779325736227f0d",
       "release": "0.58.3",
       "role": "agent routing and v0.58.3 workflow skills"
     },
@@ -114,9 +114,9 @@
       "path": "tools/pyCircuit",
       "url": "https://github.com/LinxISA/pyCircuit.git",
       "branch": "main",
-      "commit": "47e156bf8c2778f6aea81e8ce77a0b91417bd0e8",
-      "tree": "4c8059554e63c9065e82751c794e11cad42ad1d4",
-      "role": "pyCircuit model"
+      "commit": "1f1651f9bff4293deb1613324ab575b3322ab38b",
+      "tree": "d3e9b0f56375882ccf3399f5d7d59dc40bd7bae2",
+      "role": "pyCircuit 6 model"
     },
     {
       "path": "workloads/pto_kernels",
