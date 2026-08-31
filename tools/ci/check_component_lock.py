@@ -31,13 +31,13 @@ RELEASE_0583_COMPONENTS = (REQUIRED_COMPONENTS - {
     "lib/glibc",
     "lib/musl",
     "skills/linx-skills",
-    "tools/model",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
 REVIEW_ONLY_OPEN_PR_COMPONENTS = {
     "tools/LinxCoreModel",
     "tools/SuperScalarModel",
     "tools/asl-model",
+    "tools/model",
     "tools/pto-spec",
 }
 GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
