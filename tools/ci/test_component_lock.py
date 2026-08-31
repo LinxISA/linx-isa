@@ -27,8 +27,9 @@ class ComponentLockTests(unittest.TestCase):
     def test_standalone_supernpu_gitlink_is_forbidden(self) -> None:
         checker = load_checker()
         lock = {
-            "schema_version": 1,
+            "schema_version": 2,
             "profile": "v0.58",
+            "integration_phase": "draft_staging",
             "components": [
                 {
                     "path": "workloads/SuperNPUBench",
@@ -47,18 +48,23 @@ class ComponentLockTests(unittest.TestCase):
         errors = checker.validate(lock, modules, {"workloads/SuperNPUBench": "1" * 40})
         self.assertTrue(any("SuperNPUBench" in error for error in errors), errors)
 
-    def test_linxcoremodel_topic_pin_must_be_explicitly_review_only(self) -> None:
+    def test_draft_staging_topic_pin_is_not_merge_ready(self) -> None:
         checker = load_checker()
         path = "tools/LinxCoreModel"
         lock = {
-            "schema_version": 1,
+            "schema_version": 2,
             "profile": "v0.58",
+            "integration_phase": "draft_staging",
             "components": [
                 {
                     "path": path,
                     "url": "https://github.com/LinxISA/LinxCoreModel.git",
                     "branch": "main",
                     "commit": "2" * 40,
+                    "tree": "3" * 40,
+                    "role": "staged topic",
+                    "integration_status": "review_only_open_pr",
+                    "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/37",
                 }
             ],
         }
@@ -70,24 +76,29 @@ class ComponentLockTests(unittest.TestCase):
             }
         }
 
-        errors = checker.validate(lock, modules, {path: "2" * 40})
+        errors = checker.validate(
+            lock, modules, {path: "2" * 40}, require_merge_ready=True
+        )
 
         self.assertTrue(
-            any("review-only open PR" in error for error in errors), errors
+            any("not merge-ready evidence" in error for error in errors), errors
         )
 
     def test_linxcoremodel_review_only_pin_rejects_release_metadata(self) -> None:
         checker = load_checker()
         path = "tools/LinxCoreModel"
         lock = {
-            "schema_version": 1,
+            "schema_version": 2,
             "profile": "v0.58",
+            "integration_phase": "draft_staging",
             "components": [
                 {
                     "path": path,
                     "url": "https://github.com/LinxISA/LinxCoreModel.git",
                     "branch": "main",
                     "commit": "3" * 40,
+                    "tree": "4" * 40,
+                    "role": "staged topic",
                     "integration_status": "review_only_open_pr",
                     "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/36",
                     "release_tag": "linxisa-v0.58.0",
@@ -110,8 +121,9 @@ class ComponentLockTests(unittest.TestCase):
         checker = load_checker()
         path = "lib/mesa3d"
         lock = {
-            "schema_version": 1,
+            "schema_version": 2,
             "profile": "v0.58",
+            "integration_phase": "draft_staging",
             "components": [
                 {
                     "path": path,

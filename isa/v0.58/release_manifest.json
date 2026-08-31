@@ -10,22 +10,22 @@
     "unlisted_selectors_reserved": true
   },
   "cardinality": {
-    "tile_operations": 107,
+    "tile_operations": 108,
     "tile_families": {
       "CUBE": 12,
-      "TEPL": 85,
+      "TEPL": 86,
       "TLSU": 10
     },
     "semantic_engines": {
       "CUBE": 12,
-      "SFU": 54,
+      "SFU": 55,
       "TLSU": 10,
       "VEC": 31
     },
     "tile_classifications": {
       "elementwise-tile-tile": 25,
       "irregular-and-complex": 9,
-      "layout-and-rearrangement": 9,
+      "layout-and-rearrangement": 10,
       "matrix-and-matrix-vector": 12,
       "memory-and-data-movement": 9,
       "reduce-and-expand": 28,

@@ -26,7 +26,7 @@
 
 ## Description
 
-FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.
+FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through
 
 ## Encoding Notes
 
-- `FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.`
+- `FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.`
 
 ## Full Catalog Forms
 

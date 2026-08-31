@@ -828,7 +828,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleScalarIO",
-      "semantic_summary": "Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.",
+      "semantic_summary": "Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.",
       "status": "accepted"
     },
     {
@@ -952,8 +952,9 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleTileIO",
-      "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
-      "status": "accepted"
+      "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+      "status": "accepted",
+      "state_effects": []
     },
     {
       "asm": "B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>",
@@ -1038,8 +1039,9 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleTileIO",
-      "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
-      "status": "accepted"
+      "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+      "status": "accepted",
+      "state_effects": []
     },
     {
       "asm": "B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>",
@@ -1174,8 +1176,9 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleTileIO",
-      "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
-      "status": "accepted"
+      "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+      "status": "accepted",
+      "state_effects": []
     },
     {
       "asm": "B.IOT SrcTile0, mask=PE_MASK, <last>",
@@ -1248,8 +1251,9 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleTileIO",
-      "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
-      "status": "accepted"
+      "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+      "status": "accepted",
+      "state_effects": []
     },
     {
       "asm": "B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>",
@@ -1360,8 +1364,9 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Input & Output",
       "semantic_handler": "BindBundleTileIO",
-      "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
-      "status": "accepted"
+      "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+      "status": "accepted",
+      "state_effects": []
     },
     {
       "asm": "BSTART DIRECT, <label>",
@@ -1736,7 +1741,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Begins a TLSU byte-displacement gather block and selects its transfer DataType.",
+      "semantic_summary": "Begins a strided indexed TLSU gather block.",
       "status": "accepted"
     },
     {
@@ -1803,7 +1808,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Begins a TLSU byte-displacement atomic compare-and-swap gather block.",
+      "semantic_summary": "Begins an atomic compare-and-swap strided indexed TLSU gather block.",
       "status": "accepted"
     },
     {
@@ -1870,7 +1875,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Begins a predicate-masked TLSU byte-displacement gather block.",
+      "semantic_summary": "Begins a predicate-masked strided indexed TLSU gather block.",
       "status": "accepted"
     },
     {
@@ -1937,7 +1942,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Begins a predicate-masked TLSU byte-displacement scatter block.",
+      "semantic_summary": "Begins a predicate-masked strided indexed TLSU scatter block.",
       "status": "accepted"
     },
     {
@@ -2004,7 +2009,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteBundleStart",
-      "semantic_summary": "Begins a TLSU byte-displacement scatter block and selects its transfer DataType.",
+      "semantic_summary": "Begins a strided indexed TLSU scatter block.",
       "status": "accepted"
     },
     {
@@ -4990,7 +4995,7 @@
       "semantic_family": "CMD",
       "semantic_group": "Bundle Split",
       "semantic_handler": "ExecuteMemorySet",
-      "semantic_summary": "Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.",
+      "semantic_summary": "Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.",
       "status": "accepted"
     },
     {

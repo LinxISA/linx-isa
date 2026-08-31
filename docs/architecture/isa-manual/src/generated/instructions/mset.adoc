@@ -7,7 +7,7 @@
 
 *Syntax:* MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]
 
-*Description:* Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
+*Description:* Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.
 
 *Encoding:*
 

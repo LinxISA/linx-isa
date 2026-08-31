@@ -2245,7 +2245,7 @@ image::encodings/enc_hl_bfi.svg[HL.BFI encoding form hl_bfi_48_995211593446,alig
 
 Encoding notes (informative)::
 +
-* HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.
+* HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.
 
 Operation (informative)::
 +
@@ -6322,7 +6322,7 @@ image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_df50a269be7c,align="
 
 Encoding notes (informative)::
 +
-* Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
+* Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
 
 Operation (informative)::
 +
@@ -6390,7 +6390,7 @@ image::encodings/enc_b_iot_32_cd6ec8181a49.svg[B.IOT encoding form b_iot_32_cd6e
 
 Encoding notes (informative)::
 +
-* Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+* Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 
 Operation (informative)::
 +
@@ -6554,7 +6554,7 @@ image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgat
 
 Encoding notes (informative)::
 +
-* Begins a TLSU byte-displacement gather block and selects its transfer DataType.
+* Begins a strided indexed TLSU gather block.
 
 Operation (informative)::
 +
@@ -6583,7 +6583,7 @@ image::encodings/enc_bstart_mgather_cas.svg[BSTART.MGATHER.CAS encoding form bst
 
 Encoding notes (informative)::
 +
-* Begins a TLSU byte-displacement atomic compare-and-swap gather block.
+* Begins an atomic compare-and-swap strided indexed TLSU gather block.
 
 Operation (informative)::
 +
@@ -6612,7 +6612,7 @@ image::encodings/enc_bstart_mgather_mask.svg[BSTART.MGATHER.MASK encoding form b
 
 Encoding notes (informative)::
 +
-* Begins a predicate-masked TLSU byte-displacement gather block.
+* Begins a predicate-masked strided indexed TLSU gather block.
 
 Operation (informative)::
 +
@@ -6670,7 +6670,7 @@ image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_ms
 
 Encoding notes (informative)::
 +
-* Begins a TLSU byte-displacement scatter block and selects its transfer DataType.
+* Begins a strided indexed TLSU scatter block.
 
 Operation (informative)::
 +
@@ -6699,7 +6699,7 @@ image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding form
 
 Encoding notes (informative)::
 +
-* Begins a predicate-masked TLSU byte-displacement scatter block.
+* Begins a predicate-masked strided indexed TLSU scatter block.
 
 Operation (informative)::
 +
@@ -7632,7 +7632,7 @@ image::encodings/enc_mset.svg[MSET encoding form mset_32_7a5f3c26ac6b,align="cen
 
 Encoding notes (informative)::
 +
-* Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
+* Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.
 
 Operation (informative)::
 +
@@ -10482,7 +10482,7 @@ image::encodings/enc_fcvt.svg[FCVT encoding form fcvt_32_5bc6f18dcd9f,align="cen
 
 Encoding notes (informative)::
 +
-* FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.
+* FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.
 
 Operation (informative)::
 +
@@ -10510,7 +10510,7 @@ image::encodings/enc_fcvta.svg[FCVTA encoding form fcvta_32_e40944328b8e,align="
 
 Encoding notes (informative)::
 +
-* FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.
+* FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.
 
 Operation (informative)::
 +
@@ -10538,7 +10538,7 @@ image::encodings/enc_fcvtm.svg[FCVTM encoding form fcvtm_32_9a1ae5d79987,align="
 
 Encoding notes (informative)::
 +
-* FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.
+* FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode.
 
 Operation (informative)::
 +
@@ -10566,7 +10566,7 @@ image::encodings/enc_fcvtn.svg[FCVTN encoding form fcvtn_32_a24d859f77cf,align="
 
 Encoding notes (informative)::
 +
-* FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.
+* FCVTN converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-nearest mode.
 
 Operation (informative)::
 +
@@ -10594,7 +10594,7 @@ image::encodings/enc_fcvtp.svg[FCVTP encoding form fcvtp_32_20805e380dd5,align="
 
 Encoding notes (informative)::
 +
-* FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.
+* FCVTP converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-up mode.
 
 Operation (informative)::
 +
@@ -10622,7 +10622,7 @@ image::encodings/enc_fcvtz.svg[FCVTZ encoding form fcvtz_32_d9465be494b6,align="
 
 Encoding notes (informative)::
 +
-* FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.
+* FCVTZ converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-toward-zero mode.
 
 Operation (informative)::
 +
@@ -11250,7 +11250,7 @@ image::encodings/enc_scvtf.svg[SCVTF encoding form scvtf_32_1dad03d9ab31,align="
 
 Encoding notes (informative)::
 +
-* SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+* SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 
 Operation (informative)::
 +
@@ -11278,7 +11278,7 @@ image::encodings/enc_ucvtf.svg[UCVTF encoding form ucvtf_32_828c970cf295,align="
 
 Encoding notes (informative)::
 +
-* UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+* UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 
 Operation (informative)::
 +

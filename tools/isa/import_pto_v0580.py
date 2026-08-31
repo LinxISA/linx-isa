@@ -21,7 +21,7 @@ EXPECTED_ABI = "pto-isa-0.58.5-mode-function-v1"
 VECTOR_BASENAME = "pto-isa-0585-hardware-numeric-vectors.json"
 SCALAR_FORM_COUNT = 466
 COMMAND_FORM_COUNT = 76
-TILE_OPERATION_COUNT = 107
+TILE_OPERATION_COUNT = 108
 EXTENSION_RESERVATION_COUNT = 46
 
 
@@ -72,11 +72,11 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
     if Counter(item["family"] for item in docs["tiles"]["operations"]) != Counter(
-        {"TEPL": 85, "TLSU": 10, "CUBE": 12}
+        {"TEPL": 86, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
     if Counter(item["engine"] for item in docs["tiles"]["operations"]) != Counter(
-        {"VEC": 31, "SFU": 54, "TLSU": 10, "CUBE": 12}
+        {"VEC": 31, "SFU": 55, "TLSU": 10, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 semantic engine counts")
     if Counter(item["classification"] for item in docs["tiles"]["operations"]) != Counter(
@@ -86,7 +86,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
             "reduce-and-expand": 28,
             "memory-and-data-movement": 9,
             "matrix-and-matrix-vector": 12,
-            "layout-and-rearrangement": 9,
+            "layout-and-rearrangement": 10,
             "irregular-and-complex": 9,
         }
     ):
@@ -317,7 +317,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "selector_formula": "(mode << 5) | function",
         "mode_field_bits": [0, 1],
         "function_field_bits": [0, 4],
-        "accepted_selector_count": 85,
+        "accepted_selector_count": 86,
         "reserved_selector_ranges": tiles["reserved"]["tepl_selector_ranges"],
         "migration_aliases": {},
         "ops": tepl_ops,

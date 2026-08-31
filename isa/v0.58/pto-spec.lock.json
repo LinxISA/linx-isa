@@ -3,18 +3,18 @@
   "catalogs": {
     "command_forms": {
       "path": "spec/catalog/command-forms.json",
-      "sha256": "2df86181747660ba95dd1dff1d16c9b98896db686714424f32cfaa72974115e9",
+      "sha256": "9f2b57e8919c01a215f8905584ee44a6ac288dac1e2cce4ffb802a133a67426d",
       "count": 76
     },
     "scalar_forms": {
       "path": "spec/catalog/scalar-forms.json",
-      "sha256": "44847ad7289923fedd7d337e18ee8d2d4d2009f912d2f12480f15c0ef36d60ed",
+      "sha256": "e045c5303b402c1420b4cfc088f3d225eafdb47993f0e5159577dec18418fb07",
       "count": 466
     },
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
-      "sha256": "e5893ebf366c3044a98b4cbd03cf684748b3f5f4f9befd0e012bc93fa852f408",
-      "count": 107
+      "sha256": "39390924b3311741fdf3995b710b37a957480bfc32795bdf9f4eda340875a698",
+      "count": 108
     },
     "extension_encoding_reservations": {
       "path": "spec/catalog/extension-encoding-reservations.json",
@@ -22,9 +22,9 @@
       "count": 46
     }
   },
-  "content_sha256": "c428fbd7716993764350d22737703aaf6c187b90a5d16efe541a97798a53e908",
+  "content_sha256": "0b17ab8fc2d49aee22ed81221122f6e3e7fa43e39f20361a3178dfa72c384606",
   "encoding_abi": "pto-isa-0.58.5-mode-function-v1",
-  "encoding_projection_sha256": "c4a0188f4c9087388fe6239e4ec2da6550b81c87bb1466e6157d69a9aa45f747",
+  "encoding_projection_sha256": "d02ba5f4eb051406437aead50773b81c2bbb5ab1e8b1ea9966e5e967690ea48d",
   "hardware_conformance_profile": {
     "path": "spec/hardware-conformance-profile.json",
     "profile_id": "pto-hardware-numeric-0.58.5-ieee-v1",
@@ -37,11 +37,11 @@
   "release": "0.58.5",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "0d8c655f839e59ed72e2d2bab8ee40f1521aba9ef34a060c9d57804b42fad23d"
+    "sha256": "73e7eb3c14a5c7845c3a8449a4951086f02781474d71748c1ffd99b65b242595"
   },
   "source": {
-    "commit": "6fc3141ac790b6b6fed192bedc99a9264f2b25ac",
-    "tree": "5ce013251b7359b9ddbe5d0d3e2efa3a8613533c",
+    "commit": "2dc3bc5ed88508acb9b21c42648bf920f5781965",
+    "tree": "01e228c735c670c19a6e79d6b0ffa7a7431c990f",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

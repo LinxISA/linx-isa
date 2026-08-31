@@ -34,6 +34,43 @@ class PtoFunctionalModelLockTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("consumer gitlink mismatch", result.stderr)
 
+    def test_result_hash_mutation_fails_closed(self):
+        payload = json.loads(LOCK.read_text(encoding="utf-8"))
+        payload["validated_results"]["scalar_stop_pc"]["result_sha256"] = "0" * 64
+        with tempfile.TemporaryDirectory() as temporary:
+            mutated = Path(temporary) / "lock.json"
+            mutated.write_text(json.dumps(payload), encoding="utf-8")
+            result = self.run_checker(mutated)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("scalar_stop_pc result hash mismatch", result.stderr)
+
+    def test_required_component_must_be_initialized(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("functional_lock", CHECKER)
+        self.assertIsNotNone(spec)
+        self.assertIsNotNone(spec.loader)
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+        commit = "1" * 40
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git", "update-index", "--add", "--cacheinfo",
+                    f"160000,{commit},tools/consumer",
+                ],
+                cwd=root,
+                check=True,
+            )
+            with self.assertRaisesRegex(ValueError, "required initialized submodule"):
+                checker.validate_component(
+                    root,
+                    {"path": "tools/consumer", "commit": commit, "tree": "2" * 40},
+                    "consumer",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

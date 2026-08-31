@@ -2,7 +2,7 @@
   "family_constraint_application_count": 0,
   "family_constraint_count": 0,
   "family_constraints": [],
-  "form_constraint_count": 47,
+  "form_constraint_count": 41,
   "form_count": 466,
   "forms": [
     {
@@ -4827,32 +4827,13 @@
       "asm": "fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
             0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            3
           ]
         }
       ],
@@ -4921,20 +4902,12 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.",
+      "semantic_summary": "FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.",
       "status": "accepted"
     },
     {
       "asm": "fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
-        {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
         {
           "field": "DstType",
           "operator": "one-of",
@@ -4946,14 +4919,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -5022,20 +4988,12 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.",
+      "semantic_summary": "FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.",
       "status": "accepted"
     },
     {
       "asm": "fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
-        {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
         {
           "field": "DstType",
           "operator": "one-of",
@@ -5047,14 +5005,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -5123,20 +5074,12 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.",
+      "semantic_summary": "FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode.",
       "status": "accepted"
     },
     {
       "asm": "fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
-        {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
         {
           "field": "DstType",
           "operator": "one-of",
@@ -5148,14 +5091,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -5224,20 +5160,12 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.",
+      "semantic_summary": "FCVTN converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-nearest mode.",
       "status": "accepted"
     },
     {
       "asm": "fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
-        {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
         {
           "field": "DstType",
           "operator": "one-of",
@@ -5249,14 +5177,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -5325,20 +5246,12 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.",
+      "semantic_summary": "FCVTP converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-up mode.",
       "status": "accepted"
     },
     {
       "asm": "fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
-        {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
         {
           "field": "DstType",
           "operator": "one-of",
@@ -5350,14 +5263,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -5426,7 +5332,7 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.",
+      "semantic_summary": "FCVTZ converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-toward-zero mode.",
       "status": "accepted"
     },
     {
@@ -7426,7 +7332,36 @@
     },
     {
       "asm": "hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}",
-      "constraints": [],
+      "constraints": [
+        {
+          "field": "immr",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "field": "imms",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -7504,7 +7439,7 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "InsertBitfield",
-      "semantic_summary": "HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.",
+      "semantic_summary": "HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.",
       "status": "accepted"
     },
     {
@@ -28380,32 +28315,13 @@
       "asm": "scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
             0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            3
           ]
         }
       ],
@@ -28474,7 +28390,7 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.",
+      "semantic_summary": "SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.",
       "status": "accepted"
     },
     {
@@ -33384,32 +33300,13 @@
       "asm": "ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}",
       "constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
             0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            3
           ]
         }
       ],
@@ -33478,7 +33375,7 @@
       "semantic_family": "FSU",
       "semantic_group": "FSU",
       "semantic_handler": "ConvertFloatingEncoding",
-      "semantic_summary": "UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.",
+      "semantic_summary": "UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.",
       "status": "accepted"
     },
     {

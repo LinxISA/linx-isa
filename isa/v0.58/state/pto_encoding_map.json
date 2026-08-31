@@ -9,22 +9,22 @@
     "legacy_decode_allowed": false,
     "source_aliases_are_migration_only": false
   },
-  "entry_count": 107,
+  "entry_count": 108,
   "family_counts": {
     "CUBE": 12,
-    "TEPL": 85,
+    "TEPL": 86,
     "TLSU": 10
   },
   "engine_counts": {
     "CUBE": 12,
-    "SFU": 54,
+    "SFU": 55,
     "TLSU": 10,
     "VEC": 31
   },
   "classification_counts": {
     "elementwise-tile-tile": 25,
     "irregular-and-complex": 9,
-    "layout-and-rearrangement": 9,
+    "layout-and-rearrangement": 10,
     "matrix-and-matrix-vector": 12,
     "memory-and-data-movement": 9,
     "reduce-and-expand": 28,
@@ -1313,6 +1313,18 @@
       "selector": "0x078",
       "mode": 3,
       "function": 24,
+      "disposition": "accepted-direct-operation",
+      "contract_status": "reviewed-complete"
+    },
+    {
+      "name": "TGPR2T",
+      "family": "TEPL",
+      "classification": "layout-and-rearrangement",
+      "engine": "SFU",
+      "command_mnemonic": "BSTART.TEPL",
+      "selector": "0x07E",
+      "mode": 3,
+      "function": 30,
       "disposition": "accepted-direct-operation",
       "contract_status": "reviewed-complete"
     }

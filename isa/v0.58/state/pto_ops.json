@@ -3,22 +3,22 @@
   "profile": "v0.58",
   "version": "0.58.5",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
-  "operation_count": 107,
+  "operation_count": 108,
   "family_counts": {
     "CUBE": 12,
-    "TEPL": 85,
+    "TEPL": 86,
     "TLSU": 10
   },
   "engine_counts": {
     "CUBE": 12,
-    "SFU": 54,
+    "SFU": 55,
     "TLSU": 10,
     "VEC": 31
   },
   "classification_counts": {
     "elementwise-tile-tile": 25,
     "irregular-and-complex": 9,
-    "layout-and-rearrangement": 9,
+    "layout-and-rearrangement": 10,
     "matrix-and-matrix-vector": 12,
     "memory-and-data-movement": 9,
     "reduce-and-expand": 28,
@@ -837,7 +837,8 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "CMode",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "Sat"
         ],
         "pad_union": "pad-value"
       },
@@ -852,7 +853,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "predicate destination"
+          "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
         },
         {
           "field": "source0",
@@ -871,7 +872,7 @@
       "selector": "0x00D",
       "semantic_handler": "ExecuteTileCompare",
       "state_effects": [
-        "operand:destination0:packed-predicate-destination",
+        "operand:destination0:variant-predicate-carrier-destination",
         "operand:source0:persistent-source-left",
         "operand:source1:persistent-source-right",
         "operand:comparison:six-mode-comparison",
@@ -1360,7 +1361,7 @@
         },
         {
           "field": "source0",
-          "role": "packed predicate mask"
+          "role": "legacy Predicate, CUBE PredicateCell, or first GPR-mask role"
         },
         {
           "field": "source1",
@@ -1376,7 +1377,7 @@
       "semantic_handler": "ExecuteTileSelect",
       "state_effects": [
         "operand:destination0:numeric-destination",
-        "operand:source0:packed-predicate-mask",
+        "operand:source0:variant-predicate-mask-carrier",
         "operand:source1:persistent-source-true",
         "operand:source2:persistent-source-false",
         "runtime:CurrentBundlePadValue:numeric-padding"
@@ -2208,7 +2209,8 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "CMode",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "Sat"
         ],
         "pad_union": "pad-value"
       },
@@ -2223,7 +2225,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new packed Local predicate destination"
+          "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
         },
         {
           "field": "source0",
@@ -2242,7 +2244,7 @@
       "selector": "0x02D",
       "semantic_handler": "ExecuteTileCompareScalar",
       "state_effects": [
-        "operand:destination0:packed-predicate-destination",
+        "operand:destination0:variant-predicate-carrier-destination",
         "operand:source0:persistent-local-source",
         "operand:scalar0:private-gpr-raw-element",
         "operand:comparison:six-mode-comparison",
@@ -2289,7 +2291,7 @@
         },
         {
           "field": "source0",
-          "role": "packed Local predicate mask"
+          "role": "legacy Predicate, CUBE PredicateCell, or GPR mask role"
         },
         {
           "field": "source1",
@@ -2305,7 +2307,7 @@
       "semantic_handler": "ExecuteTileSelectScalar",
       "state_effects": [
         "operand:destination0:new-local-numeric-destination",
-        "operand:source0:packed-predicate-mask",
+        "operand:source0:variant-predicate-mask-carrier",
         "operand:source1:persistent-local-source-true",
         "operand:scalar0:private-gpr-scalar-false",
         "runtime:CurrentBundlePadValue:numeric-padding"
@@ -4947,6 +4949,9 @@
           "operand": "address"
         },
         {
+          "operand": "scalar0"
+        },
+        {
           "operand": "source0"
         },
         {
@@ -4979,6 +4984,10 @@
           "role": "base-address"
         },
         {
+          "field": "scalar0",
+          "role": "GM row stride in elements"
+        },
+        {
           "field": "source0",
           "role": "indices"
         }
@@ -4988,7 +4997,8 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:address:base-address",
-        "operand:source0:byte-displacement-indices",
+        "operand:scalar0:gm-row-stride-elements",
+        "operand:source0:logical-linear-element-indices",
         "runtime:CurrentBundlePadValue:physical-padding"
       ],
       "classification": "memory-and-data-movement",
@@ -4998,6 +5008,9 @@
       "arguments": [
         {
           "operand": "address"
+        },
+        {
+          "operand": "scalar0"
         },
         {
           "operand": "source0"
@@ -5027,20 +5040,25 @@
           "role": "base-address"
         },
         {
+          "field": "scalar0",
+          "role": "GM row stride in elements"
+        },
+        {
           "field": "source0",
           "role": "source"
         },
         {
           "field": "source1",
-          "role": "byte-displacement-indices"
+          "role": "logical-linear-element-indices"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
       "semantic_handler": "MSCATTER",
       "state_effects": [
         "operand:address:base-address",
+        "operand:scalar0:gm-row-stride-elements",
         "operand:source0:source",
-        "operand:source1:byte-displacement-indices"
+        "operand:source1:logical-linear-element-indices"
       ],
       "classification": "memory-and-data-movement",
       "engine": "TLSU"
@@ -5052,6 +5070,9 @@
         },
         {
           "operand": "address"
+        },
+        {
+          "operand": "scalar0"
         },
         {
           "operand": "source0"
@@ -5089,6 +5110,10 @@
           "role": "base-address"
         },
         {
+          "field": "scalar0",
+          "role": "GM row stride in elements"
+        },
+        {
           "field": "source0",
           "role": "indices"
         },
@@ -5102,7 +5127,8 @@
       "state_effects": [
         "operand:destination0:destination",
         "operand:address:base-address",
-        "operand:source0:byte-displacement-indices",
+        "operand:scalar0:gm-row-stride-elements",
+        "operand:source0:logical-linear-element-indices",
         "operand:source1:exact-predicate-mask",
         "runtime:CurrentBundlePadValue:inactive-and-physical-padding"
       ],
@@ -5113,6 +5139,9 @@
       "arguments": [
         {
           "operand": "address"
+        },
+        {
+          "operand": "scalar0"
         },
         {
           "operand": "source0"
@@ -5145,12 +5174,16 @@
           "role": "base-address"
         },
         {
+          "field": "scalar0",
+          "role": "GM row stride in elements"
+        },
+        {
           "field": "source0",
           "role": "source"
         },
         {
           "field": "source1",
-          "role": "byte-displacement-indices"
+          "role": "logical-linear-element-indices"
         },
         {
           "field": "source2",
@@ -5161,8 +5194,9 @@
       "semantic_handler": "MSCATTER_MASK",
       "state_effects": [
         "operand:address:base-address",
+        "operand:scalar0:gm-row-stride-elements",
         "operand:source0:source",
-        "operand:source1:byte-displacement-indices",
+        "operand:source1:logical-linear-element-indices",
         "operand:source2:exact-predicate-mask"
       ],
       "classification": "memory-and-data-movement",
@@ -5175,6 +5209,9 @@
         },
         {
           "operand": "address"
+        },
+        {
+          "operand": "scalar0"
         },
         {
           "operand": "source0"
@@ -5215,6 +5252,10 @@
           "role": "base-address"
         },
         {
+          "field": "scalar0",
+          "role": "GM row stride in elements"
+        },
+        {
           "field": "source0",
           "role": "indices"
         },
@@ -5232,7 +5273,8 @@
       "state_effects": [
         "operand:destination0:observed-old-values",
         "operand:address:base-address",
-        "operand:source0:byte-displacement-indices",
+        "operand:scalar0:gm-row-stride-elements",
+        "operand:source0:logical-linear-element-indices",
         "operand:source1:expected-values",
         "operand:source2:replacement-values",
         "runtime:CurrentBundlePadValue:physical-padding"
@@ -6319,6 +6361,76 @@
         "operand:destination0:destination",
         "operand:source0:source",
         "operand:scalar0:unpack-control"
+      ],
+      "classification": "layout-and-rearrangement",
+      "engine": "SFU"
+    },
+    {
+      "arguments": [
+        {
+          "operand": "destination0"
+        },
+        {
+          "operand": "source0"
+        },
+        {
+          "operand": "source1"
+        },
+        {
+          "operand": "source2"
+        },
+        {
+          "operand": "source3"
+        }
+      ],
+      "command_mnemonic": "BSTART.TEPL",
+      "contract_status": "reviewed-complete",
+      "datr_contract": {
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId",
+          "RMode"
+        ],
+        "pad_union": "pad-value"
+      },
+      "disposition": "accepted-direct-operation",
+      "effect_contract": "TGPR2T",
+      "family": "TEPL",
+      "fault_contract": "ExecuteTileInstruction",
+      "function": 30,
+      "legality_handler": "TileOperandsLegal_TGPR2T",
+      "mode": 3,
+      "name": "TGPR2T",
+      "operands": [
+        {
+          "field": "destination0",
+          "role": "destination"
+        },
+        {
+          "field": "source0",
+          "role": "source0"
+        },
+        {
+          "field": "source1",
+          "role": "source1"
+        },
+        {
+          "field": "source2",
+          "role": "source2"
+        },
+        {
+          "field": "source3",
+          "role": "source3"
+        }
+      ],
+      "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+      "selector": "0x07E",
+      "semantic_handler": "TGPR2T",
+      "state_effects": [
+        "operand:destination0:CUBE U8 destination",
+        "operand:source0:ordered source-only GPR0",
+        "operand:source1:ordered source-only GPR1",
+        "operand:source2:ordered source-only GPR2",
+        "operand:source3:ordered source-only GPR3"
       ],
       "classification": "layout-and-rearrangement",
       "engine": "SFU"

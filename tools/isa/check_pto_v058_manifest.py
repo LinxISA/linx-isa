@@ -286,7 +286,7 @@ def validate(root: Path) -> list[str]:
     expected_catalogs = {
         "scalar_forms": 466,
         "command_forms": 76,
-        "tile_operations": 107,
+        "tile_operations": 108,
         "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
     }
     for name, count in expected_catalogs.items():
@@ -295,21 +295,21 @@ def validate(root: Path) -> list[str]:
             errors.append(f"PTO lock must freeze {count} {name}")
 
     tiles = docs["tiles"].get("operations", [])
-    expected_family_counts = Counter({"TEPL": 85, "TLSU": 10, "CUBE": 12})
-    expected_engine_counts = Counter({"VEC": 31, "SFU": 54, "TLSU": 10, "CUBE": 12})
+    expected_family_counts = Counter({"TEPL": 86, "TLSU": 10, "CUBE": 12})
+    expected_engine_counts = Counter({"VEC": 31, "SFU": 55, "TLSU": 10, "CUBE": 12})
     expected_classification_counts = Counter({
         "elementwise-tile-tile": 25,
         "tile-scalar-and-immediate": 15,
         "reduce-and-expand": 28,
         "memory-and-data-movement": 9,
         "matrix-and-matrix-vector": 12,
-        "layout-and-rearrangement": 9,
+        "layout-and-rearrangement": 10,
         "irregular-and-complex": 9,
     })
     if Counter(item.get("family") for item in tiles) != expected_family_counts:
-        errors.append("tile inventory must be exactly 85 TEPL / 10 TLSU / 12 CUBE")
+        errors.append("tile inventory must be exactly 86 TEPL / 10 TLSU / 12 CUBE")
     if Counter(item.get("engine") for item in tiles) != expected_engine_counts:
-        errors.append("tile semantic engines must be exactly 31 VEC / 54 SFU / 10 TLSU / 12 CUBE")
+        errors.append("tile semantic engines must be exactly 31 VEC / 55 SFU / 10 TLSU / 12 CUBE")
     if Counter(item.get("classification") for item in tiles) != expected_classification_counts:
         errors.append("tile semantic classifications differ from the canonical PTO 0.58 catalog")
     if docs["tiles"].get("engine_counts") != dict(sorted(expected_engine_counts.items())):

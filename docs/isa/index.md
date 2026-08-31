@@ -114,9 +114,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [B.DIM](instructions/b_dim.md) | bundle_argument | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.FPATR](instructions/b_fpatr.md) | bundle_fixed_point_postprocess_attribute | 32 | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
 | [B.HINT](instructions/b_hint.md) | bundle_hint | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
-| [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride. |
+| [B.IOR](instructions/b_ior.md) | bundle_input_output | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements. |
 | [B.IOS](instructions/b_ios.md) | bundle_input_output | 32 | Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
-| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.IOT](instructions/b_iot.md) | bundle_input_output | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
 | [B.TEXT](instructions/b_text.md) | bundle_offset | 32 | Sets the out-of-line body entry address for a decoupled bundle. |
 | [BSTART](instructions/bstart.md) | bundle_split | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART.FP](instructions/bstart_fp.md) | bundle_split | 32 | Terminates the current block and begins the next. |
@@ -154,8 +154,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [FABS](instructions/fabs.md) | fsu | 32 | Floating-point absolute value. |
 | [FADD](instructions/fadd.md) | fsu | 32 | Floating-point addition. |
 | [FCVT](instructions/fcvt.md) | fsu | 32 | Floating-point format conversion. |
-| [FCVTA](instructions/fcvta.md) | fsu | 32 | FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode. |
-| [FCVTM](instructions/fcvtm.md) | fsu | 32 | FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode. |
+| [FCVTA](instructions/fcvta.md) | fsu | 32 | FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode. |
+| [FCVTM](instructions/fcvtm.md) | fsu | 32 | FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode. |
 | [HL.LB.PCR](instructions/hl_lb_pcr.md) | lda_pc_rel | 48 | HL.LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
 | [HL.LBU.PCR](instructions/hl_lbu_pcr.md) | lda_pc_rel | 48 | HL.LBU.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |
 | [HL.LD.PCR](instructions/hl_ld_pcr.md) | lda_pc_rel | 48 | HL.LD.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value. |

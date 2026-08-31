@@ -5,26 +5,26 @@
   "architecture": {
     "repository": "https://github.com/PTO-ISA/pto-spec.git",
     "path": "tools/pto-spec",
-    "commit": "6fc3141ac790b6b6fed192bedc99a9264f2b25ac",
-    "tree": "5ce013251b7359b9ddbe5d0d3e2efa3a8613533c",
+    "commit": "2dc3bc5ed88508acb9b21c42648bf920f5781965",
+    "tree": "01e228c735c670c19a6e79d6b0ffa7a7431c990f",
     "pto_lock": "isa/v0.58/pto-spec.lock.json",
-    "pto_lock_sha256": "8d7b9c7df563f230862891ac4f7da6bbd137a14f1ca8148bbb3685ce10382dc0",
-    "release_manifest_sha256": "0d8c655f839e59ed72e2d2bab8ee40f1521aba9ef34a060c9d57804b42fad23d"
+    "pto_lock_sha256": "786dabc3bbb883eb7c78090f7256e505b2a4bd3d9abcfcb25f679547c841ea91",
+    "release_manifest_sha256": "73e7eb3c14a5c7845c3a8449a4951086f02781474d71748c1ffd99b65b242595"
   },
   "reference_model": {
     "repository": "https://github.com/PTO-ISA/asl-model.git",
     "path": "tools/asl-model",
-    "commit": "dbcb8de1b08a83cbc6b3245b513fa8a50de85564",
-    "tree": "7e5cbb290e3587155a4387569bac7d6eaafdee13",
+    "commit": "e7850440230fc9f8d99237a9d7eb1b9cb5abd73d",
+    "tree": "0613746f1e10abbb62060575db28d7ade71c7690",
     "model_lock": "pto-lock.json",
-    "model_lock_sha256": "30b2635c231c34a1ef35f55893f09345ac9272bea2b7961df0f17098d831e31d",
+    "model_lock_sha256": "8d4d37f6f18526e6cbfd9998dc9020fea303ec804a5828e3deec176542ff40df",
     "model_ndf": "docs/model-ndf-v1.md"
   },
   "consumer": {
     "repository": "https://github.com/LinxISA/SuperScalarModel.git",
     "path": "tools/SuperScalarModel",
-    "commit": "bee53b66dee24e2b37cb359d2cb8addcdfb3c119",
-    "tree": "5299dea0033dccd9823a8bb2760ba2da29dc68f0",
+    "commit": "37b0edfb6346d879b484b025eba214ac0e6eb5e2",
+    "tree": "956ee5048f210dbd747ff6cdce22a8f946260dd2",
     "modeling_spec": "modelSpec/pto_aslref_gfrun_modeling_spec.md"
   },
   "aslref": {
@@ -32,13 +32,50 @@
     "commit": "0b6e09066d4186c8a26e02e3bb884bd664d5eb34"
   },
   "interfaces": {
-    "model_abi": "pto-asl-model-experimental-v1",
+    "model_abi": "pto-asl-model-experimental-v2",
     "worker_protocol": "pto-asl-worker-v1",
     "architecture_version": "0.58.5"
   },
+  "corpus": {
+    "repository": "https://github.com/PTO-ISA/pto-spec.git",
+    "commit": "a0d7b39c345f19e90020d356dd8caf4d83e03418",
+    "tree": "bff7b3de3a78339bd170fe0a855af8853eb77ecb",
+    "builder": "scripts/build-functional-model-corpus",
+    "builder_sha256": "1a87977780b2c1daa9315dd8426a3874ddd6a4e3c839b1a335ab6abd4f566a70",
+    "schema": "spec/schemas/pto-functional-model-corpus-v1.schema.json",
+    "schema_sha256": "a43842e497dd64d9f1edc6b7614dffb993345822b1d176cb675c33bcd088de49"
+  },
+  "toolchain": {
+    "repository": "https://github.com/LinxISA/llvm-project.git",
+    "commit": "baef2b3a47a2162ef4e0542eb715562bfdbe7a6a",
+    "clang_sha256": "f9009511b94b0a7de2275a96f28d53afcaa9b635af7425e8316cee875bddcb8e",
+    "lld_sha256": "ee909db67b7e7686b7890d8c197738d0411fde889c03adb436d803d53085d8da",
+    "readelf_sha256": "8c1d14f4b9a4616a2f477d721eeb65e9d29533d0adf607218e595dd4c5d0aca4"
+  },
   "validated_results": {
-    "scalar_stop_pc": "0623ccb9b1619bd388284a438034d8cb6431964ba727d8b1c450303105735488",
-    "block_64_stop_pc": "3ca4f90350a3e8d3a10ad40647b2b13d1e7ac2b3bbd5c53982ee568ee0bcbcb8",
-    "tile_tadd_stop_pc": "85dd751867e3155c7f2e23e8446546906f5bf617d4d985ed474822613764d69e"
+    "scalar_stop_pc": {
+      "source": "tests/functional-model/corpus/scalar_stop_pc.S",
+      "source_sha256": "f473f0ad381f4f08cafee459544c019036fd3e7ab6c783ea26dace190196de85",
+      "linker_script": "tests/functional-model/corpus/scalar_stop_pc.ld",
+      "linker_sha256": "4fedab537006f7f40e68b61c2e2152502bc550c0bc32b58183ee85673c47f4ea",
+      "result_hex": "19000000",
+      "result_sha256": "0623ccb9b1619bd388284a438034d8cb6431964ba727d8b1c450303105735488"
+    },
+    "block_64_stop_pc": {
+      "source": "tests/functional-model/corpus/block_64_stop_pc.S",
+      "source_sha256": "cd1b1f6e324a981762241428bd3a8b651d52f2c40e5a277d2b0ba21792b8b60b",
+      "linker_script": "tests/functional-model/corpus/block_64_stop_pc.ld",
+      "linker_sha256": "da502a469cf48d287a27a6853bd6343faf28390ef2ffc1df49b73439b2146079",
+      "result_hex": "a55a0000",
+      "result_sha256": "3ca4f90350a3e8d3a10ad40647b2b13d1e7ac2b3bbd5c53982ee568ee0bcbcb8"
+    },
+    "tile_tadd_stop_pc": {
+      "source": "tests/functional-model/corpus/tile_tadd_stop_pc.S",
+      "source_sha256": "9ec9ce56439d739cf3330ebea3051674e66b3b80e14e42741bb021d5f35f827e",
+      "linker_script": "tests/functional-model/corpus/tile_tadd_stop_pc.ld",
+      "linker_sha256": "76e2723f4b2655aa0026aab0eba768a78945382afff7fc8c5192ff8b6a87305a",
+      "result_hex": "32000000",
+      "result_sha256": "85dd751867e3155c7f2e23e8446546906f5bf617d4d985ed474822613764d69e"
+    }
   }
 }

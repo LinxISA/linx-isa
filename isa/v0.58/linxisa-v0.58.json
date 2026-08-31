@@ -4883,7 +4883,7 @@
       "id": "b_ior_32_df50a269be7c",
       "length_bits": 32,
       "mnemonic": "B.IOR",
-      "note": "Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.",
+      "note": "Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.",
       "parts": [
         {
           "segments": [
@@ -5353,7 +5353,7 @@
       "id": "b_iot_32_21bee57b65c0",
       "length_bits": 32,
       "mnemonic": "B.IOT",
-      "note": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+      "note": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
       "parts": [
         {
           "segments": [
@@ -5565,7 +5565,7 @@
       "id": "b_iot_32_3bc48b48fea2",
       "length_bits": 32,
       "mnemonic": "B.IOT",
-      "note": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+      "note": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
       "parts": [
         {
           "segments": [
@@ -5783,7 +5783,7 @@
       "id": "b_iot_32_53c1ffc02364",
       "length_bits": 32,
       "mnemonic": "B.IOT",
-      "note": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+      "note": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
       "parts": [
         {
           "segments": [
@@ -5979,7 +5979,7 @@
       "id": "b_iot_32_7d0899202df1",
       "length_bits": 32,
       "mnemonic": "B.IOT",
-      "note": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+      "note": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
       "parts": [
         {
           "segments": [
@@ -6223,7 +6223,7 @@
       "id": "b_iot_32_cd6ec8181a49",
       "length_bits": 32,
       "mnemonic": "B.IOT",
-      "note": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+      "note": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
       "parts": [
         {
           "segments": [
@@ -8213,7 +8213,7 @@
       "id": "bstart_mgather_32_477b2795765c",
       "length_bits": 32,
       "mnemonic": "BSTART.MGATHER",
-      "note": "Begins a TLSU byte-displacement gather block and selects its transfer DataType.",
+      "note": "Begins a strided indexed TLSU gather block.",
       "parts": [
         {
           "segments": [
@@ -8355,7 +8355,7 @@
       "id": "bstart_mgather_cas_32_74d282c28e52",
       "length_bits": 32,
       "mnemonic": "BSTART.MGATHER.CAS",
-      "note": "Begins a TLSU byte-displacement atomic compare-and-swap gather block.",
+      "note": "Begins an atomic compare-and-swap strided indexed TLSU gather block.",
       "parts": [
         {
           "segments": [
@@ -8497,7 +8497,7 @@
       "id": "bstart_mgather_mask_32_c53a0033eb26",
       "length_bits": 32,
       "mnemonic": "BSTART.MGATHER.MASK",
-      "note": "Begins a predicate-masked TLSU byte-displacement gather block.",
+      "note": "Begins a predicate-masked strided indexed TLSU gather block.",
       "parts": [
         {
           "segments": [
@@ -8721,7 +8721,7 @@
       "id": "bstart_mscatter_32_7f76f632a75f",
       "length_bits": 32,
       "mnemonic": "BSTART.MSCATTER",
-      "note": "Begins a TLSU byte-displacement scatter block and selects its transfer DataType.",
+      "note": "Begins a strided indexed TLSU scatter block.",
       "parts": [
         {
           "segments": [
@@ -8863,7 +8863,7 @@
       "id": "bstart_mscatter_mask_32_6037e1cd885f",
       "length_bits": 32,
       "mnemonic": "BSTART.MSCATTER.MASK",
-      "note": "Begins a predicate-masked TLSU byte-displacement scatter block.",
+      "note": "Begins a predicate-masked strided indexed TLSU scatter block.",
       "parts": [
         {
           "segments": [
@@ -21265,14 +21265,59 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "4"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "5"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "6"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "7"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "8"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -21423,7 +21468,7 @@
       "id": "fcvt_32_5bc6f18dcd9f",
       "length_bits": 32,
       "mnemonic": "FCVT",
-      "note": "FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.",
+      "note": "FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.",
       "parts": [
         {
           "segments": [
@@ -21538,14 +21583,39 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "8"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -21696,7 +21766,7 @@
       "id": "fcvta_32_e40944328b8e",
       "length_bits": 32,
       "mnemonic": "FCVTA",
-      "note": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.",
+      "note": "FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.",
       "parts": [
         {
           "segments": [
@@ -21811,14 +21881,39 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "8"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -21969,7 +22064,7 @@
       "id": "fcvtm_32_9a1ae5d79987",
       "length_bits": 32,
       "mnemonic": "FCVTM",
-      "note": "FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.",
+      "note": "FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode.",
       "parts": [
         {
           "segments": [
@@ -22084,14 +22179,39 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "8"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -22242,7 +22362,7 @@
       "id": "fcvtn_32_a24d859f77cf",
       "length_bits": 32,
       "mnemonic": "FCVTN",
-      "note": "FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.",
+      "note": "FCVTN converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-nearest mode.",
       "parts": [
         {
           "segments": [
@@ -22357,14 +22477,39 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "8"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -22515,7 +22660,7 @@
       "id": "fcvtp_32_20805e380dd5",
       "length_bits": 32,
       "mnemonic": "FCVTP",
-      "note": "FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.",
+      "note": "FCVTP converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-up mode.",
       "parts": [
         {
           "segments": [
@@ -22630,14 +22775,39 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "8"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -22788,7 +22958,7 @@
       "id": "fcvtz_32_d9465be494b6",
       "length_bits": 32,
       "mnemonic": "FCVTZ",
-      "note": "FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.",
+      "note": "FCVTZ converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-toward-zero mode.",
       "parts": [
         {
           "segments": [
@@ -28197,6 +28367,568 @@
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "8"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "9"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "14"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "15"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "16"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "17"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "18"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "19"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "20"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "21"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "22"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "23"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "24"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "25"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "26"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "27"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "28"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "31"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "32"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "33"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "34"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "35"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "36"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "37"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "38"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "39"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "40"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "41"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "42"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "43"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "44"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "45"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "46"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "47"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "48"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "49"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "50"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "51"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "52"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "53"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "54"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "55"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "56"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "57"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "58"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "59"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "60"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "61"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "62"
+              },
+              {
+                "field": "immr",
+                "op": "!=",
+                "value": "63"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "8"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "9"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "14"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "15"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "16"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "17"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "18"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "19"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "20"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "21"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "22"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "23"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "24"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "25"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "26"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "27"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "28"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "29"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "30"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "31"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "32"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "33"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "34"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "35"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "36"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "37"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "38"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "39"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "40"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "41"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "42"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "43"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "44"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "45"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "46"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "47"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "48"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "49"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "50"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "51"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "52"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "53"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "54"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "55"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "56"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "57"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "58"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "59"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "60"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "61"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "62"
+              },
+              {
+                "field": "imms",
+                "op": "!=",
+                "value": "63"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -28272,7 +29004,7 @@
       "id": "hl_bfi_48_995211593446",
       "length_bits": 48,
       "mnemonic": "HL.BFI",
-      "note": "HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.",
+      "note": "HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.",
       "parts": [
         {
           "segments": [
@@ -69724,7 +70456,7 @@
       "id": "mset_32_7a5f3c26ac6b",
       "length_bits": 32,
       "mnemonic": "MSET",
-      "note": "Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.",
+      "note": "Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.",
       "parts": [
         {
           "segments": [
@@ -72982,14 +73714,59 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "4"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "5"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "6"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "7"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "8"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -73140,7 +73917,7 @@
       "id": "scvtf_32_1dad03d9ab31",
       "length_bits": 32,
       "mnemonic": "SCVTF",
-      "note": "SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.",
+      "note": "SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.",
       "parts": [
         {
           "segments": [
@@ -83051,14 +83828,59 @@
           {
             "constraints": [
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "2"
+                "value": "4"
               },
               {
-                "field": "SrcType",
+                "field": "DstType",
                 "op": "!=",
-                "value": "3"
+                "value": "5"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "6"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "7"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "8"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "9"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "10"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "11"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "12"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "13"
+              },
+              {
+                "field": "DstType",
+                "op": "!=",
+                "value": "14"
               },
               {
                 "field": "DstType",
@@ -83209,7 +84031,7 @@
       "id": "ucvtf_32_828c970cf295",
       "length_bits": 32,
       "mnemonic": "UCVTF",
-      "note": "UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.",
+      "note": "UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.",
       "parts": [
         {
           "segments": [
@@ -146660,7 +147482,7 @@
       "profile": "v0.58",
       "semantic_engine_counts": {
         "CUBE": 12,
-        "SFU": 54,
+        "SFU": 55,
         "TLSU": 10,
         "VEC": 31
       },
@@ -146678,7 +147500,7 @@
       },
       "source_lock": "isa/v0.58/pto-spec.lock.json",
       "tepl": {
-        "accepted_selector_count": 85,
+        "accepted_selector_count": 86,
         "function_field_bits": [
           0,
           4
@@ -147111,7 +147933,7 @@
             "operands": [
               {
                 "field": "destination0",
-                "role": "predicate destination"
+                "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
               },
               {
                 "field": "source0",
@@ -147131,7 +147953,7 @@
             "semantic_handler": "ExecuteTileCompare",
             "semantic_status": "reviewed-complete",
             "state_effects": [
-              "operand:destination0:packed-predicate-destination",
+              "operand:destination0:variant-predicate-carrier-destination",
               "operand:source0:persistent-source-left",
               "operand:source1:persistent-source-right",
               "operand:comparison:six-mode-comparison",
@@ -147426,7 +148248,7 @@
               },
               {
                 "field": "source0",
-                "role": "packed predicate mask"
+                "role": "legacy Predicate, CUBE PredicateCell, or first GPR-mask role"
               },
               {
                 "field": "source1",
@@ -147443,7 +148265,7 @@
             "semantic_status": "reviewed-complete",
             "state_effects": [
               "operand:destination0:numeric-destination",
-              "operand:source0:packed-predicate-mask",
+              "operand:source0:variant-predicate-mask-carrier",
               "operand:source1:persistent-source-true",
               "operand:source2:persistent-source-false",
               "runtime:CurrentBundlePadValue:numeric-padding"
@@ -147956,7 +148778,7 @@
             "operands": [
               {
                 "field": "destination0",
-                "role": "new packed Local predicate destination"
+                "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
               },
               {
                 "field": "source0",
@@ -147976,7 +148798,7 @@
             "semantic_handler": "ExecuteTileCompareScalar",
             "semantic_status": "reviewed-complete",
             "state_effects": [
-              "operand:destination0:packed-predicate-destination",
+              "operand:destination0:variant-predicate-carrier-destination",
               "operand:source0:persistent-local-source",
               "operand:scalar0:private-gpr-raw-element",
               "operand:comparison:six-mode-comparison",
@@ -148000,7 +148822,7 @@
               },
               {
                 "field": "source0",
-                "role": "packed Local predicate mask"
+                "role": "legacy Predicate, CUBE PredicateCell, or GPR mask role"
               },
               {
                 "field": "source1",
@@ -148017,7 +148839,7 @@
             "semantic_status": "reviewed-complete",
             "state_effects": [
               "operand:destination0:new-local-numeric-destination",
-              "operand:source0:packed-predicate-mask",
+              "operand:source0:variant-predicate-mask-carrier",
               "operand:source1:persistent-local-source-true",
               "operand:scalar0:private-gpr-scalar-false",
               "runtime:CurrentBundlePadValue:numeric-padding"
@@ -149625,6 +150447,50 @@
               "operand:source0:source",
               "operand:scalar0:unpack-control"
             ]
+          },
+          {
+            "classification": "layout-and-rearrangement",
+            "effect_contract": "TGPR2T",
+            "engine": "SFU",
+            "fault_contract": "ExecuteTileInstruction",
+            "function": 30,
+            "legality_handler": "TileOperandsLegal_TGPR2T",
+            "logical_selector": 126,
+            "mode": 3,
+            "name": "TGPR2T",
+            "operands": [
+              {
+                "field": "destination0",
+                "role": "destination"
+              },
+              {
+                "field": "source0",
+                "role": "source0"
+              },
+              {
+                "field": "source1",
+                "role": "source1"
+              },
+              {
+                "field": "source2",
+                "role": "source2"
+              },
+              {
+                "field": "source3",
+                "role": "source3"
+              }
+            ],
+            "profile": "v0.58",
+            "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+            "semantic_handler": "TGPR2T",
+            "semantic_status": "reviewed-complete",
+            "state_effects": [
+              "operand:destination0:CUBE U8 destination",
+              "operand:source0:ordered source-only GPR0",
+              "operand:source1:ordered source-only GPR1",
+              "operand:source2:ordered source-only GPR2",
+              "operand:source3:ordered source-only GPR3"
+            ]
           }
         ],
         "reserved_selector_ranges": [
@@ -149813,7 +150679,8 @@
             "state_effects": [
               "operand:destination0:destination",
               "operand:address:base-address",
-              "operand:source0:byte-displacement-indices",
+              "operand:scalar0:gm-row-stride-elements",
+              "operand:source0:logical-linear-element-indices",
               "runtime:CurrentBundlePadValue:physical-padding"
             ]
           },
@@ -149827,8 +150694,9 @@
             "semantic_status": "reviewed-complete",
             "state_effects": [
               "operand:address:base-address",
+              "operand:scalar0:gm-row-stride-elements",
               "operand:source0:source",
-              "operand:source1:byte-displacement-indices"
+              "operand:source1:logical-linear-element-indices"
             ]
           },
           {
@@ -149842,7 +150710,8 @@
             "state_effects": [
               "operand:destination0:destination",
               "operand:address:base-address",
-              "operand:source0:byte-displacement-indices",
+              "operand:scalar0:gm-row-stride-elements",
+              "operand:source0:logical-linear-element-indices",
               "operand:source1:exact-predicate-mask",
               "runtime:CurrentBundlePadValue:inactive-and-physical-padding"
             ]
@@ -149857,8 +150726,9 @@
             "semantic_status": "reviewed-complete",
             "state_effects": [
               "operand:address:base-address",
+              "operand:scalar0:gm-row-stride-elements",
               "operand:source0:source",
-              "operand:source1:byte-displacement-indices",
+              "operand:source1:logical-linear-element-indices",
               "operand:source2:exact-predicate-mask"
             ]
           },
@@ -149873,7 +150743,8 @@
             "state_effects": [
               "operand:destination0:observed-old-values",
               "operand:address:base-address",
-              "operand:source0:byte-displacement-indices",
+              "operand:scalar0:gm-row-stride-elements",
+              "operand:source0:logical-linear-element-indices",
               "operand:source1:expected-values",
               "operand:source2:replacement-values",
               "runtime:CurrentBundlePadValue:physical-padding"
@@ -152517,7 +153388,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleScalarIO",
-          "semantic_summary": "Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.",
+          "semantic_summary": "Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.",
           "status": "accepted"
         },
         {
@@ -152641,7 +153512,8 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleTileIO",
-          "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+          "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+          "state_effects": [],
           "status": "accepted"
         },
         {
@@ -152727,7 +153599,8 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleTileIO",
-          "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+          "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+          "state_effects": [],
           "status": "accepted"
         },
         {
@@ -152863,7 +153736,8 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleTileIO",
-          "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+          "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+          "state_effects": [],
           "status": "accepted"
         },
         {
@@ -152937,7 +153811,8 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleTileIO",
-          "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+          "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+          "state_effects": [],
           "status": "accepted"
         },
         {
@@ -153049,7 +153924,8 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Input & Output",
           "semantic_handler": "BindBundleTileIO",
-          "semantic_summary": "Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.",
+          "semantic_summary": "Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.",
+          "state_effects": [],
           "status": "accepted"
         },
         {
@@ -153425,7 +154301,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Split",
           "semantic_handler": "ExecuteBundleStart",
-          "semantic_summary": "Begins a TLSU byte-displacement gather block and selects its transfer DataType.",
+          "semantic_summary": "Begins a strided indexed TLSU gather block.",
           "status": "accepted"
         },
         {
@@ -153492,7 +154368,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Split",
           "semantic_handler": "ExecuteBundleStart",
-          "semantic_summary": "Begins a TLSU byte-displacement atomic compare-and-swap gather block.",
+          "semantic_summary": "Begins an atomic compare-and-swap strided indexed TLSU gather block.",
           "status": "accepted"
         },
         {
@@ -153559,7 +154435,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Split",
           "semantic_handler": "ExecuteBundleStart",
-          "semantic_summary": "Begins a predicate-masked TLSU byte-displacement gather block.",
+          "semantic_summary": "Begins a predicate-masked strided indexed TLSU gather block.",
           "status": "accepted"
         },
         {
@@ -153626,7 +154502,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Split",
           "semantic_handler": "ExecuteBundleStart",
-          "semantic_summary": "Begins a predicate-masked TLSU byte-displacement scatter block.",
+          "semantic_summary": "Begins a predicate-masked strided indexed TLSU scatter block.",
           "status": "accepted"
         },
         {
@@ -153693,7 +154569,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Split",
           "semantic_handler": "ExecuteBundleStart",
-          "semantic_summary": "Begins a TLSU byte-displacement scatter block and selects its transfer DataType.",
+          "semantic_summary": "Begins a strided indexed TLSU scatter block.",
           "status": "accepted"
         },
         {
@@ -156679,7 +157555,7 @@
           "semantic_family": "CMD",
           "semantic_group": "Bundle Split",
           "semantic_handler": "ExecuteMemorySet",
-          "semantic_summary": "Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.",
+          "semantic_summary": "Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.",
           "status": "accepted"
         },
         {
@@ -157430,7 +158306,7 @@
       "classification_counts": {
         "elementwise-tile-tile": 25,
         "irregular-and-complex": 9,
-        "layout-and-rearrangement": 9,
+        "layout-and-rearrangement": 10,
         "matrix-and-matrix-vector": 12,
         "memory-and-data-movement": 9,
         "reduce-and-expand": 28,
@@ -157438,7 +158314,7 @@
       },
       "engine_counts": {
         "CUBE": 12,
-        "SFU": 54,
+        "SFU": 55,
         "TLSU": 10,
         "VEC": 31
       },
@@ -158726,12 +159602,24 @@
           "mode": 3,
           "name": "TUNPACK",
           "selector": "0x078"
+        },
+        {
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "disposition": "accepted-direct-operation",
+          "engine": "SFU",
+          "family": "TEPL",
+          "function": 30,
+          "mode": 3,
+          "name": "TGPR2T",
+          "selector": "0x07E"
         }
       ],
-      "entry_count": 107,
+      "entry_count": 108,
       "family_counts": {
         "CUBE": 12,
-        "TEPL": 85,
+        "TEPL": 86,
         "TLSU": 10
       },
       "migration_aliases": {},
@@ -158750,7 +159638,7 @@
       "classification_counts": {
         "elementwise-tile-tile": 25,
         "irregular-and-complex": 9,
-        "layout-and-rearrangement": 9,
+        "layout-and-rearrangement": 10,
         "matrix-and-matrix-vector": 12,
         "memory-and-data-movement": 9,
         "reduce-and-expand": 28,
@@ -158788,16 +159676,16 @@
       ],
       "engine_counts": {
         "CUBE": 12,
-        "SFU": 54,
+        "SFU": 55,
         "TLSU": 10,
         "VEC": 31
       },
       "family_counts": {
         "CUBE": 12,
-        "TEPL": 85,
+        "TEPL": 86,
         "TLSU": 10
       },
-      "operation_count": 107,
+      "operation_count": 108,
       "operations": [
         {
           "arguments": [
@@ -159492,7 +160380,8 @@
           "datr_contract": {
             "allowed_nonzero_fields": [
               "CMode",
-              "PadValueOrByteId"
+              "PadValueOrByteId",
+              "Sat"
             ],
             "pad_union": "pad-value"
           },
@@ -159508,7 +160397,7 @@
           "operands": [
             {
               "field": "destination0",
-              "role": "predicate destination"
+              "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
             },
             {
               "field": "source0",
@@ -159527,7 +160416,7 @@
           "selector": "0x00D",
           "semantic_handler": "ExecuteTileCompare",
           "state_effects": [
-            "operand:destination0:packed-predicate-destination",
+            "operand:destination0:variant-predicate-carrier-destination",
             "operand:source0:persistent-source-left",
             "operand:source1:persistent-source-right",
             "operand:comparison:six-mode-comparison",
@@ -160016,7 +160905,7 @@
             },
             {
               "field": "source0",
-              "role": "packed predicate mask"
+              "role": "legacy Predicate, CUBE PredicateCell, or first GPR-mask role"
             },
             {
               "field": "source1",
@@ -160032,7 +160921,7 @@
           "semantic_handler": "ExecuteTileSelect",
           "state_effects": [
             "operand:destination0:numeric-destination",
-            "operand:source0:packed-predicate-mask",
+            "operand:source0:variant-predicate-mask-carrier",
             "operand:source1:persistent-source-true",
             "operand:source2:persistent-source-false",
             "runtime:CurrentBundlePadValue:numeric-padding"
@@ -160863,7 +161752,8 @@
           "datr_contract": {
             "allowed_nonzero_fields": [
               "CMode",
-              "PadValueOrByteId"
+              "PadValueOrByteId",
+              "Sat"
             ],
             "pad_union": "pad-value"
           },
@@ -160879,7 +161769,7 @@
           "operands": [
             {
               "field": "destination0",
-              "role": "new packed Local predicate destination"
+              "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
             },
             {
               "field": "source0",
@@ -160898,7 +161788,7 @@
           "selector": "0x02D",
           "semantic_handler": "ExecuteTileCompareScalar",
           "state_effects": [
-            "operand:destination0:packed-predicate-destination",
+            "operand:destination0:variant-predicate-carrier-destination",
             "operand:source0:persistent-local-source",
             "operand:scalar0:private-gpr-raw-element",
             "operand:comparison:six-mode-comparison",
@@ -160945,7 +161835,7 @@
             },
             {
               "field": "source0",
-              "role": "packed Local predicate mask"
+              "role": "legacy Predicate, CUBE PredicateCell, or GPR mask role"
             },
             {
               "field": "source1",
@@ -160961,7 +161851,7 @@
           "semantic_handler": "ExecuteTileSelectScalar",
           "state_effects": [
             "operand:destination0:new-local-numeric-destination",
-            "operand:source0:packed-predicate-mask",
+            "operand:source0:variant-predicate-mask-carrier",
             "operand:source1:persistent-local-source-true",
             "operand:scalar0:private-gpr-scalar-false",
             "runtime:CurrentBundlePadValue:numeric-padding"
@@ -163601,6 +164491,9 @@
               "operand": "address"
             },
             {
+              "operand": "scalar0"
+            },
+            {
               "operand": "source0"
             },
             {
@@ -163635,6 +164528,10 @@
               "role": "base-address"
             },
             {
+              "field": "scalar0",
+              "role": "GM row stride in elements"
+            },
+            {
               "field": "source0",
               "role": "indices"
             }
@@ -163644,7 +164541,8 @@
           "state_effects": [
             "operand:destination0:destination",
             "operand:address:base-address",
-            "operand:source0:byte-displacement-indices",
+            "operand:scalar0:gm-row-stride-elements",
+            "operand:source0:logical-linear-element-indices",
             "runtime:CurrentBundlePadValue:physical-padding"
           ]
         },
@@ -163652,6 +164550,9 @@
           "arguments": [
             {
               "operand": "address"
+            },
+            {
+              "operand": "scalar0"
             },
             {
               "operand": "source0"
@@ -163683,20 +164584,25 @@
               "role": "base-address"
             },
             {
+              "field": "scalar0",
+              "role": "GM row stride in elements"
+            },
+            {
               "field": "source0",
               "role": "source"
             },
             {
               "field": "source1",
-              "role": "byte-displacement-indices"
+              "role": "logical-linear-element-indices"
             }
           ],
           "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
           "semantic_handler": "MSCATTER",
           "state_effects": [
             "operand:address:base-address",
+            "operand:scalar0:gm-row-stride-elements",
             "operand:source0:source",
-            "operand:source1:byte-displacement-indices"
+            "operand:source1:logical-linear-element-indices"
           ]
         },
         {
@@ -163706,6 +164612,9 @@
             },
             {
               "operand": "address"
+            },
+            {
+              "operand": "scalar0"
             },
             {
               "operand": "source0"
@@ -163745,6 +164654,10 @@
               "role": "base-address"
             },
             {
+              "field": "scalar0",
+              "role": "GM row stride in elements"
+            },
+            {
               "field": "source0",
               "role": "indices"
             },
@@ -163758,7 +164671,8 @@
           "state_effects": [
             "operand:destination0:destination",
             "operand:address:base-address",
-            "operand:source0:byte-displacement-indices",
+            "operand:scalar0:gm-row-stride-elements",
+            "operand:source0:logical-linear-element-indices",
             "operand:source1:exact-predicate-mask",
             "runtime:CurrentBundlePadValue:inactive-and-physical-padding"
           ]
@@ -163767,6 +164681,9 @@
           "arguments": [
             {
               "operand": "address"
+            },
+            {
+              "operand": "scalar0"
             },
             {
               "operand": "source0"
@@ -163801,12 +164718,16 @@
               "role": "base-address"
             },
             {
+              "field": "scalar0",
+              "role": "GM row stride in elements"
+            },
+            {
               "field": "source0",
               "role": "source"
             },
             {
               "field": "source1",
-              "role": "byte-displacement-indices"
+              "role": "logical-linear-element-indices"
             },
             {
               "field": "source2",
@@ -163817,8 +164738,9 @@
           "semantic_handler": "MSCATTER_MASK",
           "state_effects": [
             "operand:address:base-address",
+            "operand:scalar0:gm-row-stride-elements",
             "operand:source0:source",
-            "operand:source1:byte-displacement-indices",
+            "operand:source1:logical-linear-element-indices",
             "operand:source2:exact-predicate-mask"
           ]
         },
@@ -163829,6 +164751,9 @@
             },
             {
               "operand": "address"
+            },
+            {
+              "operand": "scalar0"
             },
             {
               "operand": "source0"
@@ -163871,6 +164796,10 @@
               "role": "base-address"
             },
             {
+              "field": "scalar0",
+              "role": "GM row stride in elements"
+            },
+            {
               "field": "source0",
               "role": "indices"
             },
@@ -163888,7 +164817,8 @@
           "state_effects": [
             "operand:destination0:observed-old-values",
             "operand:address:base-address",
-            "operand:source0:byte-displacement-indices",
+            "operand:scalar0:gm-row-stride-elements",
+            "operand:source0:logical-linear-element-indices",
             "operand:source1:expected-values",
             "operand:source2:replacement-values",
             "runtime:CurrentBundlePadValue:physical-padding"
@@ -164976,6 +165906,76 @@
             "operand:source0:source",
             "operand:scalar0:unpack-control"
           ]
+        },
+        {
+          "arguments": [
+            {
+              "operand": "destination0"
+            },
+            {
+              "operand": "source0"
+            },
+            {
+              "operand": "source1"
+            },
+            {
+              "operand": "source2"
+            },
+            {
+              "operand": "source3"
+            }
+          ],
+          "classification": "layout-and-rearrangement",
+          "command_mnemonic": "BSTART.TEPL",
+          "contract_status": "reviewed-complete",
+          "datr_contract": {
+            "allowed_nonzero_fields": [
+              "PadValueOrByteId",
+              "RMode"
+            ],
+            "pad_union": "pad-value"
+          },
+          "disposition": "accepted-direct-operation",
+          "effect_contract": "TGPR2T",
+          "engine": "SFU",
+          "family": "TEPL",
+          "fault_contract": "ExecuteTileInstruction",
+          "function": 30,
+          "legality_handler": "TileOperandsLegal_TGPR2T",
+          "mode": 3,
+          "name": "TGPR2T",
+          "operands": [
+            {
+              "field": "destination0",
+              "role": "destination"
+            },
+            {
+              "field": "source0",
+              "role": "source0"
+            },
+            {
+              "field": "source1",
+              "role": "source1"
+            },
+            {
+              "field": "source2",
+              "role": "source2"
+            },
+            {
+              "field": "source3",
+              "role": "source3"
+            }
+          ],
+          "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+          "selector": "0x07E",
+          "semantic_handler": "TGPR2T",
+          "state_effects": [
+            "operand:destination0:CUBE U8 destination",
+            "operand:source0:ordered source-only GPR0",
+            "operand:source1:ordered source-only GPR1",
+            "operand:source2:ordered source-only GPR2",
+            "operand:source3:ordered source-only GPR3"
+          ]
         }
       ],
       "profile": "v0.58",
@@ -165076,7 +166076,7 @@
       "family_constraint_application_count": 0,
       "family_constraint_count": 0,
       "family_constraints": [],
-      "form_constraint_count": 47,
+      "form_constraint_count": 41,
       "form_count": 466,
       "forms": [
         {
@@ -169901,32 +170901,13 @@
           "asm": "fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
             {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
-            {
               "field": "DstType",
               "operator": "one-of",
               "values": [
                 0,
                 1,
                 2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                3
               ]
             }
           ],
@@ -169995,20 +170976,12 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.",
+          "semantic_summary": "FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.",
           "status": "accepted"
         },
         {
           "asm": "fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
-            {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
             {
               "field": "DstType",
               "operator": "one-of",
@@ -170020,14 +170993,7 @@
                 4,
                 5,
                 6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                7
               ]
             }
           ],
@@ -170096,20 +171062,12 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-to-nearest, ties-away mode.",
+          "semantic_summary": "FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.",
           "status": "accepted"
         },
         {
           "asm": "fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
-            {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
             {
               "field": "DstType",
               "operator": "one-of",
@@ -170121,14 +171079,7 @@
                 4,
                 5,
                 6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                7
               ]
             }
           ],
@@ -170197,20 +171148,12 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.",
+          "semantic_summary": "FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode.",
           "status": "accepted"
         },
         {
           "asm": "fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
-            {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
             {
               "field": "DstType",
               "operator": "one-of",
@@ -170222,14 +171165,7 @@
                 4,
                 5,
                 6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                7
               ]
             }
           ],
@@ -170298,20 +171234,12 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.",
+          "semantic_summary": "FCVTN converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-nearest mode.",
           "status": "accepted"
         },
         {
           "asm": "fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
-            {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
             {
               "field": "DstType",
               "operator": "one-of",
@@ -170323,14 +171251,7 @@
                 4,
                 5,
                 6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                7
               ]
             }
           ],
@@ -170399,20 +171320,12 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.",
+          "semantic_summary": "FCVTP converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-up mode.",
           "status": "accepted"
         },
         {
           "asm": "fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
-            {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
             {
               "field": "DstType",
               "operator": "one-of",
@@ -170424,14 +171337,7 @@
                 4,
                 5,
                 6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                7
               ]
             }
           ],
@@ -170500,7 +171406,7 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.",
+          "semantic_summary": "FCVTZ converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-toward-zero mode.",
           "status": "accepted"
         },
         {
@@ -172500,7 +173406,36 @@
         },
         {
           "asm": "hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}",
-          "constraints": [],
+          "constraints": [
+            {
+              "field": "immr",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            },
+            {
+              "field": "imms",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -172578,7 +173513,7 @@
           "semantic_family": "ALU",
           "semantic_group": "ALU",
           "semantic_handler": "InsertBitfield",
-          "semantic_summary": "HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.",
+          "semantic_summary": "HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.",
           "status": "accepted"
         },
         {
@@ -193454,32 +194389,13 @@
           "asm": "scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
             {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
-            {
               "field": "DstType",
               "operator": "one-of",
               "values": [
                 0,
                 1,
                 2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                3
               ]
             }
           ],
@@ -193548,7 +194464,7 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.",
+          "semantic_summary": "SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.",
           "status": "accepted"
         },
         {
@@ -198458,32 +199374,13 @@
           "asm": "ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}",
           "constraints": [
             {
-              "field": "SrcType",
-              "operator": "one-of",
-              "values": [
-                0,
-                1
-              ]
-            },
-            {
               "field": "DstType",
               "operator": "one-of",
               "values": [
                 0,
                 1,
                 2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14
+                3
               ]
             }
           ],
@@ -198552,7 +199449,7 @@
           "semantic_family": "FSU",
           "semantic_group": "FSU",
           "semantic_handler": "ConvertFloatingEncoding",
-          "semantic_summary": "UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.",
+          "semantic_summary": "UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.",
           "status": "accepted"
         },
         {

@@ -93,12 +93,12 @@ assert (int(b_ios_part["mask"], 0), int(b_ios_part["match"], 0)) == (
 )
 assert spec["retired_encodings"]["entries"] == []
 pto_ops = json.loads((ROOT / "isa/v0.58/state/pto_ops.json").read_text(encoding="utf-8"))
-expected_family_counts = {"CUBE": 12, "TEPL": 85, "TLSU": 10}
-expected_engine_counts = {"CUBE": 12, "SFU": 54, "TLSU": 10, "VEC": 31}
+expected_family_counts = {"CUBE": 12, "TEPL": 86, "TLSU": 10}
+expected_engine_counts = {"CUBE": 12, "SFU": 55, "TLSU": 10, "VEC": 31}
 expected_classification_counts = {
     "elementwise-tile-tile": 25,
     "irregular-and-complex": 9,
-    "layout-and-rearrangement": 9,
+    "layout-and-rearrangement": 10,
     "matrix-and-matrix-vector": 12,
     "memory-and-data-movement": 9,
     "reduce-and-expand": 28,

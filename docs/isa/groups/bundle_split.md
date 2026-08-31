@@ -56,7 +56,7 @@ Instructions in the **Bundle Split** group of the LinxISA v0.58.5 catalog.
 | [FRET.STK](../instructions/fret_stk.md) | `FRET.STK [ra ~ RegDstn], sp!, uimm` | 32 | — | Restores a restartable stack frame whose first stack slot supplies the validated return target. |
 | [L.BSTOP](../instructions/l_bstop.md) | `L.BSTOP` | 64 | — | Commits the current bundle and transfers to its selected continuation. |
 | [MCOPY](../instructions/mcopy.md) | `MCOPY [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Copies a non-overlapping byte range in restartable forward memory steps. |
-| [MSET](../instructions/mset.md) | `MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` | 32 | — | Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight. |
+| [MSET](../instructions/mset.md) | `MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` | 32 | — | Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight. |
 | [XB](../instructions/xb.md) | `XB ACR-ID, C-ID` | 32 | — | Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects. |
 
 ## See Also

@@ -13,6 +13,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LOCK = ROOT / "isa/v0.58/pto-functional-model.lock.json"
+SHA256_LENGTH = 64
+REQUIRED_RESULTS = ("scalar_stop_pc", "block_64_stop_pc", "tile_tadd_stop_pc")
 
 
 def sha256(path: Path) -> str:
@@ -52,16 +54,35 @@ def checkout_value(root: Path, path: str, revision: str) -> str:
     return completed.stdout.strip()
 
 
+def git_blob(root: Path, path: str, revision: str, blob_path: str) -> bytes:
+    completed = subprocess.run(
+        ["git", "-C", str(root / path), "show", f"{revision}:{blob_path}"],
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode != 0:
+        raise ValueError(f"cannot inspect {blob_path} at {revision} in {path}")
+    return completed.stdout
+
+
+def require_sha256(value: object, label: str) -> str:
+    text = str(value)
+    if len(text) != SHA256_LENGTH or any(character not in "0123456789abcdef" for character in text):
+        raise ValueError(f"{label} is not a lowercase SHA-256")
+    return text
+
+
 def validate_component(root: Path, section: dict[str, object], label: str) -> None:
     path = str(section["path"])
     commit = str(section["commit"])
     if gitlink(root, path) != commit:
         raise ValueError(f"{label} gitlink mismatch")
-    if (root / path / ".git").exists():
-        if checkout_value(root, path, "HEAD") != commit:
-            raise ValueError(f"{label} checkout mismatch")
-        if checkout_value(root, path, "HEAD^{tree}") != section["tree"]:
-            raise ValueError(f"{label} tree mismatch")
+    if not (root / path / ".git").exists():
+        raise ValueError(f"{label} required initialized submodule is missing")
+    if checkout_value(root, path, "HEAD") != commit:
+        raise ValueError(f"{label} checkout mismatch")
+    if checkout_value(root, path, "HEAD^{tree}") != section["tree"]:
+        raise ValueError(f"{label} tree mismatch")
 
 
 def validate(root: Path, lock_path: Path) -> None:
@@ -73,8 +94,12 @@ def validate(root: Path, lock_path: Path) -> None:
     consumer = lock.get("consumer")
     aslref = lock.get("aslref")
     interfaces = lock.get("interfaces")
+    corpus = lock.get("corpus")
+    toolchain = lock.get("toolchain")
+    validated_results = lock.get("validated_results")
     if not all(isinstance(item, dict) for item in (
-        architecture, reference_model, consumer, aslref, interfaces
+        architecture, reference_model, consumer, aslref, interfaces,
+        corpus, toolchain, validated_results,
     )):
         raise ValueError("functional-model lock sections are malformed")
 
@@ -83,6 +108,9 @@ def validate(root: Path, lock_path: Path) -> None:
     consumer = consumer  # type: ignore[assignment]
     aslref = aslref  # type: ignore[assignment]
     interfaces = interfaces  # type: ignore[assignment]
+    corpus = corpus  # type: ignore[assignment]
+    toolchain = toolchain  # type: ignore[assignment]
+    validated_results = validated_results  # type: ignore[assignment]
     validate_component(root, architecture, "PTO architecture")
     validate_component(root, reference_model, "ASL reference model")
     validate_component(root, consumer, "SuperScalarModel consumer")
@@ -127,8 +155,66 @@ def validate(root: Path, lock_path: Path) -> None:
     ):
         component_root = root / str(section["path"])
         path = component_root / str(section[field])
-        if (component_root / ".git").exists() and not path.is_file():
+        if not path.is_file():
             raise ValueError(f"missing locked contract: {path}")
+
+    if corpus.get("repository") != architecture.get("repository"):
+        raise ValueError("functional-model corpus repository mismatch")
+    corpus_commit = str(corpus["commit"])
+    corpus_tree = checkout_value(root, str(architecture["path"]), f"{corpus_commit}^{{tree}}")
+    if corpus_tree != corpus.get("tree"):
+        raise ValueError("functional-model corpus tree mismatch")
+    for field in ("builder", "schema"):
+        digest = hashlib.sha256(
+            git_blob(root, str(architecture["path"]), corpus_commit, str(corpus[field]))
+        ).hexdigest()
+        if digest != require_sha256(corpus.get(f"{field}_sha256"), f"corpus {field} hash"):
+            raise ValueError(f"functional-model corpus {field} hash mismatch")
+
+    if toolchain.get("repository") != "https://github.com/LinxISA/llvm-project.git":
+        raise ValueError("functional-model toolchain repository mismatch")
+    for field in ("commit", "clang_sha256", "lld_sha256", "readelf_sha256"):
+        value = str(toolchain.get(field, ""))
+        expected_length = 40 if field == "commit" else SHA256_LENGTH
+        if len(value) != expected_length or any(character not in "0123456789abcdef" for character in value):
+            raise ValueError(f"functional-model toolchain {field} is malformed")
+
+    if set(validated_results) != set(REQUIRED_RESULTS):
+        raise ValueError("functional-model validated results must name exactly the three smoke cases")
+    for case_id in REQUIRED_RESULTS:
+        result = validated_results[case_id]
+        if not isinstance(result, dict):
+            raise ValueError(f"{case_id} validated result is malformed")
+        expected_fields = {
+            "source", "source_sha256", "linker_script", "linker_sha256",
+            "result_hex", "result_sha256",
+        }
+        if set(result) != expected_fields:
+            raise ValueError(f"{case_id} validated result fields are malformed")
+        for path_field, hash_field in (
+            ("source", "source_sha256"),
+            ("linker_script", "linker_sha256"),
+        ):
+            digest = hashlib.sha256(
+                git_blob(
+                    root,
+                    str(architecture["path"]),
+                    corpus_commit,
+                    str(result[path_field]),
+                )
+            ).hexdigest()
+            if digest != require_sha256(result[hash_field], f"{case_id} {hash_field}"):
+                raise ValueError(f"{case_id} {path_field} hash mismatch")
+        try:
+            result_bytes = bytes.fromhex(str(result["result_hex"]))
+        except ValueError as error:
+            raise ValueError(f"{case_id} result_hex is malformed") from error
+        if len(result_bytes) != 4:
+            raise ValueError(f"{case_id} result must contain exactly four bytes")
+        if hashlib.sha256(result_bytes).hexdigest() != require_sha256(
+            result["result_sha256"], f"{case_id} result hash"
+        ):
+            raise ValueError(f"{case_id} result hash mismatch")
 
 
 def main() -> int:

@@ -346,8 +346,8 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
     ops = tepl.get("ops", []) if isinstance(tepl, dict) else []
     if tepl.get("kind") != "mode_function" or tepl.get("selector_formula") != "(mode << 5) | function":
         errors.append("state.engine_ops.tepl must use the PTO 0.58 Mode/Function contract")
-    if tepl.get("accepted_selector_count") != 85 or len(ops) != 85:
-        errors.append("state.engine_ops.tepl must contain exactly 85 PTO 0.58 operations")
+    if tepl.get("accepted_selector_count") != 86 or len(ops) != 86:
+        errors.append("state.engine_ops.tepl must contain exactly 86 PTO 0.58 operations")
     selectors = set()
     engine_counts: Counter[str] = Counter()
     classification_counts: Counter[str] = Counter()
@@ -375,15 +375,15 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         for operation in state.get("legal_aliases", []):
             engine_counts[str(operation.get("engine"))] += 1
             classification_counts[str(operation.get("classification"))] += 1
-    expected_engine_counts = {"CUBE": 12, "SFU": 54, "TLSU": 10, "VEC": 31}
+    expected_engine_counts = {"CUBE": 12, "SFU": 55, "TLSU": 10, "VEC": 31}
     if dict(sorted(engine_counts.items())) != expected_engine_counts:
-        errors.append("state.engine_ops semantic engines must be exactly 31 VEC / 54 SFU / 10 TLSU / 12 CUBE")
+        errors.append("state.engine_ops semantic engines must be exactly 31 VEC / 55 SFU / 10 TLSU / 12 CUBE")
     if engine_ops.get("semantic_engine_counts") != expected_engine_counts:
         errors.append("state.engine_ops.semantic_engine_counts differs from the PTO 0.58 projection")
     expected_classification_counts = {
         "elementwise-tile-tile": 25,
         "irregular-and-complex": 9,
-        "layout-and-rearrangement": 9,
+        "layout-and-rearrangement": 10,
         "matrix-and-matrix-vector": 12,
         "memory-and-data-movement": 9,
         "reduce-and-expand": 28,

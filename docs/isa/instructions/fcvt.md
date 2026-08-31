@@ -36,7 +36,7 @@ Floating-point format conversion.
 
 ## Encoding Notes
 
-- `FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.`
+- `FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.`
 
 ## Full Catalog Forms
 
