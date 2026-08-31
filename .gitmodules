@@ -78,3 +78,8 @@
 	url = https://github.com/LinxISA/SuperScalarModel.git
 	branch = main
 	update = checkout
+[submodule "tools/asl-model"]
+	path = tools/asl-model
+	url = https://github.com/PTO-ISA/asl-model.git
+	branch = main
+	update = checkout

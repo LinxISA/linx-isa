@@ -114,6 +114,8 @@ expected_submodules=(
   "skills/linx-skills"
   "tools/LinxCoreModel"
   "tools/Linx-TileOP-API"
+  "tools/SuperScalarModel"
+  "tools/asl-model"
   "tools/model"
   "tools/pto-spec"
   "tools/pyCircuit"

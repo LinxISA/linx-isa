@@ -1,34 +1,44 @@
 {
-  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_functional_model_lock.v1.json",
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_aslref_model_lock.v1.json",
   "schema_version": 1,
   "release": "0.58.5",
   "architecture": {
     "repository": "https://github.com/PTO-ISA/pto-spec.git",
     "path": "tools/pto-spec",
-    "commit": "82f21ec39cedf11600670c1ec131aae05bdf6053",
-    "tree": "8177612afaf19e9cbf8281ef18f770fcafa82f52",
+    "commit": "6fc3141ac790b6b6fed192bedc99a9264f2b25ac",
+    "tree": "5ce013251b7359b9ddbe5d0d3e2efa3a8613533c",
     "pto_lock": "isa/v0.58/pto-spec.lock.json",
-    "pto_lock_sha256": "abcc2b9ad64e7961c20e80778839015f372c9d61ee66b6e00fa3391d8ed87a71",
-    "release_manifest_sha256": "4a3e89bebf6404891c20203efda7ad85df8ee697f007f16b75aaf10c8b6f35d2"
+    "pto_lock_sha256": "8d7b9c7df563f230862891ac4f7da6bbd137a14f1ca8148bbb3685ce10382dc0",
+    "release_manifest_sha256": "0d8c655f839e59ed72e2d2bab8ee40f1521aba9ef34a060c9d57804b42fad23d"
   },
-  "model": {
+  "reference_model": {
+    "repository": "https://github.com/PTO-ISA/asl-model.git",
+    "path": "tools/asl-model",
+    "commit": "dbcb8de1b08a83cbc6b3245b513fa8a50de85564",
+    "tree": "7e5cbb290e3587155a4387569bac7d6eaafdee13",
+    "model_lock": "pto-lock.json",
+    "model_lock_sha256": "30b2635c231c34a1ef35f55893f09345ac9272bea2b7961df0f17098d831e31d",
+    "model_ndf": "docs/model-ndf-v1.md"
+  },
+  "consumer": {
     "repository": "https://github.com/LinxISA/SuperScalarModel.git",
     "path": "tools/SuperScalarModel",
-    "commit": "411ae88ed4fb5e4c4810b370a5b8413def098f2d",
-    "tree": "3fd8593d72a54e1d2cf66a665bd1dc8fd23f9252",
-    "ndf": "docs/pto-asl-functional-model-ndf-v1.json",
-    "ndf_sha256": "6decbaec7df4fc958c5c0fd92372eb09d74e51fd88ce0061ad5d07ae5b1b7533"
+    "commit": "20b34aa31e71921128b1e1786824f00d2bc6e15b",
+    "tree": "a3217ae48585b9019f6ddbaec41f2fa63aa5aa7d",
+    "modeling_spec": "modelSpec/pto_aslref_gfrun_modeling_spec.md"
+  },
+  "aslref": {
+    "repository": "https://github.com/herd/herdtools7.git",
+    "commit": "0b6e09066d4186c8a26e02e3bb884bd664d5eb34"
   },
   "interfaces": {
-    "model_descriptor_sha256": "4abe82abd25853c566e23c41690c8cc0b405df31f7265f1b3d2f9295cef9c073",
-    "experimental_c_abi_version": 262144,
-    "pto_mir_schema": "pto-mir-v1",
-    "snapshot_schema": "pto-functional-model-snapshot-v1",
-    "snapshot_schema_version": 1,
-    "bundle_tile_summary_schema": "pto-bundle-tile-state-sha256-v1"
+    "model_abi": "pto-asl-model-experimental-v1",
+    "worker_protocol": "pto-asl-worker-v1",
+    "architecture_version": "0.58.5"
   },
-  "corpus": {
-    "schema": "pto-functional-model-corpus-index-v1",
-    "manifest_sha256": "92a15d05160e1ec0dfd288a79c53ba1a34e5eb570028bf27d2b360afce033d07"
+  "validated_results": {
+    "scalar_stop_pc": "0623ccb9b1619bd388284a438034d8cb6431964ba727d8b1c450303105735488",
+    "block_64_stop_pc": "3ca4f90350a3e8d3a10ad40647b2b13d1e7ac2b3bbd5c53982ee568ee0bcbcb8",
+    "tile_tadd_stop_pc": "85dd751867e3155c7f2e23e8446546906f5bf617d4d985ed474822613764d69e"
   }
 }

@@ -48,6 +48,10 @@
       "mnemonic": "ASSERT",
       "status": "executable-subset"
     },
+    "b_assemble_32_058abbee219d": {
+      "mnemonic": "B.ASSEMBLE",
+      "status": "decode-only"
+    },
     "b_catr_32_18ebd8429b53": {
       "mnemonic": "B.CATR",
       "status": "executable-subset"
@@ -68,7 +72,7 @@
       "mnemonic": "B.DIM",
       "status": "executable-subset"
     },
-    "b_fpatr_32_ecbf4a9b6cf0": {
+    "b_fpatr_32_12243b200432": {
       "mnemonic": "B.FPATR",
       "status": "executable-subset"
     },
@@ -84,7 +88,7 @@
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
-    "b_ios_32_0f62f62d6a81": {
+    "b_ios_32_2f2d1ab83761": {
       "mnemonic": "B.IOS",
       "status": "executable-subset"
     },
@@ -107,6 +111,10 @@
     "b_iot_32_cd6ec8181a49": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
+    },
+    "b_subview_32_48f114b5d12b": {
+      "mnemonic": "B.SUBVIEW",
+      "status": "decode-only"
     },
     "b_text_32_6f2fe6f95841": {
       "mnemonic": "B.TEXT",
@@ -288,28 +296,8 @@
       "mnemonic": "BSTART.TMOV",
       "status": "executable-subset"
     },
-    "bstart_tmov_32_34d0ab432974": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
-    "bstart_tmov_32_472804576301": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
-    "bstart_tmov_32_d96181e99f01": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
-    "bstart_tmov_32_efe5c49fcb78": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
     "bstart_tprefetch_32_3c9e83c5a42f": {
       "mnemonic": "BSTART.TPREFETCH",
-      "status": "executable-subset"
-    },
-    "bstart_tstore_32_6bed4bf0e415": {
-      "mnemonic": "BSTART.TSTORE",
       "status": "executable-subset"
     },
     "bstart_tstore_32_d592de9e15a8": {
@@ -3029,6 +3017,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.58.3",
-  "spec_version": "0.58.3"
+  "schema_version": "linx-sail-status-v0.58.5",
+  "spec_version": "0.58.5"
 }

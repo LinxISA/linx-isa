@@ -26,7 +26,7 @@ class PtoFunctionalModelLockTest(unittest.TestCase):
 
     def test_consumer_mutation_fails_closed(self):
         payload = json.loads(LOCK.read_text(encoding="utf-8"))
-        payload["model"]["commit"] = "0" * 40
+        payload["consumer"]["commit"] = "0" * 40
         with tempfile.TemporaryDirectory() as temporary:
             mutated = Path(temporary) / "lock.json"
             mutated.write_text(json.dumps(payload), encoding="utf-8")

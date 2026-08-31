@@ -105,21 +105,31 @@
       "path": "tools/SuperScalarModel",
       "url": "https://github.com/LinxISA/SuperScalarModel.git",
       "branch": "main",
-      "commit": "411ae88ed4fb5e4c4810b370a5b8413def098f2d",
-      "tree": "3fd8593d72a54e1d2cf66a665bd1dc8fd23f9252",
-      "role": "PTO ASL functional-model NDF owner and ASL-only gfrun consumer",
-      "integration_status": "review_only_branch",
-      "review_url": "https://github.com/LinxISA/SuperScalarModel/tree/codex/pto-asl-model-ndf"
+      "commit": "20b34aa31e71921128b1e1786824f00d2bc6e15b",
+      "tree": "a3217ae48585b9019f6ddbaec41f2fa63aa5aa7d",
+      "role": "ASL-only gfrun consumer of the public PTO model ABI",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/LinxISA/SuperScalarModel/pull/428"
     },
     {
       "path": "tools/pto-spec",
       "url": "https://github.com/PTO-ISA/pto-spec.git",
       "branch": "main",
-      "commit": "82f21ec39cedf11600670c1ec131aae05bdf6053",
-      "tree": "8177612afaf19e9cbf8281ef18f770fcafa82f52",
-      "role": "PTO ISA 0.58.5 normative source and generated functional-model producer",
+      "commit": "6fc3141ac790b6b6fed192bedc99a9264f2b25ac",
+      "tree": "5ce013251b7359b9ddbe5d0d3e2efa3a8613533c",
+      "role": "PTO ISA 0.58.5 normative source and next-instruction owner",
       "integration_status": "review_only_open_pr",
-      "review_url": "https://github.com/PTO-ISA/pto-spec/pull/183"
+      "review_url": "https://github.com/PTO-ISA/pto-spec/pull/188"
+    },
+    {
+      "path": "tools/asl-model",
+      "url": "https://github.com/PTO-ISA/asl-model.git",
+      "branch": "main",
+      "commit": "dbcb8de1b08a83cbc6b3245b513fa8a50de85564",
+      "tree": "7e5cbb290e3587155a4387569bac7d6eaafdee13",
+      "role": "ASLRef-backed PTO reference model and C ABI owner",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/PTO-ISA/asl-model/pull/2"
     },
     {
       "path": "tools/model",
