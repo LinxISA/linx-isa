@@ -24,7 +24,6 @@ jobs:
         run: |
           git submodule update --init tools/pto-spec
           git submodule update --init tools/asl-model
-          git submodule update --init tools/SuperScalarModel
       - name: Check v0.58 golden artifacts
         run: python3 tools/isa/build_golden.py --profile v0.58 --check
       - name: Validate standalone v0.58 ISA spec

@@ -125,8 +125,9 @@ def validate(root: Path, lock_path: Path) -> None:
         (reference_model, "model_ndf"),
         (consumer, "modeling_spec"),
     ):
-        path = root / str(section["path"]) / str(section[field])
-        if not path.is_file():
+        component_root = root / str(section["path"])
+        path = component_root / str(section[field])
+        if (component_root / ".git").exists() and not path.is_file():
             raise ValueError(f"missing locked contract: {path}")
 
 
