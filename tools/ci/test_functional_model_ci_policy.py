@@ -69,6 +69,17 @@ class FunctionalModelCiPolicyTests(unittest.TestCase):
         self.assertIn("ref: ${{ github.sha }}", root_checkout)
         self.assertIn("persist-credentials: false", root_checkout)
         self.assertNotIn("repository:", root_checkout)
+        resolver = "tools/SuperScalarModel/ci_scripts/linx_toolchain_path.py"
+        identity = (
+            "tools/SuperScalarModel/ci_scripts/check_linx_toolchain_identity.py"
+        )
+        corpus_builder = ".ci/pto-corpus/scripts/build-functional-model-corpus"
+        self.assertIn(resolver, workflow)
+        self.assertIn(identity, workflow)
+        self.assertLess(workflow.index(identity), workflow.index(corpus_builder))
+        self.assertNotIn('git -C "$toolchain_bin"', workflow)
+        self.assertNotIn('sha256sum "$toolchain_bin', workflow)
+        self.assertNotIn('test -x "$toolchain_bin', workflow)
 
     def test_required_check_contract_names_ruleset_identity_and_fork_path(self) -> None:
         contract = (

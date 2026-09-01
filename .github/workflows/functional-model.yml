@@ -56,18 +56,15 @@ jobs:
         env:
           PTO_FUNCTIONAL_TOOLCHAIN_BIN: ${{ vars.PTO_FUNCTIONAL_TOOLCHAIN_BIN }}
         run: |
-          toolchain_bin="${PTO_FUNCTIONAL_TOOLCHAIN_BIN:-${GITHUB_WORKSPACE}/compiler/llvm/build-linxisa-clang/bin}"
-          test -x "$toolchain_bin/clang"
-          test -x "$toolchain_bin/ld.lld"
-          test -x "$toolchain_bin/llvm-readelf"
-          test "$(git -C "$toolchain_bin" rev-parse HEAD)" = \
-            baef2b3a47a2162ef4e0542eb715562bfdbe7a6a
-          test "$(sha256sum "$toolchain_bin/clang" | cut -d' ' -f1)" = \
-            f9009511b94b0a7de2275a96f28d53afcaa9b635af7425e8316cee875bddcb8e
-          test "$(sha256sum "$toolchain_bin/ld.lld" | cut -d' ' -f1)" = \
-            ee909db67b7e7686b7890d8c197738d0411fde889c03adb436d803d53085d8da
-          test "$(sha256sum "$toolchain_bin/llvm-readelf" | cut -d' ' -f1)" = \
-            8c1d14f4b9a4616a2f477d721eeb65e9d29533d0adf607218e595dd4c5d0aca4
+          runner_work_root=$(dirname "$(dirname "$GITHUB_WORKSPACE")")
+          resolver_workspace="$runner_work_root/SuperScalarModel/SuperScalarModel"
+          toolchain_bin=$(python3 \
+            tools/SuperScalarModel/ci_scripts/linx_toolchain_path.py \
+            "$resolver_workspace" \
+            --configured "$PTO_FUNCTIONAL_TOOLCHAIN_BIN")
+          python3 \
+            tools/SuperScalarModel/ci_scripts/check_linx_toolchain_identity.py \
+            "$toolchain_bin"
           .ci/pto-corpus/scripts/build-functional-model-corpus \
             --clang "$toolchain_bin/clang" \
             --lld "$toolchain_bin/ld.lld" \

@@ -164,6 +164,9 @@ def validate(root: Path, lock_path: Path) -> None:
         path = component_root / str(section[field])
         if not path.is_file():
             raise ValueError(f"missing locked contract: {path}")
+        hash_field = f"{field}_sha256"
+        if hash_field in section and sha256(path) != section[hash_field]:
+            raise ValueError(f"locked contract hash mismatch: {path}")
 
     if corpus.get("repository") != architecture.get("repository"):
         raise ValueError("functional-model corpus repository mismatch")

@@ -23,9 +23,10 @@
   "consumer": {
     "repository": "https://github.com/LinxISA/SuperScalarModel.git",
     "path": "tools/SuperScalarModel",
-    "commit": "ce696b0aeb4d34a98ff8479ae8bcb5408a1d8b02",
-    "tree": "1739b32192b37cdaff7893452f961afa430d8cd2",
-    "modeling_spec": "modelSpec/pto_aslref_gfrun_modeling_spec.md"
+    "commit": "bcb59f3656aee9693066643501317418f12ed93c",
+    "tree": "79fd9051dfeff18a566fce84e6f291ac90337436",
+    "modeling_spec": "modelSpec/pto_aslref_gfrun_modeling_spec.md",
+    "modeling_spec_sha256": "d96cf59799216a48e5c4606e069f40ff6b5427c2de20e33459acd5c328a7c6e1"
   },
   "aslref": {
     "repository": "https://github.com/herd/herdtools7.git",

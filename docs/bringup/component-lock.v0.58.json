@@ -106,8 +106,8 @@
       "path": "tools/SuperScalarModel",
       "url": "https://github.com/LinxISA/SuperScalarModel.git",
       "branch": "main",
-      "commit": "ce696b0aeb4d34a98ff8479ae8bcb5408a1d8b02",
-      "tree": "1739b32192b37cdaff7893452f961afa430d8cd2",
+      "commit": "bcb59f3656aee9693066643501317418f12ed93c",
+      "tree": "79fd9051dfeff18a566fce84e6f291ac90337436",
       "role": "ASL-only gfrun consumer of the public PTO model ABI",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/LinxISA/SuperScalarModel/pull/428"

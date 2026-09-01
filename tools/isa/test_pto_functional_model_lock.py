@@ -155,6 +155,16 @@ class PtoFunctionalModelLockTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("scalar_stop_pc result hash mismatch", result.stderr)
 
+    def test_consumer_modeling_spec_hash_mutation_fails_closed(self):
+        payload = json.loads(LOCK.read_text(encoding="utf-8"))
+        payload["consumer"]["modeling_spec_sha256"] = "0" * 64
+        with tempfile.TemporaryDirectory() as temporary:
+            mutated = Path(temporary) / "lock.json"
+            mutated.write_text(json.dumps(payload), encoding="utf-8")
+            result = self.run_checker(mutated)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("locked contract hash mismatch", result.stderr)
+
     def test_execution_evidence_rejects_self_consistent_lock_mutation(self):
         checker = load_checker()
         payload = json.loads(LOCK.read_text(encoding="utf-8"))
