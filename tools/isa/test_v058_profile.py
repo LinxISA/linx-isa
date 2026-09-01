@@ -104,6 +104,33 @@ expected_classification_counts = {
     "reduce-and-expand": 28,
     "tile-scalar-and-immediate": 15,
 }
+release_manifest = json.loads(
+    (ROOT / "isa/v0.58/release_manifest.json").read_text(encoding="utf-8")
+)
+assert release_manifest["cardinality"]["tile_operations"] == len(pto_ops["operations"])
+assert release_manifest["cardinality"]["tile_families"] == expected_family_counts
+assert release_manifest["cardinality"]["semantic_engines"] == expected_engine_counts
+assert (
+    release_manifest["cardinality"]["tile_classifications"]
+    == expected_classification_counts
+)
+meta_text = (ROOT / "isa/v0.58/meta.json").read_text(encoding="utf-8")
+english_contract = (
+    ROOT / "docs/architecture/v0.58-architecture-contract.md"
+).read_text(encoding="utf-8")
+chinese_contract = (
+    ROOT / "docs/zh/architecture/v0.58-architecture-contract.md"
+).read_text(encoding="utf-8")
+assert "108 tile operations" in meta_text
+assert "31 VEC, 55 SFU, 10 TLSU, and 12 CUBE" in meta_text
+assert "10 layout-and-rearrangement" in meta_text
+assert "108 tile operations encoded in 86 TEPL, 10 TLSU, and 12 CUBE" in english_contract
+assert "55 SFU operations" in english_contract
+assert "10 layout-and-rearrangement" in english_contract
+assert "108 条 Tile" in chinese_contract
+assert "86 TEPL、10 TLSU 和 12 CUBE" in chinese_contract
+assert "31 VEC / 55 SFU / 10 TLSU /" in chinese_contract
+assert "10\nlayout-and-rearrangement" in chinese_contract
 assert pto_ops["family_counts"] == expected_family_counts
 assert pto_ops["engine_counts"] == expected_engine_counts
 assert pto_ops["classification_counts"] == expected_classification_counts

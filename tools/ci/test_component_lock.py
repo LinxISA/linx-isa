@@ -24,6 +24,17 @@ class ComponentLockTests(unittest.TestCase):
         checker = load_checker()
         self.assertEqual(checker.check_repository(ROOT), [])
 
+    def test_ci_rechecks_draft_transitions_and_enforces_merge_readiness(self) -> None:
+        workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        for event in ("ready_for_review", "converted_to_draft"):
+            self.assertIn(event, workflow)
+        self.assertIn("github.event.pull_request.draft == false", workflow)
+        self.assertIn("args+=(--require-merge-ready)", workflow)
+        self.assertIn(
+            "import_pto_v0580.py --source-root tools/pto-spec --check",
+            workflow,
+        )
+
     def test_standalone_supernpu_gitlink_is_forbidden(self) -> None:
         checker = load_checker()
         lock = {

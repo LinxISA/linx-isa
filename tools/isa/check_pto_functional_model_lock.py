@@ -72,6 +72,13 @@ def require_sha256(value: object, label: str) -> str:
     return text
 
 
+def require_file_hash(path: Path, expected: object, label: str) -> bytes:
+    content = path.read_bytes()
+    if hashlib.sha256(content).hexdigest() != require_sha256(expected, label):
+        raise ValueError(f"{label} mismatch")
+    return content
+
+
 def validate_component(root: Path, section: dict[str, object], label: str) -> None:
     path = str(section["path"])
     commit = str(section["commit"])
@@ -217,13 +224,163 @@ def validate(root: Path, lock_path: Path) -> None:
             raise ValueError(f"{case_id} result hash mismatch")
 
 
+def validate_execution_evidence(
+    root: Path,
+    lock_path: Path,
+    corpus_manifest_path: Path,
+    evidence_root: Path,
+) -> None:
+    lock = load_json(lock_path)
+    toolchain = lock.get("toolchain")
+    validated_results = lock.get("validated_results")
+    reference_model = lock.get("reference_model")
+    if not all(isinstance(value, dict) for value in (
+        toolchain, validated_results, reference_model
+    )):
+        raise ValueError("functional-model execution lock sections are malformed")
+    toolchain = toolchain  # type: ignore[assignment]
+    validated_results = validated_results  # type: ignore[assignment]
+    reference_model = reference_model  # type: ignore[assignment]
+
+    corpus_index = load_json(corpus_manifest_path)
+    if corpus_index.get("schema") != "pto-functional-model-corpus-index-v1":
+        raise ValueError("functional-model corpus index schema mismatch")
+    corpus_toolchain = corpus_index.get("toolchain")
+    if not isinstance(corpus_toolchain, dict):
+        raise ValueError("functional-model corpus toolchain is malformed")
+    for field in ("clang_sha256", "lld_sha256", "readelf_sha256"):
+        if corpus_toolchain.get(field) != toolchain.get(field):
+            raise ValueError(f"functional-model corpus toolchain {field} mismatch")
+    version_identity = "\n".join(
+        str(corpus_toolchain.get(field, ""))
+        for field in ("clang_version", "lld_version", "readelf_version")
+    )
+    if str(toolchain["commit"]) not in version_identity:
+        raise ValueError("functional-model corpus toolchain version lacks locked commit")
+
+    rows = corpus_index.get("cases")
+    if not isinstance(rows, list):
+        raise ValueError("functional-model corpus index cases are malformed")
+    rows_by_id = {
+        str(row.get("id")): row for row in rows if isinstance(row, dict)
+    }
+    if not set(REQUIRED_RESULTS) <= set(rows_by_id):
+        raise ValueError("functional-model corpus index lacks required smoke cases")
+
+    model_lock_path = (
+        root / str(reference_model["path"]) / str(reference_model["model_lock"])
+    )
+    model_identity = load_json(model_lock_path)
+    corpus_root = corpus_manifest_path.parent
+    for case_id in REQUIRED_RESULTS:
+        row = rows_by_id[case_id]
+        locked_result = validated_results[case_id]
+        if not isinstance(locked_result, dict):
+            raise ValueError(f"{case_id} locked result is malformed")
+        artifact_root = corpus_root / str(row["directory"])
+        case_manifest_path = artifact_root / "manifest.json"
+        require_file_hash(
+            case_manifest_path, row["manifest_sha256"], f"{case_id} corpus manifest hash"
+        )
+        case_document = load_json(case_manifest_path)
+        case = case_document.get("case")
+        if not isinstance(case, dict) or case.get("id") != case_id:
+            raise ValueError(f"{case_id} corpus case manifest mismatch")
+        if case_document.get("toolchain") != corpus_toolchain:
+            raise ValueError(f"{case_id} corpus toolchain identity mismatch")
+        inputs = case.get("inputs")
+        elf_record = case.get("elf")
+        golden_record = case.get("golden")
+        result_record = case.get("result")
+        stop_policy = case.get("stop_policy")
+        if not all(isinstance(value, dict) for value in (
+            inputs, elf_record, golden_record, result_record, stop_policy
+        )):
+            raise ValueError(f"{case_id} corpus evidence sections are malformed")
+        inputs = inputs  # type: ignore[assignment]
+        elf_record = elf_record  # type: ignore[assignment]
+        golden_record = golden_record  # type: ignore[assignment]
+        result_record = result_record  # type: ignore[assignment]
+        stop_policy = stop_policy  # type: ignore[assignment]
+        for field in ("source_sha256", "linker_sha256"):
+            if inputs.get(field) != locked_result.get(field):
+                raise ValueError(f"{case_id} corpus {field} mismatch")
+        for field in ("builder_sha256", "schema_sha256"):
+            if inputs.get(field) != lock["corpus"].get(field):
+                raise ValueError(f"{case_id} corpus input {field} mismatch")
+        for field in ("clang_sha256", "lld_sha256"):
+            if inputs.get(field) != toolchain.get(field):
+                raise ValueError(f"{case_id} corpus input {field} mismatch")
+        elf_path = artifact_root / str(elf_record["filename"])
+        golden_path = artifact_root / str(golden_record["filename"])
+        elf = require_file_hash(elf_path, row["elf_sha256"], f"{case_id} ELF hash")
+        if hashlib.sha256(elf).hexdigest() != elf_record.get("sha256"):
+            raise ValueError(f"{case_id} ELF manifest hash mismatch")
+        golden = require_file_hash(
+            golden_path, row["golden_sha256"], f"{case_id} golden hash"
+        )
+        if hashlib.sha256(golden).hexdigest() != golden_record.get("sha256"):
+            raise ValueError(f"{case_id} golden manifest hash mismatch")
+        if golden_record.get("size") != len(golden) or result_record.get("size") != len(golden):
+            raise ValueError(f"{case_id} golden/result size mismatch")
+        expected = bytes.fromhex(str(locked_result["result_hex"]))
+        if golden != expected:
+            raise ValueError(f"{case_id} golden bytes differ from locked result")
+
+        result_path = evidence_root / case_id / "result.bin"
+        run_manifest_path = evidence_root / case_id / "manifest.json"
+        actual = result_path.read_bytes()
+        if actual != golden:
+            raise ValueError(f"{case_id} actual result differs from independent golden")
+        if hashlib.sha256(actual).hexdigest() != locked_result["result_sha256"]:
+            raise ValueError(f"{case_id} actual result hash differs from lock")
+        run_manifest = load_json(run_manifest_path)
+        if run_manifest.get("schema") != "pto-asl-model-run-v1":
+            raise ValueError(f"{case_id} run manifest schema mismatch")
+        if run_manifest.get("status") != "passed":
+            raise ValueError(f"{case_id} run manifest is not passed")
+        if run_manifest.get("identity") != model_identity:
+            raise ValueError(f"{case_id} run manifest model identity mismatch")
+        if run_manifest.get("final_tpc") != stop_policy.get("stop_pc"):
+            raise ValueError(f"{case_id} run manifest final TPC mismatch")
+        if run_manifest.get("result") != {
+            "address": result_record.get("address"),
+            "bytes_hex": actual.hex(),
+            "sha256": hashlib.sha256(actual).hexdigest(),
+            "size": len(actual),
+        }:
+            raise ValueError(f"{case_id} run manifest result mismatch")
+        run_elf = run_manifest.get("elf")
+        if not isinstance(run_elf, dict) or run_elf.get("sha256") != row["elf_sha256"]:
+            raise ValueError(f"{case_id} run manifest ELF hash mismatch")
+        if run_elf.get("entry") != elf_record.get("entry"):
+            raise ValueError(f"{case_id} run manifest ELF entry mismatch")
+        if run_manifest.get("stop_policy") != {
+            "max_steps": stop_policy.get("max_steps"),
+            "stop_after_hits": 1,
+            "stop_pc": stop_policy.get("stop_pc"),
+        }:
+            raise ValueError(f"{case_id} run manifest stop policy mismatch")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--lock", type=Path, default=DEFAULT_LOCK)
+    parser.add_argument("--corpus-manifest", type=Path)
+    parser.add_argument("--evidence-root", type=Path)
     arguments = parser.parse_args()
     try:
         validate(arguments.root.resolve(), arguments.lock.resolve())
+        if (arguments.corpus_manifest is None) != (arguments.evidence_root is None):
+            raise ValueError("execution evidence requires both corpus manifest and evidence root")
+        if arguments.corpus_manifest is not None and arguments.evidence_root is not None:
+            validate_execution_evidence(
+                arguments.root.resolve(),
+                arguments.lock.resolve(),
+                arguments.corpus_manifest.resolve(),
+                arguments.evidence_root.resolve(),
+            )
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
         print(f"PTO functional-model lock failed: {error}", file=sys.stderr)
         return 1
