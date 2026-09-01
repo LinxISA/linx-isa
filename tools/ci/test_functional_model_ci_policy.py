@@ -58,6 +58,8 @@ class FunctionalModelCiPolicyTests(unittest.TestCase):
             "github.repository == 'LinxISA/linx-isa' && github.event_name == 'push'",
             workflow,
         )
+        self.assertIn("group: pto-functional-model-${{ github.ref }}", workflow)
+        self.assertIn("cancel-in-progress: true", workflow)
         self.assertNotIn("pull_request:", workflow)
         self.assertNotIn("pull_request_target:", workflow)
         self.assertNotIn("workflow_dispatch:", workflow)
