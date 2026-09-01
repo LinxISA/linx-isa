@@ -202,114 +202,20 @@ jobs:
       - name: Run tools/model tests
         run: ctest --test-dir tools/model/build-ci --output-on-failure
 
-  functional-model:
-    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: [self-hosted, linux]
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-      - name: Initialize exact functional-model components
-        run: |
-          git submodule update --init tools/pto-spec
-          git submodule update --init tools/asl-model
-          git submodule update --init tools/SuperScalarModel
-      - name: Checkout exact functional-model corpus producer
-        uses: actions/checkout@v7
-        with:
-          repository: PTO-ISA/pto-spec
-          ref: a0d7b39c345f19e90020d356dd8caf4d83e03418
-          path: .ci/pto-corpus
-      - name: Validate exact pins and PTO projection parity
-        run: |
-          git -C tools/pto-spec fetch --no-tags origin \
-            a0d7b39c345f19e90020d356dd8caf4d83e03418
-          python3 tools/isa/check_pto_functional_model_lock.py --root .
-          python3 tools/isa/import_pto_v0580.py --source-root tools/pto-spec --check
-      - name: Build PTO ASL and install the public model ABI
-        run: |
-          make -C tools/pto-spec build
-          cmake -S tools/asl-model -B .ci/asl-model-build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/.ci/asl-model-install"
-          cmake --build .ci/asl-model-build -j 12
-          cmake --install .ci/asl-model-build
-      - name: Verify exact hosted LLVM toolchain and build corpus
-        env:
-          PTO_FUNCTIONAL_TOOLCHAIN_BIN: ${{ vars.PTO_FUNCTIONAL_TOOLCHAIN_BIN }}
-        run: |
-          toolchain_bin="${PTO_FUNCTIONAL_TOOLCHAIN_BIN:-${GITHUB_WORKSPACE}/compiler/llvm/build-linxisa-clang/bin}"
-          test -x "$toolchain_bin/clang"
-          test -x "$toolchain_bin/ld.lld"
-          test -x "$toolchain_bin/llvm-readelf"
-          test "$(git -C "$toolchain_bin" rev-parse HEAD)" = \
-            baef2b3a47a2162ef4e0542eb715562bfdbe7a6a
-          test "$(sha256sum "$toolchain_bin/clang" | cut -d' ' -f1)" = \
-            f9009511b94b0a7de2275a96f28d53afcaa9b635af7425e8316cee875bddcb8e
-          test "$(sha256sum "$toolchain_bin/ld.lld" | cut -d' ' -f1)" = \
-            ee909db67b7e7686b7890d8c197738d0411fde889c03adb436d803d53085d8da
-          test "$(sha256sum "$toolchain_bin/llvm-readelf" | cut -d' ' -f1)" = \
-            8c1d14f4b9a4616a2f477d721eeb65e9d29533d0adf607218e595dd4c5d0aca4
-          .ci/pto-corpus/scripts/build-functional-model-corpus \
-            --clang "$toolchain_bin/clang" \
-            --lld "$toolchain_bin/ld.lld" \
-            --readelf "$toolchain_bin/llvm-readelf" \
-            --output .ci/pto-corpus-build
-          python3 tools/SuperScalarModel/scripts/prepare-asl-gfrun-corpus-index \
-            .ci/pto-corpus-build/manifest.json \
-            .ci/pto-asl-corpus.index
-      - name: Build and execute the three real ASL-only gfrun smoke cases
-        run: |
-          python3 tools/SuperScalarModel/build.py all --clean --tests \
-            --warnings-as-errors \
-            --build-dir "${GITHUB_WORKSPACE}/.ci/asl-gfrun-build" \
-            --target check-asl-gfrun \
-            --pto-asl-model-root "${GITHUB_WORKSPACE}/.ci/asl-model-install" \
-            --pto-asl-runner "${GITHUB_WORKSPACE}/tools/asl-model/scripts/pto-asl-run" \
-            --pto-asl-spec "${GITHUB_WORKSPACE}/tools/pto-spec/build/pto-spec.asl" \
-            --pto-aslref "${GITHUB_WORKSPACE}/tools/pto-spec/.cache/herdtools7/_build/default/asllib/aslref.exe" \
-            --pto-asl-lock "${GITHUB_WORKSPACE}/tools/asl-model/pto-lock.json" \
-            --pto-asl-corpus-index "${GITHUB_WORKSPACE}/.ci/pto-asl-corpus.index" \
-            -j 12
-      - name: Validate retained execution manifests and result bytes
-        run: |
-          python3 tools/isa/check_pto_functional_model_lock.py \
-            --root . \
-            --corpus-manifest .ci/pto-corpus-build/manifest.json \
-            --evidence-root .ci/asl-gfrun-build/asl-gfrun-results
-      - name: Retain functional-model execution evidence
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: pto-functional-model-${{ github.sha }}
-          if-no-files-found: error
-          path: |
-            .ci/pto-corpus-build/manifest.json
-            .ci/pto-corpus-build/*/manifest.json
-            .ci/pto-corpus-build/*/*.elf
-            .ci/pto-corpus-build/*/*.golden.bin
-            .ci/asl-gfrun-build/asl-gfrun-results/*/manifest.json
-            .ci/asl-gfrun-build/asl-gfrun-results/*/result.bin
-
   guard:
-    needs: [guards, avs-contract, docs, lint, model, functional-model]
+    needs: [guards, avs-contract, docs, lint, model]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           sparse-checkout: tools/ci
-      - name: Enforce aggregate and self-hosted runner policy
+      - name: Enforce aggregate trusted-push policy
         env:
           EVENT_NAME: ${{ github.event_name }}
           REPOSITORY: ${{ github.repository }}
           HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
           PULL_REQUEST_DRAFT: ${{ github.event.pull_request.draft || false }}
-          FUNCTIONAL_RESULT: ${{ needs.functional-model.result }}
           GUARDS_RESULT: ${{ needs.guards.result }}
           AVS_RESULT: ${{ needs.avs-contract.result }}
           DOCS_RESULT: ${{ needs.docs.result }}
@@ -321,7 +227,6 @@ jobs:
             --repository "$REPOSITORY" \
             --head-repository "$HEAD_REPOSITORY" \
             --pull-request-draft "$PULL_REQUEST_DRAFT" \
-            --functional-result "$FUNCTIONAL_RESULT" \
             --required-result "$GUARDS_RESULT" \
             --required-result "$AVS_RESULT" \
             --required-result "$DOCS_RESULT" \

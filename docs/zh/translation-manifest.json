@@ -246,7 +246,7 @@
       "translation_sha256": "2897a3c3ebfb9fa186fd2aa72bb2856812ba90a27ebd71a21c92676da8560667"
     },
     "bringup/README.md": {
-      "source_sha256": "5828c2818d24287582376ebf4788b8a2c1022fcb6bc34976335f6cc70cc2e7b5",
+      "source_sha256": "aba2b8d5611ce26eec1608aab042525bf2f197e489195cea848d653d5cdbc99a",
       "translation_sha256": "6ed81eae7f61d5a84f37fcc2c9293e84fc6ab8fa9c28a402abc041c38d6a0009"
     },
     "bringup/SIMT_COMPILER_MATURITY_PLAN.md": {

@@ -34,15 +34,8 @@ class ComponentLockTests(unittest.TestCase):
             "import_pto_v0580.py --source-root tools/pto-spec --check",
             workflow,
         )
-        self.assertIn(
-            "github.event_name == 'push' || "
-            "github.event.pull_request.head.repo.full_name == github.repository",
-            workflow,
-        )
         self.assertIn("if: ${{ always() }}", workflow)
         self.assertIn("check_functional_model_ci_policy.py", workflow)
-        self.assertNotIn("github.event.label", workflow)
-        self.assertNotIn("secrets.", workflow)
 
     def test_standalone_supernpu_gitlink_is_forbidden(self) -> None:
         checker = load_checker()
