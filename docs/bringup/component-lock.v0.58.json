@@ -106,8 +106,8 @@
       "path": "tools/SuperScalarModel",
       "url": "https://github.com/LinxISA/SuperScalarModel.git",
       "branch": "main",
-      "commit": "4ebc2c56b37f4d3ca76e7e252122d523474bd213",
-      "tree": "504df5dc17e65fa4c59c982551642c7b0209d8e6",
+      "commit": "831232c81d01c94a9bdcf84f60cfb1db9bf1e4c5",
+      "tree": "36025d88a927ed523448171556797bafc70d2d2c",
       "role": "ASL-only gfrun consumer of the public PTO model ABI",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/LinxISA/SuperScalarModel/pull/428"
@@ -116,8 +116,8 @@
       "path": "tools/pto-spec",
       "url": "https://github.com/PTO-ISA/pto-spec.git",
       "branch": "main",
-      "commit": "2dc3bc5ed88508acb9b21c42648bf920f5781965",
-      "tree": "01e228c735c670c19a6e79d6b0ffa7a7431c990f",
+      "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
+      "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
       "role": "PTO ISA 0.58.5 normative source and next-instruction owner",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/PTO-ISA/pto-spec/pull/190"
@@ -126,8 +126,8 @@
       "path": "tools/asl-model",
       "url": "https://github.com/PTO-ISA/asl-model.git",
       "branch": "main",
-      "commit": "e7850440230fc9f8d99237a9d7eb1b9cb5abd73d",
-      "tree": "0613746f1e10abbb62060575db28d7ade71c7690",
+      "commit": "6814c9e4457a937570cbfd5a481b0fd3ab96d805",
+      "tree": "70ffa96101905a9f4effa076eda62f02215d7f30",
       "role": "ASLRef-backed PTO reference model and C ABI owner",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/PTO-ISA/asl-model/pull/4"
