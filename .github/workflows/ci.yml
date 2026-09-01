@@ -203,6 +203,7 @@ jobs:
         run: ctest --test-dir tools/model/build-ci --output-on-failure
 
   functional-model:
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: [self-hosted, linux]
     timeout-minutes: 120
     steps:
@@ -296,7 +297,33 @@ jobs:
 
   guard:
     needs: [guards, avs-contract, docs, lint, model, functional-model]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Confirm required release checks
-        run: echo "All required LinxISA release checks passed."
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: tools/ci
+      - name: Enforce aggregate and self-hosted runner policy
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          PULL_REQUEST_DRAFT: ${{ github.event.pull_request.draft || false }}
+          FUNCTIONAL_RESULT: ${{ needs.functional-model.result }}
+          GUARDS_RESULT: ${{ needs.guards.result }}
+          AVS_RESULT: ${{ needs.avs-contract.result }}
+          DOCS_RESULT: ${{ needs.docs.result }}
+          LINT_RESULT: ${{ needs.lint.result }}
+          MODEL_RESULT: ${{ needs.model.result }}
+        run: |
+          python3 tools/ci/check_functional_model_ci_policy.py \
+            --event-name "$EVENT_NAME" \
+            --repository "$REPOSITORY" \
+            --head-repository "$HEAD_REPOSITORY" \
+            --pull-request-draft "$PULL_REQUEST_DRAFT" \
+            --functional-result "$FUNCTIONAL_RESULT" \
+            --required-result "$GUARDS_RESULT" \
+            --required-result "$AVS_RESULT" \
+            --required-result "$DOCS_RESULT" \
+            --required-result "$LINT_RESULT" \
+            --required-result "$MODEL_RESULT"
