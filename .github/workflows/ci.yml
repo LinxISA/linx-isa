@@ -22,7 +22,18 @@ jobs:
       - name: Initialize canonical QEMU leaf
         run: git submodule update --init emulator/qemu
       - name: Initialize PTO ASL functional-model chain
+        env:
+          SUPERSCALARMODEL_READ_TOKEN: ${{ secrets.SUPERSCALARMODEL_READ_TOKEN }}
         run: |
+          if [[ -z "$SUPERSCALARMODEL_READ_TOKEN" ]]; then
+            echo "SUPERSCALARMODEL_READ_TOKEN is required to read the private SuperScalarModel submodule" >&2
+            exit 1
+          fi
+          git config --local url."https://x-access-token:${SUPERSCALARMODEL_READ_TOKEN}@github.com/".insteadOf "https://github.com/"
+          cleanup_credentials() {
+            git config --local --unset-all "url.https://x-access-token:${SUPERSCALARMODEL_READ_TOKEN}@github.com/.insteadOf" || true
+          }
+          trap cleanup_credentials EXIT
           git submodule update --init tools/pto-spec
           git submodule update --init tools/asl-model
           git submodule update --init tools/SuperScalarModel
@@ -193,10 +204,19 @@ jobs:
         run: |
           git submodule sync -- tools/model
           git submodule update --init tools/model
+      - name: Check out immutable LinxISA codec authority
+        uses: actions/checkout@v7
+        with:
+          repository: LinxISA/linx-isa
+          ref: 660c870ff241f9803d8060f00ed3684ffed6f06c
+          path: .ci/linxisa-codec-authority
+          fetch-depth: 1
       - name: Install build deps
         run: sudo apt-get update && sudo apt-get install -y ninja-build
       - name: Configure tools/model
-        run: cmake -S tools/model -B tools/model/build-ci -G Ninja
+        run: >-
+          cmake -S tools/model -B tools/model/build-ci -G Ninja
+          -DLINXISA_AUTHORITY_ROOT="${{ github.workspace }}/.ci/linxisa-codec-authority"
       - name: Build tools/model
         run: cmake --build tools/model/build-ci
       - name: Run tools/model tests
