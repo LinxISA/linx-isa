@@ -1252,12 +1252,12 @@ function decode_execute32_opcode_0b0000111(inst : bits(32)) -> unit = {
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b000_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00000009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00000009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b000_match_0(inst) then {
-    // LB | lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 120}
+    // LB | lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 120}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1271,12 +1271,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00001009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00001009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b001_match_0(inst) then {
-    // LH | lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 138}
+    // LH | lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 138}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1290,12 +1290,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b001(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b010_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00002009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00002009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b010_match_0(inst) then {
-    // LW | lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 152}
+    // LW | lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 152}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1309,12 +1309,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b010(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b011_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00003009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00003009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b011(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b011_match_0(inst) then {
-    // LD | ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 126}
+    // LD | ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 126}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1328,12 +1328,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b011(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b100_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00004009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00004009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b100(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b100_match_0(inst) then {
-    // LBU | lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 123}
+    // LBU | lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 123}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1347,12 +1347,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b100(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b101_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00005009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00005009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b101(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b101_match_0(inst) then {
-    // LHU | lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 142}
+    // LHU | lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 142}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1366,12 +1366,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b101(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b110_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00006009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00006009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b110(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b110_match_0(inst) then {
-    // LWU | lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 164}
+    // LWU | lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 164}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1385,12 +1385,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b110(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b111_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00007009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00007009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b111(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b111_match_0(inst) then {
-    // PRF | prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | {'file': 'opcodes/lx_32.opc', 'line': 182}
+    // PRF | prf [SrcL, SrcR<{.sw,.uw}><<<shamt>] | {'file': 'opcodes/lx_32.opc', 'line': 182}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4241,12 +4241,12 @@ function decode_execute32_opcode_0b1000111(inst : bits(32)) -> unit = {
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b000_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00000049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00000049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b000_match_0(inst) then {
-    // SB | sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 189}
+    // SB | sb SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 189}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4259,12 +4259,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00001049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00001049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b001_match_0(inst) then {
-    // SH | sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | {'file': 'opcodes/lx_32.opc', 'line': 228}
+    // SH | sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1] | {'file': 'opcodes/lx_32.opc', 'line': 228}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4277,12 +4277,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b001(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b010_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00002049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00002049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b010_match_0(inst) then {
-    // SW | sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | {'file': 'opcodes/lx_32.opc', 'line': 252}
+    // SW | sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2] | {'file': 'opcodes/lx_32.opc', 'line': 252}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4295,12 +4295,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b010(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b011_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00003049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00003049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b011(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b011_match_0(inst) then {
-    // SD | sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | {'file': 'opcodes/lx_32.opc', 'line': 197}
+    // SD | sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3] | {'file': 'opcodes/lx_32.opc', 'line': 197}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4313,12 +4313,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b011(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b101_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00005049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00005049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b101(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b101_match_0(inst) then {
-    // SH.U | sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 230}
+    // SH.U | sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 230}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4331,12 +4331,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b101(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b110_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00006049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00006049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b110(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b110_match_0(inst) then {
-    // SW.U | sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 259}
+    // SW.U | sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 259}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4349,12 +4349,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b110(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b111_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00007049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00007049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b111(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b111_match_0(inst) then {
-    // SD.U | sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 204}
+    // SD.U | sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 204}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -6155,87 +6155,87 @@ function decode_execute48_match_13(inst : bits(48)) -> bool = {
 }
 
 function decode_execute48_match_14(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00000049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00000049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_15(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00000049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00000049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_16(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00000049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00000049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_17(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00003049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00003049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_18(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00003049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00003049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_19(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00007049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00007049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_20(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00007049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00007049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_21(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00003049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00003049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_22(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00007049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00007049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_23(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00001049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00001049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_24(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00001049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00001049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_25(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00005049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00005049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_26(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00005049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00005049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_27(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00001049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00001049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_28(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00005049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00005049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_29(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00002049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00002049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_30(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00002049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00002049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_31(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00006049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00006049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_32(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00006049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00006049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_33(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00002049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00002049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_34(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00006049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00006049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_35(inst : bits(48)) -> bool = {
@@ -6263,7 +6263,7 @@ function decode_execute48_match_40(inst : bits(48)) -> bool = {
 }
 
 function decode_execute48_match_41(inst : bits(48)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0xfe00707f000f) == 0x0000204d000e, (inst[9..4] != 0b001000)), and_bool_no_flow((inst[9..4] != 0b001001), (inst[9..4] != 0b001010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b001011), (inst[9..4] != 0b001100)), and_bool_no_flow((inst[9..4] != 0b001101), (inst[9..4] != 0b001110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b001111), (inst[9..4] != 0b010000)), and_bool_no_flow((inst[9..4] != 0b010001), (inst[9..4] != 0b010010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b010011), (inst[9..4] != 0b010100)), and_bool_no_flow((inst[9..4] != 0b010101), (inst[9..4] != 0b010110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b010111), (inst[9..4] != 0b011000)), and_bool_no_flow((inst[9..4] != 0b011001), (inst[9..4] != 0b011010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b011011), (inst[9..4] != 0b011100)), and_bool_no_flow((inst[9..4] != 0b011101), (inst[9..4] != 0b011110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b011111), (inst[9..4] != 0b100000)), and_bool_no_flow((inst[9..4] != 0b100001), (inst[9..4] != 0b100010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b100011), (inst[9..4] != 0b100100)), and_bool_no_flow((inst[9..4] != 0b100101), (inst[9..4] != 0b100110)))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b100111), (inst[9..4] != 0b101000)), and_bool_no_flow((inst[9..4] != 0b101001), (inst[9..4] != 0b101010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b101011), (inst[9..4] != 0b101100)), and_bool_no_flow((inst[9..4] != 0b101101), (inst[9..4] != 0b101110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b101111), (inst[9..4] != 0b110000)), and_bool_no_flow((inst[9..4] != 0b110001), (inst[9..4] != 0b110010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b110011), (inst[9..4] != 0b110100)), and_bool_no_flow((inst[9..4] != 0b110101), (inst[9..4] != 0b110110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b110111), (inst[9..4] != 0b111000)), and_bool_no_flow((inst[9..4] != 0b111001), (inst[9..4] != 0b111010))), and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b111011), (inst[9..4] != 0b111100)), and_bool_no_flow((inst[9..4] != 0b111101), (inst[9..4] != 0b111110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[9..4] != 0b111111), (inst[15..10] != 0b001000)), and_bool_no_flow((inst[15..10] != 0b001001), (inst[15..10] != 0b001010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b001011), (inst[15..10] != 0b001100)), and_bool_no_flow((inst[15..10] != 0b001101), (inst[15..10] != 0b001110))))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b001111), (inst[15..10] != 0b010000)), and_bool_no_flow((inst[15..10] != 0b010001), (inst[15..10] != 0b010010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b010011), (inst[15..10] != 0b010100)), and_bool_no_flow((inst[15..10] != 0b010101), (inst[15..10] != 0b010110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b010111), (inst[15..10] != 0b011000)), and_bool_no_flow((inst[15..10] != 0b011001), (inst[15..10] != 0b011010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b011011), (inst[15..10] != 0b011100)), and_bool_no_flow((inst[15..10] != 0b011101), (inst[15..10] != 0b011110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b011111), (inst[15..10] != 0b100000)), and_bool_no_flow((inst[15..10] != 0b100001), (inst[15..10] != 0b100010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b100011), (inst[15..10] != 0b100100)), and_bool_no_flow((inst[15..10] != 0b100101), (inst[15..10] != 0b100110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b100111), (inst[15..10] != 0b101000)), and_bool_no_flow((inst[15..10] != 0b101001), (inst[15..10] != 0b101010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b101011), (inst[15..10] != 0b101100)), and_bool_no_flow((inst[15..10] != 0b101101), (inst[15..10] != 0b101110)))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b101111), (inst[15..10] != 0b110000)), and_bool_no_flow((inst[15..10] != 0b110001), (inst[15..10] != 0b110010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b110011), (inst[15..10] != 0b110100)), and_bool_no_flow((inst[15..10] != 0b110101), (inst[15..10] != 0b110110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b110111), (inst[15..10] != 0b111000)), and_bool_no_flow((inst[15..10] != 0b111001), (inst[15..10] != 0b111010))), and_bool_no_flow(and_bool_no_flow((inst[15..10] != 0b111011), (inst[15..10] != 0b111100)), and_bool_no_flow((inst[15..10] != 0b111101), (inst[15..10] != 0b111110))))), (inst[15..10] != 0b111111))))
+  (inst & 0xfe00707f000f) == 0x0000204d000e
 }
 
 function decode_execute48_match_42(inst : bits(48)) -> bool = {
@@ -6275,87 +6275,87 @@ function decode_execute48_match_43(inst : bits(48)) -> bool = {
 }
 
 function decode_execute48_match_44(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00000009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00000009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_45(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00000009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00000009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_46(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00000009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00000009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_47(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00004009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00004009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_48(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00004009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00004009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_49(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00004009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00004009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_50(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00003009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00003009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_51(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00003009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00003009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_52(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00003009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00003009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_53(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00001009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00001009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_54(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00001009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00001009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_55(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00001009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00001009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_56(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00005009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00005009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_57(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00005009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00005009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_58(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00005009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00005009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_59(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00002009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00002009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_60(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00002009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00002009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_61(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00002009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00002009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_62(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00006009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00006009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_63(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00006009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00006009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_64(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00006009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00006009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_65(inst : bits(48)) -> bool = {
@@ -7010,7 +7010,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_remw(regdst0, regdst1, srcl, srcr)
   }
   else if decode_execute48_match_13(inst) then {
-    // HL.PRF | hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | {'file': 'opcodes/lx_hl48.opc', 'line': 135}
+    // HL.PRF | hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>] | {'file': 'opcodes/lx_hl48.opc', 'line': 135}
     let srcl : bits(5) = inst[35..31];
     let srcr : bits(5) = inst[40..36];
     let srcrtype : bits(2) = inst[42..41];
@@ -7019,7 +7019,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_prf(srcl, srcr, srcrtype, model, shamt)
   }
   else if decode_execute48_match_14(inst) then {
-    // HL.SB.PO | hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 144}
+    // HL.SB.PO | hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 144}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7028,7 +7028,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sb_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_15(inst) then {
-    // HL.SB.PR | hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 145}
+    // HL.SB.PR | hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 145}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7037,7 +7037,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sb_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_16(inst) then {
-    // HL.SBP | hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 150}
+    // HL.SBP | hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 150}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7046,7 +7046,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sbp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_17(inst) then {
-    // HL.SD.PO | hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 152}
+    // HL.SD.PO | hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 152}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7055,7 +7055,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_18(inst) then {
-    // HL.SD.PR | hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 153}
+    // HL.SD.PR | hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 153}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7064,7 +7064,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_19(inst) then {
-    // HL.SD.UPO | hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 154}
+    // HL.SD.UPO | hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 154}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7073,7 +7073,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_upo(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_20(inst) then {
-    // HL.SD.UPR | hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 155}
+    // HL.SD.UPR | hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 155}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7082,7 +7082,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_upr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_21(inst) then {
-    // HL.SDP | hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | {'file': 'opcodes/lx_hl48.opc', 'line': 164}
+    // HL.SDP | hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3] | {'file': 'opcodes/lx_hl48.opc', 'line': 164}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7091,7 +7091,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sdp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_22(inst) then {
-    // HL.SDP.U | hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 165}
+    // HL.SDP.U | hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 165}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7100,7 +7100,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sdp_u(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_23(inst) then {
-    // HL.SH.PO | hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 176}
+    // HL.SH.PO | hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 176}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7109,7 +7109,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_24(inst) then {
-    // HL.SH.PR | hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 177}
+    // HL.SH.PR | hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 177}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7118,7 +7118,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_25(inst) then {
-    // HL.SH.UPO | hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 178}
+    // HL.SH.UPO | hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 178}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7127,7 +7127,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_upo(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_26(inst) then {
-    // HL.SH.UPR | hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 179}
+    // HL.SH.UPR | hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 179}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7136,7 +7136,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_upr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_27(inst) then {
-    // HL.SHP | hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | {'file': 'opcodes/lx_hl48.opc', 'line': 188}
+    // HL.SHP | hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1] | {'file': 'opcodes/lx_hl48.opc', 'line': 188}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7145,7 +7145,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_shp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_28(inst) then {
-    // HL.SHP.U | hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 189}
+    // HL.SHP.U | hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 189}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7154,7 +7154,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_shp_u(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_29(inst) then {
-    // HL.SW.PO | hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 195}
+    // HL.SW.PO | hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 195}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7163,7 +7163,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_30(inst) then {
-    // HL.SW.PR | hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 196}
+    // HL.SW.PR | hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 196}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7172,7 +7172,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_31(inst) then {
-    // HL.SW.UPO | hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 197}
+    // HL.SW.UPO | hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 197}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7181,7 +7181,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_upo(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_32(inst) then {
-    // HL.SW.UPR | hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 198}
+    // HL.SW.UPR | hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 198}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7190,7 +7190,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_upr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_33(inst) then {
-    // HL.SWP | hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | {'file': 'opcodes/lx_hl48.opc', 'line': 207}
+    // HL.SWP | hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2] | {'file': 'opcodes/lx_hl48.opc', 'line': 207}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7199,7 +7199,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_swp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_34(inst) then {
-    // HL.SWP.U | hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 208}
+    // HL.SWP.U | hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 208}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7297,7 +7297,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ccatw(regdst0, regdst1, srcl, srcr, shamt)
   }
   else if decode_execute48_match_44(inst) then {
-    // HL.LB.PO | hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 49}
+    // HL.LB.PO | hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 49}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7307,7 +7307,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lb_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_45(inst) then {
-    // HL.LB.PR | hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 50}
+    // HL.LB.PR | hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 50}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7317,7 +7317,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lb_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_46(inst) then {
-    // HL.LBP | hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 55}
+    // HL.LBP | hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 55}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7327,7 +7327,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_47(inst) then {
-    // HL.LBU.PO | hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 57}
+    // HL.LBU.PO | hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 57}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7337,7 +7337,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbu_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_48(inst) then {
-    // HL.LBU.PR | hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 58}
+    // HL.LBU.PR | hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 58}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7347,7 +7347,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbu_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_49(inst) then {
-    // HL.LBUP | hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 63}
+    // HL.LBUP | hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 63}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7357,7 +7357,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbup(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_50(inst) then {
-    // HL.LD.PO | hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 65}
+    // HL.LD.PO | hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 65}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7367,7 +7367,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ld_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_51(inst) then {
-    // HL.LD.PR | hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 66}
+    // HL.LD.PR | hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 66}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7377,7 +7377,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ld_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_52(inst) then {
-    // HL.LDP | hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 75}
+    // HL.LDP | hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 75}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7387,7 +7387,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ldp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_53(inst) then {
-    // HL.LH.PO | hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 77}
+    // HL.LH.PO | hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 77}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7397,7 +7397,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lh_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_54(inst) then {
-    // HL.LH.PR | hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 78}
+    // HL.LH.PR | hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 78}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7407,7 +7407,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lh_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_55(inst) then {
-    // HL.LHP | hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 87}
+    // HL.LHP | hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 87}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7417,7 +7417,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_56(inst) then {
-    // HL.LHU.PO | hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 89}
+    // HL.LHU.PO | hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 89}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7427,7 +7427,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhu_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_57(inst) then {
-    // HL.LHU.PR | hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 90}
+    // HL.LHU.PR | hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 90}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7437,7 +7437,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhu_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_58(inst) then {
-    // HL.LHUP | hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 99}
+    // HL.LHUP | hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 99}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7447,7 +7447,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhup(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_59(inst) then {
-    // HL.LW.PO | hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 104}
+    // HL.LW.PO | hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 104}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7457,7 +7457,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lw_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_60(inst) then {
-    // HL.LW.PR | hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 105}
+    // HL.LW.PR | hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 105}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7467,7 +7467,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lw_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_61(inst) then {
-    // HL.LWP | hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 114}
+    // HL.LWP | hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 114}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7477,7 +7477,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_62(inst) then {
-    // HL.LWU.PO | hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 116}
+    // HL.LWU.PO | hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 116}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7487,7 +7487,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwu_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_63(inst) then {
-    // HL.LWU.PR | hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 117}
+    // HL.LWU.PR | hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 117}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7497,7 +7497,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwu_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_64(inst) then {
-    // HL.LWUP | hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 126}
+    // HL.LWUP | hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 126}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7507,7 +7507,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwup(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_65(inst) then {
-    // HL.PRF.A | hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 136}
+    // HL.PRF.A | hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 136}
     let regdst : bits(5) = inst[27..23];
     let srcl : bits(5) = inst[35..31];
     let srcr : bits(5) = inst[40..36];

@@ -5,7 +5,7 @@
 [[inst_hl_lbu_po]]
 ==== HL.LBU.PO
 
-*Syntax:* hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
+*Syntax:* hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
 
 *Description:* HL.LBU.PO snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 

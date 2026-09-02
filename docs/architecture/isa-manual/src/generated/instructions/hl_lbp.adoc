@@ -5,7 +5,7 @@
 [[inst_hl_lbp]]
 ==== HL.LBP
 
-*Syntax:* hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
+*Syntax:* hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
 
 *Description:* HL.LBP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 1-byte values.
 

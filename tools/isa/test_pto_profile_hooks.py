@@ -25,8 +25,8 @@ class PtoProfileHookLockTests(unittest.TestCase):
             hook["source"],
             {
                 "repository": "https://github.com/PTO-ISA/pto-spec.git",
-                "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
-                "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
+                "commit": "33637171b96b402a14319561662cb741e9cc6f87",
+                "tree": "d880e84dc9efd41e7aa29377196723e256cad1dd",
                 "path": "asl/arch/profile/extension-first-use.asl",
                 "sha256": "ef0bbe915fc5fd01cc93cca2a176844dcbdcb6d48af9bf36404c0bfa897615f3",
             },
@@ -38,7 +38,7 @@ class PtoProfileHookLockTests(unittest.TestCase):
         self.assertEqual(lock["common_pto_release"], "0.58.5")
         self.assertEqual(
             lock["common_pto_lock_sha256"],
-            "70b9039c131c4ea49f61c7f4c7183700e0eb5bcfca1432afae6d9ee7d315a8ad",
+            "fe7bd4c6a521f652e6430a6b010b3513c21dfe70aaa17c104bb196cd69d469cd",
         )
 
     def test_checker_rejects_mapping_mutation(self) -> None:

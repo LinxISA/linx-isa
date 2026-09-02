@@ -1065,11 +1065,11 @@ function exec_c_setret(uimm5 : bits(5)) -> unit = {
 
 function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   // Select SrcL for a nonzero predicate, otherwise select SrcR. CSEL uses
-  // SrcRType=10 for its optional .neg spelling; every other value is plain.
+  // SrcRType=11 for its optional .neg spelling; every other value is plain.
   let p = read_reg5(SrcP);
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = if SrcRType == 0b10 then sub_bits(0x0000_0000_0000_0000, b0) else b0;
+  let b = if SrcRType == 0b11 then sub_bits(0x0000_0000_0000_0000, b0) else b0;
   let r = if p != 0x0000_0000_0000_0000 then a else b;
   write_regdst(RegDst, r)
 }

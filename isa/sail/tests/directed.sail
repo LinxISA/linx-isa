@@ -159,23 +159,23 @@ function main() : unit -> unit = {
   tile_effect_reset_arch();
   bdesc_reset();
 
-  // SrcRType arithmetic codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
-  assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
-  assert(apply_srcrtype_arith64(0b01, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
-  assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
-  assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+  // SrcRType arithmetic codes are 00=none, 01=.sw, 10=.uw, 11=.neg.
+  assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+  assert(apply_srcrtype_arith64(0b01, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
+  assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
+  assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
 
-  // CSEL has a form-specific SrcRType assignment: 11 is the canonical plain
-  // spelling and 10 is .neg. Predicate true always selects SrcL.
+  // CSEL has a form-specific SrcRType assignment: 11 is .neg and the other
+  // three encodings are plain aliases. Predicate true always selects SrcL.
   write_reg5(0b00001, 0x0000_0000_0000_0000); // predicate
   write_reg5(0b00010, 0x1111_2222_3333_4444); // SrcL
   write_reg5(0b00011, 0x0000_0000_0000_0007); // SrcR
   exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
-  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
-  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
   assert(read_reg5(0b00100) == 0xFFFF_FFFF_FFFF_FFF9);
-  write_reg5(0b00001, 0x0000_0000_0000_0001);
   exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
+  write_reg5(0b00001, 0x0000_0000_0000_0001);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
   assert(read_reg5(0b00100) == 0x1111_2222_3333_4444);
 
   // LBU host memory is outside this REPL proof boundary: read_mem8/write_mem8
@@ -183,14 +183,29 @@ function main() : unit -> unit = {
   // apply SrcRType first, shift that modifier, add base, then zext8_from8.
   let lbu_base : bits(64) = 0x0000_0010_0000_1000;
   let lbu_src : bits(64) = 0x0000_0001_8000_0004;
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_000E_8000_0FFC);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_000D_0000_0FF8);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
+  // The imported AGU form constraint rejects raw 11 before exec_prf without
+  // enabling an unrelated first-use profile for later directed cases.
+  pc = 0x0000_0000_0000_0790;
+  tpc = pc;
+  last_e = 0b0;
+  last_argv = 0b0;
+  last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  last_bi = 0b0;
+  ssr_econfig_acr1 = sail_zeros(64);
+  decode_execute32(0x0600_7009);
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(last_cause == 0x000100);
+  assert(last_traparg0 == 0x0000_0000_0000_0790);
   assert(zext8_from8(0x81) == 0x0000_0000_0000_0081);
   assert(zext8_from8(0x42) == 0x0000_0000_0000_0042);
   assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);

@@ -5482,7 +5482,7 @@
       "translation_sha256": "c268eeb6474c45ba48703b3914dc78024129b77d6c012f0d9a12b8692614f9f4"
     },
     "isa/instructions/hl_bfi.md": {
-      "source_sha256": "a0c34ac0cb5bf0c6cd69febd8e3a9fdc9445342bded76c4a813c5be177f11ca2",
+      "source_sha256": "5df5f552358741b75de110cb09fc3de8a9d16c98c51daaa2a405c74be613525d",
       "translation_sha256": "ee4734e7d7190e32d64c0497a1ef6637fa2815677e8fa2a045c8e3177b3998de"
     },
     "isa/instructions/hl_bstart_call.md": {
@@ -5578,11 +5578,11 @@
       "translation_sha256": "0a144e8e154208a7309b98c8bfd227f5d46873eae4abfec7ade09d4a9057f840"
     },
     "isa/instructions/hl_lb_po.md": {
-      "source_sha256": "1d04590a3681809328263876acb1bea12ff24dd7cc8aa1d7077b65b68fe4767f",
+      "source_sha256": "dd4bb364f8e2db6b84577df4b5a2a6acdc1d3f236cbc1072c89a1c6b468c1cd0",
       "translation_sha256": "9255c99727e6f95313cdc595b288dc651aa1d64c48b17aa1e73298d2ff0d0493"
     },
     "isa/instructions/hl_lb_pr.md": {
-      "source_sha256": "1cf084e705e1b5da9b98c62373702f98246a5aa5db35e81c141dd33f0c0b7cfd",
+      "source_sha256": "0eb2073081a971cc61dc2a8e30613450d9a419b4d6d23ff6c1d709b2c9486049",
       "translation_sha256": "7ec26720e91d2584939cb7000ef3665bcd01caa4049fe35f90daa02f25793799"
     },
     "isa/instructions/hl_lbi.md": {
@@ -5602,7 +5602,7 @@
       "translation_sha256": "fbc21bdd242e11de621d225ac56053445fbb5eb9c277d68505ec4b1f972ec6f6"
     },
     "isa/instructions/hl_lbp.md": {
-      "source_sha256": "7e0d6a9c860a76d4d4aabc390e673d8883cb1685abaa0f2ac43a8c38bb3ec016",
+      "source_sha256": "69eef2e95357360e743ce5ea3485878c8ba8a580f2fc9f2792ef2bd26da6b2ce",
       "translation_sha256": "a1cc73f7465f4c4acac76d3719f27c592247f878a1a98d7c43048d2d1a9c81de"
     },
     "isa/instructions/hl_lbu_pcr.md": {
@@ -5610,11 +5610,11 @@
       "translation_sha256": "7e18b6ac2b74f5109f834a98f2932f13bdc9f32359dc98de0a7c3bc8dc9ed691"
     },
     "isa/instructions/hl_lbu_po.md": {
-      "source_sha256": "84ea766723fde5fdfc1e02faf57d57ae9ee70e199428b10cc3074c4dffee7700",
+      "source_sha256": "4e703c0c646f9b632349fec567da1042f637fa73594105b5fca9920a9df5485d",
       "translation_sha256": "9e421351091602d1edb31b776870245a79a89a0a32eabf2ae2743900ed074dc9"
     },
     "isa/instructions/hl_lbu_pr.md": {
-      "source_sha256": "5103deff9c297250fd1aea72dcc6f594f39ae4f5b764bdb7949a014977d5aa34",
+      "source_sha256": "545cad8b5a48eddc3fcebf5c4607eaaa24cd43550e1d050c4bc48400567caadf",
       "translation_sha256": "90f608bdbbf54a82364644acc5fe244da309779b0aa6ded4ab8bf3d27d8fcf8e"
     },
     "isa/instructions/hl_lbui.md": {
@@ -5634,7 +5634,7 @@
       "translation_sha256": "4f15cb098cf079e69713c14c9b8f8cebe8c438f1ffb0ed91ee2a6b01c4491f8e"
     },
     "isa/instructions/hl_lbup.md": {
-      "source_sha256": "aa6a2b8bbc2cd2dfd136b9925d292a6059b0d63bcab4f2e88e3cb0a89f74da22",
+      "source_sha256": "065b0165dc260c577efcea6944dacbd590f43bf012531cfcfaa88d07d6b7933d",
       "translation_sha256": "ae74cbae26f00c0e1bc57c0bda2391f22b1051480b4101956fe4e098c6da9f7d"
     },
     "isa/instructions/hl_ld_pcr.md": {
@@ -5642,11 +5642,11 @@
       "translation_sha256": "b1e54e1b60554b3b37fc3a44504b50c864f44cce7fc6789e5380c045e1295e70"
     },
     "isa/instructions/hl_ld_po.md": {
-      "source_sha256": "77dc651fc5f6bbb426d70244a21628c0303319d219eedeb067beadd04d447591",
+      "source_sha256": "5006415aa48a3f5e2c85220490476931087e1fabf3ed9ad6a89723fc28594098",
       "translation_sha256": "96558ae8043308a3ab046e23935b67c354a04ba99dd3c194fb2dca5753cd11f3"
     },
     "isa/instructions/hl_ld_pr.md": {
-      "source_sha256": "a673b3d0b36df7f47aaef797a4d84b31bf69cec38e6a977b84edc965b24d3a07",
+      "source_sha256": "37705e7533429d1daab71e18a9fec407a921aac85ffede6a6d43e13bfa7a482a",
       "translation_sha256": "3595ce444b5fc501c12b21dcf96db5b205a5dcedec848aa859669852df3bd179"
     },
     "isa/instructions/hl_ldi.md": {
@@ -5682,7 +5682,7 @@
       "translation_sha256": "ae1396b7ca297738dcf42cae64ba2399aab5674313f07bac4af0437d4501687e"
     },
     "isa/instructions/hl_ldp.md": {
-      "source_sha256": "33f502506f4958ad808c2fed42fd20797bf9cb1c538d53a3bda1f3fb3d105349",
+      "source_sha256": "280523a1c89ee4a2626de2b1f7d2b202fbfa5d963f91a7372139dbecc8cb4f1b",
       "translation_sha256": "fbd3dc174bf9828b29367c172f85df47de8659b6a9db2ce9417e656f89fc1949"
     },
     "isa/instructions/hl_lh_pcr.md": {
@@ -5690,11 +5690,11 @@
       "translation_sha256": "8fa74a07ca41a17e82e79becac97a710b08b444a57ced84e0e7e9efa21a01e84"
     },
     "isa/instructions/hl_lh_po.md": {
-      "source_sha256": "16425b2490423de4169a27a0534dde59640e4257b98e293d0fc8dd87d41fa2ff",
+      "source_sha256": "5ac3903b80f8db5da9c1ff0cfd97730c89fad8c7217f1c16f3411e426b0d3455",
       "translation_sha256": "c922862aac0a2c4927287cc82f41f5b88a71d04b935c7a18138534812801f07d"
     },
     "isa/instructions/hl_lh_pr.md": {
-      "source_sha256": "e43fd939f08da3eb41d77ea3610895626f89c817205e02310c90dc2a51d0f45b",
+      "source_sha256": "b4828944b962d6ed6d280133ae65273a91570b765fef2b646b098b6b4f926d73",
       "translation_sha256": "0a264424114929015e342f0f11bbb106aa6ffd25efb6eff7570373551520a7ea"
     },
     "isa/instructions/hl_lhi.md": {
@@ -5730,7 +5730,7 @@
       "translation_sha256": "9616a24df896616093e7745fef38e4402d843c388653e855b3f7ceb7126229bd"
     },
     "isa/instructions/hl_lhp.md": {
-      "source_sha256": "a43938d8e93926410c40b2a4c526d6d421a7607fe0a19b2bc615f64faa92b4ff",
+      "source_sha256": "a3aec3bb3f3f67f459b6a7961f243b6cdf7baf36bb14d6d57ae4821af358f3ca",
       "translation_sha256": "8365c29397969da677644cfda25a28cdbc0b76c96df5021f5162678090a818c3"
     },
     "isa/instructions/hl_lhu_pcr.md": {
@@ -5738,11 +5738,11 @@
       "translation_sha256": "0068ae858977c6a05458685a8837843314fd3f1293c1e2931c09608a86903376"
     },
     "isa/instructions/hl_lhu_po.md": {
-      "source_sha256": "d9b12910724961fbf7bbf4084d96c59ad1a672e80fb9403239821a4b18097cf9",
+      "source_sha256": "fd481412d4239b06c4ae67810757c5ee01aa39a6158065ef1b9443691bfd38f3",
       "translation_sha256": "466bf86fe93aa8ba97eb72f7844ce5c24a2200903c83f73db84d111d8b890dac"
     },
     "isa/instructions/hl_lhu_pr.md": {
-      "source_sha256": "99d9182109ed570eea6b3b5898b39f9e0d1b0fd9a530ad2f05867c3e2133089a",
+      "source_sha256": "dc7dcf7a0f35813d52ab45a5165595d96e40af4fa3941bcef13cd8b4ae548f21",
       "translation_sha256": "d74ddd3140bf8e093a5c1f568d92caecd63302093585c8188a3dce103c6d6aad"
     },
     "isa/instructions/hl_lhui.md": {
@@ -5778,7 +5778,7 @@
       "translation_sha256": "0063f1ff7d9f9def666ed8df1b30bfaf62b508166dcc9b9ba97272d2c385d80b"
     },
     "isa/instructions/hl_lhup.md": {
-      "source_sha256": "db15bcc2ab52b83e8a7296bbfe0be40d134f5a3b3512ff82ce9997fd04fff974",
+      "source_sha256": "008b18d7ae9acb485e33401788d7eb25d035a3297a4e8f5dd6e3ef46a1605a65",
       "translation_sha256": "cd9f82c93fa4188ca4e2625f9b3e8c8d1cb2434f7b337090ccb170a559543a82"
     },
     "isa/instructions/hl_lis.md": {
@@ -5798,11 +5798,11 @@
       "translation_sha256": "5756cdc5597bd0512d344de21e32bb5277c0b9b398abe7660f1266875084fc8d"
     },
     "isa/instructions/hl_lw_po.md": {
-      "source_sha256": "e356dde4c4a3d55ddcefae6bae3c9d07b979058274caea54b6e8f328b9798ad6",
+      "source_sha256": "d07aecad2c781e02f253704c9e1091611f4ac7cd6c16a5590298383f5b0a21fc",
       "translation_sha256": "e30f6ac87ba143c5a4c83adcdc32f8567bcbab82b5e1e591e9666cbf539b8bcc"
     },
     "isa/instructions/hl_lw_pr.md": {
-      "source_sha256": "3245bcb8eafc1cb8ec75d60401d5c3c80a409ca3524b114194a37e0a2527d690",
+      "source_sha256": "2f3ac172985f2737a4b5ca89d85f33e5a4d538f1be04bbcb30a8358ac04a81cf",
       "translation_sha256": "aa06e71af0df4eb2cb1d63b2daa61b0309c669b86e589700305c34013f69112c"
     },
     "isa/instructions/hl_lwi.md": {
@@ -5838,7 +5838,7 @@
       "translation_sha256": "3cda306b26070e89a6993a6a0212cff43441db8213ddf3be4299bd68370ac99d"
     },
     "isa/instructions/hl_lwp.md": {
-      "source_sha256": "d6cc29bf2cba21f661b128e41b367a4b49e04554b99838ee62a21b596c82da9d",
+      "source_sha256": "9efa55eaffc3cf4d9bdc80b1400d35791dba018ae0f0cdb91df12f9175a65f1a",
       "translation_sha256": "cd15fb3dabe8010d84e2d9371c31150780ff6e00f1c36da80fa16ce7fec9cb18"
     },
     "isa/instructions/hl_lwu_pcr.md": {
@@ -5846,11 +5846,11 @@
       "translation_sha256": "3a08596133c3723cd34ede56ada910a74d800d1535342a54c6127bef4ee8c787"
     },
     "isa/instructions/hl_lwu_po.md": {
-      "source_sha256": "88c5d33c6b6c4e65f21ba3a000603a65386b511a7375097b0f9a7316c637b0b9",
+      "source_sha256": "894355e9b83f5ad47939a5c0b8d45d8fa8af199911b1100038c87c93ddfea273",
       "translation_sha256": "4148699983453503aa55c53b0b91204d66c054f6c9574e19fe75517d497bf5f4"
     },
     "isa/instructions/hl_lwu_pr.md": {
-      "source_sha256": "124f7e99a94a838f261941ccda804c9784077866d8ea162d3bb39ff36b516eb6",
+      "source_sha256": "fe67b640f88c455fcbd141b2af11dadec11aa82d678b6e7eb151e024b4429c91",
       "translation_sha256": "b8af7643f48d0dc51e5460ce7ebbe143766e9e6c7324212c838d4b9a6a81fd7c"
     },
     "isa/instructions/hl_lwui.md": {
@@ -5886,7 +5886,7 @@
       "translation_sha256": "3c44e71e9b9a8079fec621359899dd031731fa1b0f488fb2cc6e602feca9cf81"
     },
     "isa/instructions/hl_lwup.md": {
-      "source_sha256": "4eb8b95f2d8e00a665b419f35c6f3c065e60559b1bfed60888eb5e0d870263e2",
+      "source_sha256": "ab9b2a2fb4fdf5d75d574d45ca91457a6b3d98b238ff1f2ae6af2e4e0f412e38",
       "translation_sha256": "67d9129120ae851f6b9f94ada8ec1518e1c685b09402335db27be02d9519cf42"
     },
     "isa/instructions/hl_madd.md": {
@@ -5922,11 +5922,11 @@
       "translation_sha256": "4869749ba9828d4f0d634a1f77d5761e739e731ad30e1ae1f9b027f5bee34fd6"
     },
     "isa/instructions/hl_prf.md": {
-      "source_sha256": "484d760ee944ce5b76ca28dcceb652e5b3a2e2321d5c4c175561e03a5e5a7cc8",
+      "source_sha256": "f56a8e55b4732948b493144575bac405a6000ed42b7b7f52cd46a9ed78f44ddf",
       "translation_sha256": "99476b48b5572e87d51f8c5b132ebf02b41a7d78d1e6674362893280980f0d9e"
     },
     "isa/instructions/hl_prf_a.md": {
-      "source_sha256": "0d977bac3b4b8ab99409832390502b964eadef3f1252504d03cc4e5d06cc36d5",
+      "source_sha256": "9b973bfc12815f2e8d96957a07cf14a30a2b90424437b8f363264b3442d97497",
       "translation_sha256": "e50393f2bfb3f643cf0c6653085c4cdf423bf92efb25ed0724d0378262009333"
     },
     "isa/instructions/hl_prfi_u.md": {
@@ -5970,11 +5970,11 @@
       "translation_sha256": "7c30b8b80c508d6b203c98a1834cb977b0cc899735ef5ff8d4faf3a02c787b4e"
     },
     "isa/instructions/hl_sb_po.md": {
-      "source_sha256": "5dfbeb06a70139c78360d686be0c99e09395cf1386a11d4e3143fa6c6034e0ba",
+      "source_sha256": "8285b9456820c39cc34a75512b8ecee5f326e8c45064c8b57dd4983fe6e82d16",
       "translation_sha256": "058d6638d9f3a32b653636e05ad1fdaf08124a317e257b972ea51d1244e80e37"
     },
     "isa/instructions/hl_sb_pr.md": {
-      "source_sha256": "b7ec3ecce7c2d285ce878a20aa6fcf85dcb2a323863fb1afb4a19fc00579618a",
+      "source_sha256": "d23427a9bc8086cf600f198c6d5d0bfb1f55f67bd17c04e6cdd405ff3e94bd02",
       "translation_sha256": "db385ab3260df0b62fad06060880f57544d416110829b0e0681e7bf34f8bc1ea"
     },
     "isa/instructions/hl_sbi.md": {
@@ -5994,7 +5994,7 @@
       "translation_sha256": "8a7ecfd2046984e74b9ebacf8dd870ebef787d7d76edb72a949e52d06f5eff83"
     },
     "isa/instructions/hl_sbp.md": {
-      "source_sha256": "ba090afaa023f495b96a7a1f2eb4c2c50222f7be88176f60472f9168feb4943c",
+      "source_sha256": "eed13146104af65c4b9f0bca595a58b26dbd989ca41edaa7a5d0a89fd487b846",
       "translation_sha256": "6d00ea02d378cd1e3a60ef98fa5b6a9422bc83aaa147195ae5c97d9ba51705cd"
     },
     "isa/instructions/hl_sd_pcr.md": {
@@ -6002,19 +6002,19 @@
       "translation_sha256": "ccaec12fa0f50961583f8db2167f376f468ea8780ffc558642b666d5e081f216"
     },
     "isa/instructions/hl_sd_po.md": {
-      "source_sha256": "9bcc688dcf28c55358738e2e0995911a6c405efea8e26d8b4c3c7832440e244e",
+      "source_sha256": "21de59c718a3b83b1bb2d7c14d728b1a907f5689899ee9080f038d22c8657f05",
       "translation_sha256": "0a6fe11afc125983299d14d6738d41952f36c49963869848d7dce376784ca868"
     },
     "isa/instructions/hl_sd_pr.md": {
-      "source_sha256": "16d45bd0429e1161a27831d09275685f9ac9f55953ccf71738ad07e8cce94b44",
+      "source_sha256": "3ccb14befb2dafdab4dc8654208420007765f0e1a0d77b9c58a09401c31c3dbc",
       "translation_sha256": "c59ed48709e49e9b6cb750160e3975d7e1cdcb51a3f6853221e18c0f228719be"
     },
     "isa/instructions/hl_sd_upo.md": {
-      "source_sha256": "5af8396387b0f2d1acd6a2953cee35fa8863a442abe5f81e35e21610ffa4d940",
+      "source_sha256": "e550bf5f651f03c572f022af054e20f1241c2f541a4e931bac24a4a06faea7d1",
       "translation_sha256": "0300d4b6be0173a551877f1b4de3b32173342c1593956ea0ec00426eaa580a5a"
     },
     "isa/instructions/hl_sd_upr.md": {
-      "source_sha256": "c16ba3fe862a8ed7137748703c4400c41e4bc7cf5d6d21a8c14e6822962b7019",
+      "source_sha256": "05cad9c5793f98c2334869f960d5331a8de815e939b4f2f71b98eaaa160bea70",
       "translation_sha256": "a949b2f07909f799fdcb47fabdadf6e64b22f0d1e41c25d1605a87be3bbdc23a"
     },
     "isa/instructions/hl_sdi.md": {
@@ -6050,11 +6050,11 @@
       "translation_sha256": "228c129be3616664461e8e6699f4cb72cdcef719f5929fa157a8e26642f1fc83"
     },
     "isa/instructions/hl_sdp.md": {
-      "source_sha256": "2c232aed3543733a13d4d82fc5386f1cdc986c31f4ded3c0d3c858597934bf5c",
+      "source_sha256": "4a72fc5e87b1d1d686a5bddf03e012ad0f9963f0d111f3be6177c3ccd39bdf99",
       "translation_sha256": "f45b0818d72eee25bbc60e5521d93a213cb24c1f1a8878f3ba67bf8fb4f6b346"
     },
     "isa/instructions/hl_sdp_u.md": {
-      "source_sha256": "ecf95dbced7e71dd7449b0bcdcf539b04736c8e6c7b642d01b49bf66ff5afe77",
+      "source_sha256": "3509bb484d6e184f8220b1f6638f3f479b5232da7c1e4fccd7bba1ece5b7ea8f",
       "translation_sha256": "b91476869e80243fb4ab5ebb990957320de248680d9536912bfdf7dbfe70eb98"
     },
     "isa/instructions/hl_setc_andi.md": {
@@ -6098,19 +6098,19 @@
       "translation_sha256": "a2b3c1c37b91d77405c8b2e1284f64cf9473e6bec1a9e84e5a742dd04bfb23ad"
     },
     "isa/instructions/hl_sh_po.md": {
-      "source_sha256": "795e5b5357b6e94b52163899cb468aba3e4e143b6646add1cfbc3a56dc436cec",
+      "source_sha256": "5c2b163e2acedc28ba0f607128864c65e4bf5c13110a7241a099ffa649200fb6",
       "translation_sha256": "efcd56b592feefb4da0399eb4362044b70d53df8e94be0806c17979e13c74ba7"
     },
     "isa/instructions/hl_sh_pr.md": {
-      "source_sha256": "e5070667c478f569555a162d7545fb24455e50b80ea9097df63e5fbbd0906526",
+      "source_sha256": "923f84f46fdc725ce93b43713b5159ab10b84c5536c86282725529f0c288fe5a",
       "translation_sha256": "92ca3e0184aca586765eaa0d5a4513d564a54cdfea7136689748bd5772afeaa6"
     },
     "isa/instructions/hl_sh_upo.md": {
-      "source_sha256": "6d0d5717d87797dd279a73cc2f3f12c009c3a580599ea69df34451923df31833",
+      "source_sha256": "cc7701a6d7a892ed41939d2804e9562a35e33ef4b0d6f8f95d5a60e37ed29718",
       "translation_sha256": "f872a4fc46a0360fca2d19658ac93ba8dba5a363a71cadba623548cadd554f54"
     },
     "isa/instructions/hl_sh_upr.md": {
-      "source_sha256": "c0cb65f5c1b9a8a062cc6d59e3eb34b9f4f9bfa6373d1e22ce44afc72af058de",
+      "source_sha256": "9ed36aea622c3cd2c7e75971fd2d2fb41ea9c9a93a9008748a62d3176609b8a7",
       "translation_sha256": "d2b2e82c261dcc2dc236df099381e86332c9b98b28242293ab45415cd2038a9f"
     },
     "isa/instructions/hl_shi.md": {
@@ -6146,11 +6146,11 @@
       "translation_sha256": "316420fa2f66b0a30e61d4e99ff8f6c57c54cdb1790071a5e55d5e4689e69928"
     },
     "isa/instructions/hl_shp.md": {
-      "source_sha256": "b43cea6c03ecdb424a3c999de0dc4eaa916d0f0dc64ba540b107ea7ceeaa1f92",
+      "source_sha256": "cfbc6edf1bf4ac5782744e78c374b9e9d75c5f5b18879cc454c8ebd9d6880265",
       "translation_sha256": "2f4b01a7b4445cddde7ade20911d10e9ec8c4675a88067752daa42d498ca9b4f"
     },
     "isa/instructions/hl_shp_u.md": {
-      "source_sha256": "069ac00d428b198d6967434f301324b5d05c0905faaa685719e566f9489f09a8",
+      "source_sha256": "2b9dfc40eb46d32bd831d08364b6cc3dcc2e5c841ba393b3ba823dc8a4ba8847",
       "translation_sha256": "dbaf2d03702e388c2b3627567687624efbc8f12dc1a641fc4b082b7b8464c27d"
     },
     "isa/instructions/hl_ssrget.md": {
@@ -6174,19 +6174,19 @@
       "translation_sha256": "58cd2e67890e1868d3188c2c1d794ddcad83bdd9145dbf0ac2d58fd88e69d9e2"
     },
     "isa/instructions/hl_sw_po.md": {
-      "source_sha256": "0796bddfbc9933773a264873631cf05531c3c46127a733c4b674abc42d6ea521",
+      "source_sha256": "7b8c854d158c5e4fb35cad4905403d19736449550efd6e366cb646b5c8db1d70",
       "translation_sha256": "2db7c2984e4c882da30210333bb0d6fe9923e934dc464347c454aa807fd4222d"
     },
     "isa/instructions/hl_sw_pr.md": {
-      "source_sha256": "3c09708ff19837ce3ca3c4f58c22735eaddc68850ce2d1d7dc280e4904e3c186",
+      "source_sha256": "886b4bb47b210e037587358ac5a49c9047ea4603406e53ab363df3990f245813",
       "translation_sha256": "50005f4d8fed0dac0fec8aa028024ba675f3bb33544106151046a433ba3f9aca"
     },
     "isa/instructions/hl_sw_upo.md": {
-      "source_sha256": "7eb5b0568c39bf503a464d1ef04b4721c12d5def116d3fec19e67bc679134406",
+      "source_sha256": "bc63d2b3a0acce3fb3fa7aa62356772179dba22cf21d1f77a5d4d58d59418867",
       "translation_sha256": "6c1862b4029a9f15d844a93d95406c5d17da0fbaadc91bdb12d939a76b7d0d08"
     },
     "isa/instructions/hl_sw_upr.md": {
-      "source_sha256": "9d3c0ed8a7a4b6ad57f1eed0e8067132ee8723046802910f9de4c608efe83267",
+      "source_sha256": "073f00b2ff07f7a56b6244e58e92ece6a20f022ea77c917bc3c3943792a118ef",
       "translation_sha256": "7930cefc08186bc1847c5b74a6e56629d7faffc410e2552f4d3f5bb5d1183feb"
     },
     "isa/instructions/hl_swi.md": {
@@ -6222,11 +6222,11 @@
       "translation_sha256": "3f2b361b58704001260f2feefe660c92bf9cacc0fc9136f7f17113c12a04d26a"
     },
     "isa/instructions/hl_swp.md": {
-      "source_sha256": "6c482b812c37f3254f443d62b3318496c353bf80a001c935ed6e2e41d584a85f",
+      "source_sha256": "f3ce581612dd976a0937c41bceac61c3f98fea6bb348d4fedcf06b96f2185f4b",
       "translation_sha256": "b0ac7d5d31fe9b78c4a2ab78a4adc4f60fa69710ebf15aed1b4d76b15e911afb"
     },
     "isa/instructions/hl_swp_u.md": {
-      "source_sha256": "3b86382885d1033e9184eda8a3741c05718fa36ca8ce70de27c182ba82023fc3",
+      "source_sha256": "d442ede6300fe9449d06aea801545d0f3fc813ec975454fc1672cb55f82fea88",
       "translation_sha256": "8e8ee2073c74ef7a256f5d9331cf39f3affd9148c2c19bd1c01c29d0e5702270"
     },
     "isa/instructions/hl_xori.md": {
@@ -6258,7 +6258,7 @@
       "translation_sha256": "2f5149e0fd2a6379b2bafee4601ba2a0df3c873b6c34b4dee51f5f8eab4af2e3"
     },
     "isa/instructions/lb.md": {
-      "source_sha256": "9c079ff7b4ed6bf2b5262ba427c0504ab48d42dd4f4ee44f843d5daa15c58b15",
+      "source_sha256": "c2dce73ae313d25c2d367198b6d1bc699fa3f313d9f6d49f0eb26b761afcf159",
       "translation_sha256": "774faa9b23a9ae5e343bc0041a29b4fadc4a6681a7abc4d746f1d011d13d0435"
     },
     "isa/instructions/lb_pcr.md": {
@@ -6270,7 +6270,7 @@
       "translation_sha256": "73675888cb8cc64fd8519c6e0cd8a9abe9e72b87a215fda7d5e271b3d68a6612"
     },
     "isa/instructions/lbu.md": {
-      "source_sha256": "7467c1d6763e76ea844395617dd7975688b35c3802098a58457a61d577db65cb",
+      "source_sha256": "c0b03836734a52639ec0360d695e4e3a6aac1dd708d4f1a62b6e27d135c760fa",
       "translation_sha256": "5db2e0bfd52b93f044bc7d8dcd7cb7aaae945684d6a64d242cf43939c7bb8f4a"
     },
     "isa/instructions/lbu_pcr.md": {
@@ -6282,7 +6282,7 @@
       "translation_sha256": "d717735d034ca88e16c3403149137089890b0c6456692c5119e6736162c8f05d"
     },
     "isa/instructions/ld.md": {
-      "source_sha256": "4801de098b9c04da018b8345211efed45397be230565c093be422ee3690dab12",
+      "source_sha256": "0e7bf2d43bd0b51696eeffee64e8679f2160e873a156fabee4f518c7eb816b79",
       "translation_sha256": "5c847b64961e605f61243bb1580ee3bf199f48b622c2b5c85eaa8d227f2ebfae"
     },
     "isa/instructions/ld_add.md": {
@@ -6330,7 +6330,7 @@
       "translation_sha256": "e92d7d9a0a9c9972ba725d97fc73d39454d73df799fd6969d0262111c06ffdbb"
     },
     "isa/instructions/lh.md": {
-      "source_sha256": "45beb78ae1c79debff1caaa383a691bc17d80da445619666c8428de64947b823",
+      "source_sha256": "345d35485e386fe79284c957f7f8564b1388f0e748f30cc4f7bf44227f67ea4e",
       "translation_sha256": "3e3b72f93d489c72628d062081c62c9ec67ccb1fa6282e4f6edaecf20e623952"
     },
     "isa/instructions/lh_pcr.md": {
@@ -6346,7 +6346,7 @@
       "translation_sha256": "c6b4f48e32b97d69c1493d0a1fabe50b66d515f07f8a19430915219cce5f652d"
     },
     "isa/instructions/lhu.md": {
-      "source_sha256": "509541fc88237a9b30e4b3c54a270cd8072b9f497b22194e60e62fb259f26e4d",
+      "source_sha256": "f44e3d403df0066692f28ae38aa18b31708845b24913328a40ef0d4266971070",
       "translation_sha256": "146331d8d6d30298f7dfd7c0147e8b475a1991ee0c3e45ecb766b0aa1e8a7f6a"
     },
     "isa/instructions/lhu_pcr.md": {
@@ -6386,7 +6386,7 @@
       "translation_sha256": "c95123c5d7d94f207904c8c0ae57c21f25e895f9886cef2b58a7af0493afa776"
     },
     "isa/instructions/lw.md": {
-      "source_sha256": "3c11b51a96b45c38a4af9a7ad27c29e157a18ceb01b7418d3bbef4b8aefbebe8",
+      "source_sha256": "eed73d919900bec4b3d56d1349118db91656eabab8385251cc29bfe332b48f84",
       "translation_sha256": "87db6dd40483f745e7083c51394089c8c430acd6a3cc03639c35281046aec3b5"
     },
     "isa/instructions/lw_add.md": {
@@ -6434,7 +6434,7 @@
       "translation_sha256": "3a6fa18eb7229f48f4aa5a3a8c413fd0ac5e366a13fb0d5ca37be3ec6843caa9"
     },
     "isa/instructions/lwu.md": {
-      "source_sha256": "17f895e6e8b9fc482ac75694d940082f11cca3d5f17d371bec1599682002da6f",
+      "source_sha256": "e49945e761d3fc9edc266e9de67f002b3a9e98afaee71366f9d3e564583194c4",
       "translation_sha256": "ee32318f7657c8a0b254d17cebb2e8ba8b62b0d4b603955e4aefa00cc527b979"
     },
     "isa/instructions/lwu_pcr.md": {
@@ -6514,7 +6514,7 @@
       "translation_sha256": "74b056dacb760cc9920f848a4e7cbe54782d964e801904d95428d012dbfc2304"
     },
     "isa/instructions/prf.md": {
-      "source_sha256": "5d83cafb1872832acd13be83a79ab9c52ed95b7d487d8ec3c3fe40214cf8ed11",
+      "source_sha256": "d3adb3b75903d4ad0083cb23660c37230de92b1c5281691865243b72cf3cc0a0",
       "translation_sha256": "f4af1ba858bcd626325b6f65665893776ce6ce2f525fe140857cbe1dbecc26b6"
     },
     "isa/instructions/prfi_u.md": {
@@ -6542,7 +6542,7 @@
       "translation_sha256": "d4f65d76f22174139d2921e61ff79ebe232de15eaaa0da694ef225e1bcd4691f"
     },
     "isa/instructions/sb.md": {
-      "source_sha256": "40e38551ac245115703fd397d19088e4e5764bb9aeb69a6f31ba62881f14c10e",
+      "source_sha256": "5f195597c6154667d66761ceab25431d15a4a53d70c3ca4ede8ecde8313b3243",
       "translation_sha256": "89c843c0bb89fdcaf5590b6d3bd8487007a9bab775649af01ac8b62b65c22aa6"
     },
     "isa/instructions/sb_pcr.md": {
@@ -6574,7 +6574,7 @@
       "translation_sha256": "7557dbb11c02c6655e509ab8a183f11e9fefa9343da71f187d05d5242cb1815e"
     },
     "isa/instructions/sd.md": {
-      "source_sha256": "363122a175eb88f919d07fe109e1dc9c181118556b2072bfb7a596dedfca214a",
+      "source_sha256": "9b1df01f9e99c140cdb28a1a98732c535ad5b9bcc40825e1df4b309404256d1c",
       "translation_sha256": "934c1302780eebfebe81e7f581a6a388f94c4537bf9e9a4c7668bc88ee3b67aa"
     },
     "isa/instructions/sd_add.md": {
@@ -6602,7 +6602,7 @@
       "translation_sha256": "3beefcc6a4cc1e2a3b3c021262f7084a2272b5640306f857cfcba21ec7f87bf4"
     },
     "isa/instructions/sd_u.md": {
-      "source_sha256": "febb9d3e5cbedc289aaad13806315766228a2ec74a5661385d67d8cb9b714ced",
+      "source_sha256": "fcfa01dd351169aeac02c0ef8f1bdf41dab91fb3f67bdfe5dbc24da283bfac88",
       "translation_sha256": "05fba91cbb1304761168c44bc05fe91a41146fb92c5df4396b1217bae55fe64a"
     },
     "isa/instructions/sd_umax.md": {
@@ -6698,7 +6698,7 @@
       "translation_sha256": "a27e7708a3e7f90559761bf1e473d117bab43f40d434ad556253e8ef9cc11387"
     },
     "isa/instructions/sh.md": {
-      "source_sha256": "7be7172f9a6d6ef53b42b1fdd39f82c4a05485c06cd87c25592f2dc381857918",
+      "source_sha256": "b556d835cf7e06e89ca3a303a6d252768ebf6fa67416d98a04d60061e690fcad",
       "translation_sha256": "e1907ccc6634c43310e219f20961dafe31c22b728e6d70ab3479707ca3bea4b0"
     },
     "isa/instructions/sh_pcr.md": {
@@ -6706,7 +6706,7 @@
       "translation_sha256": "cb77f650286e2b0f6c12970962c796ce874a791f1a319175351cc7e8e0edcf6d"
     },
     "isa/instructions/sh_u.md": {
-      "source_sha256": "c530a9df3930adecddeb905a1de741e2d0c7c359c188fc81053f97bff76a72c1",
+      "source_sha256": "31768856285ccffec28ab8e05599eb9f262a68ab83ce82f6f0aad0f099340c1c",
       "translation_sha256": "2f83ecec378fd3335deb4352638ccdbd1a0b8b6a5af5dd8af828506c96519f18"
     },
     "isa/instructions/shi.md": {
@@ -6794,7 +6794,7 @@
       "translation_sha256": "774c5ca5b1e0eabed4543130c13bd02abd2da1891c11bd72c701fb30f82f6561"
     },
     "isa/instructions/sw.md": {
-      "source_sha256": "87be449816922d6bc5ba515b92e25c2e44e00a1786a60c4f50a4cb6005058027",
+      "source_sha256": "61a333e5db64ee8c0413df1edda5a781fd62d84ace5bd2fef1e21c839591756a",
       "translation_sha256": "11da7b91c2014dc27f36b018a835fba4a2b5b8e6339c4d04929c3a1bf0cc8d62"
     },
     "isa/instructions/sw_add.md": {
@@ -6822,7 +6822,7 @@
       "translation_sha256": "20f3020cdf0511742889668de5a8fed85698a3d3fb49f986579726ced988e8bc"
     },
     "isa/instructions/sw_u.md": {
-      "source_sha256": "6556b2a6e511f34b0b607724fb5ef3d876b524cc7301f989c553335cd0b7fe3b",
+      "source_sha256": "2c2af07a298823be49804255e68f25d805a5caf2cb8ff638538445d820d7eff2",
       "translation_sha256": "f7e0d03375b09ca4743c27868ff620ac70c9724dbba6b8197f6b541c23c318a5"
     },
     "isa/instructions/sw_umax.md": {

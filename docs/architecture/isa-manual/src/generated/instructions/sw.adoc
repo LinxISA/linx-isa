@@ -5,7 +5,7 @@
 [[inst_sw]]
 ==== SW
 
-*Syntax:* sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]
+*Syntax:* sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]
 
 *Description:* SW snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 

@@ -21532,32 +21532,13 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
             0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            3
           ]
         }
       ],
@@ -21830,14 +21811,6 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
@@ -21848,14 +21821,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -22128,14 +22094,6 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
@@ -22146,14 +22104,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -22426,14 +22377,6 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
@@ -22444,14 +22387,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -22724,14 +22660,6 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
@@ -22742,14 +22670,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -23022,14 +22943,6 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
@@ -23040,14 +22953,7 @@
             4,
             5,
             6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            7
           ]
         }
       ],
@@ -28367,568 +28273,6 @@
         "length_bits": 48,
         "parts": [
           {
-            "constraints": [
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "8"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "9"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "10"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "11"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "12"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "13"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "14"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "15"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "16"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "17"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "18"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "19"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "20"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "21"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "22"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "23"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "24"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "25"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "26"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "27"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "28"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "29"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "30"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "31"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "32"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "33"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "34"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "35"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "36"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "37"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "38"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "39"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "40"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "41"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "42"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "43"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "44"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "45"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "46"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "47"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "48"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "49"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "50"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "51"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "52"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "53"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "54"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "55"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "56"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "57"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "58"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "59"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "60"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "61"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "62"
-              },
-              {
-                "field": "immr",
-                "op": "!=",
-                "value": "63"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "8"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "9"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "10"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "11"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "12"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "13"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "14"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "15"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "16"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "17"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "18"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "19"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "20"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "21"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "22"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "23"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "24"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "25"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "26"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "27"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "28"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "29"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "30"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "31"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "32"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "33"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "34"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "35"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "36"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "37"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "38"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "39"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "40"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "41"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "42"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "43"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "44"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "45"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "46"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "47"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "48"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "49"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "50"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "51"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "52"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "53"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "54"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "55"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "56"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "57"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "58"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "59"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "60"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "61"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "62"
-              },
-              {
-                "field": "imms",
-                "op": "!=",
-                "value": "63"
-              }
-            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -29004,7 +28348,7 @@
       "id": "hl_bfi_48_995211593446",
       "length_bits": 48,
       "mnemonic": "HL.BFI",
-      "note": "HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.",
+      "note": "HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.",
       "parts": [
         {
           "segments": [
@@ -33215,11 +32559,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -33381,7 +32732,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lb_po_48_5c7f5c82b186",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -33399,11 +32760,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -33565,7 +32933,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lb_pr_48_cf73675cad50",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -34221,11 +33599,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -34387,7 +33772,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lbp_48_9d1fd0b3105b",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -34533,11 +33928,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -34699,7 +34101,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lbu_po_48_5c8a5b39e6c5",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -34717,11 +34129,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -34883,7 +34302,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lbu_pr_48_bf9a0ea4b0db",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -35539,11 +34968,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -35705,7 +35141,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lbup_48_c9598658dde4",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -35851,11 +35297,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -36017,7 +35470,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_ld_po_48_870e30995d10",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -36035,11 +35498,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -36201,7 +35671,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_ld_pr_48_7ec4111b123b",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -37495,11 +36975,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -37661,7 +37148,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_ldp_48_a7a45a43dff9",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -37807,11 +37304,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -37973,7 +37477,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lh_po_48_7ca3e8b77906",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -37991,11 +37505,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -38157,7 +37678,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lh_pr_48_d59f64cde1dc",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -39451,11 +38982,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -39617,7 +39155,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lhp_48_128eb429101f",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -39763,11 +39311,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -39929,7 +39484,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lhu_po_48_c57c3b4a74e8",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -39947,11 +39512,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -40113,7 +39685,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lhu_pr_48_f874b126e29c",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -41407,11 +40989,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -41573,7 +41162,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lhup_48_ea24f978b27a",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -42067,11 +41666,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -42233,7 +41839,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lw_po_48_ff2c6de58064",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -42251,11 +41867,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -42417,7 +42040,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lw_pr_48_2b0d62d28b57",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -43711,11 +43344,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -43877,7 +43517,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lwp_48_10fe25c62553",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -44023,11 +43673,18 @@
       "uop_group": "LDA/PC_REL"
     },
     {
-      "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -44189,7 +43846,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lwu_po_48_98730d2ddead",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -44207,11 +43874,18 @@
       "uop_group": "LDA/POST_INDEX"
     },
     {
-      "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -44373,7 +44047,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lwu_pr_48_f105cacec36c",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -45667,11 +45351,18 @@
       "uop_group": "LDA/PAIR"
     },
     {
-      "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
+      "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst0",
@@ -45833,7 +45524,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_lwup_48_30f20380c354",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -47121,7 +46822,7 @@
       "uop_group": "ALU"
     },
     {
-      "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
+      "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -47433,7 +47134,7 @@
       "uop_group": "LDA"
     },
     {
-      "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
@@ -49724,11 +49425,18 @@
       "uop_group": "STA/PC_REL"
     },
     {
-      "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -49862,7 +49570,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sb_po_48_c21837f2c14d",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -49884,11 +49602,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -50022,7 +49747,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sb_pr_48_40eae4513905",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -50754,11 +50489,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -50892,7 +50634,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sbp_48_12e03c011f0a",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -51060,11 +50812,18 @@
       "uop_group": "STA/PC_REL"
     },
     {
-      "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
+      "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -51198,7 +50957,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sd_po_48_9ced722101a8",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -51220,11 +50989,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
+      "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -51358,7 +51134,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sd_pr_48_4f96249f5efe",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -51380,11 +51166,18 @@
       "uop_group": "STA/PRE_INDEX"
     },
     {
-      "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -51518,7 +51311,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sd_upo_48_ba930fbec5c7",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -51540,11 +51343,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -51678,7 +51488,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sd_upr_48_af7118270a90",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -53120,11 +52940,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
+      "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -53258,7 +53085,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sdp_48_5884c49a7e55",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -53280,11 +53117,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -53418,7 +53262,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sdp_u_48_66de58724f2f",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -54844,11 +54698,18 @@
       "uop_group": "STA/PC_REL"
     },
     {
-      "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
+      "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -54982,7 +54843,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sh_po_48_e0b543d5b724",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -55004,11 +54875,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
+      "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -55142,7 +55020,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sh_pr_48_40ab17f5a580",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -55164,11 +55052,18 @@
       "uop_group": "STA/PRE_INDEX"
     },
     {
-      "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -55302,7 +55197,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sh_upo_48_5bfb8ea0c992",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -55324,11 +55229,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -55462,7 +55374,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sh_upr_48_719102d66e45",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -56904,11 +56826,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
+      "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -57042,7 +56971,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_shp_48_ccc507e71a27",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -57064,11 +57003,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -57202,7 +57148,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_shp_u_48_232b2200b7b9",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -57900,11 +57856,18 @@
       "uop_group": "STA/PC_REL"
     },
     {
-      "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
+      "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -58038,7 +58001,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sw_po_48_84cf0cd97fde",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -58060,11 +58033,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
+      "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -58198,7 +58178,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sw_pr_48_d80424b0a9cb",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -58220,11 +58210,18 @@
       "uop_group": "STA/PRE_INDEX"
     },
     {
-      "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -58358,7 +58355,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sw_upo_48_59be7b468f8a",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -58380,11 +58387,18 @@
       "uop_group": "STA/POST_INDEX"
     },
     {
-      "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
+      "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -58518,7 +58532,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_sw_upr_48_d4ccb513944a",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -59960,11 +59984,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
+      "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -60098,7 +60129,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_swp_48_d0efe96e09f0",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -60120,11 +60161,18 @@
       "uop_group": "STA/PAIR"
     },
     {
-      "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 48,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -60258,7 +60306,17 @@
           "width_bits": 48
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "hl_swp_u_48_c244a576be8e",
       "source": {
         "file": "opcodes/lx_hl48.opc",
@@ -62072,11 +62130,18 @@
       "uop_group": "CMD"
     },
     {
-      "asm": "lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -62210,7 +62275,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "lb_32_b718aa88e28f",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -62449,11 +62524,18 @@
       "uop_group": "LDA/BASE_IMM"
     },
     {
-      "asm": "lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -62587,7 +62669,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "lbu_32_a9a58ab4ea22",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -62826,11 +62918,18 @@
       "uop_group": "LDA/BASE_IMM"
     },
     {
-      "asm": "ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -62964,7 +63063,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "ld_32_7c48838bc4e6",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -64779,11 +64888,18 @@
       "uop_group": "LDA/UNSCALED"
     },
     {
-      "asm": "lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -64917,7 +65033,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "lh_32_d0f04d7d7696",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -65276,11 +65402,18 @@
       "uop_group": "LDA/UNSCALED"
     },
     {
-      "asm": "lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -65414,7 +65547,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "lhu_32_730caf67ecd1",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -66692,11 +66835,18 @@
       "uop_group": "ALU"
     },
     {
-      "asm": "lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -66830,7 +66980,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "lw_32_3a77ffafcb34",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -68645,11 +68805,18 @@
       "uop_group": "LDA/UNSCALED"
     },
     {
-      "asm": "lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -68783,7 +68950,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "lwu_32_678935925636",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -71662,11 +71839,18 @@
       "uop_group": "ALU"
     },
     {
-      "asm": "prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
+      "asm": "prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "RegDst",
@@ -71800,7 +71984,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "prf_32_30e6dfe4e3ce",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -72586,11 +72780,18 @@
       "uop_group": "ALU"
     },
     {
-      "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -72696,7 +72897,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sb_32_43c106ae3749",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -73981,32 +74192,13 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
             0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            3
           ]
         }
       ],
@@ -74025,11 +74217,18 @@
       "uop_group": "FSU"
     },
     {
-      "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
+      "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -74135,7 +74334,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sd_32_9dbc40328653",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -75008,11 +75217,18 @@
       "uop_group": "AMO"
     },
     {
-      "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -75118,7 +75334,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sd_u_32_1602c58c2031",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -77917,11 +78143,18 @@
       "uop_group": "BRU"
     },
     {
-      "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
+      "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -78027,7 +78260,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sh_32_bc7d4a7dea28",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -78170,11 +78413,18 @@
       "uop_group": "STA"
     },
     {
-      "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -78280,7 +78530,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sh_u_32_fa87afbf8f24",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -80957,11 +81217,18 @@
       "uop_group": "ALU"
     },
     {
-      "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
+      "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -81067,7 +81334,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sw_32_28ad317b1b41",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -81940,11 +82217,18 @@
       "uop_group": "AMO"
     },
     {
-      "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
+      "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
       "encoding": {
         "length_bits": 32,
         "parts": [
           {
+            "constraints": [
+              {
+                "field": "SrcRType",
+                "op": "!=",
+                "value": "3"
+              }
+            ],
             "fields": [
               {
                 "name": "SrcD",
@@ -82050,7 +82334,17 @@
           "width_bits": 32
         }
       ],
-      "pto_source_constraints": [],
+      "pto_source_constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "pto_source_form_id": "sw_u_32_718a61f75d33",
       "source": {
         "file": "opcodes/lx_32.opc",
@@ -84095,32 +84389,13 @@
       ],
       "pto_source_constraints": [
         {
-          "field": "SrcType",
-          "operator": "one-of",
-          "values": [
-            0,
-            1
-          ]
-        },
-        {
           "field": "DstType",
           "operator": "one-of",
           "values": [
             0,
             1,
             2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
+            3
           ]
         }
       ],
@@ -147060,8 +147335,8 @@
     },
     "srcrtype": {
       "csel": {
-        "description": "CSEL encodes its optional .neg as SrcRType=10; the canonical unmodified spelling uses SrcRType=11 and every other value is also treated as unmodified.",
-        "policy": "10_as_neg_else_00"
+        "description": "CSEL encodes its optional .neg as SrcRType=11; raw 00, 01, and 10 are unmodified aliases.",
+        "policy": "11_as_neg_else_00"
       },
       "description": "2-bit SrcRType mapping and evaluation order.",
       "mapping": {
@@ -166076,7 +166351,7 @@
       "family_constraint_application_count": 0,
       "family_constraint_count": 0,
       "family_constraints": [],
-      "form_constraint_count": 41,
+      "form_constraint_count": 96,
       "form_count": 466,
       "forms": [
         {
@@ -173406,36 +173681,7 @@
         },
         {
           "asm": "hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}",
-          "constraints": [
-            {
-              "field": "immr",
-              "operator": "one-of",
-              "values": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7
-              ]
-            },
-            {
-              "field": "imms",
-              "operator": "one-of",
-              "values": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7
-              ]
-            }
-          ],
+          "constraints": [],
           "encoding": [
             {
               "index": 0,
@@ -173513,7 +173759,7 @@
           "semantic_family": "ALU",
           "semantic_group": "ALU",
           "semantic_handler": "InsertBitfield",
-          "semantic_summary": "HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.",
+          "semantic_summary": "HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.",
           "status": "accepted"
         },
         {
@@ -174977,8 +175223,18 @@
             "size_bytes": 1,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -175081,8 +175337,18 @@
             "size_bytes": 1,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -175513,8 +175779,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -175678,8 +175954,18 @@
             "size_bytes": 1,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -175782,8 +176068,18 @@
             "size_bytes": 1,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -176214,8 +176510,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -176379,8 +176685,18 @@
             "size_bytes": 8,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -176483,8 +176799,18 @@
             "size_bytes": 8,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -177243,8 +177569,18 @@
             "size_bytes": 8,
             "update_mode": "None"
           },
-          "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -177408,8 +177744,18 @@
             "size_bytes": 2,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -177512,8 +177858,18 @@
             "size_bytes": 2,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -178272,8 +178628,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -178437,8 +178803,18 @@
             "size_bytes": 2,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -178541,8 +178917,18 @@
             "size_bytes": 2,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -179301,8 +179687,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -179622,8 +180018,18 @@
             "size_bytes": 4,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -179726,8 +180132,18 @@
             "size_bytes": 4,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -180486,8 +180902,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -180651,8 +181077,18 @@
             "size_bytes": 4,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -180755,8 +181191,18 @@
             "size_bytes": 4,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -181515,8 +181961,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-          "constraints": [],
+          "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -182207,7 +182663,7 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
+          "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
           "constraints": [
             {
               "field": "model",
@@ -182309,7 +182765,7 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+          "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
           "constraints": [
             {
               "field": "model",
@@ -182951,8 +183407,18 @@
             "size_bytes": 1,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -183043,8 +183509,18 @@
             "size_bytes": 1,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -183483,8 +183959,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -183641,8 +184127,18 @@
             "size_bytes": 8,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -183733,8 +184229,18 @@
             "size_bytes": 8,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -183825,8 +184331,18 @@
             "size_bytes": 8,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -183917,8 +184433,18 @@
             "size_bytes": 8,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -184705,8 +185231,18 @@
             "size_bytes": 8,
             "update_mode": "None"
           },
-          "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
-          "constraints": [],
+          "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -184797,8 +185333,18 @@
             "size_bytes": 8,
             "update_mode": "None"
           },
-          "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -185507,8 +186053,18 @@
             "size_bytes": 2,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -185599,8 +186155,18 @@
             "size_bytes": 2,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -185691,8 +186257,18 @@
             "size_bytes": 2,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -185783,8 +186359,18 @@
             "size_bytes": 2,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -186571,8 +187157,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
-          "constraints": [],
+          "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -186663,8 +187259,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -187053,8 +187659,18 @@
             "size_bytes": 4,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -187145,8 +187761,18 @@
             "size_bytes": 4,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -187237,8 +187863,18 @@
             "size_bytes": 4,
             "update_mode": "PostIndex"
           },
-          "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -187329,8 +187965,18 @@
             "size_bytes": 4,
             "update_mode": "PreIndex"
           },
-          "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -188117,8 +188763,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
-          "constraints": [],
+          "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -188209,8 +188865,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -188590,8 +189256,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -188806,8 +189482,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -189022,8 +189708,18 @@
             "size_bytes": 8,
             "update_mode": "None"
           },
-          "asm": "ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -190066,8 +190762,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -190350,8 +191056,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -191108,8 +191824,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -192152,8 +192878,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-          "constraints": [],
+          "asm": "lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -193334,8 +194070,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
-          "constraints": [],
+          "asm": "prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -193801,8 +194547,18 @@
             "size_bytes": 1,
             "update_mode": "None"
           },
-          "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -194477,8 +195233,18 @@
             "size_bytes": 8,
             "update_mode": "None"
           },
-          "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
-          "constraints": [],
+          "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -194973,8 +195739,18 @@
             "size_bytes": 8,
             "update_mode": "None"
           },
-          "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -196426,8 +197202,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
-          "constraints": [],
+          "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -196567,8 +197353,18 @@
             "size_bytes": 2,
             "update_mode": "None"
           },
-          "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -197938,8 +198734,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
-          "constraints": [],
+          "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,
@@ -198434,8 +199240,18 @@
             "size_bytes": 4,
             "update_mode": "None"
           },
-          "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-          "constraints": [],
+          "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+          "constraints": [
+            {
+              "field": "SrcRType",
+              "operator": "one-of",
+              "values": [
+                0,
+                1,
+                2
+              ]
+            }
+          ],
           "encoding": [
             {
               "index": 0,

@@ -116,21 +116,17 @@
       "path": "tools/pto-spec",
       "url": "https://github.com/PTO-ISA/pto-spec.git",
       "branch": "main",
-      "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
-      "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
-      "role": "PTO ISA 0.58.5 normative source and next-instruction owner",
-      "integration_status": "review_only_open_pr",
-      "review_url": "https://github.com/PTO-ISA/pto-spec/pull/190"
+      "commit": "33637171b96b402a14319561662cb741e9cc6f87",
+      "tree": "d880e84dc9efd41e7aa29377196723e256cad1dd",
+      "role": "PTO ISA 0.58.5 normative source and next-instruction owner"
     },
     {
       "path": "tools/asl-model",
       "url": "https://github.com/PTO-ISA/asl-model.git",
       "branch": "main",
-      "commit": "6814c9e4457a937570cbfd5a481b0fd3ab96d805",
-      "tree": "70ffa96101905a9f4effa076eda62f02215d7f30",
-      "role": "ASLRef-backed PTO reference model and C ABI owner",
-      "integration_status": "review_only_open_pr",
-      "review_url": "https://github.com/PTO-ISA/asl-model/pull/4"
+      "commit": "3e775759add3a209cd8503f92472e1de1b60db16",
+      "tree": "99dd801fd92a58ab31372566da6961ca1dec123d",
+      "role": "ASLRef-backed PTO reference model and C ABI owner"
     },
     {
       "path": "tools/model",
