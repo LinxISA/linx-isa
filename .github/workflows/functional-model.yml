@@ -27,7 +27,18 @@ jobs:
         with:
           python-version: "3.11"
       - name: Initialize exact functional-model components
+        env:
+          SUPERSCALARMODEL_READ_TOKEN: ${{ secrets.SUPERSCALARMODEL_READ_TOKEN }}
         run: |
+          if [[ -z "$SUPERSCALARMODEL_READ_TOKEN" ]]; then
+            echo "SUPERSCALARMODEL_READ_TOKEN is required to read the private SuperScalarModel submodule" >&2
+            exit 1
+          fi
+          git config --local url."https://x-access-token:${SUPERSCALARMODEL_READ_TOKEN}@github.com/".insteadOf "https://github.com/"
+          cleanup_credentials() {
+            git config --local --unset-all "url.https://x-access-token:${SUPERSCALARMODEL_READ_TOKEN}@github.com/.insteadOf" || true
+          }
+          trap cleanup_credentials EXIT
           git submodule update --init tools/pto-spec
           git submodule update --init tools/asl-model
           git submodule update --init tools/SuperScalarModel

@@ -136,10 +136,10 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "bf9d73cff60009e9d40e7f3d240411d96af8cf87",
-      "tree": "e1cfb2ff41916573752ba192b38d33ee7bcc8c76",
+      "commit": "e9f14d9228732f0589f309285cbc8aabaa698353",
+      "tree": "970ca59157a53349d2ccd75d942526f007df7acc",
       "release": "0.58.3",
-      "role": "v0.58.3 queue-wired model"
+      "role": "v0.58.5 codec projection model"
     },
     {
       "path": "tools/pyCircuit",
