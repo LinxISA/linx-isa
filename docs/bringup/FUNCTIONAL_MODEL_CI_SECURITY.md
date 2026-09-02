@@ -20,3 +20,11 @@ remains unsatisfied. To obtain the check, a maintainer must mirror the exact
 fork head commit to a trusted branch in the base repository, or use a
 separately authorized ephemeral runner lane. Labels and secrets are not runner
 authorization mechanisms.
+
+The `tools/SuperScalarModel` gitlink is hosted in a private repository. The
+repository must provide both workflows with a read-only GitHub App or
+fine-grained token in the `SUPERSCALARMODEL_READ_TOKEN` secret. Restrict the
+token to `LinxISA/SuperScalarModel` contents read access. The workflows use it
+only while initializing submodules and remove the temporary URL rewrite when
+that step exits. Without this secret, the guards job fails during submodule
+initialization before it can report lock or projection results.
