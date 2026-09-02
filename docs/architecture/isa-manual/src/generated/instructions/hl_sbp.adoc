@@ -5,7 +5,7 @@
 [[inst_hl_sbp]]
 ==== HL.SBP
 
-*Syntax:* hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]
+*Syntax:* hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]
 
 *Description:* HL.SBP snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 1-byte values.
 

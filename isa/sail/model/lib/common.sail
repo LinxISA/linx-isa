@@ -250,28 +250,28 @@ function ashr32(w : bits(32), sh : int) -> bits(32) = {
 // Architectural state accessors are defined in state.sail.
 
 // SrcRType mapping (2-bit).
-// 00: .sw (sext32)
-// 01: .uw (zext32)
-// 10: .neg (arithmetic) OR .not (logical)
-// 11: unchanged
+// 00: unchanged
+// 01: .sw (sext32)
+// 10: .uw (zext32)
+// 11: .neg (arithmetic) OR .not (logical)
 
 type srcrtype = bits(2)
 
 function apply_srcrtype_arith64(t : srcrtype, x : bits(64)) -> bits(64) = {
   match t {
-    0b00 => sext32(x),
-    0b01 => zext32(x),
-    0b10 => sub_bits(sail_zeros(64), x),
-    0b11 => x
+    0b00 => x,
+    0b01 => sext32(x),
+    0b10 => zext32(x),
+    0b11 => sub_bits(sail_zeros(64), x)
   }
 }
 
 function apply_srcrtype_logic64(t : srcrtype, x : bits(64)) -> bits(64) = {
   match t {
-    0b00 => sext32(x),
-    0b01 => zext32(x),
-    0b10 => not_vec(x),
-    0b11 => x
+    0b00 => x,
+    0b01 => sext32(x),
+    0b10 => zext32(x),
+    0b11 => not_vec(x)
   }
 }
 
@@ -280,8 +280,8 @@ function apply_srcrtype_arith32(t : srcrtype, x : bits(64)) -> bits(32) = {
   match t {
     0b00 => w,
     0b01 => w,
-    0b10 => sub_bits(sail_zeros(32), w),
-    0b11 => w
+    0b10 => w,
+    0b11 => sub_bits(sail_zeros(32), w)
   }
 }
 
@@ -290,8 +290,8 @@ function apply_srcrtype_logic32(t : srcrtype, x : bits(64)) -> bits(32) = {
   match t {
     0b00 => w,
     0b01 => w,
-    0b10 => not_vec(w),
-    0b11 => w
+    0b10 => w,
+    0b11 => not_vec(w)
   }
 }
 

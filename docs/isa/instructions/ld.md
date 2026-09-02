@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+- `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ LD snapshots its scalar sources, forms its encoded address, and loads one aligne
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 32 | — |
+| `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` | 32 | — |
 
 <div class="insn-nav">
 

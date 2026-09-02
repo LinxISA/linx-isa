@@ -5,7 +5,7 @@
 [[inst_prf]]
 ==== PRF
 
-*Syntax:* prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]
+*Syntax:* prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]
 
 *Description:* PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
 

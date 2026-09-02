@@ -5,7 +5,7 @@
 [[inst_sd]]
 ==== SD
 
-*Syntax:* sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]
+*Syntax:* sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]
 
 *Description:* SD snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
 

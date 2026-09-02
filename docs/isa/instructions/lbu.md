@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+- `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ LBU snapshots its scalar sources, forms its encoded address, and loads one align
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 32 | — |
+| `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` | 32 | — |
 
 <div class="insn-nav">
 

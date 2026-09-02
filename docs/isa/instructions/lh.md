@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+- `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ LH snapshots its scalar sources, forms its encoded address, and loads one aligne
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 32 | — |
+| `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` | 32 | — |
 
 <div class="insn-nav">
 

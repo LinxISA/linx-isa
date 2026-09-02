@@ -236,9 +236,9 @@ assert semantics_conventions["immediate_materialization"]["hl_lui"] == {
 }
 assert "sail_shiftleft(zext32_from32(imm32), 32)" in sail_execute
 assert "write_regdst(RegDst, sext32_from32(imm32))" not in sail_execute
-assert semantics_conventions["srcrtype"]["csel"]["policy"] == "10_as_neg_else_00"
-assert "if SrcRType == 0b10 then sub_bits" in sail_execute
-assert "if SrcRType == 0b11 then sub_bits" not in sail_execute
+assert semantics_conventions["srcrtype"]["csel"]["policy"] == "11_as_neg_else_00"
+assert "if SrcRType == 0b11 then sub_bits" in sail_execute
+assert "if SrcRType == 0b10 then sub_bits" not in sail_execute
 assert "tile_tlsu_required_sources" in sail_execute
 assert "tile_tlsu_produces_output" in sail_execute
 assert "tile_tma_" not in sail_execute

@@ -8,7 +8,7 @@
     },
     "scalar_forms": {
       "path": "spec/catalog/scalar-forms.json",
-      "sha256": "e045c5303b402c1420b4cfc088f3d225eafdb47993f0e5159577dec18418fb07",
+      "sha256": "0cf45e973a23f50613fc2f411422c73c05ff2ceacdf33da42870091931614af3",
       "count": 466
     },
     "tile_operations": {
@@ -22,9 +22,9 @@
       "count": 46
     }
   },
-  "content_sha256": "8fd44cabc8b4b7ec56fc226cec1ba10d176982481c115062ad5c8c25c1a94a6d",
+  "content_sha256": "3a0eb710726063b91a376d97981818f4c91998a24a63043538916d3d1d2607f0",
   "encoding_abi": "pto-isa-0.58.5-mode-function-v1",
-  "encoding_projection_sha256": "d02ba5f4eb051406437aead50773b81c2bbb5ab1e8b1ea9966e5e967690ea48d",
+  "encoding_projection_sha256": "d8deb7e99bae8dec66a624b36b93bb3f85bcf93dfa02d3ee07357d1efb1ede18",
   "hardware_conformance_profile": {
     "path": "spec/hardware-conformance-profile.json",
     "profile_id": "pto-hardware-numeric-0.58.5-ieee-v1",
@@ -37,11 +37,11 @@
   "release": "0.58.5",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "d6ffe96d31a7f641c27e81fe995149f0a33b8eff94b6d408f09c3b1c6410b6e7"
+    "sha256": "632bf8227b4994bc7f03d5cd0957931673d3c7c838bc2324e5117426d1ea7960"
   },
   "source": {
-    "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
-    "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
+    "commit": "33637171b96b402a14319561662cb741e9cc6f87",
+    "tree": "d880e84dc9efd41e7aa29377196723e256cad1dd",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

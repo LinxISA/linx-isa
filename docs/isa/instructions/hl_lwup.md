@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+- `hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.LWUP snapshots its scalar sources, forms its encoded address, and loads two a
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` | 48 | — |
+| `hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` | 48 | — |
 
 <div class="insn-nav">
 

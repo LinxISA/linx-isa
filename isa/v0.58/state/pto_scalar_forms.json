@@ -2,7 +2,7 @@
   "family_constraint_application_count": 0,
   "family_constraint_count": 0,
   "family_constraints": [],
-  "form_constraint_count": 41,
+  "form_constraint_count": 96,
   "form_count": 466,
   "forms": [
     {
@@ -7332,36 +7332,7 @@
     },
     {
       "asm": "hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}",
-      "constraints": [
-        {
-          "field": "immr",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
-          ]
-        },
-        {
-          "field": "imms",
-          "operator": "one-of",
-          "values": [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7
-          ]
-        }
-      ],
+      "constraints": [],
       "encoding": [
         {
           "index": 0,
@@ -7439,7 +7410,7 @@
       "semantic_family": "ALU",
       "semantic_group": "ALU",
       "semantic_handler": "InsertBitfield",
-      "semantic_summary": "HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.",
+      "semantic_summary": "HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.",
       "status": "accepted"
     },
     {
@@ -8903,8 +8874,18 @@
         "size_bytes": 1,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -9007,8 +8988,18 @@
         "size_bytes": 1,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -9439,8 +9430,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -9604,8 +9605,18 @@
         "size_bytes": 1,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -9708,8 +9719,18 @@
         "size_bytes": 1,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -10140,8 +10161,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -10305,8 +10336,18 @@
         "size_bytes": 8,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -10409,8 +10450,18 @@
         "size_bytes": 8,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -11169,8 +11220,18 @@
         "size_bytes": 8,
         "update_mode": "None"
       },
-      "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -11334,8 +11395,18 @@
         "size_bytes": 2,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -11438,8 +11509,18 @@
         "size_bytes": 2,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -12198,8 +12279,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -12363,8 +12454,18 @@
         "size_bytes": 2,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -12467,8 +12568,18 @@
         "size_bytes": 2,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -13227,8 +13338,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -13548,8 +13669,18 @@
         "size_bytes": 4,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -13652,8 +13783,18 @@
         "size_bytes": 4,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -14412,8 +14553,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -14577,8 +14728,18 @@
         "size_bytes": 4,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -14681,8 +14842,18 @@
         "size_bytes": 4,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -15441,8 +15612,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1",
-      "constraints": [],
+      "asm": "hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -16133,7 +16314,7 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
+      "asm": "hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
       "constraints": [
         {
           "field": "model",
@@ -16235,7 +16416,7 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
+      "asm": "hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
       "constraints": [
         {
           "field": "model",
@@ -16877,8 +17058,18 @@
         "size_bytes": 1,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -16969,8 +17160,18 @@
         "size_bytes": 1,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -17409,8 +17610,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -17567,8 +17778,18 @@
         "size_bytes": 8,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -17659,8 +17880,18 @@
         "size_bytes": 8,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -17751,8 +17982,18 @@
         "size_bytes": 8,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -17843,8 +18084,18 @@
         "size_bytes": 8,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -18631,8 +18882,18 @@
         "size_bytes": 8,
         "update_mode": "None"
       },
-      "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
-      "constraints": [],
+      "asm": "hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -18723,8 +18984,18 @@
         "size_bytes": 8,
         "update_mode": "None"
       },
-      "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -19433,8 +19704,18 @@
         "size_bytes": 2,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -19525,8 +19806,18 @@
         "size_bytes": 2,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -19617,8 +19908,18 @@
         "size_bytes": 2,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -19709,8 +20010,18 @@
         "size_bytes": 2,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -20497,8 +20808,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
-      "constraints": [],
+      "asm": "hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -20589,8 +20910,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -20979,8 +21310,18 @@
         "size_bytes": 4,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -21071,8 +21412,18 @@
         "size_bytes": 4,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -21163,8 +21514,18 @@
         "size_bytes": 4,
         "update_mode": "PostIndex"
       },
-      "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -21255,8 +21616,18 @@
         "size_bytes": 4,
         "update_mode": "PreIndex"
       },
-      "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -22043,8 +22414,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
-      "constraints": [],
+      "asm": "hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -22135,8 +22516,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -22516,8 +22907,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -22732,8 +23133,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -22948,8 +23359,18 @@
         "size_bytes": 8,
         "update_mode": "None"
       },
-      "asm": "ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -23992,8 +24413,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -24276,8 +24707,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -25034,8 +25475,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -26078,8 +26529,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}",
-      "constraints": [],
+      "asm": "lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -27260,8 +27721,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]",
-      "constraints": [],
+      "asm": "prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -27727,8 +28198,18 @@
         "size_bytes": 1,
         "update_mode": "None"
       },
-      "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "sb SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -28403,8 +28884,18 @@
         "size_bytes": 8,
         "update_mode": "None"
       },
-      "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]",
-      "constraints": [],
+      "asm": "sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -28899,8 +29390,18 @@
         "size_bytes": 8,
         "update_mode": "None"
       },
-      "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -30352,8 +30853,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]",
-      "constraints": [],
+      "asm": "sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -30493,8 +31004,18 @@
         "size_bytes": 2,
         "update_mode": "None"
       },
-      "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -31864,8 +32385,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]",
-      "constraints": [],
+      "asm": "sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,
@@ -32360,8 +32891,18 @@
         "size_bytes": 4,
         "update_mode": "None"
       },
-      "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]",
-      "constraints": [],
+      "asm": "sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]",
+      "constraints": [
+        {
+          "field": "SrcRType",
+          "operator": "one-of",
+          "values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
       "encoding": [
         {
           "index": 0,

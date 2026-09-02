@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+- `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SH snapshots its scalar sources, forms its encoded address, and stores one align
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]` | 32 | — |
+| `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]` | 32 | — |
 
 <div class="insn-nav">
 

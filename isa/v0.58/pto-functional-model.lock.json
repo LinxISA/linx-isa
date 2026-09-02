@@ -5,19 +5,19 @@
   "architecture": {
     "repository": "https://github.com/PTO-ISA/pto-spec.git",
     "path": "tools/pto-spec",
-    "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
-    "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
+    "commit": "33637171b96b402a14319561662cb741e9cc6f87",
+    "tree": "d880e84dc9efd41e7aa29377196723e256cad1dd",
     "pto_lock": "isa/v0.58/pto-spec.lock.json",
-    "pto_lock_sha256": "70b9039c131c4ea49f61c7f4c7183700e0eb5bcfca1432afae6d9ee7d315a8ad",
-    "release_manifest_sha256": "d6ffe96d31a7f641c27e81fe995149f0a33b8eff94b6d408f09c3b1c6410b6e7"
+    "pto_lock_sha256": "fe7bd4c6a521f652e6430a6b010b3513c21dfe70aaa17c104bb196cd69d469cd",
+    "release_manifest_sha256": "632bf8227b4994bc7f03d5cd0957931673d3c7c838bc2324e5117426d1ea7960"
   },
   "reference_model": {
     "repository": "https://github.com/PTO-ISA/asl-model.git",
     "path": "tools/asl-model",
-    "commit": "6814c9e4457a937570cbfd5a481b0fd3ab96d805",
-    "tree": "70ffa96101905a9f4effa076eda62f02215d7f30",
+    "commit": "3e775759add3a209cd8503f92472e1de1b60db16",
+    "tree": "99dd801fd92a58ab31372566da6961ca1dec123d",
     "model_lock": "pto-lock.json",
-    "model_lock_sha256": "90a48d5f5c408e1c5698b07713ab75ed16cd7fbcf5fa561fcdeaee222aa5213c",
+    "model_lock_sha256": "a96a7e8160085b64872942bf4e2b8ce5c481f70314e98274f0ed236d010d0ded",
     "model_ndf": "docs/model-ndf-v1.md",
     "model_ndf_sha256": "69d192e0d0138e6dc1746330fecd9e2fdbc3cb720e53b8bda59429be141bd187"
   },

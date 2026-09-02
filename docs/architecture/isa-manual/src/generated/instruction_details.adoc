@@ -2245,7 +2245,7 @@ image::encodings/enc_hl_bfi.svg[HL.BFI encoding form hl_bfi_48_995211593446,alig
 
 Encoding notes (informative)::
 +
-* HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.
+* HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.
 
 Operation (informative)::
 +
@@ -11498,11 +11498,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lb_po_48_6681088ab2a9` — `hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lb_po_48_6681088ab2a9` — `hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lb_po.svg[HL.LB.PO encoding form hl_lb_po_48_6681088ab2a9,align="center"]
 
 
@@ -11554,11 +11554,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbu_po_48_7269ae6c8b57` — `hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbu_po_48_7269ae6c8b57` — `hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbu_po.svg[HL.LBU.PO encoding form hl_lbu_po_48_7269ae6c8b57,align="center"]
 
 
@@ -11610,11 +11610,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_ld_po_48_bf5a47212c1e` — `hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_ld_po_48_bf5a47212c1e` — `hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_ld_po.svg[HL.LD.PO encoding form hl_ld_po_48_bf5a47212c1e,align="center"]
 
 
@@ -11694,11 +11694,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lh_po_48_94154c7cdaba` — `hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lh_po_48_94154c7cdaba` — `hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lh_po.svg[HL.LH.PO encoding form hl_lh_po_48_94154c7cdaba,align="center"]
 
 
@@ -11778,11 +11778,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhu_po_48_70fcb01a2cd1` — `hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhu_po_48_70fcb01a2cd1` — `hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhu_po.svg[HL.LHU.PO encoding form hl_lhu_po_48_70fcb01a2cd1,align="center"]
 
 
@@ -11862,11 +11862,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lw_po_48_e8f3606964a3` — `hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lw_po_48_e8f3606964a3` — `hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lw_po.svg[HL.LW.PO encoding form hl_lw_po_48_e8f3606964a3,align="center"]
 
 
@@ -11946,11 +11946,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwu_po_48_ec309139d376` — `hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwu_po_48_ec309139d376` — `hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwu_po.svg[HL.LWU.PO encoding form hl_lwu_po_48_ec309139d376,align="center"]
 
 
@@ -12033,11 +12033,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lb_pr_48_7dd145c8dca5` — `hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lb_pr_48_7dd145c8dca5` — `hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lb_pr.svg[HL.LB.PR encoding form hl_lb_pr_48_7dd145c8dca5,align="center"]
 
 
@@ -12089,11 +12089,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbu_pr_48_38f53bbd7a7d` — `hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbu_pr_48_38f53bbd7a7d` — `hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbu_pr.svg[HL.LBU.PR encoding form hl_lbu_pr_48_38f53bbd7a7d,align="center"]
 
 
@@ -12145,11 +12145,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_ld_pr_48_b3cce95b31c8` — `hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_ld_pr_48_b3cce95b31c8` — `hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_ld_pr.svg[HL.LD.PR encoding form hl_ld_pr_48_b3cce95b31c8,align="center"]
 
 
@@ -12229,11 +12229,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lh_pr_48_d39cc9e74fc5` — `hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lh_pr_48_d39cc9e74fc5` — `hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lh_pr.svg[HL.LH.PR encoding form hl_lh_pr_48_d39cc9e74fc5,align="center"]
 
 
@@ -12313,11 +12313,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhu_pr_48_2b52029d8c1e` — `hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhu_pr_48_2b52029d8c1e` — `hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhu_pr.svg[HL.LHU.PR encoding form hl_lhu_pr_48_2b52029d8c1e,align="center"]
 
 
@@ -12397,11 +12397,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lw_pr_48_18db10ea88bf` — `hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lw_pr_48_18db10ea88bf` — `hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lw_pr.svg[HL.LW.PR encoding form hl_lw_pr_48_18db10ea88bf,align="center"]
 
 
@@ -12481,11 +12481,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwu_pr_48_319ed7e2c7d1` — `hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwu_pr_48_319ed7e2c7d1` — `hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwu_pr.svg[HL.LWU.PR encoding form hl_lwu_pr_48_319ed7e2c7d1,align="center"]
 
 
@@ -12935,11 +12935,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbp_48_2fcf575fd0c8` — `hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbp_48_2fcf575fd0c8` — `hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbp.svg[HL.LBP encoding form hl_lbp_48_2fcf575fd0c8,align="center"]
 
 
@@ -12991,11 +12991,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbup_48_c9bf719605ca` — `hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbup_48_c9bf719605ca` — `hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbup.svg[HL.LBUP encoding form hl_lbup_48_c9bf719605ca,align="center"]
 
 
@@ -13075,11 +13075,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_ldp_48_bacfe47cfd0b` — `hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_ldp_48_bacfe47cfd0b` — `hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_ldp.svg[HL.LDP encoding form hl_ldp_48_bacfe47cfd0b,align="center"]
 
 
@@ -13159,11 +13159,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhp_48_1a5646453ffe` — `hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhp_48_1a5646453ffe` — `hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhp.svg[HL.LHP encoding form hl_lhp_48_1a5646453ffe,align="center"]
 
 
@@ -13243,11 +13243,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhup_48_0ba242a670ec` — `hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhup_48_0ba242a670ec` — `hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhup.svg[HL.LHUP encoding form hl_lhup_48_0ba242a670ec,align="center"]
 
 
@@ -13327,11 +13327,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwp_48_7a46de902d85` — `hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwp_48_7a46de902d85` — `hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwp.svg[HL.LWP encoding form hl_lwp_48_7a46de902d85,align="center"]
 
 
@@ -13411,11 +13411,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwup_48_9af645913747` — `hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwup_48_9af645913747` — `hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwup.svg[HL.LWUP encoding form hl_lwup_48_9af645913747,align="center"]
 
 
@@ -13442,11 +13442,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+* `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 
 Encoding::
 +
-.`hl_prf_48_6a2f3688490f` — `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+.`hl_prf_48_6a2f3688490f` — `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 image::encodings/enc_hl_prf.svg[HL.PRF encoding form hl_prf_48_6a2f3688490f,align="center"]
 
 
@@ -13471,11 +13471,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_prf_a_48_1dc197c8b5a5` — `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`hl_prf_a_48_1dc197c8b5a5` — `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_hl_prf_a.svg[HL.PRF.A encoding form hl_prf_a_48_1dc197c8b5a5,align="center"]
 
 
@@ -13961,11 +13961,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sb_po_48_bb1ccb3da24b` — `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sb_po_48_bb1ccb3da24b` — `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sb_po.svg[HL.SB.PO encoding form hl_sb_po_48_bb1ccb3da24b,align="center"]
 
 
@@ -14017,11 +14017,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+* `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_po_48_f335328a7f87` — `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+.`hl_sd_po_48_f335328a7f87` — `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_po.svg[HL.SD.PO encoding form hl_sd_po_48_f335328a7f87,align="center"]
 
 
@@ -14045,11 +14045,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_upo_48_7d91573c6555` — `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sd_upo_48_7d91573c6555` — `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_upo.svg[HL.SD.UPO encoding form hl_sd_upo_48_7d91573c6555,align="center"]
 
 
@@ -14129,11 +14129,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+* `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_po_48_2b20a782f566` — `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+.`hl_sh_po_48_2b20a782f566` — `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_po.svg[HL.SH.PO encoding form hl_sh_po_48_2b20a782f566,align="center"]
 
 
@@ -14157,11 +14157,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_upo_48_d28769e5b16f` — `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sh_upo_48_d28769e5b16f` — `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_upo.svg[HL.SH.UPO encoding form hl_sh_upo_48_d28769e5b16f,align="center"]
 
 
@@ -14241,11 +14241,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+* `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_po_48_3183f373cc63` — `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+.`hl_sw_po_48_3183f373cc63` — `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_po.svg[HL.SW.PO encoding form hl_sw_po_48_3183f373cc63,align="center"]
 
 
@@ -14269,11 +14269,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_upo_48_bab8d2d69b0b` — `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sw_upo_48_bab8d2d69b0b` — `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_upo.svg[HL.SW.UPO encoding form hl_sw_upo_48_bab8d2d69b0b,align="center"]
 
 
@@ -14356,11 +14356,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sb_pr_48_6355032ffe23` — `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sb_pr_48_6355032ffe23` — `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sb_pr.svg[HL.SB.PR encoding form hl_sb_pr_48_6355032ffe23,align="center"]
 
 
@@ -14412,11 +14412,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+* `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_pr_48_a9ff27c38e8d` — `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+.`hl_sd_pr_48_a9ff27c38e8d` — `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_pr.svg[HL.SD.PR encoding form hl_sd_pr_48_a9ff27c38e8d,align="center"]
 
 
@@ -14440,11 +14440,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_upr_48_9dcf6a32e5df` — `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sd_upr_48_9dcf6a32e5df` — `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_upr.svg[HL.SD.UPR encoding form hl_sd_upr_48_9dcf6a32e5df,align="center"]
 
 
@@ -14524,11 +14524,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+* `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_pr_48_ec007e4fe531` — `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+.`hl_sh_pr_48_ec007e4fe531` — `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_pr.svg[HL.SH.PR encoding form hl_sh_pr_48_ec007e4fe531,align="center"]
 
 
@@ -14552,11 +14552,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_upr_48_d53d5eeaff29` — `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sh_upr_48_d53d5eeaff29` — `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_upr.svg[HL.SH.UPR encoding form hl_sh_upr_48_d53d5eeaff29,align="center"]
 
 
@@ -14636,11 +14636,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+* `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_pr_48_f2ebdd2d507e` — `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+.`hl_sw_pr_48_f2ebdd2d507e` — `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_pr.svg[HL.SW.PR encoding form hl_sw_pr_48_f2ebdd2d507e,align="center"]
 
 
@@ -14664,11 +14664,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_upr_48_0710e763bdf1` — `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sw_upr_48_0710e763bdf1` — `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_upr.svg[HL.SW.UPR encoding form hl_sw_upr_48_0710e763bdf1,align="center"]
 
 
@@ -14978,11 +14978,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_sbp_48_4e0c7cb0c724` — `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_sbp_48_4e0c7cb0c724` — `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_sbp.svg[HL.SBP encoding form hl_sbp_48_4e0c7cb0c724,align="center"]
 
 
@@ -15062,11 +15062,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+* `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]`
 
 Encoding::
 +
-.`hl_sdp_48_355cef372d62` — `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+.`hl_sdp_48_355cef372d62` — `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]`
 image::encodings/enc_hl_sdp.svg[HL.SDP encoding form hl_sdp_48_355cef372d62,align="center"]
 
 
@@ -15090,11 +15090,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_sdp_u_48_30e8e0d29477` — `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_sdp_u_48_30e8e0d29477` — `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_sdp_u.svg[HL.SDP.U encoding form hl_sdp_u_48_30e8e0d29477,align="center"]
 
 
@@ -15174,11 +15174,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+* `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]`
 
 Encoding::
 +
-.`hl_shp_48_c360aaff00b3` — `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+.`hl_shp_48_c360aaff00b3` — `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]`
 image::encodings/enc_hl_shp.svg[HL.SHP encoding form hl_shp_48_c360aaff00b3,align="center"]
 
 
@@ -15202,11 +15202,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_shp_u_48_f36739d9d0e0` — `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_shp_u_48_f36739d9d0e0` — `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_shp_u.svg[HL.SHP.U encoding form hl_shp_u_48_f36739d9d0e0,align="center"]
 
 
@@ -15286,11 +15286,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+* `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]`
 
 Encoding::
 +
-.`hl_swp_48_86359b86a0ae` — `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+.`hl_swp_48_86359b86a0ae` — `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]`
 image::encodings/enc_hl_swp.svg[HL.SWP encoding form hl_swp_48_86359b86a0ae,align="center"]
 
 
@@ -15314,11 +15314,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_swp_u_48_31bb1fa06039` — `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_swp_u_48_31bb1fa06039` — `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_swp_u.svg[HL.SWP.U encoding form hl_swp_u_48_31bb1fa06039,align="center"]
 
 
@@ -15345,11 +15345,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lb_32_69fa62bab890` — `lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lb_32_69fa62bab890` — `lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lb.svg[LB encoding form lb_32_69fa62bab890,align="center"]
 
 
@@ -15373,11 +15373,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lbu_32_3dba99c3867b` — `lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lbu_32_3dba99c3867b` — `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lbu.svg[LBU encoding form lbu_32_3dba99c3867b,align="center"]
 
 
@@ -15401,11 +15401,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`ld_32_6ccb1c483bc5` — `ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`ld_32_6ccb1c483bc5` — `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_ld.svg[LD encoding form ld_32_6ccb1c483bc5,align="center"]
 
 
@@ -15429,11 +15429,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lh_32_ba0f2afd9b3f` — `lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lh_32_ba0f2afd9b3f` — `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lh.svg[LH encoding form lh_32_ba0f2afd9b3f,align="center"]
 
 
@@ -15457,11 +15457,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lhu_32_050c45d23cc9` — `lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lhu_32_050c45d23cc9` — `lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lhu.svg[LHU encoding form lhu_32_050c45d23cc9,align="center"]
 
 
@@ -15485,11 +15485,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lw_32_3ab9351b5a00` — `lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lw_32_3ab9351b5a00` — `lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lw.svg[LW encoding form lw_32_3ab9351b5a00,align="center"]
 
 
@@ -15513,11 +15513,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lwu_32_59dfc83ee4f4` — `lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lwu_32_59dfc83ee4f4` — `lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lwu.svg[LWU encoding form lwu_32_59dfc83ee4f4,align="center"]
 
 
@@ -15541,11 +15541,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+* `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 
 Encoding::
 +
-.`prf_32_a91e5e18a496` — `prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+.`prf_32_a91e5e18a496` — `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 image::encodings/enc_prf.svg[PRF encoding form prf_32_a91e5e18a496,align="center"]
 
 
@@ -15745,11 +15745,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sb SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sb_32_f0f61f5c7063` — `sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sb_32_f0f61f5c7063` — `sb SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sb.svg[SB encoding form sb_32_f0f61f5c7063,align="center"]
 
 
@@ -15773,11 +15773,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+* `sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]`
 
 Encoding::
 +
-.`sd_32_324dd0ff5d29` — `sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+.`sd_32_324dd0ff5d29` — `sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]`
 image::encodings/enc_sd.svg[SD encoding form sd_32_324dd0ff5d29,align="center"]
 
 
@@ -15801,11 +15801,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sd_u_32_854cc53e5b65` — `sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sd_u_32_854cc53e5b65` — `sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sd_u.svg[SD.U encoding form sd_u_32_854cc53e5b65,align="center"]
 
 
@@ -15829,11 +15829,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+* `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]`
 
 Encoding::
 +
-.`sh_32_80b2371159a4` — `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+.`sh_32_80b2371159a4` — `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]`
 image::encodings/enc_sh.svg[SH encoding form sh_32_80b2371159a4,align="center"]
 
 
@@ -15857,11 +15857,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sh_u_32_bf6553f1739e` — `sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sh_u_32_bf6553f1739e` — `sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sh_u.svg[SH.U encoding form sh_u_32_bf6553f1739e,align="center"]
 
 
@@ -15885,11 +15885,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+* `sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]`
 
 Encoding::
 +
-.`sw_32_4fdd666796e5` — `sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+.`sw_32_4fdd666796e5` — `sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]`
 image::encodings/enc_sw.svg[SW encoding form sw_32_4fdd666796e5,align="center"]
 
 
@@ -15913,11 +15913,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sw_u_32_9f812ca5bf87` — `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sw_u_32_9f812ca5bf87` — `sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sw_u.svg[SW.U encoding form sw_u_32_9f812ca5bf87,align="center"]
 
 
