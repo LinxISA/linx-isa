@@ -189,8 +189,23 @@ function main() : unit -> unit = {
   assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
   assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
   assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
-  // The imported AGU form constraint rejects raw 11 before exec_lbu.
-  assert_reserved_branch_word(0x0600_7009, 0x0000_0000_0000_0790);
+  // The imported AGU form constraint rejects raw 11 before exec_prf without
+  // enabling an unrelated first-use profile for later directed cases.
+  pc = 0x0000_0000_0000_0790;
+  tpc = pc;
+  last_e = 0b0;
+  last_argv = 0b0;
+  last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64);
+  last_bi = 0b0;
+  ssr_econfig_acr1 = sail_zeros(64);
+  decode_execute32(0x0600_7009);
+  assert(last_e == 0b1);
+  assert(last_argv == 0b1);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(last_cause == 0x000100);
+  assert(last_traparg0 == 0x0000_0000_0000_0790);
   assert(zext8_from8(0x81) == 0x0000_0000_0000_0081);
   assert(zext8_from8(0x42) == 0x0000_0000_0000_0042);
   assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);
