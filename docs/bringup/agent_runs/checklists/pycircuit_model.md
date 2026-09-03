@@ -1,12 +1,12 @@
 # pyCircuit Model Checklist
 
 - [ ] ID: PYC-001 Pass pyCircuit CPU C++ smoke gate.
-  Command: `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
+  Command: `bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
   Done means: pyCircuit C++ CPU flow passes smoke execution.
   Status: ❌ FAIL (2026-03-15) - the latest pin-lane run fails with `missing pycc` before the smoke flow can start (log: `docs/bringup/gates/logs/2026-03-15-r2-pin/pin/pyc_cpu_cpp_smoke.log`).
 
 - [ ] ID: PYC-002 Pass QEMU vs pyCircuit trace diff gate.
-  Command: `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
+  Command: `bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
   Done means: schema checks pass and trace diff has no mismatches for gated sample.
   Status: ❌ FAIL (2026-03-15) - the latest pin-lane run reaches trace generation but aborts with `missing pycc` before the pyCircuit side can compile the sample (log: `docs/bringup/gates/logs/2026-03-15-r2-pin/pin/pyc_trace_diff.log`).
 

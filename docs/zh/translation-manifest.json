@@ -42,8 +42,8 @@
       "translation_sha256": "371621400575aff6adfa8643ef8930aa4d3668cc878c18d8bcf38fd0f69e4a22"
     },
     "architecture/linxcore/verification-matrix.md": {
-      "source_sha256": "fee68648c65b178366d470082854ae69a8dfa0601a2aadcbe7da4193054fa362",
-      "translation_sha256": "5223c280ddf05467da3d3ed4f43cd88ea539a3f8c464f5af287026643ebb9f10"
+      "source_sha256": "73136e5854fae4654fe4c1a413aaa81ccc213fdeac306dd91d01b5387723a2d1",
+      "translation_sha256": "3e26fa9c26009f645a503a874a86a251769b727628af649e38748164274463d7"
     },
     "architecture/research/linx-simt-alt-compiler-gap-analysis.md": {
       "source_sha256": "fdc0d71b16ff7030d91ec756b52690072a6288bd70ed5f1547f8e5d901875e2e",
@@ -286,8 +286,8 @@
       "translation_sha256": "5caa49a50f9ca3e89249d0bd188318d00913bc404895ab6188767b9a98663b2d"
     },
     "bringup/agent_runs/checklists/pycircuit_model.md": {
-      "source_sha256": "2f84ed71fbd44b28a3e90fc6ef1a3ec3b523dfa7fe955880d33f4317bf7bb82c",
-      "translation_sha256": "92d9e49b9745c23ef90af70ed6623b388744deeaa6d3f174e99fe730c0f70f44"
+      "source_sha256": "eec9bde522b90c3f9f08b93cb9fb1e9c7a15f8964680d2d79d83eb5e811fbea8",
+      "translation_sha256": "dbc95926d657c9101b8c2d8f1778f4e33da2105537db885c33f749d03d90b1fc"
     },
     "bringup/agent_runs/checklists/specint_qemu.md": {
       "source_sha256": "a57d6f8626a0cb1bd2d7199c9e93286a8ffa3e66919aad1ac11ac8e1cc71789c",
@@ -322,8 +322,8 @@
       "translation_sha256": "e81e67e55f7598675530ce50a39b7fab3f3bdff7bb6e74a15d35090cc36bcabc"
     },
     "bringup/contracts/pyc_linxcore_interface_contract.md": {
-      "source_sha256": "2eda91af77e73415197f511f0717d231972a02357cb53be6bfa0785c8af52ee1",
-      "translation_sha256": "1ad46ffb3c8f60c8503003ba16fac0c60db3638e85e5f74daad2d713e185bb9b"
+      "source_sha256": "687aa0ac7cb6f52f38c9c1c5aa5f1117eaee6cb7a27006ea5578eaa87dd59f02",
+      "translation_sha256": "d3f915c70bc8e1d5416fe96f95ca0ee3231cf3f1015584f34bb8797e98a7346c"
     },
     "bringup/contracts/trace_schema.md": {
       "source_sha256": "0b7da4d8bfe581049da511066e3e16c3eebe24713ea31a60e81923883f56411c",

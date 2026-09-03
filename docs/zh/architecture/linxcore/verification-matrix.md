@@ -66,8 +66,8 @@
 | 灵犀核心 | `LinxCore::cosim smoke` | `bash rtl/LinxCore/tests/test_cosim_smoke.sh` |提交流与参考入口点对齐 |
 |测试台| `Testbench::ROB bookkeeping` | `bash rtl/LinxCore/tests/test_rob_bookkeeping.sh` | super标量 退休排序不变量 | super标量
 |测试台| `Testbench::block struct pyc flow smoke` | `bash rtl/LinxCore/tests/test_block_struct_pyc_flow.sh` |块结构 pyCircuit 管道集成 |
-| py电路| `pyCircuit::CPU C++ smoke` | `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh` | pyCircuit CPU 流功能 |
-| py电路| `pyCircuit::QEMU vs pyCircuit trace diff` | `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh` |建筑痕迹等价|
+| py电路| `pyCircuit::CPU C++ smoke` | `bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh` | pyCircuit CPU 流功能 |
+| py电路| `pyCircuit::QEMU vs pyCircuit trace diff` | `bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh` |建筑痕迹等价|
 | py电路| `pyCircuit::interface contract gate` | `python3 tools/bringup/check_pycircuit_interface_contract.py --root . --strict` |版本化 pyCircuit↔灵犀Core 界面控制 |
 | 灵犀跟踪 | `LinxTrace::contract sync lint` | `python3 rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py` |发射器、linter 和查看器管道合约同步 |
 | 灵犀跟踪 | `LinxTrace::sample trace lint` | `bash rtl/LinxCore/tests/test_konata_sanity.sh` |追踪有效性和舞台存在感 |

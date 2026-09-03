@@ -1,12 +1,12 @@
 # pyCircuit 模型清单
 
 - [ ] ID: PYC-001 通过 pyCircuit CPU C++ 烟门。
-  命令：`bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
+  命令：`bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
   完成意味着：pyCircuit C++ CPU 流程通过烟雾执行。
   状态： ❌ 失败 (2026-03-15) - 在烟雾流开始之前，最新的 pin-lane 运行失败并显示 `missing pycc`（日志：`docs/bringup/gates/logs/2026-03-15-r2-pin/pin/pyc_cpu_cpp_smoke.log`）。
 
 - [ ] ID：PYC-002 通过 QEMU 与 pyCircuit 跟踪差异门。
-  命令：`bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
+  命令：`bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
   完成意味着：模式检查通过并且跟踪差异与门控样本没有不匹配。
   状态：❌失败 (2026-03-15) - 最新的引脚通道运行达到跟踪生成，但在 pyCircuit 端编译示例之前以 `missing pycc` 中止（日志：`docs/bringup/gates/logs/2026-03-15-r2-pin/pin/pyc_trace_diff.log`）。
 

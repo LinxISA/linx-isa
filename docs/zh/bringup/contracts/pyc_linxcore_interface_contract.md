@@ -1,6 +1,6 @@
 # pyCircuit ↔ 灵犀Core 接口合约
 
-版本：`2.0`
+版本：`3.0`
 
 ## 范围
 
@@ -19,16 +19,16 @@
 
 ## 所需的生产者路径
 
-- `tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
-- `tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
-- `tools/pyCircuit/contrib/linx/flows/tools/linx_trace_diff.py`
+- `tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
+- `tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
+- `tools/pyCircuit/integrations/linx/flows/tools/linx_trace_diff.py`
 
 ## 必需的提交字段
 
 所需的提交跟踪字段必须与以下内容保持兼容：
 
 - `tools/bringup/validate_trace_schema.py`
-- `tools/pyCircuit/contrib/linx/flows/tools/linx_trace_diff.py`
+- `tools/pyCircuit/integrations/linx/flows/tools/linx_trace_diff.py`
 
 当前标量/底座所需设置：
 
@@ -62,5 +62,8 @@
 版本 `2.0` 强制提交源/目标关联。制片人
 消费者路径必须处理丢失的源、目的地、内存方向或
 trap-argument 字段作为合约失败而不是可选的调试元数据。
+
+版本 `3.0` 将生产者路径从已移除的 `contrib/linx` 硬切换到按职责
+组织的 `integrations/linx`。Git 历史是唯一兼容机制，不提供旧路径转发。
 
 生产者方的任何更改都必须更新合同版本和迁移说明。
