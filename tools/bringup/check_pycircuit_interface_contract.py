@@ -128,7 +128,8 @@ def main(argv: list[str]) -> int:
 
     try:
         diff_fields = _extract_python_list(
-            root / "tools/pyCircuit/contrib/linx/flows/tools/linx_trace_diff.py",
+            root
+            / "tools/pyCircuit/integrations/linx/flows/tools/linx_trace_diff.py",
             "MANDATORY_FIELDS",
         )
         validator_fields = _extract_python_list(trace_validator_path, "DEFAULT_REQUIRED_FIELDS")
@@ -143,8 +144,14 @@ def main(argv: list[str]) -> int:
         if field not in required_commit_fields_norm:
             errors.append(f"contract missing validate_trace_schema required field: {field}")
 
-    run_cpp_path = root / "tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh"
-    run_diff_path = root / "tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh"
+    run_cpp_path = (
+        root
+        / "tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh"
+    )
+    run_diff_path = (
+        root
+        / "tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh"
+    )
     run_cpp = run_cpp_path.read_text(encoding="utf-8", errors="replace")
     run_diff = run_diff_path.read_text(encoding="utf-8", errors="replace")
 

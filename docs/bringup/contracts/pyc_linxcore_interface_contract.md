@@ -1,6 +1,6 @@
 # pyCircuit ↔ LinxCore Interface Contract
 
-Version: `2.0`
+Version: `3.0`
 
 ## Scope
 
@@ -19,16 +19,16 @@ Canonical machine-readable file:
 
 ## Required producer paths
 
-- `tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
-- `tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
-- `tools/pyCircuit/contrib/linx/flows/tools/linx_trace_diff.py`
+- `tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh`
+- `tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh`
+- `tools/pyCircuit/integrations/linx/flows/tools/linx_trace_diff.py`
 
 ## Required commit fields
 
 The required commit trace fields must remain compatible with:
 
 - `tools/bringup/validate_trace_schema.py`
-- `tools/pyCircuit/contrib/linx/flows/tools/linx_trace_diff.py`
+- `tools/pyCircuit/integrations/linx/flows/tools/linx_trace_diff.py`
 
 Current scalar/base required set:
 
@@ -59,8 +59,13 @@ Current scalar/base required set:
 - `trap_cause`
 - `traparg0`
 
-Version `2.0` makes committed source/destination correlation mandatory. Producer
+Version `2.0` made committed source/destination correlation mandatory. Producer
 and consumer paths must treat missing source, destination, memory-direction, or
 trap-argument fields as contract failures rather than optional debug metadata.
+
+Version `3.0` hard-breaks the producer locations from the retired
+`contrib/linx` tree to the responsibility-based `integrations/linx` tree. Git
+history is the only compatibility mechanism; no producer-path forwarders are
+provided.
 
 Any producer-side changes must update contract version and migration notes.

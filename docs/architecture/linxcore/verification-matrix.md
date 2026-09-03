@@ -106,8 +106,8 @@ It is the normative mapping between:
 | LinxCore | `LinxCore::cosim smoke` | `bash rtl/LinxCore/tests/test_cosim_smoke.sh` | commit stream alignment with reference entrypoint |
 | Testbench | `Testbench::ROB bookkeeping` | `bash rtl/LinxCore/tests/test_rob_bookkeeping.sh` | superscalar retirement ordering invariants |
 | Testbench | `Testbench::block struct pyc flow smoke` | `bash rtl/LinxCore/tests/test_block_struct_pyc_flow.sh` | block-structure pyCircuit pipeline integration |
-| pyCircuit | `pyCircuit::CPU C++ smoke` | `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh` | pyCircuit CPU flow functionality |
-| pyCircuit | `pyCircuit::QEMU vs pyCircuit trace diff` | `bash tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh` | architectural trace equivalence |
+| pyCircuit | `pyCircuit::CPU C++ smoke` | `bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh` | pyCircuit CPU flow functionality |
+| pyCircuit | `pyCircuit::QEMU vs pyCircuit trace diff` | `bash tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh` | architectural trace equivalence |
 | pyCircuit | `pyCircuit::interface contract gate` | `python3 tools/bringup/check_pycircuit_interface_contract.py --root . --strict` | versioned pyCircuit↔LinxCore interface control |
 | LinxTrace | `LinxTrace::contract sync lint` | `python3 rtl/LinxCore/tools/linxcoresight/lint_trace_contract_sync.py` | emitter, linter, and viewer pipeline contract sync |
 | LinxTrace | `LinxTrace::sample trace lint` | `bash rtl/LinxCore/tests/test_konata_sanity.sh` | trace validity and stage presence |

@@ -762,7 +762,7 @@ if [[ "$RUN_PYC_PR_GATES" == "1" ]]; then
   run_gate \
     "pyCircuit" \
     "CPU C++ smoke" \
-    "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh" \
+    "bash $ROOT/tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh" \
     "pyc_cpu_cpp_smoke_pass" \
     "pyc_cpu_cpp_smoke_fail" \
     "pyc_cpu_cpp_smoke" \
@@ -771,7 +771,7 @@ if [[ "$RUN_PYC_PR_GATES" == "1" ]]; then
   run_gate \
     "pyCircuit" \
     "QEMU vs pyCircuit trace diff" \
-    "QEMU_BIN=$QEMU_BIN bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh" \
+    "QEMU_BIN=$QEMU_BIN bash $ROOT/tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh" \
     "pyc_trace_diff_pass" \
     "pyc_trace_diff_fail" \
     "pyc_trace_diff" \
@@ -787,8 +787,8 @@ if [[ "$RUN_PYC_PR_GATES" == "1" ]]; then
     "yes" \
     "pycircuit"
 else
-  record_skipped_gate "pyCircuit" "CPU C++ smoke" "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_cpu_pyc_cpp.sh" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
-  record_skipped_gate "pyCircuit" "QEMU vs pyCircuit trace diff" "bash $ROOT/tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
+  record_skipped_gate "pyCircuit" "CPU C++ smoke" "bash $ROOT/tools/pyCircuit/integrations/linx/flows/tools/run_linx_cpu_pyc_cpp.sh" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
+  record_skipped_gate "pyCircuit" "QEMU vs pyCircuit trace diff" "bash $ROOT/tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
   record_skipped_gate "pyCircuit" "interface contract gate" "python3 $ROOT/tools/bringup/check_pycircuit_interface_contract.py --root $ROOT --strict --out $RUN_LOG_DIR/pyc_interface_contract_report.json" "RUN_PYC_PR_GATES=0" "pycircuit" "no"
 fi
 

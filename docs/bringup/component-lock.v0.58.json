@@ -69,7 +69,7 @@
       "path": "rtl/LinxCore",
       "url": "https://github.com/LinxISA/LinxCore.git",
       "branch": "main",
-      "commit": "aedec9de2b7ecf765ea34b7bb7f12305850fac79",
+      "commit": "e3f0d93b5b093218596d64051bb9a95de2cfb413",
       "tree": "6218500b54b9743ff515f6eb916aa1b34cd5d6bd",
       "role": "RTL implementation"
     },
@@ -114,8 +114,8 @@
       "path": "tools/pyCircuit",
       "url": "https://github.com/LinxISA/pyCircuit.git",
       "branch": "main",
-      "commit": "1f1651f9bff4293deb1613324ab575b3322ab38b",
-      "tree": "d3e9b0f56375882ccf3399f5d7d59dc40bd7bae2",
+      "commit": "616c13befbe40cd30973a831a1506c556925a17d",
+      "tree": "460bac6b24750cd95cbe70e7aee11d0a36a4dbc8",
       "role": "pyCircuit 6 model"
     },
     {

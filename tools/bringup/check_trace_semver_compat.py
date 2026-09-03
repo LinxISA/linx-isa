@@ -40,7 +40,10 @@ def main(argv: list[str]) -> int:
     runtime_path = root / "tools/bringup/run_runtime_convergence.sh"
     strict_path = root / "tools/regression/strict_cross_repo.sh"
     validator_path = root / "tools/bringup/validate_trace_schema.py"
-    pyc_diff_path = root / "tools/pyCircuit/contrib/linx/flows/tools/run_linx_qemu_vs_pyc.sh"
+    pyc_diff_path = (
+        root
+        / "tools/pyCircuit/integrations/linx/flows/tools/run_linx_qemu_vs_pyc.sh"
+    )
 
     for path in [trace_contract_path, runtime_path, strict_path, validator_path, pyc_diff_path]:
         if not path.is_file():
