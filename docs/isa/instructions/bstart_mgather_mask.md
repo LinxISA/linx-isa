@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Begins a predicate-masked TLSU byte-displacement gather block.`
+- `Begins a predicate-masked strided indexed TLSU gather block.`
 
 ## Full Catalog Forms
 

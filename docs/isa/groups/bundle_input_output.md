@@ -10,15 +10,15 @@
 
 </div>
 
-Instructions in the **Bundle Input & Output** group of the LinxISA v0.58.3 catalog.
+Instructions in the **Bundle Input & Output** group of the LinxISA v0.58.5 catalog.
 
 ## Instructions
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.IOR](../instructions/b_ior.md) | `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` | 32 | — | Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride. |
-| [B.IOS](../instructions/b_ios.md) | `B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>` | 32 | — | Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
-| [B.IOT](../instructions/b_iot.md) | `B.IOT SrcTile0, mask=PE_MASK, <last>` | 32 | — | Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source. |
+| [B.IOR](../instructions/b_ior.md) | `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` | 32 | — | Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements. |
+| [B.IOS](../instructions/b_ios.md) | `B.IOS S<SharedTileID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` | 32 | — | Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
+| [B.IOT](../instructions/b_iot.md) | `B.IOT SrcTile0, mask=PE_MASK, <last>` | 32 | — | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
 
 ## See Also
 

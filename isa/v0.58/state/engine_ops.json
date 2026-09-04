@@ -1,12 +1,12 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/engine_ops.v0.json",
   "profile": "v0.58",
-  "version": "0.58.3",
+  "version": "0.58.5",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
   "note": "PTO ISA 0.58 encoding families and semantic execution-engine annotations; TEPL remains an encoding carrier and is not a semantic engine.",
   "semantic_engine_counts": {
     "CUBE": 12,
-    "SFU": 56,
+    "SFU": 55,
     "TLSU": 10,
     "VEC": 31
   },
@@ -85,7 +85,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:address:base-address",
-          "operand:source0:byte-displacement-indices",
+          "operand:scalar0:gm-row-stride-elements",
+          "operand:source0:logical-linear-element-indices",
           "runtime:CurrentBundlePadValue:physical-padding"
         ]
       },
@@ -99,8 +100,9 @@
         "semantic_handler": "MSCATTER",
         "state_effects": [
           "operand:address:base-address",
+          "operand:scalar0:gm-row-stride-elements",
           "operand:source0:source",
-          "operand:source1:byte-displacement-indices"
+          "operand:source1:logical-linear-element-indices"
         ]
       },
       {
@@ -114,7 +116,8 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:address:base-address",
-          "operand:source0:byte-displacement-indices",
+          "operand:scalar0:gm-row-stride-elements",
+          "operand:source0:logical-linear-element-indices",
           "operand:source1:exact-predicate-mask",
           "runtime:CurrentBundlePadValue:inactive-and-physical-padding"
         ]
@@ -129,8 +132,9 @@
         "semantic_handler": "MSCATTER_MASK",
         "state_effects": [
           "operand:address:base-address",
+          "operand:scalar0:gm-row-stride-elements",
           "operand:source0:source",
-          "operand:source1:byte-displacement-indices",
+          "operand:source1:logical-linear-element-indices",
           "operand:source2:exact-predicate-mask"
         ]
       },
@@ -145,7 +149,8 @@
         "state_effects": [
           "operand:destination0:observed-old-values",
           "operand:address:base-address",
-          "operand:source0:byte-displacement-indices",
+          "operand:scalar0:gm-row-stride-elements",
+          "operand:source0:logical-linear-element-indices",
           "operand:source1:expected-values",
           "operand:source2:replacement-values",
           "runtime:CurrentBundlePadValue:physical-padding"
@@ -397,7 +402,7 @@
       0,
       4
     ],
-    "accepted_selector_count": 87,
+    "accepted_selector_count": 86,
     "reserved_selector_ranges": [
       [
         "0x005",
@@ -440,11 +445,23 @@
         "0x061"
       ],
       [
+        "0x065",
+        "0x065"
+      ],
+      [
         "0x069",
         "0x069"
       ],
       [
-        "0x075",
+        "0x06E",
+        "0x06E"
+      ],
+      [
+        "0x071",
+        "0x074"
+      ],
+      [
+        "0x079",
         "0x07F"
       ]
     ],
@@ -872,7 +889,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "predicate destination"
+            "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
           },
           {
             "field": "source0",
@@ -888,7 +905,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:packed-predicate-destination",
+          "operand:destination0:variant-predicate-carrier-destination",
           "operand:source0:persistent-source-left",
           "operand:source1:persistent-source-right",
           "operand:comparison:six-mode-comparison",
@@ -1187,7 +1204,7 @@
           },
           {
             "field": "source0",
-            "role": "packed predicate mask"
+            "role": "legacy Predicate, CUBE PredicateCell, or first GPR-mask role"
           },
           {
             "field": "source1",
@@ -1200,7 +1217,7 @@
         ],
         "state_effects": [
           "operand:destination0:numeric-destination",
-          "operand:source0:packed-predicate-mask",
+          "operand:source0:variant-predicate-mask-carrier",
           "operand:source1:persistent-source-true",
           "operand:source2:persistent-source-false",
           "runtime:CurrentBundlePadValue:numeric-padding"
@@ -1717,7 +1734,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new packed Local predicate destination"
+            "role": "legacy Predicate or CUBE PredicateCell destination; absent for GPR carrier"
           },
           {
             "field": "source0",
@@ -1733,7 +1750,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:packed-predicate-destination",
+          "operand:destination0:variant-predicate-carrier-destination",
           "operand:source0:persistent-local-source",
           "operand:scalar0:private-gpr-raw-element",
           "operand:comparison:six-mode-comparison",
@@ -1761,7 +1778,7 @@
           },
           {
             "field": "source0",
-            "role": "packed Local predicate mask"
+            "role": "legacy Predicate, CUBE PredicateCell, or GPR mask role"
           },
           {
             "field": "source1",
@@ -1774,7 +1791,7 @@
         ],
         "state_effects": [
           "operand:destination0:new-local-numeric-destination",
-          "operand:source0:packed-predicate-mask",
+          "operand:source0:variant-predicate-mask-carrier",
           "operand:source1:persistent-local-source-true",
           "operand:scalar0:private-gpr-scalar-false",
           "runtime:CurrentBundlePadValue:numeric-padding"
@@ -2881,40 +2898,6 @@
         "semantic_status": "reviewed-complete"
       },
       {
-        "name": "TFILLPAD",
-        "classification": "layout-and-rearrangement",
-        "engine": "SFU",
-        "mode": 3,
-        "function": 5,
-        "semantic_handler": "TFILLPAD",
-        "legality_handler": "TileOperandsLegal_TFILLPAD",
-        "effect_contract": "TFILLPAD",
-        "fault_contract": "ExecuteTileInstruction",
-        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-        "operands": [
-          {
-            "field": "destination0",
-            "role": "destination"
-          },
-          {
-            "field": "source0",
-            "role": "source"
-          },
-          {
-            "field": "scalar0",
-            "role": "padding"
-          }
-        ],
-        "state_effects": [
-          "operand:destination0:destination",
-          "operand:source0:source",
-          "operand:scalar0:padding"
-        ],
-        "profile": "v0.58",
-        "logical_selector": 101,
-        "semantic_status": "reviewed-complete"
-      },
-      {
         "name": "TCI",
         "classification": "irregular-and-complex",
         "engine": "SFU",
@@ -3200,35 +3183,6 @@
         "semantic_status": "reviewed-complete"
       },
       {
-        "name": "TTRANS",
-        "classification": "layout-and-rearrangement",
-        "engine": "SFU",
-        "mode": 3,
-        "function": 14,
-        "semantic_handler": "TTRANS",
-        "legality_handler": "TileOperandsLegal_TTRANS",
-        "effect_contract": "TTRANS",
-        "fault_contract": "ExecuteTileInstruction",
-        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
-        "operands": [
-          {
-            "field": "destination0",
-            "role": "destination"
-          },
-          {
-            "field": "source0",
-            "role": "source"
-          }
-        ],
-        "state_effects": [
-          "operand:destination0:destination",
-          "operand:source0:source"
-        ],
-        "profile": "v0.58",
-        "logical_selector": 110,
-        "semantic_status": "reviewed-complete"
-      },
-      {
         "name": "TGATHER",
         "classification": "irregular-and-complex",
         "engine": "SFU",
@@ -3299,147 +3253,198 @@
         "semantic_status": "reviewed-complete"
       },
       {
-        "name": "TPARTADD",
-        "classification": "irregular-and-complex",
+        "name": "TPERMUTE",
+        "classification": "layout-and-rearrangement",
         "engine": "SFU",
         "mode": 3,
-        "function": 17,
-        "semantic_handler": "ExecuteTilePartial",
-        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-        "effect_contract": "ExecuteTilePartial",
+        "function": 21,
+        "semantic_handler": "TPERMUTE",
+        "legality_handler": "TileOperandsLegal_TPERMUTE",
+        "effect_contract": "TPERMUTE",
         "fault_contract": "ExecuteTileInstruction",
         "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local union destination"
+            "role": "destination"
           },
           {
             "field": "source0",
-            "role": "persistent Local left source anchored at origin"
+            "role": "source0"
           },
           {
             "field": "source1",
-            "role": "persistent Local right source anchored at origin"
+            "role": "source1"
+          },
+          {
+            "field": "source2",
+            "role": "indices"
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-union-destination",
-          "operand:source0:persistent-origin-anchored-left-source",
-          "operand:source1:persistent-origin-anchored-right-source",
-          "runtime:NumericStatusFlags:overlap-operation-status",
-          "runtime:TilePad_Null:physical-padding"
+          "operand:destination0:destination",
+          "operand:source0:source0",
+          "operand:source1:source1",
+          "operand:source2:indices"
         ],
         "profile": "v0.58",
-        "logical_selector": 113,
+        "logical_selector": 117,
         "semantic_status": "reviewed-complete"
       },
       {
-        "name": "TPARTMUL",
-        "classification": "irregular-and-complex",
+        "name": "TSHUF",
+        "classification": "layout-and-rearrangement",
         "engine": "SFU",
         "mode": 3,
-        "function": 18,
-        "semantic_handler": "ExecuteTilePartial",
-        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-        "effect_contract": "ExecuteTilePartial",
+        "function": 22,
+        "semantic_handler": "TSHUF",
+        "legality_handler": "TileOperandsLegal_TSHUF",
+        "effect_contract": "TSHUF",
         "fault_contract": "ExecuteTileInstruction",
         "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local union destination"
+            "role": "destination"
           },
           {
             "field": "source0",
-            "role": "persistent Local left source anchored at origin"
+            "role": "source"
           },
           {
             "field": "source1",
-            "role": "persistent Local right source anchored at origin"
+            "role": "controls"
+          },
+          {
+            "field": "scalar0",
+            "role": "shuffle-control"
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-union-destination",
-          "operand:source0:persistent-origin-anchored-left-source",
-          "operand:source1:persistent-origin-anchored-right-source",
-          "runtime:NumericStatusFlags:overlap-operation-status",
-          "runtime:TilePad_Null:physical-padding"
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:source1:controls",
+          "operand:scalar0:shuffle-control"
         ],
         "profile": "v0.58",
-        "logical_selector": 114,
+        "logical_selector": 118,
         "semantic_status": "reviewed-complete"
       },
       {
-        "name": "TPARTMAX",
-        "classification": "irregular-and-complex",
+        "name": "TPACK",
+        "classification": "layout-and-rearrangement",
         "engine": "SFU",
         "mode": 3,
-        "function": 19,
-        "semantic_handler": "ExecuteTilePartial",
-        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-        "effect_contract": "ExecuteTilePartial",
+        "function": 23,
+        "semantic_handler": "TPACK",
+        "legality_handler": "TileOperandsLegal_TPACK",
+        "effect_contract": "TPACK",
         "fault_contract": "ExecuteTileInstruction",
         "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local union destination"
+            "role": "destination"
           },
           {
             "field": "source0",
-            "role": "persistent Local left source anchored at origin"
+            "role": "source0"
           },
           {
             "field": "source1",
-            "role": "persistent Local right source anchored at origin"
+            "role": "source1"
+          },
+          {
+            "field": "scalar0",
+            "role": "pack-control"
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-union-destination",
-          "operand:source0:persistent-origin-anchored-left-source",
-          "operand:source1:persistent-origin-anchored-right-source",
-          "runtime:NumericStatusFlags:overlap-operation-status",
-          "runtime:TilePad_Null:physical-padding"
+          "operand:destination0:destination",
+          "operand:source0:source0",
+          "operand:source1:source1",
+          "operand:scalar0:pack-control"
         ],
         "profile": "v0.58",
-        "logical_selector": 115,
+        "logical_selector": 119,
         "semantic_status": "reviewed-complete"
       },
       {
-        "name": "TPARTMIN",
-        "classification": "irregular-and-complex",
+        "name": "TUNPACK",
+        "classification": "layout-and-rearrangement",
         "engine": "SFU",
         "mode": 3,
-        "function": 20,
-        "semantic_handler": "ExecuteTilePartial",
-        "legality_handler": "TileOperandsLegal_ExecuteTilePartial",
-        "effect_contract": "ExecuteTilePartial",
+        "function": 24,
+        "semantic_handler": "TUNPACK",
+        "legality_handler": "TileOperandsLegal_TUNPACK",
+        "effect_contract": "TUNPACK",
         "fault_contract": "ExecuteTileInstruction",
         "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local union destination"
+            "role": "destination"
           },
           {
             "field": "source0",
-            "role": "persistent Local left source anchored at origin"
+            "role": "source"
           },
           {
-            "field": "source1",
-            "role": "persistent Local right source anchored at origin"
+            "field": "scalar0",
+            "role": "unpack-control"
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-union-destination",
-          "operand:source0:persistent-origin-anchored-left-source",
-          "operand:source1:persistent-origin-anchored-right-source",
-          "runtime:NumericStatusFlags:overlap-operation-status",
-          "runtime:TilePad_Null:physical-padding"
+          "operand:destination0:destination",
+          "operand:source0:source",
+          "operand:scalar0:unpack-control"
         ],
         "profile": "v0.58",
-        "logical_selector": 116,
+        "logical_selector": 120,
+        "semantic_status": "reviewed-complete"
+      },
+      {
+        "name": "TGPR2T",
+        "classification": "layout-and-rearrangement",
+        "engine": "SFU",
+        "mode": 3,
+        "function": 30,
+        "semantic_handler": "TGPR2T",
+        "legality_handler": "TileOperandsLegal_TGPR2T",
+        "effect_contract": "TGPR2T",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "destination"
+          },
+          {
+            "field": "source0",
+            "role": "source0"
+          },
+          {
+            "field": "source1",
+            "role": "source1"
+          },
+          {
+            "field": "source2",
+            "role": "source2"
+          },
+          {
+            "field": "source3",
+            "role": "source3"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:CUBE U8 destination",
+          "operand:source0:ordered source-only GPR0",
+          "operand:source1:ordered source-only GPR1",
+          "operand:source2:ordered source-only GPR2",
+          "operand:source3:ordered source-only GPR3"
+        ],
+        "profile": "v0.58",
+        "logical_selector": 126,
         "semantic_status": "reviewed-complete"
       }
     ]
@@ -3492,8 +3497,8 @@
     "physical_contiguity": "required"
   },
   "shared_tile_registers": {
-    "registers_per_core": 256,
-    "assembly_names": "S0..S255",
+    "registers_per_core": 64,
+    "assembly_names": "S0..S63",
     "addressing": "absolute-index",
     "sharing_domain": "one bank private to each core and shared by its four PEs",
     "quarter_selection": "B.IOS 3-bit PEMode decoded to the fixed four-PE mask; zero means NOP",

@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
+- `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ Latches complete-bundle matrix post-processing mode, reduction enables, and fixe
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB` | 32 | — |
+| `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn` | 32 | — |
 
 <div class="insn-nav">
 

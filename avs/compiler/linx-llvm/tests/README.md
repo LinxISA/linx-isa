@@ -69,8 +69,8 @@ Current compiler target contract:
 
 ## Curated assembly tests
 
-- `41_v0583_isa_forms.s` — positive assembler/disassembler coverage for active
-  PTO ISA 0.58.3 attributes, tile carriers and aliases, fused calls, frame
+- `41_v0585_isa_forms.s` — positive assembler/disassembler coverage for active
+  PTO ISA 0.58.5 attributes, tile carriers and aliases, fused calls, frame
   forms, and `L.BSTOP` that are not guaranteed to appear in C output.
 
 Notes:

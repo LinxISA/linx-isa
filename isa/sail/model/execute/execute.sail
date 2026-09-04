@@ -3196,14 +3196,14 @@ function exec_b_dim() -> unit = {
 }
 function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
-function exec_b_ios(SharedTID : bits(8), SizeCode : bits(4), PEMode : bits(3)) -> unit = {
+function exec_b_ios(SharedTileID : bits(6), SizeCode : bits(4), PEMode : bits(3)) -> unit = {
   // Role is consumed by the surrounding BSTART schema. The architectural
   // index is absolute (S0..S255). PEMode expands to the fixed four-PE mask;
   // mode zero is a strict no-op and does not mutate descriptors.
   let pe_mask = decode_pe_mode(PEMode);
   if pe_mask == 0x0 then ()
   else {
-    shared_tile_binding_id = SharedTID;
+    shared_tile_binding_id = sail_zero_extend(SharedTileID, 8);
     shared_tile_binding_pe_mode = PEMode;
     shared_tile_binding_pe_mask = pe_mask;
     shared_tile_binding_size_code = SizeCode;
@@ -3227,6 +3227,17 @@ function exec_b_ior() -> unit = {
   bdesc_mark_ior()
 }
 function exec_b_iot() -> unit = { tile_effect_append_iot(decoded_biot_raw()) }
+
+// PTO 0.58.5 range modifiers are decoded by the current Sail projection but
+// their carrier stream is not yet represented in Sail state. Fail closed and
+// grade these forms decode-only instead of publishing incomplete effects.
+function exec_b_subview(SrcSelect : bits(1), uimm11 : bits(11), RegSrc : bits(5), SubviewSizeCode : bits(4)) -> unit = {
+  trap_illegal_inst(read_pc_or_tpc())
+}
+
+function exec_b_assemble(INIT : bits(1), uimm11 : bits(11), RegSrc : bits(5), LAST : bits(1), ParentSizeCode : bits(4)) -> unit = {
+  trap_illegal_inst(read_pc_or_tpc())
+}
 
 function exec_b_catr() -> unit = {
   // Staged semantics: latch raw control-attribute word so DR (bit 26) can be consulted.

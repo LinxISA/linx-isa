@@ -1,7 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "profile": "v0.58",
-  "description": "Exact reviewed component pins for the LinxISA and PTO ISA v0.58.3 superproject integration surface.",
+  "integration_phase": "draft_staging",
+  "description": "Exact component pins for the PTO ISA 0.58.5 review integration over the existing LinxISA v0.58.3 leaf baseline.",
   "components": [
     {
       "path": "compiler/llvm",
@@ -100,6 +101,36 @@
       "role": "C++ core model",
       "integration_status": "review_only_open_pr",
       "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/37"
+    },
+    {
+      "path": "tools/SuperScalarModel",
+      "url": "https://github.com/LinxISA/SuperScalarModel.git",
+      "branch": "main",
+      "commit": "831232c81d01c94a9bdcf84f60cfb1db9bf1e4c5",
+      "tree": "36025d88a927ed523448171556797bafc70d2d2c",
+      "role": "ASL-only gfrun consumer of the public PTO model ABI",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/LinxISA/SuperScalarModel/pull/428"
+    },
+    {
+      "path": "tools/pto-spec",
+      "url": "https://github.com/PTO-ISA/pto-spec.git",
+      "branch": "main",
+      "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
+      "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
+      "role": "PTO ISA 0.58.5 normative source and next-instruction owner",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/PTO-ISA/pto-spec/pull/190"
+    },
+    {
+      "path": "tools/asl-model",
+      "url": "https://github.com/PTO-ISA/asl-model.git",
+      "branch": "main",
+      "commit": "6814c9e4457a937570cbfd5a481b0fd3ab96d805",
+      "tree": "70ffa96101905a9f4effa076eda62f02215d7f30",
+      "role": "ASLRef-backed PTO reference model and C ABI owner",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/PTO-ISA/asl-model/pull/4"
     },
     {
       "path": "tools/model",

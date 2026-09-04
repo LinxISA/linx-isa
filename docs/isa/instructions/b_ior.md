@@ -26,7 +26,7 @@
 
 ## Description
 
-Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
+Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE u
 
 ## Encoding Notes
 
-- `Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.`
+- `Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.`
 
 ## Full Catalog Forms
 

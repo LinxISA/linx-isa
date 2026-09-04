@@ -36,7 +36,7 @@
 
 ## Encoding Notes
 
-- `HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.`
+- `HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.`
 
 ## Full Catalog Forms
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/release_manifest.v1.json",
   "profile": "v0.58",
-  "version": "0.58.3",
+  "version": "0.58.5",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
   "policy": {
     "pto_spec_is_sole_source_for_scalar_block": true,
@@ -10,34 +10,34 @@
     "unlisted_selectors_reserved": true
   },
   "cardinality": {
-    "tile_operations": 109,
+    "tile_operations": 108,
     "tile_families": {
       "CUBE": 12,
-      "TEPL": 87,
+      "TEPL": 86,
       "TLSU": 10
     },
     "semantic_engines": {
       "CUBE": 12,
-      "SFU": 56,
+      "SFU": 55,
       "TLSU": 10,
       "VEC": 31
     },
     "tile_classifications": {
       "elementwise-tile-tile": 25,
-      "irregular-and-complex": 13,
-      "layout-and-rearrangement": 7,
+      "irregular-and-complex": 9,
+      "layout-and-rearrangement": 10,
       "matrix-and-matrix-vector": 12,
       "memory-and-data-movement": 9,
       "reduce-and-expand": 28,
       "tile-scalar-and-immediate": 15
     },
-    "command_forms": 74,
+    "command_forms": 76,
     "command_form_families": {
       "BBD": 5,
-      "CMD": 69
+      "CMD": 71
     },
     "scalar_forms": 466,
-    "extension_encoding_reservations": 40
+    "extension_encoding_reservations": 46
   },
   "migration_aliases": {},
   "deleted_names": [
@@ -47,14 +47,19 @@
     "TALLOC",
     "TAXPY",
     "TDEINTERLEAVE",
+    "TFILLPAD",
     "TFMOD",
     "TFMODS",
     "TFREE",
     "TGATHERB",
     "TINTERLEAVE",
     "TLRELU",
+    "TPARTADD",
     "TPARTARGMAX",
     "TPARTARGMIN",
+    "TPARTMAX",
+    "TPARTMIN",
+    "TPARTMUL",
     "TPOP",
     "TPRELU",
     "TPUSH",
@@ -62,7 +67,8 @@
     "TSUBC",
     "TSUBSC",
     "TRANDOM",
-    "TSORT32"
+    "TSORT32",
+    "TTRANS"
   ],
   "rejected_names": [
     "TEXRACT",

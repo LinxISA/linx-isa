@@ -281,7 +281,7 @@ if [[ -d "$ASM_DIR" ]]; then
     wc -c "$OUT/$BASE.bin" >"$OUT/$BASE.bin.size"
 
     case "$BASE" in
-      41_v0583_isa_forms)
+      41_v0585_isa_forms)
         python3 "$ROOT/check_required_mnemonics.py" \
           --objdump "$OUT/$BASE.objdump" \
           --label "$BASE" \

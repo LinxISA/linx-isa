@@ -1,0 +1,107 @@
+name: PTO Functional Model Trusted Push
+
+on:
+  push:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pto-functional-model-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  functional-model:
+    name: PTO functional-model execution (trusted push)
+    if: ${{ github.repository == 'LinxISA/linx-isa' && github.event_name == 'push' }}
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Initialize exact functional-model components
+        run: |
+          git submodule update --init tools/pto-spec
+          git submodule update --init tools/asl-model
+          git submodule update --init tools/SuperScalarModel
+      - name: Checkout exact functional-model corpus producer
+        uses: actions/checkout@v7
+        with:
+          repository: PTO-ISA/pto-spec
+          ref: a0d7b39c345f19e90020d356dd8caf4d83e03418
+          path: .ci/pto-corpus
+          persist-credentials: false
+      - name: Validate exact pins and PTO projection parity
+        run: |
+          git -C tools/pto-spec fetch --no-tags origin \
+            a0d7b39c345f19e90020d356dd8caf4d83e03418
+          python3 tools/isa/check_pto_functional_model_lock.py --root .
+          python3 tools/isa/import_pto_v0580.py --source-root tools/pto-spec --check
+      - name: Build PTO ASL and install the public model ABI
+        run: |
+          make -C tools/pto-spec build
+          cmake -S tools/asl-model -B .ci/asl-model-build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/.ci/asl-model-install"
+          cmake --build .ci/asl-model-build -j 12
+          cmake --install .ci/asl-model-build
+      - name: Verify exact hosted LLVM toolchain and build corpus
+        env:
+          PTO_FUNCTIONAL_TOOLCHAIN_BIN: ${{ vars.PTO_FUNCTIONAL_TOOLCHAIN_BIN }}
+        run: |
+          runner_work_root=$(dirname "$(dirname "$GITHUB_WORKSPACE")")
+          resolver_workspace="$runner_work_root/SuperScalarModel/SuperScalarModel"
+          toolchain_bin=$(python3 \
+            tools/SuperScalarModel/ci_scripts/linx_toolchain_path.py \
+            "$resolver_workspace" \
+            --configured "$PTO_FUNCTIONAL_TOOLCHAIN_BIN")
+          python3 \
+            tools/SuperScalarModel/ci_scripts/check_linx_toolchain_identity.py \
+            "$toolchain_bin"
+          .ci/pto-corpus/scripts/build-functional-model-corpus \
+            --clang "$toolchain_bin/clang" \
+            --lld "$toolchain_bin/ld.lld" \
+            --readelf "$toolchain_bin/llvm-readelf" \
+            --output .ci/pto-corpus-build
+          python3 tools/SuperScalarModel/scripts/prepare-asl-gfrun-corpus-index \
+            .ci/pto-corpus-build/manifest.json \
+            .ci/pto-asl-corpus.index
+      - name: Build and execute the three real ASL-only gfrun smoke cases
+        run: |
+          python3 tools/SuperScalarModel/build.py all --clean --tests \
+            --warnings-as-errors \
+            --build-dir "${GITHUB_WORKSPACE}/.ci/asl-gfrun-build" \
+            --target check-asl-gfrun \
+            --pto-asl-model-root "${GITHUB_WORKSPACE}/.ci/asl-model-install" \
+            --pto-asl-runner "${GITHUB_WORKSPACE}/tools/asl-model/scripts/pto-asl-run" \
+            --pto-asl-spec "${GITHUB_WORKSPACE}/tools/pto-spec/build/pto-spec.asl" \
+            --pto-aslref "${GITHUB_WORKSPACE}/tools/pto-spec/.cache/herdtools7/_build/default/asllib/aslref.exe" \
+            --pto-asl-lock "${GITHUB_WORKSPACE}/tools/asl-model/pto-lock.json" \
+            --pto-asl-corpus-index "${GITHUB_WORKSPACE}/.ci/pto-asl-corpus.index" \
+            -j 12
+      - name: Validate retained execution manifests and result bytes
+        run: |
+          python3 tools/isa/check_pto_functional_model_lock.py \
+            --root . \
+            --corpus-manifest .ci/pto-corpus-build/manifest.json \
+            --evidence-root .ci/asl-gfrun-build/asl-gfrun-results
+      - name: Retain functional-model execution evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: pto-functional-model-${{ github.sha }}
+          if-no-files-found: error
+          path: |
+            .ci/pto-corpus-build/manifest.json
+            .ci/pto-corpus-build/*/manifest.json
+            .ci/pto-corpus-build/*/*.elf
+            .ci/pto-corpus-build/*/*.golden.bin
+            .ci/asl-gfrun-build/asl-gfrun-results/*/manifest.json
+            .ci/asl-gfrun-build/asl-gfrun-results/*/result.bin

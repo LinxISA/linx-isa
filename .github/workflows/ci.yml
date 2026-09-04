@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
 
 permissions:
   contents: read
@@ -20,6 +21,24 @@ jobs:
           python-version: "3.11"
       - name: Initialize canonical QEMU leaf
         run: git submodule update --init emulator/qemu
+      - name: Initialize PTO ASL functional-model chain
+        run: |
+          git submodule update --init tools/pto-spec
+          git submodule update --init tools/asl-model
+          git submodule update --init tools/SuperScalarModel
+          git -C tools/pto-spec fetch --no-tags origin \
+            a0d7b39c345f19e90020d356dd8caf4d83e03418
+      - name: Enforce Draft staging or merge-ready component pins
+        env:
+          REQUIRE_MERGE_READY: ${{ github.event_name == 'push' || github.event.pull_request.draft == false }}
+        run: |
+          args=()
+          if [[ "$REQUIRE_MERGE_READY" == "true" ]]; then
+            args+=(--require-merge-ready)
+          fi
+          python3 tools/ci/check_component_lock.py --root . "${args[@]}"
+      - name: Check exact PTO source projection parity
+        run: python3 tools/isa/import_pto_v0580.py --source-root tools/pto-spec --check
       - name: Check v0.58 golden artifacts
         run: python3 tools/isa/build_golden.py --profile v0.58 --check
       - name: Validate standalone v0.58 ISA spec
@@ -29,6 +48,8 @@ jobs:
           python3 tools/isa/check_pto_v058_manifest.py --root .
           python3 tools/isa/check_pto_profile_hooks.py --root .
           python3 -m unittest tools.isa.test_pto_profile_hooks
+          python3 tools/isa/check_pto_functional_model_lock.py --root .
+          python3 -m unittest tools.isa.test_pto_functional_model_lock
           python3 tools/isa/test_golden_contract.py
           python3 tools/isa/test_fused_call_contract.py
           python3 tools/isa/test_agent_navigation.py
@@ -183,7 +204,31 @@ jobs:
 
   guard:
     needs: [guards, avs-contract, docs, lint, model]
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Confirm required release checks
-        run: echo "All required LinxISA release checks passed."
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: tools/ci
+      - name: Enforce aggregate trusted-push policy
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          PULL_REQUEST_DRAFT: ${{ github.event.pull_request.draft || false }}
+          GUARDS_RESULT: ${{ needs.guards.result }}
+          AVS_RESULT: ${{ needs.avs-contract.result }}
+          DOCS_RESULT: ${{ needs.docs.result }}
+          LINT_RESULT: ${{ needs.lint.result }}
+          MODEL_RESULT: ${{ needs.model.result }}
+        run: |
+          python3 tools/ci/check_functional_model_ci_policy.py \
+            --event-name "$EVENT_NAME" \
+            --repository "$REPOSITORY" \
+            --head-repository "$HEAD_REPOSITORY" \
+            --pull-request-draft "$PULL_REQUEST_DRAFT" \
+            --required-result "$GUARDS_RESULT" \
+            --required-result "$AVS_RESULT" \
+            --required-result "$DOCS_RESULT" \
+            --required-result "$LINT_RESULT" \
+            --required-result "$MODEL_RESULT"

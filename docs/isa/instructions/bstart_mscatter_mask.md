@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Begins a predicate-masked TLSU byte-displacement scatter block.`
+- `Begins a predicate-masked strided indexed TLSU scatter block.`
 
 ## Full Catalog Forms
 

@@ -19,17 +19,23 @@ REQUIRED_COMPONENTS = {
     "emulator/qemu",
     "kernel/linux",
     "tools/Linx-TileOP-API",
+    "tools/SuperScalarModel",
+    "tools/asl-model",
+    "tools/pto-spec",
     "workloads/pto_kernels",
 }
-RELEASE_0583_COMPONENTS = REQUIRED_COMPONENTS | {
+RELEASE_0583_COMPONENTS = (REQUIRED_COMPONENTS - {
+    "emulator/qemu",
+    "tools/SuperScalarModel", "tools/asl-model", "tools/pto-spec"
+}) | {
     "compiler/ptoas",
+    "emulator/qemu",
     "lib/glibc",
     "lib/musl",
     "skills/linx-skills",
     "tools/model",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
-REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
 GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
 
 
@@ -70,12 +76,18 @@ def validate(
     lock: dict[str, Any],
     modules: dict[str, dict[str, str]],
     gitlinks: dict[str, str],
+    require_merge_ready: bool = False,
 ) -> list[str]:
     errors: list[str] = []
-    if lock.get("schema_version") != 1:
-        errors.append("component lock schema_version must be 1")
+    if lock.get("schema_version") != 2:
+        errors.append("component lock schema_version must be 2")
     if lock.get("profile") != "v0.58":
         errors.append("component lock profile must be v0.58")
+    integration_phase = lock.get("integration_phase")
+    if integration_phase not in {"draft_staging", "merge_ready"}:
+        errors.append("component lock integration_phase must be draft_staging or merge_ready")
+    if require_merge_ready and integration_phase != "merge_ready":
+        errors.append("component lock is Draft staging evidence, not merge-ready evidence")
 
     raw_components = lock.get("components")
     if not isinstance(raw_components, list):
@@ -125,14 +137,19 @@ def validate(
                 errors.append(
                     f"{path} must record release 0.58.3, got {item.get('release')!r}"
                 )
-        if path in REVIEW_ONLY_OPEN_PR_COMPONENTS:
-            if item.get("integration_status") != "review_only_open_pr":
-                errors.append(f"{path} must be recorded as a review-only open PR")
+        integration_status = item.get("integration_status", "")
+        if integration_status:
+            if integration_status != "review_only_open_pr":
+                errors.append(f"{path} has unsupported integration_status {integration_status!r}")
             review_url = item.get("review_url", "")
             if not GITHUB_PR_URL_RE.fullmatch(review_url):
                 errors.append(f"{path} must record its GitHub review PR URL")
             if item.get("release_tag", "") or item.get("release_url", ""):
                 errors.append(f"{path} review-only pin must not have release metadata")
+            if integration_phase == "merge_ready" or require_merge_ready:
+                errors.append(f"{path} open topic head is not merge-ready evidence")
+        elif item.get("review_url", ""):
+            errors.append(f"{path} review_url requires review_only_open_pr status")
         module = modules.get(path)
         if module is None:
             continue
@@ -149,16 +166,24 @@ def validate(
     return errors
 
 
-def check_repository(root: Path) -> list[str]:
+def check_repository(root: Path, require_merge_ready: bool = False) -> list[str]:
     lock = json.loads((root / LOCK_PATH).read_text(encoding="utf-8"))
-    return validate(lock, load_modules(root / ".gitmodules"), load_gitlinks(root))
+    return validate(
+        lock,
+        load_modules(root / ".gitmodules"),
+        load_gitlinks(root),
+        require_merge_ready=require_merge_ready,
+    )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument("--require-merge-ready", action="store_true")
     args = parser.parse_args()
-    errors = check_repository(args.root.resolve())
+    errors = check_repository(
+        args.root.resolve(), require_merge_ready=args.require_merge_ready
+    )
     if errors:
         for error in errors:
             print(f"error: {error}")

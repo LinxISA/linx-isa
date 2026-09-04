@@ -1,6 +1,8 @@
 {
   "default_status": "executable-subset",
   "form_overrides": {
+    "b_assemble_32_058abbee219d": "decode-only",
+    "b_subview_32_48f114b5d12b": "decode-only",
     "dma_32_a168aeca5fa5": "decode-only"
   },
   "schema_version": "linx-sail-policy-v0.58.3"

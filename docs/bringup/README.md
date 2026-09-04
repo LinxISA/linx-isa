@@ -10,6 +10,8 @@ matrix is published. Its historical PASS results do not transfer to v0.58.
 - Onboarding and workspace setup: `docs/bringup/GETTING_STARTED.md`
 - Benchmark/QEMU/Linux hard-break flow: `docs/bringup/BENCHMARK_QEMU_LINUX_FLOW.md`
 - AI workload/QEMU/LinxCoreModel hard-break flow: `docs/bringup/AI_WORKLOAD_BRINGUP_FLOW.md`
+- Push-only functional-model CI trust boundary and required-check identity:
+  `docs/bringup/FUNCTIONAL_MODEL_CI_SECURITY.md`
 
 ## Normative Contract
 

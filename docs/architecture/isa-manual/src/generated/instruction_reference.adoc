@@ -90,7 +90,7 @@
 |`HL.ADDIW` |48 |- |`hl.addiw SrcL, uimm, ->{t, u, Rd}` |HL.ADDIW applies word addition to SrcL[31:0] and the low word of a zero-extended 24-bit immediate, then sign-extends the 32-bit result.
 |`HL.ANDI` |48 |- |`hl.andi SrcL, simm, ->{t, u, Rd}` |HL.ANDI applies XLEN bitwise conjunction to SrcL and a sign-extended 24-bit immediate.
 |`HL.ANDIW` |48 |- |`hl.andiw SrcL, simm, ->{t, u, Rd}` |HL.ANDIW applies word bitwise conjunction to SrcL[31:0] and the low word of a sign-extended 24-bit immediate, then sign-extends the 32-bit result.
-|`HL.BFI` |48 |- |`hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}` |HL.BFI inserts ascending low source bits into an inclusive wrapping destination interval of a snapshotted base value and publishes the XLEN result.
+|`HL.BFI` |48 |- |`hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}` |HL.BFI copies a low source byte field into a wrapping byte interval of a snapshotted base value and publishes the XLEN result.
 |`HL.CCAT` |48 |- |`hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCAT logically right-shifts {SrcL, SrcR}, writes the low 64-bit result to Dst0, then writes the high result to Dst1.
 |`HL.CCATW` |48 |- |`hl.ccatw SrcL, SrcR, shamt, ->Dst0, Dst1` |HL.CCATW logically right-shifts {SrcL[31:0], SrcR[31:0]}, sign-extends the low then high 32-bit results, and writes them in order.
 |`HL.DIV` |48 |- |`hl.div SrcL, SrcR, ->Dst0, Dst1` |HL.DIV computes a signed XLEN quotient/remainder pair from source snapshots, then publishes quotient followed by remainder.
@@ -224,6 +224,16 @@
 |`SETRET` |32 |- |`setret uimm, ->Ra` |SETRET - Write the architectural return address.
 |===
 
+[[insnref-bundle-range-modifier]]
+=== Bundle Range Modifier
+
+[cols="3,1,2,5,5",options="header"]
+|===
+|Mnemonic |Len |Decode |Assembly |Notes
+|`B.ASSEMBLE` |32 |- |`B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode` |Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+|`B.SUBVIEW` |32 |- |`B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode` |Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+|===
+
 [[insnref-bundle-control-attribute]]
 === Bundle Control Attribute
 
@@ -259,7 +269,7 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
+|`B.FPATR` |32 |- |`B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn` |Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls.
 |===
 
 [[insnref-bundle-hint]]
@@ -278,13 +288,13 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
-|`B.IOS` |32 |- |`B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
+|`B.IOS` |32 |- |`B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |===
 
 [[insnref-bundle-offset]]
@@ -310,12 +320,12 @@
 |`BSTART.FP` |32 |- |`BSTART.FP IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.GMOV` |32 |- |`BSTART.GMOV DataType` |Starts a Core4 peer-Local fragment transfer block.
-|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Begins a TLSU byte-displacement gather block and selects its transfer DataType.
-|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Begins a TLSU byte-displacement atomic compare-and-swap gather block.
-|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Begins a predicate-masked TLSU byte-displacement gather block.
+|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Begins a strided indexed TLSU gather block.
+|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Begins an atomic compare-and-swap strided indexed TLSU gather block.
+|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Begins a predicate-masked strided indexed TLSU gather block.
 |`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Begins a TLSU byte-displacement scatter block and selects its transfer DataType.
-|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Begins a predicate-masked TLSU byte-displacement scatter block.
+|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Begins a strided indexed TLSU scatter block.
+|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Begins a predicate-masked strided indexed TLSU scatter block.
 |`BSTART.MSEQ` |32 |- |`BSTART.MSEQ <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -338,12 +348,7 @@
 |`BSTART.TMATMULMX.ACC` |32 |- |`BSTART.TMATMULMX.ACC DataType` |Starts CUBE Function 6 for the TMATMUL_MX_ACC Matrix-matrix complete-bundle operation.
 |`BSTART.TMATMULMX.BIAS` |32 |- |`BSTART.TMATMULMX.BIAS DataType` |Starts CUBE Function 5 for the TMATMUL_MX_BIAS Matrix-matrix complete-bundle operation.
 |`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.TMOV` |32 |- |`BSTART.TMOV DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TPREFETCH` |32 |- |`BSTART.TPREFETCH DataType` |Starts a destination-free, four-PE TLSU prefetch block with an explicit element data type.
-|`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TSTORE` |32 |- |`BSTART.TSTORE DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTOP` |32 |- |`BSTOP` |Commits the current bundle and transfers to its selected continuation.
 |`C.BSTART` |16 |- |`C.BSTART DIRECT, label` |Starts a compressed standard block with a PC-relative direct or conditional candidate target.
@@ -357,7 +362,7 @@
 |`FRET.STK` |32 |- |`FRET.STK [ra ~ RegDstn], sp!, uimm` |Restores a restartable stack frame whose first stack slot supplies the validated return target.
 |`L.BSTOP` |64 |- |`L.BSTOP` |Commits the current bundle and transfers to its selected continuation.
 |`MCOPY` |32 |- |`MCOPY [RegSrc0, RegSrc1, RegSrc2]` |Copies a non-overlapping byte range in restartable forward memory steps.
-|`MSET` |32 |- |`MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` |Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
+|`MSET` |32 |- |`MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` |Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.
 |`XB` |32 |- |`XB ACR-ID, C-ID` |Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects.
 |===
 
@@ -527,12 +532,12 @@
 |Mnemonic |Len |Decode |Assembly |Notes
 |`FABS` |32 |- |`fabs.{T} SrcL, ->{t, u, Rd}` |FABS clears the sign bit of the selected FP64 or FP32 carrier, preserves every other carrier bit, and publishes no numeric flags.
 |`FADD` |32 |- |`fadd.{T} SrcL, SrcR, ->{t, u, Rd}` |FADD adds two selected FP64 or FP32 carriers through the active numeric profile and publishes its sticky flags.
-|`FCVT` |32 |- |`fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.
-|`FCVTA` |32 |- |`fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.
-|`FCVTM` |32 |- |`fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.
-|`FCVTN` |32 |- |`fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.
-|`FCVTP` |32 |- |`fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.
-|`FCVTZ` |32 |- |`fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.
+|`FCVT` |32 |- |`fcvt.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.
+|`FCVTA` |32 |- |`fcvta.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.
+|`FCVTM` |32 |- |`fcvtm.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode.
+|`FCVTN` |32 |- |`fcvtn.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTN converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-nearest mode.
+|`FCVTP` |32 |- |`fcvtp.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTP converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-up mode.
+|`FCVTZ` |32 |- |`fcvtz.{srcT2dstT} SrcL, ->{t, u, Rd}` |FCVTZ converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-toward-zero mode.
 |`FDIV` |32 |- |`fdiv.{T} SrcL, SrcR, ->{t, u, Rd}` |FDIV divides the left selected carrier by the right through the active numeric profile and publishes its sticky flags.
 |`FEQ` |32 |- |`feq.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQ performs ordered quiet equality and returns canonical XLEN zero or one.
 |`FEQS` |32 |- |`feqs.{T} SrcL, SrcR, ->{t, u, Rd}` |FEQS performs ordered signaling equality and returns canonical XLEN zero or one.
@@ -553,8 +558,8 @@
 |`FRECIP` |32 |- |`frecip.{T} SrcL, ->{t, u, Rd}` |FRECIP applies the active numeric profile reciprocal operation to the selected FP64 or FP32 carrier.
 |`FSQRT` |32 |- |`fsqrt.{T} SrcL, ->{t, u, Rd}` |FSQRT applies the active numeric profile square-root operation to the selected FP64 or FP32 carrier.
 |`FSUB` |32 |- |`fsub.{T} SrcL, SrcR, ->{t, u, Rd}` |FSUB subtracts the right selected carrier from the left through the active numeric profile and publishes its sticky flags.
-|`SCVTF` |32 |- |`scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
-|`UCVTF` |32 |- |`ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+|`SCVTF` |32 |- |`scvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
+|`UCVTF` |32 |- |`ucvtf.{srcT2dstT} SrcL, ->{t, u, Rd}` |UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 |===
 
 [[insnref-lda-pc-rel]]

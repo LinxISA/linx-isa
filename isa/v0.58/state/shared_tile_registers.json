@@ -1,12 +1,12 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/shared_tile_registers.v1.json",
   "profile": "v0.58",
-  "version": "0.58.3",
+  "version": "0.58.5",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
-  "register_count": 256,
+  "register_count": 64,
   "register_names": {
     "first": "S0",
-    "last": "S255",
+    "last": "S63",
     "syntax": "S<absolute-index>"
   },
   "scope": {

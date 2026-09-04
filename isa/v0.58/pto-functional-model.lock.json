@@ -1,0 +1,83 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_aslref_model_lock.v1.json",
+  "schema_version": 1,
+  "release": "0.58.5",
+  "architecture": {
+    "repository": "https://github.com/PTO-ISA/pto-spec.git",
+    "path": "tools/pto-spec",
+    "commit": "8cf9dd8024325eb53626d375ef148dcbdbf17a6b",
+    "tree": "23473fe75cb5961081aa510a8a67d15be33bff73",
+    "pto_lock": "isa/v0.58/pto-spec.lock.json",
+    "pto_lock_sha256": "70b9039c131c4ea49f61c7f4c7183700e0eb5bcfca1432afae6d9ee7d315a8ad",
+    "release_manifest_sha256": "d6ffe96d31a7f641c27e81fe995149f0a33b8eff94b6d408f09c3b1c6410b6e7"
+  },
+  "reference_model": {
+    "repository": "https://github.com/PTO-ISA/asl-model.git",
+    "path": "tools/asl-model",
+    "commit": "6814c9e4457a937570cbfd5a481b0fd3ab96d805",
+    "tree": "70ffa96101905a9f4effa076eda62f02215d7f30",
+    "model_lock": "pto-lock.json",
+    "model_lock_sha256": "90a48d5f5c408e1c5698b07713ab75ed16cd7fbcf5fa561fcdeaee222aa5213c",
+    "model_ndf": "docs/model-ndf-v1.md",
+    "model_ndf_sha256": "69d192e0d0138e6dc1746330fecd9e2fdbc3cb720e53b8bda59429be141bd187"
+  },
+  "consumer": {
+    "repository": "https://github.com/LinxISA/SuperScalarModel.git",
+    "path": "tools/SuperScalarModel",
+    "commit": "831232c81d01c94a9bdcf84f60cfb1db9bf1e4c5",
+    "tree": "36025d88a927ed523448171556797bafc70d2d2c",
+    "modeling_spec": "modelSpec/pto_aslref_gfrun_modeling_spec.md",
+    "modeling_spec_sha256": "d96cf59799216a48e5c4606e069f40ff6b5427c2de20e33459acd5c328a7c6e1"
+  },
+  "aslref": {
+    "repository": "https://github.com/herd/herdtools7.git",
+    "commit": "0b6e09066d4186c8a26e02e3bb884bd664d5eb34"
+  },
+  "interfaces": {
+    "model_abi": "pto-asl-model-experimental-v2",
+    "worker_protocol": "pto-asl-worker-v1",
+    "architecture_version": "0.58.5"
+  },
+  "corpus": {
+    "repository": "https://github.com/PTO-ISA/pto-spec.git",
+    "commit": "a0d7b39c345f19e90020d356dd8caf4d83e03418",
+    "tree": "bff7b3de3a78339bd170fe0a855af8853eb77ecb",
+    "builder": "scripts/build-functional-model-corpus",
+    "builder_sha256": "1a87977780b2c1daa9315dd8426a3874ddd6a4e3c839b1a335ab6abd4f566a70",
+    "schema": "spec/schemas/pto-functional-model-corpus-v1.schema.json",
+    "schema_sha256": "a43842e497dd64d9f1edc6b7614dffb993345822b1d176cb675c33bcd088de49"
+  },
+  "toolchain": {
+    "repository": "https://github.com/LinxISA/llvm-project.git",
+    "commit": "baef2b3a47a2162ef4e0542eb715562bfdbe7a6a",
+    "clang_sha256": "f9009511b94b0a7de2275a96f28d53afcaa9b635af7425e8316cee875bddcb8e",
+    "lld_sha256": "ee909db67b7e7686b7890d8c197738d0411fde889c03adb436d803d53085d8da",
+    "readelf_sha256": "8c1d14f4b9a4616a2f477d721eeb65e9d29533d0adf607218e595dd4c5d0aca4"
+  },
+  "validated_results": {
+    "scalar_stop_pc": {
+      "source": "tests/functional-model/corpus/scalar_stop_pc.S",
+      "source_sha256": "f473f0ad381f4f08cafee459544c019036fd3e7ab6c783ea26dace190196de85",
+      "linker_script": "tests/functional-model/corpus/scalar_stop_pc.ld",
+      "linker_sha256": "4fedab537006f7f40e68b61c2e2152502bc550c0bc32b58183ee85673c47f4ea",
+      "result_hex": "19000000",
+      "result_sha256": "0623ccb9b1619bd388284a438034d8cb6431964ba727d8b1c450303105735488"
+    },
+    "block_64_stop_pc": {
+      "source": "tests/functional-model/corpus/block_64_stop_pc.S",
+      "source_sha256": "cd1b1f6e324a981762241428bd3a8b651d52f2c40e5a277d2b0ba21792b8b60b",
+      "linker_script": "tests/functional-model/corpus/block_64_stop_pc.ld",
+      "linker_sha256": "da502a469cf48d287a27a6853bd6343faf28390ef2ffc1df49b73439b2146079",
+      "result_hex": "a55a0000",
+      "result_sha256": "3ca4f90350a3e8d3a10ad40647b2b13d1e7ac2b3bbd5c53982ee568ee0bcbcb8"
+    },
+    "tile_tadd_stop_pc": {
+      "source": "tests/functional-model/corpus/tile_tadd_stop_pc.S",
+      "source_sha256": "9ec9ce56439d739cf3330ebea3051674e66b3b80e14e42741bb021d5f35f827e",
+      "linker_script": "tests/functional-model/corpus/tile_tadd_stop_pc.ld",
+      "linker_sha256": "76e2723f4b2655aa0026aab0eba768a78945382afff7fc8c5192ff8b6a87305a",
+      "result_hex": "32000000",
+      "result_sha256": "85dd751867e3155c7f2e23e8446546906f5bf617d4d985ed474822613764d69e"
+    }
+  }
+}

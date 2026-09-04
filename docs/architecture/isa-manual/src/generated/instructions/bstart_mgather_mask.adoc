@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MGATHER.MASK DataType
 
-*Description:* Begins a predicate-masked TLSU byte-displacement gather block.
+*Description:* Begins a predicate-masked strided indexed TLSU gather block.
 
 *Encoding:*
 

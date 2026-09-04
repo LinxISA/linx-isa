@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **Bundle Control Attribute** group of the LinxISA v0.58.3 catalog.
+Instructions in the **Bundle Control Attribute** group of the LinxISA v0.58.5 catalog.
 
 ## Instructions
 
