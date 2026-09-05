@@ -25,7 +25,7 @@ v0.57/v0.58.1 报告、旧 SHA、仅 trace 输出、等待项、跳过项和缺�
 | 表面 | 状态 | 当前证据 |
 | --- | --- | --- |
 | ISA catalog、Sail、PTO lock | 已验证 | Golden/catalog/manifest；Sail parser、定向语义、coverage、C backend；744/773 权威 |
-| LLVM/LLD | 已合入 | `b7c83f68bf84125e696a70bec4b665c70a3b584d`；MC 55/55；linx32 759/759、linx64 723/723 compile AVS；新鲜 pure-CodeGen（含别名）146/723 |
+| LLVM/LLD | 已合入并重钉 | `3d79447f635b00feb68f5a6acaa2dae31dc43b7a`；PTO 0.58.6 投影身份及六套 Tile AVS 编译/运行通过；穷举 MC/编译证据仍按提交归属于 `b7c83f68bf84125e696a70bec4b665c70a3b584d` |
 | QEMU | 叶仓已合入 | `bfd46ef40864cd3c0536c54722359e667babd8a1`；PTO 0.58.6 身份、精确解码覆盖、整数 GM 原子/归约与 Local TIMG2COL 门禁通过 |
 | Linx-TileOP-API | 叶仓已合入 | `bd1ecca97ca47da0edc462c1ce19749c6940780e`；compute Zero、transport Null 契约通过 |
 | PTOAS | 已合入 | `cbfaefe6d3a42b6cb3de1482ef01663630d4b39e`；精确 PTO/TileOP pin、源码审查、本地门禁及六个适用的托管 wheel 任务全部通过 |

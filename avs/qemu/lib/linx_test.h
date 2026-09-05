@@ -126,7 +126,8 @@ static inline __attribute__((noreturn)) void linx_test_exit(uint32_t code) {
  * Output a hex digit
  */
 static inline void uart_puthex_digit(uint8_t d) {
-    uart_putc("0123456789ABCDEF"[d & 0xFu]);
+    d &= 0xFu;
+    uart_putc((char)(d < 10u ? '0' + d : 'A' + (d - 10u)));
 }
 
 /*
@@ -177,9 +178,12 @@ static inline void test_suite_begin(uint32_t suite_id) {
  */
 static inline void test_start(uint32_t test_id) {
 #if !LINX_TEST_QUIET
-    uart_puts("  Test 0x");
+    /* Keep the machine-readable marker independent of global relocations. */
+    uart_putc(' '); uart_putc(' '); uart_putc('T'); uart_putc('e');
+    uart_putc('s'); uart_putc('t'); uart_putc(' '); uart_putc('0');
+    uart_putc('x');
     uart_puthex32(test_id);
-    uart_puts(": ");
+    uart_putc(':'); uart_putc(' ');
 #else
     (void)test_id;
 #endif
@@ -190,7 +194,9 @@ static inline void test_start(uint32_t test_id) {
  */
 static inline void test_pass(void) {
 #if !LINX_TEST_QUIET
-    uart_puts("PASS\r\n");
+    /* Completion markers must remain parseable before ADDTPC is fixed. */
+    uart_putc('P'); uart_putc('A'); uart_putc('S'); uart_putc('S');
+    uart_putc('\r'); uart_putc('\n');
 #endif
 }
 

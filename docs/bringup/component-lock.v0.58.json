@@ -7,10 +7,10 @@
       "path": "compiler/llvm",
       "url": "https://github.com/LinxISA/llvm-project.git",
       "branch": "main",
-      "commit": "b7c83f68bf84125e696a70bec4b665c70a3b584d",
-      "tree": "c11bd80c7dd34ed4438de1da6bde0a01eae8c76d",
+      "commit": "3d79447f635b00feb68f5a6acaa2dae31dc43b7a",
+      "tree": "d56f073fa94cd6fc6569a017d6dfec0d74baf3b2",
       "release": "0.58.3",
-      "role": "v0.58.3 compiler, assembler, and linker"
+      "role": "v0.58 compiler, assembler, and linker with PTO 0.58.6 projection identity"
     },
     {
       "path": "compiler/ptoas",

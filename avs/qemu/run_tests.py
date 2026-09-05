@@ -348,6 +348,28 @@ def _qemu_source_sha(qemu: Path) -> str:
     return proc.stdout.strip()
 
 
+def _tool_provenance(tool: Path | None) -> dict[str, object] | None:
+    if tool is None:
+        return None
+    version = subprocess.run(
+        [str(tool), "--version"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    if version.returncode != 0:
+        raise SystemExit(f"error: cannot capture tool version: {tool}")
+    first_line = version.stdout.splitlines()[0] if version.stdout else "unknown"
+    source_match = re.search(r"\b[0-9a-f]{40}\b", first_line)
+    return {
+        "path": str(tool),
+        "binary_sha256": _sha256(tool),
+        "version": first_line,
+        "source_sha": source_match.group(0) if source_match else None,
+    }
+
+
 def _qemu_provenance(qemu: Path) -> dict[str, object]:
     source_root = _qemu_source_root(qemu)
     status = subprocess.run(
@@ -387,6 +409,10 @@ def _write_execution_evidence(
     aggregate_object: Path,
     elf: Path,
     qemu: Path,
+    clang: Path,
+    clangxx: Path | None,
+    lld: Path,
+    llvm_objdump: Path,
     completed: subprocess.CompletedProcess[bytes],
     verdict: dict[str, object],
     trace_path: Path,
@@ -434,6 +460,12 @@ def _write_execution_evidence(
             "binary_sha256": _sha256(qemu),
             "sha": _qemu_source_sha(qemu),
             **_qemu_provenance(qemu),
+        },
+        "toolchain": {
+            "clang": _tool_provenance(clang),
+            "clangxx": _tool_provenance(clangxx),
+            "lld": _tool_provenance(lld),
+            "llvm_objdump": _tool_provenance(llvm_objdump),
         },
         "run": {
             "exit_code": completed.returncode,
@@ -1451,6 +1483,10 @@ def main(argv: list[str]) -> int:
             aggregate_object=out_obj,
             elf=directboot_elf,
             qemu=qemu,
+            clang=clang,
+            clangxx=clangxx,
+            lld=lld,
+            llvm_objdump=llvm_objdump,
             completed=p,
             verdict=verdict,
             trace_path=evidence_trace,
