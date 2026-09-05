@@ -77,6 +77,8 @@ COMPLETION_TEST_IDS_BY_SUITE = {
     "tile_v0583_vec": 0x00002B01,
     "tile_v0583_sfu": 0x00002C01,
     "tile_v0583_cube": 0x00002D01,
+    "tile_v0586_gm_atom_red": 0x00002E01,
+    "tile_v0586_timg2col": 0x00002F01,
     "system": 0x0000110D,
 }
 
@@ -545,6 +547,14 @@ SUITES: dict[str, dict[str, str]] = {
         "src": "tests/31_v0583_tile_cube.c",
         "macro": "LINX_TEST_ENABLE_TILE_V0583_CUBE",
     },
+    "tile_v0586_gm_atom_red": {
+        "src": "tests/32_v0586_gm_atom_red.c",
+        "macro": "LINX_TEST_ENABLE_TILE_V0586_GM_ATOM_RED",
+    },
+    "tile_v0586_timg2col": {
+        "src": "tests/33_v0586_timg2col.c",
+        "macro": "LINX_TEST_ENABLE_TILE_V0586_TIMG2COL",
+    },
 }
 
 COMPILE_ONLY_SUITE_SOURCE_OVERRIDE: dict[str, str] = {}
@@ -554,6 +564,12 @@ EXTRA_SOURCES_BY_SUITE: dict[str, list[str]] = {
     "tile_v0583_vec": ["avs/qemu/tests/29_v0583_tile_vec_carrier.S"],
     "tile_v0583_sfu": ["avs/qemu/tests/30_v0583_tile_sfu_carrier.S"],
     "tile_v0583_cube": ["avs/qemu/tests/31_v0583_tile_cube_carrier.S"],
+    "tile_v0586_gm_atom_red": [
+        "avs/qemu/tests/32_v0586_gm_atom_red_carrier.S"
+    ],
+    "tile_v0586_timg2col": [
+        "avs/qemu/tests/33_v0586_timg2col_carrier.S"
+    ],
 }
 
 def _extra_sources_for_suite(suite: str) -> list[str]:
@@ -613,6 +629,16 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
         r"\bBSTART\.TMATMUL\s+U8\b",
         r"\bB\.FPATR\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0,\s+0\b",
         r"\bB\.DATR\s+M162ND,\s+DTYPE_NONE,\s+Null\b",
+    ],
+    "tile_v0586_gm_atom_red": [
+        r"\bBSTART\.MGATHER\.ADD\s+U32\b",
+        r"\bBSTART\.MSCATTER\.POPC\s+U32\b",
+        r"\bB\.IOT\s+t#1,\s+u#1,\s+mask=0001,\s+last,\s+->t<128B>",
+    ],
+    "tile_v0586_timg2col": [
+        r"81 11\s+.*<unknown>[\s\S]*?c1 c9\s+.*<unknown>",
+        r"\bB\.DATR\s+ND2M16,\s+DTYPE_NONE,\s+Zero\b",
+        r"\bB\.IOT\s+mask=1111,\s+last,\s+->m<512B>",
     ],
     "simt_autovec": [
         r"(?s)<search_store_index_grouped_boundary>:.*?\bBSTART\.MSEQ\b.*?\bB\.TEXT\b.*?B\.IOTI.*?B\.IOTI.*?C\.B\.DIMI\s+32,\s+->lb0.*?C\.B\.DIMI\s+2,\s+->lb1.*?\bv\.sw\.brg\.local\b.*?\bv\.lw\.brg\b.*?->p.*?\bb\.nz\b.*?\bj\b.*?\bv\.sw\.brg\b",

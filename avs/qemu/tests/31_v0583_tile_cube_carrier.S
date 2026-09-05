@@ -18,7 +18,7 @@ linx_v0583_cube_matmul:
     B.IOT mask=0001, last, ->n<128B>
 
     BSTART.TMATMUL U8
-    B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0
+    B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     C.B.DIMI 4, ->lb0
     C.B.DIMI 4, ->lb1
     C.B.DIMI 4, ->lb2

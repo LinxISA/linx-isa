@@ -10,16 +10,16 @@ enum {
 };
 static const uint32_t kTestId = 0x00002D01u;
 
-static uint8_t lhs[kElements] __attribute__((aligned(64)));
-static uint8_t rhs[kElements] __attribute__((aligned(64)));
-static uint32_t output[kElements] __attribute__((aligned(64)));
-
 extern void linx_v0583_cube_matmul(const uint8_t *a, const uint8_t *b,
                                    uint32_t *dst, uint64_t input_row_stride_bytes,
                                    uint64_t output_row_stride_bytes);
 
 void run_tile_v0583_cube_tests(void)
 {
+    uint8_t lhs[kElements] __attribute__((aligned(64)));
+    uint8_t rhs[kElements] __attribute__((aligned(64)));
+    uint32_t output[kElements] __attribute__((aligned(64)));
+
     linx_test_disable_extension_first_use();
     test_start(kTestId);
     for (unsigned row = 0; row < kDim; ++row) {

@@ -139,11 +139,6 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
         "BSTART.TMATMUL.ACC",
         "BSTART.ACCCVT",
     ],
-    "bstart_tstore_spart": "BSTART.TSTORE",
-    "bstart_tmov_l2s_insert": "BSTART.TMOV",
-    "bstart_tmov_l2s_publish": "BSTART.TMOV",
-    "bstart_tmov_s2l_broadcast": "BSTART.TMOV",
-    "bstart_tmov_s2l_extract": "BSTART.TMOV",
     "c_bstop": "C.BSTOP",
     "c_bstart_cond": "C.BSTART",
     "c_bstart_direct": "C.BSTART",
@@ -228,6 +223,28 @@ SPECIAL_MAP: dict[str, str | list[str]] = {
     "qpush": ["HL.QPUSH", "V.QPUSH"],
     "qpop": ["HL.QPOP", "V.QPOP"],
 }
+
+# These QEMU decoder names belonged to superseded PTO tile selectors.  They
+# must never be normalized onto a current architectural mnemonic: several raw
+# words were reassigned in 0.58.6, so accepting the old name as an alias can
+# make a stale decoder look current in an L1 coverage report.
+RETIRED_QEMU_MNEMONICS = frozenset(
+    {
+        "bstart_tmov_l2s_insert",
+        "bstart_tmov_l2s_publish",
+        "bstart_tmov_s2l_broadcast",
+        "bstart_tmov_s2l_extract",
+        "bstart_tstore_spart",
+        "bstart_tconcat",
+        "bstart_tdequant",
+        "bstart_textract",
+        "bstart_thistogram",
+        "bstart_tinsert",
+        "bstart_tmrgsort",
+        "bstart_tquant",
+        "bstart_tsort",
+    }
+)
 
 CANONICAL_SPECIALIZATION_PROOFS: dict[str, set[str]] = {
     # These architectural names freeze one Function value of a generic tile
@@ -987,6 +1004,31 @@ def _constraint_union_forms(
     return proved
 
 
+def _mapped_form_keys(
+    instructions: list[dict[str, object]],
+    form_entries: list[dict[str, object]],
+    spec_set: set[str],
+) -> set[tuple[str, int, int, int]]:
+    """Return spec form keys proved by one concrete QEMU source surface."""
+    mapped: set[tuple[str, int, int, int]] = set()
+    for entry in form_entries:
+        canonical = _canonicalize_qemu_mnemonic(
+            str(entry["mnemonic"]), spec_set
+        )
+        for spec_name in canonical:
+            mapped.add(
+                (
+                    spec_name,
+                    int(entry["insn_len"]),
+                    int(entry["mask"]),
+                    int(entry["match"]),
+                )
+            )
+    mapped |= _canonical_specialization_forms(instructions, form_entries)
+    mapped |= _constraint_union_forms(instructions, form_entries, spec_set)
+    return mapped
+
+
 def _format_form(key: tuple[str, int, int, int]) -> str:
     mnemonic, length_bits, mask, match = key
     return f"{mnemonic} [len={length_bits} mask=0x{mask:x} match=0x{match:x}]"
@@ -1051,6 +1093,9 @@ def _render_markdown(report: dict[str, object], out_path: Path) -> None:
     lines.append(f"- Missing spec forms: `{report['form_missing_count']}`")
     lines.append(f"- Reserved spec forms: `{report['reserved_form_count']}`")
     lines.append(f"- Unmapped QEMU mnemonics: `{len(unmapped)}`")
+    lines.append(
+        f"- Retired QEMU mnemonics: `{len(report['retired_qemu_mnemonics'])}`"
+    )
     lines.append("")
     lines.append("## L1 Mnemonic Mapping By Prefix")
     lines.append("")
@@ -1227,25 +1272,32 @@ def main(argv: list[str]) -> int:
     mapped_spec = sorted({spec_name for values in mapped_pairs.values() for spec_name in values})
     missing_spec = sorted(spec_set - set(mapped_spec))
 
-    form_entries = (
-        decode_entries
-        if decode_entries
-        else [*meta_entries, *manual_translate_entries]
-    )
-    qemu_form_keys: set[tuple[str, int, int, int]] = set()
-    for entry in form_entries:
-        mapped = _canonicalize_qemu_mnemonic(str(entry["mnemonic"]), spec_set)
-        for spec_name in mapped:
-            qemu_form_keys.add((spec_name, int(entry["insn_len"]), int(entry["mask"]), int(entry["match"])))
+    decode_form_keys = _mapped_form_keys(
+        instructions, decode_entries, spec_set
+    ) if decode_entries else set()
+    metadata_entries = [*meta_entries, *manual_translate_entries]
+    metadata_form_keys = _mapped_form_keys(
+        instructions, metadata_entries, spec_set
+    ) if metadata_entries else set()
 
+    # When both sources are supplied, a form is covered only if decodetree and
+    # generated metadata independently carry its exact mask/match.  This keeps
+    # --qemu-meta meaningful instead of silently reporting decode-only success
+    # when the generated metadata is stale.
+    if decode_form_keys and meta_entries:
+        qemu_form_keys = decode_form_keys & metadata_form_keys
+    elif decode_form_keys:
+        qemu_form_keys = decode_form_keys
+    else:
+        qemu_form_keys = metadata_form_keys
+
+    form_entries = decode_entries if decode_entries else metadata_entries
     canonical_specialization_forms = _canonical_specialization_forms(
         instructions, form_entries
     )
     constraint_union_forms = _constraint_union_forms(
         instructions, form_entries, spec_set
     )
-    qemu_form_keys |= canonical_specialization_forms
-    qemu_form_keys |= constraint_union_forms
 
     mapped_spec_forms = sorted(spec_forms & qemu_form_keys)
     missing_spec_forms = sorted(_format_form(key) for key in (spec_forms - qemu_form_keys))
@@ -1269,13 +1321,19 @@ def main(argv: list[str]) -> int:
     form_coverage_count = len(mapped_spec_forms)
     spec_form_count = len(spec_forms)
     form_coverage_ratio = (form_coverage_count / spec_form_count) if spec_form_count else 0.0
+    retired_qemu_mnemonics = sorted(
+        RETIRED_QEMU_MNEMONICS & (set(qemu_non_internal) | qemu_meta_all)
+    )
 
     ok = True
     classification = "qemu_isa_coverage_report_generated"
     if args.fail_under_count and coverage_count < args.fail_under_count:
         ok = False
         classification = "qemu_isa_coverage_below_threshold"
-    if args.require_full and (coverage_count != spec_count or form_coverage_count != spec_form_count):
+    if args.require_full and retired_qemu_mnemonics:
+        ok = False
+        classification = "qemu_isa_retired_mnemonics_present"
+    elif args.require_full and (coverage_count != spec_count or form_coverage_count != spec_form_count):
         ok = False
         classification = "qemu_isa_coverage_incomplete"
 
@@ -1342,6 +1400,10 @@ def main(argv: list[str]) -> int:
         "spec_unique_mnemonics": spec_count,
         "qemu_unique_mnemonics": len(qemu_non_internal),
         "qemu_unique_forms": len(form_entries),
+        "decode_form_coverage_count": len(spec_forms & decode_form_keys),
+        "metadata_form_coverage_count": (
+            len(spec_forms & metadata_form_keys) if meta_entries else None
+        ),
         "qemu_manual_translate_mnemonics": sorted(
             str(entry["mnemonic"]) for entry in manual_translate_entries
         ),
@@ -1370,6 +1432,7 @@ def main(argv: list[str]) -> int:
         ),
         "missing_forms_by_prefix": missing_forms_by_prefix,
         "unmapped_qemu_mnemonics": sorted(unmapped),
+        "retired_qemu_mnemonics": retired_qemu_mnemonics,
         "mapped_qemu_to_spec": dict(sorted(mapped_pairs.items())),
         "missing_spec_mnemonics": missing_spec,
         "missing_spec_forms": missing_spec_forms,

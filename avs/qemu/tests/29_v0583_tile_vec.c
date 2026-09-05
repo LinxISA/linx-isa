@@ -5,15 +5,15 @@
 enum { kElements = 1024, kRowStrideBytes = 32 * sizeof(uint32_t) };
 static const uint32_t kTestId = 0x00002B01u;
 
-static uint32_t lhs[kElements] __attribute__((aligned(64)));
-static uint32_t rhs[kElements] __attribute__((aligned(64)));
-static uint32_t output[kElements] __attribute__((aligned(64)));
-
 extern void linx_v0583_vec_add(const uint32_t *a, const uint32_t *b,
                                uint32_t *dst, uint64_t row_stride_bytes);
 
 void run_tile_v0583_vec_tests(void)
 {
+    uint32_t lhs[kElements] __attribute__((aligned(64)));
+    uint32_t rhs[kElements] __attribute__((aligned(64)));
+    uint32_t output[kElements] __attribute__((aligned(64)));
+
     linx_test_disable_extension_first_use();
     test_start(kTestId);
     for (unsigned i = 0; i < kElements; ++i) {
