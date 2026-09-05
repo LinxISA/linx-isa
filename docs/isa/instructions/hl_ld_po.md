@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+- `hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.LD.PO snapshots its scalar sources, forms its encoded address, and loads one 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` | 48 | — |
+| `hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` | 48 | — |
 
 <div class="insn-nav">
 

@@ -9,8 +9,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
-assert spec["version"] == "0.58.3"
-assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 540
+pto_lock = json.loads((ROOT / "isa/v0.58/pto-spec.lock.json").read_text(encoding="utf-8"))
+assert spec["version"] == "0.58.6"
+assert pto_lock["release"] == "0.58.6"
+assert pto_lock["publication"]["tag"] == "v0.58.6.0"
+assert pto_lock["publication"]["version"] == "0.58.6.0"
+assert pto_lock["specification_status"] == "draft"
+assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 561
 pto_owned_instructions = [
     item
     for item in spec["instructions"]
@@ -21,8 +26,9 @@ linx_only_instructions = [
     for item in spec["instructions"]
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
-assert len(pto_owned_instructions) == 545
+assert len(pto_owned_instructions) == 561
 assert len(linx_only_instructions) == 212
+assert not any(item.get("pto_source_form_variant_of") for item in spec["instructions"])
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
 assert {
@@ -31,6 +37,10 @@ assert {
     "BSTART.CALL",
     "BSTART.GMOV",
     "BSTART.ICALL",
+    "BSTART.MGATHER.ADD",
+    "BSTART.MGATHER.EXCH",
+    "BSTART.MSCATTER.POPC",
+    "BSTART.TIMG2COL",
     "BSTART.VPAR",
     "BSTART.VSEQ",
     "L.BSTOP",
@@ -52,7 +62,7 @@ reservations = json.loads(
         encoding="utf-8"
     )
 )["reservations"]
-assert len(reservations) == 40
+assert len(reservations) == 46
 
 
 def encoding_parts(item: dict) -> tuple[tuple[int, int, int], ...]:
@@ -88,25 +98,43 @@ b_ios = [item for item in spec["instructions"] if item["mnemonic"] == "B.IOS"]
 assert len(b_ios) == 1
 b_ios_part = b_ios[0]["encoding"]["parts"][0]
 assert (int(b_ios_part["mask"], 0), int(b_ios_part["match"], 0)) == (
-    0xF00871FF,
+    0xFC0871FF,
     0x00001013,
+)
+timg2col = next(item for item in spec["instructions"] if item["mnemonic"] == "BSTART.TIMG2COL")
+timg2col_part = timg2col["encoding"]["parts"][0]
+assert (int(timg2col_part["mask"], 0), int(timg2col_part["match"], 0)) == (
+    0x07FFFFFF,
+    0x01C11181,
 )
 assert spec["retired_encodings"]["entries"] == []
 pto_ops = json.loads((ROOT / "isa/v0.58/state/pto_ops.json").read_text(encoding="utf-8"))
-expected_family_counts = {"CUBE": 12, "TEPL": 87, "TLSU": 10}
-expected_engine_counts = {"CUBE": 12, "SFU": 56, "TLSU": 10, "VEC": 31}
+expected_family_counts = {"CUBE": 12, "TEPL": 77, "TLSU": 28}
+expected_engine_counts = {"CUBE": 12, "SFU": 46, "TLSU": 28, "VEC": 31}
 expected_classification_counts = {
     "elementwise-tile-tile": 25,
-    "irregular-and-complex": 13,
-    "layout-and-rearrangement": 7,
+    "irregular-and-complex": 4,
+    "layout-and-rearrangement": 6,
     "matrix-and-matrix-vector": 12,
-    "memory-and-data-movement": 9,
+    "memory-and-data-movement": 27,
     "reduce-and-expand": 28,
     "tile-scalar-and-immediate": 15,
 }
 assert pto_ops["family_counts"] == expected_family_counts
 assert pto_ops["engine_counts"] == expected_engine_counts
 assert pto_ops["classification_counts"] == expected_classification_counts
+retired_0586 = {
+    "TCONCAT",
+    "TEXTRACT",
+    "TINSERT",
+    "THISTOGRAM",
+    "TQUANT",
+    "TDEQUANT",
+    "TSORT",
+    "TMRGSORT",
+}
+assert retired_0586 <= set(pto_ops["deleted_names"])
+assert retired_0586.isdisjoint(item["name"] for item in pto_ops["operations"])
 assert Counter(item["engine"] for item in pto_ops["operations"]) == Counter(expected_engine_counts)
 assert Counter(item["classification"] for item in pto_ops["operations"]) == Counter(
     expected_classification_counts
@@ -160,13 +188,15 @@ for family in ("tlsu", "cube"):
     for item in engine_ops[family]["legal_aliases"]:
         assert item["engine"] == expected_engine
         assert item["classification"] in expected_classification_counts
+assert {item["function"] for item in engine_ops["tlsu"]["legal_aliases"]} == set(range(28))
+assert engine_ops["tlsu"]["reserved_function_ranges"] == [[28, 31]]
 tfma = [item for item in pto_ops["operations"] if item["name"] == "TFMA"]
 assert len(tfma) == 1
 assert (tfma[0]["mode"], tfma[0]["function"], tfma[0]["selector"]) == (0, 28, "0x01C")
 shared = json.loads((ROOT / "isa/v0.58/state/shared_tile_registers.json").read_text(encoding="utf-8"))
-assert shared["register_count"] == 256
+assert shared["register_count"] == 64
 assert shared["register_names"]["first"] == "S0"
-assert shared["register_names"]["last"] == "S255"
+assert shared["register_names"]["last"] == "S63"
 assert shared["size_code_bytes"]["B.IOT"] == [
     None, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536
 ]

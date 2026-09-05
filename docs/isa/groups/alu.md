@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **ALU** group of the LinxISA v0.58.3 catalog.
+Instructions in the **ALU** group of the LinxISA v0.58.6 catalog.
 
 ## Instructions
 

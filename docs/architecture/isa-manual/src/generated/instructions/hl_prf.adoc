@@ -5,7 +5,7 @@
 [[inst_hl_prf]]
 ==== HL.PRF
 
-*Syntax:* hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]
+*Syntax:* hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]
 
 *Description:* HL.PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect.
 

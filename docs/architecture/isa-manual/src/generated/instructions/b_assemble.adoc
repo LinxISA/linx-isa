@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_assemble]]
+==== B.ASSEMBLE
+
+*Syntax:* B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode
+
+*Description:* Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+
+*Encoding:*
+
+image::encodings/enc_b_assemble.svg[B.ASSEMBLE encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_IO", "note": "PTO 0.58.5 common block range contract", "source": "group_rule", "uop_kind": "CMD"}`

@@ -17,29 +17,9 @@
 
 <div class="enc-diagram">
 
-<figure id="encoding-bstart_tmov_32_3079328b98d6">
-<img src="../wavedrom/enc_bstart_tmov_32_3079328b98d6.svg" alt="BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6" width="100%" />
-<figcaption><code>bstart_tmov_32_3079328b98d6</code> — <code>BSTART.TMOV DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
-<figure id="encoding-bstart_tmov_32_34d0ab432974">
-<img src="../wavedrom/enc_bstart_tmov_32_34d0ab432974.svg" alt="BSTART.TMOV encoding form bstart_tmov_32_34d0ab432974" width="100%" />
-<figcaption><code>bstart_tmov_32_34d0ab432974</code> — <code>BSTART.TMOV DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
-<figure id="encoding-bstart_tmov_32_472804576301">
-<img src="../wavedrom/enc_bstart_tmov_32_472804576301.svg" alt="BSTART.TMOV encoding form bstart_tmov_32_472804576301" width="100%" />
-<figcaption><code>bstart_tmov_32_472804576301</code> — <code>BSTART.TMOV DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
-<figure id="encoding-bstart_tmov_32_d96181e99f01">
-<img src="../wavedrom/enc_bstart_tmov_32_d96181e99f01.svg" alt="BSTART.TMOV encoding form bstart_tmov_32_d96181e99f01" width="100%" />
-<figcaption><code>bstart_tmov_32_d96181e99f01</code> — <code>BSTART.TMOV DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
-<figure id="encoding-bstart_tmov_32_efe5c49fcb78">
-<img src="../wavedrom/enc_bstart_tmov_32_efe5c49fcb78.svg" alt="BSTART.TMOV encoding form bstart_tmov_32_efe5c49fcb78" width="100%" />
-<figcaption><code>bstart_tmov_32_efe5c49fcb78</code> — <code>BSTART.TMOV DataType</code>. MSB is on the left, LSB is on the right.</figcaption>
+<figure>
+<img src="../wavedrom/enc_bstart_tmov.svg" alt="BSTART.TMOV encoding" width="100%" />
+<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
 </figure>
 
 </div>
@@ -60,13 +40,9 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Full Catalog Forms
 
-| Form ID | Assembly | Length | Decode | Encoding |
-|---------|----------|--------|--------|----------|
-| `bstart_tmov_32_3079328b98d6` | `BSTART.TMOV DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tmov_32_3079328b98d6.svg) |
-| `bstart_tmov_32_34d0ab432974` | `BSTART.TMOV DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tmov_32_34d0ab432974.svg) |
-| `bstart_tmov_32_472804576301` | `BSTART.TMOV DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tmov_32_472804576301.svg) |
-| `bstart_tmov_32_d96181e99f01` | `BSTART.TMOV DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tmov_32_d96181e99f01.svg) |
-| `bstart_tmov_32_efe5c49fcb78` | `BSTART.TMOV DataType` | 32 | — | [SVG](../wavedrom/enc_bstart_tmov_32_efe5c49fcb78.svg) |
+| Assembly | Length | Decode |
+|----------|--------|--------|
+| `BSTART.TMOV DataType` | 32 | — |
 
 <div class="insn-nav">
 

@@ -43,17 +43,37 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
     def test_checked_in_cardinalities_agree(self) -> None:
         self.assertEqual(self.validate(self.documents), [])
 
+    def test_exact_publication_lock_identity_is_enforced(self) -> None:
+        self.assertEqual(checker.validate_lock_identity(self.documents["lock"]), [])
+        mutations = {
+            "catalog digest": lambda lock: lock["catalogs"]["command_forms"].__setitem__(
+                "sha256", "0" * 64
+            ),
+            "source commit": lambda lock: lock["source"].__setitem__("commit", "0" * 40),
+            "release manifest": lambda lock: lock["release_manifest"].__setitem__(
+                "sha256", "0" * 64
+            ),
+            "numeric vectors": lambda lock: lock["numeric_conformance_vectors"].__setitem__(
+                "sha256", "0" * 64
+            ),
+        }
+        for label, mutate in mutations.items():
+            with self.subTest(label=label):
+                lock = copy.deepcopy(self.documents["lock"])
+                mutate(lock)
+                self.assertTrue(checker.validate_lock_identity(lock))
+
     def test_each_cross_file_cardinality_drift_is_rejected(self) -> None:
         mutations = {
             "meta": lambda docs: docs["meta"]["cardinality"].__setitem__(
-                "extension_encoding_reservations", 39
+                "extension_encoding_reservations", 45
             ),
             "release manifest": lambda docs: docs["release"]["cardinality"].__setitem__(
-                "extension_encoding_reservations", 39
+                "extension_encoding_reservations", 45
             ),
             "PTO lock": lambda docs: docs["lock"]["catalogs"][
                 "extension_encoding_reservations"
-            ].__setitem__("count", 39),
+            ].__setitem__("count", 45),
             "reservation projection": lambda docs: docs["reservations"].__setitem__(
                 "reservation_count", 39
             ),
@@ -68,7 +88,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
                 errors = self.validate(documents)
                 self.assertTrue(
                     any(
-                        "extension reservation cardinalities must agree at 40" in error
+                        "extension reservation cardinalities must agree at 46" in error
                         for error in errors
                     ),
                     errors,
@@ -77,7 +97,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
     def test_metadata_narrative_drift_is_rejected(self) -> None:
         documents = copy.deepcopy(self.documents)
         documents["meta"]["notes"] = [
-            note.replace("40 extension reservations", "32 extension reservations")
+            note.replace("46 extension reservations", "32 extension reservations")
             for note in documents["meta"]["notes"]
         ]
         errors = self.validate(documents)

@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.3 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.6 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-sys]]
 ==== SYS
@@ -6077,6 +6077,65 @@ off = (ZeroExtend(imm20) << 1)
 ra = base + off
 ----
 
+[[insndesc-bundle-range-modifier]]
+==== Bundle Range Modifier
+
+[[insndesc-bundle-range-modifier-b-assemble]]
+===== B.ASSEMBLE
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
+
+Encoding::
++
+.`b_assemble_32_058abbee219d` — `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
+image::encodings/enc_b_assemble.svg[B.ASSEMBLE encoding form b_assemble_32_058abbee219d,align="center"]
+
+
+Encoding notes (informative)::
++
+* Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
+[[insndesc-bundle-range-modifier-b-subview]]
+===== B.SUBVIEW
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode`
+
+Encoding::
++
+.`b_subview_32_48f114b5d12b` — `B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode`
+image::encodings/enc_b_subview.svg[B.SUBVIEW encoding form b_subview_32_48f114b5d12b,align="center"]
+
+
+Encoding notes (informative)::
++
+* Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
+----
+
 [[insndesc-bundle-control-attribute]]
 ==== Bundle Control Attribute
 
@@ -6188,12 +6247,12 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
+* `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn`
 
 Encoding::
 +
-.`b_fpatr_32_ecbf4a9b6cf0` — `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB`
-image::encodings/enc_b_fpatr.svg[B.FPATR encoding form b_fpatr_32_ecbf4a9b6cf0,align="center"]
+.`b_fpatr_32_12243b200432` — `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn`
+image::encodings/enc_b_fpatr.svg[B.FPATR encoding form b_fpatr_32_12243b200432,align="center"]
 
 
 Encoding notes (informative)::
@@ -6263,7 +6322,7 @@ image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_df50a269be7c,align="
 
 Encoding notes (informative)::
 +
-* Bind up to three absolute GPR inputs and one absolute GPR output; TLOAD/TSTORE use source zero as GM base and source one as byte row stride.
+* Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
 
 Operation (informative)::
 +
@@ -6281,17 +6340,17 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
+* `B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
 
 Encoding::
 +
-.`b_ios_32_0f62f62d6a81` — `B.IOS S<SharedTID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>`
-image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_0f62f62d6a81,align="center"]
+.`b_ios_32_2f2d1ab83761` — `B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_2f2d1ab83761,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Binds one ordered absolute Core-private Shared register S0..S255 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+* Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
 
 Operation (informative)::
 +
@@ -6331,7 +6390,7 @@ image::encodings/enc_b_iot_32_cd6ec8181a49.svg[B.IOT encoding form b_iot_32_cd6e
 
 Encoding notes (informative)::
 +
-* Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+* Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 
 Operation (informative)::
 +
@@ -6495,7 +6554,65 @@ image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgat
 
 Encoding notes (informative)::
 +
-* Begins a TLSU byte-displacement gather block and selects its transfer DataType.
+* Begins a strided indexed TLSU gather block.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-add]]
+===== BSTART.MGATHER.ADD
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.ADD DataType`
+
+Encoding::
++
+.`bstart_mgather_add_32_088f8627077f` — `BSTART.MGATHER.ADD DataType`
+image::encodings/enc_bstart_mgather_add.svg[BSTART.MGATHER.ADD encoding form bstart_mgather_add_32_088f8627077f,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.add operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-and]]
+===== BSTART.MGATHER.AND
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.AND DataType`
+
+Encoding::
++
+.`bstart_mgather_and_32_232d20899377` — `BSTART.MGATHER.AND DataType`
+image::encodings/enc_bstart_mgather_and.svg[BSTART.MGATHER.AND encoding form bstart_mgather_and_32_232d20899377,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.and operation.
 
 Operation (informative)::
 +
@@ -6524,7 +6641,94 @@ image::encodings/enc_bstart_mgather_cas.svg[BSTART.MGATHER.CAS encoding form bst
 
 Encoding notes (informative)::
 +
-* Begins a TLSU byte-displacement atomic compare-and-swap gather block.
+* Begins an atomic compare-and-swap strided indexed TLSU gather block.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-dec]]
+===== BSTART.MGATHER.DEC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.DEC DataType`
+
+Encoding::
++
+.`bstart_mgather_dec_32_a4404f381481` — `BSTART.MGATHER.DEC DataType`
+image::encodings/enc_bstart_mgather_dec.svg[BSTART.MGATHER.DEC encoding form bstart_mgather_dec_32_a4404f381481,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.dec operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-exch]]
+===== BSTART.MGATHER.EXCH
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.EXCH DataType`
+
+Encoding::
++
+.`bstart_mgather_exch_32_c3ad9cf2ffd3` — `BSTART.MGATHER.EXCH DataType`
+image::encodings/enc_bstart_mgather_exch.svg[BSTART.MGATHER.EXCH encoding form bstart_mgather_exch_32_c3ad9cf2ffd3,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.exch operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-inc]]
+===== BSTART.MGATHER.INC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.INC DataType`
+
+Encoding::
++
+.`bstart_mgather_inc_32_da1952ec2a27` — `BSTART.MGATHER.INC DataType`
+image::encodings/enc_bstart_mgather_inc.svg[BSTART.MGATHER.INC encoding form bstart_mgather_inc_32_da1952ec2a27,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.inc operation.
 
 Operation (informative)::
 +
@@ -6553,7 +6757,123 @@ image::encodings/enc_bstart_mgather_mask.svg[BSTART.MGATHER.MASK encoding form b
 
 Encoding notes (informative)::
 +
-* Begins a predicate-masked TLSU byte-displacement gather block.
+* Begins a predicate-masked strided indexed TLSU gather block.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-max]]
+===== BSTART.MGATHER.MAX
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.MAX DataType`
+
+Encoding::
++
+.`bstart_mgather_max_32_e8ab09c078b5` — `BSTART.MGATHER.MAX DataType`
+image::encodings/enc_bstart_mgather_max.svg[BSTART.MGATHER.MAX encoding form bstart_mgather_max_32_e8ab09c078b5,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.max operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-min]]
+===== BSTART.MGATHER.MIN
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.MIN DataType`
+
+Encoding::
++
+.`bstart_mgather_min_32_aade0e4a1ded` — `BSTART.MGATHER.MIN DataType`
+image::encodings/enc_bstart_mgather_min.svg[BSTART.MGATHER.MIN encoding form bstart_mgather_min_32_aade0e4a1ded,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.min operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-or]]
+===== BSTART.MGATHER.OR
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.OR DataType`
+
+Encoding::
++
+.`bstart_mgather_or_32_0c2334253cc3` — `BSTART.MGATHER.OR DataType`
+image::encodings/enc_bstart_mgather_or.svg[BSTART.MGATHER.OR encoding form bstart_mgather_or_32_0c2334253cc3,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.or operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mgather-xor]]
+===== BSTART.MGATHER.XOR
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MGATHER.XOR DataType`
+
+Encoding::
++
+.`bstart_mgather_xor_32_f8b9f1a43450` — `BSTART.MGATHER.XOR DataType`
+image::encodings/enc_bstart_mgather_xor.svg[BSTART.MGATHER.XOR encoding form bstart_mgather_xor_32_f8b9f1a43450,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mgather.xor operation.
 
 Operation (informative)::
 +
@@ -6611,7 +6931,123 @@ image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_ms
 
 Encoding notes (informative)::
 +
-* Begins a TLSU byte-displacement scatter block and selects its transfer DataType.
+* Begins a strided indexed TLSU scatter block.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-add]]
+===== BSTART.MSCATTER.ADD
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.ADD DataType`
+
+Encoding::
++
+.`bstart_mscatter_add_32_f0caf08d9183` — `BSTART.MSCATTER.ADD DataType`
+image::encodings/enc_bstart_mscatter_add.svg[BSTART.MSCATTER.ADD encoding form bstart_mscatter_add_32_f0caf08d9183,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.add operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-and]]
+===== BSTART.MSCATTER.AND
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.AND DataType`
+
+Encoding::
++
+.`bstart_mscatter_and_32_035c8fd2a29c` — `BSTART.MSCATTER.AND DataType`
+image::encodings/enc_bstart_mscatter_and.svg[BSTART.MSCATTER.AND encoding form bstart_mscatter_and_32_035c8fd2a29c,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.and operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-dec]]
+===== BSTART.MSCATTER.DEC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.DEC DataType`
+
+Encoding::
++
+.`bstart_mscatter_dec_32_d307499ccedc` — `BSTART.MSCATTER.DEC DataType`
+image::encodings/enc_bstart_mscatter_dec.svg[BSTART.MSCATTER.DEC encoding form bstart_mscatter_dec_32_d307499ccedc,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.dec operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-inc]]
+===== BSTART.MSCATTER.INC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.INC DataType`
+
+Encoding::
++
+.`bstart_mscatter_inc_32_2c10d5f5e1af` — `BSTART.MSCATTER.INC DataType`
+image::encodings/enc_bstart_mscatter_inc.svg[BSTART.MSCATTER.INC encoding form bstart_mscatter_inc_32_2c10d5f5e1af,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.inc operation.
 
 Operation (informative)::
 +
@@ -6640,7 +7076,152 @@ image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding form
 
 Encoding notes (informative)::
 +
-* Begins a predicate-masked TLSU byte-displacement scatter block.
+* Begins a predicate-masked strided indexed TLSU scatter block.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-max]]
+===== BSTART.MSCATTER.MAX
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.MAX DataType`
+
+Encoding::
++
+.`bstart_mscatter_max_32_7d06140ba225` — `BSTART.MSCATTER.MAX DataType`
+image::encodings/enc_bstart_mscatter_max.svg[BSTART.MSCATTER.MAX encoding form bstart_mscatter_max_32_7d06140ba225,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.max operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-min]]
+===== BSTART.MSCATTER.MIN
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.MIN DataType`
+
+Encoding::
++
+.`bstart_mscatter_min_32_1a9b89a73ebc` — `BSTART.MSCATTER.MIN DataType`
+image::encodings/enc_bstart_mscatter_min.svg[BSTART.MSCATTER.MIN encoding form bstart_mscatter_min_32_1a9b89a73ebc,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.min operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-or]]
+===== BSTART.MSCATTER.OR
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.OR DataType`
+
+Encoding::
++
+.`bstart_mscatter_or_32_344e52424e47` — `BSTART.MSCATTER.OR DataType`
+image::encodings/enc_bstart_mscatter_or.svg[BSTART.MSCATTER.OR encoding form bstart_mscatter_or_32_344e52424e47,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.or operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-popc]]
+===== BSTART.MSCATTER.POPC
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.POPC DataType`
+
+Encoding::
++
+.`bstart_mscatter_popc_32_97e1aec263ac` — `BSTART.MSCATTER.POPC DataType`
+image::encodings/enc_bstart_mscatter_popc.svg[BSTART.MSCATTER.POPC encoding form bstart_mscatter_popc_32_97e1aec263ac,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.popc operation.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
+[[insndesc-bundle-split-bstart-mscatter-xor]]
+===== BSTART.MSCATTER.XOR
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.MSCATTER.XOR DataType`
+
+Encoding::
++
+.`bstart_mscatter_xor_32_fa03881618df` — `BSTART.MSCATTER.XOR DataType`
+image::encodings/enc_bstart_mscatter_xor.svg[BSTART.MSCATTER.XOR encoding form bstart_mscatter_xor_32_fa03881618df,align="center"]
+
+
+Encoding notes (informative)::
++
+* Starts GM indexed mscatter.xor operation.
 
 Operation (informative)::
 +
@@ -6952,6 +7533,35 @@ EndBlock()
 BeginNextBlock(/* type/kind/target as encoded */)
 ----
 
+[[insndesc-bundle-split-bstart-timg2col]]
+===== BSTART.TIMG2COL
+
+Terminates the current block and begins the next block, encoding both block type and transition kind.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `BSTART.TIMG2COL DataType`
+
+Encoding::
++
+.`bstart_timg2col_32_557b5cf18709` — `BSTART.TIMG2COL DataType`
+image::encodings/enc_bstart_timg2col.svg[BSTART.TIMG2COL encoding form bstart_timg2col_32_557b5cf18709,align="center"]
+
+
+Encoding notes (informative)::
++
+* Begins the TLSU feature-map IMG2COL block and selects its element DataType.
+
+Operation (informative)::
++
+[source]
+----
+EndBlock()
+BeginNextBlock(/* type/kind/target as encoded */)
+----
+
 [[insndesc-bundle-split-bstart-tload]]
 ===== BSTART.TLOAD
 
@@ -7160,7 +7770,7 @@ BeginNextBlock(/* type/kind/target as encoded */)
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 5 form(s) (32 bits).
+Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -7169,15 +7779,7 @@ Assembly forms::
 Encoding::
 +
 .`bstart_tmov_32_3079328b98d6` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_3079328b98d6.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,align="center"]
-.`bstart_tmov_32_34d0ab432974` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_34d0ab432974.svg[BSTART.TMOV encoding form bstart_tmov_32_34d0ab432974,align="center"]
-.`bstart_tmov_32_472804576301` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_472804576301.svg[BSTART.TMOV encoding form bstart_tmov_32_472804576301,align="center"]
-.`bstart_tmov_32_d96181e99f01` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_d96181e99f01.svg[BSTART.TMOV encoding form bstart_tmov_32_d96181e99f01,align="center"]
-.`bstart_tmov_32_efe5c49fcb78` — `BSTART.TMOV DataType`
-image::encodings/enc_bstart_tmov_32_efe5c49fcb78.svg[BSTART.TMOV encoding form bstart_tmov_32_efe5c49fcb78,align="center"]
+image::encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,align="center"]
 
 
 Encoding notes (informative)::
@@ -7226,7 +7828,7 @@ BeginNextBlock(/* type/kind/target as encoded */)
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 2 form(s) (32 bits).
+Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -7234,10 +7836,8 @@ Assembly forms::
 
 Encoding::
 +
-.`bstart_tstore_32_6bed4bf0e415` — `BSTART.TSTORE DataType`
-image::encodings/enc_bstart_tstore_32_6bed4bf0e415.svg[BSTART.TSTORE encoding form bstart_tstore_32_6bed4bf0e415,align="center"]
 .`bstart_tstore_32_d592de9e15a8` — `BSTART.TSTORE DataType`
-image::encodings/enc_bstart_tstore_32_d592de9e15a8.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,align="center"]
+image::encodings/enc_bstart_tstore.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,align="center"]
 
 
 Encoding notes (informative)::
@@ -7583,7 +8183,7 @@ image::encodings/enc_mset.svg[MSET encoding form mset_32_7a5f3c26ac6b,align="cen
 
 Encoding notes (informative)::
 +
-* Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
+* Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.
 
 Operation (informative)::
 +
@@ -10433,7 +11033,7 @@ image::encodings/enc_fcvt.svg[FCVT encoding form fcvt_32_5bc6f18dcd9f,align="cen
 
 Encoding notes (informative)::
 +
-* FCVT converts a selected FP64 or FP32 source carrier to destination carrier code 0 through 14 through the active numeric profile.
+* FCVT converts an FP64, FP32, FP16, or E4M3 source to any of those four floating destinations through the common scalar/TCVT profile.
 
 Operation (informative)::
 +
@@ -10461,7 +11061,7 @@ image::encodings/enc_fcvta.svg[FCVTA encoding form fcvta_32_e40944328b8e,align="
 
 Encoding notes (informative)::
 +
-* FCVTA converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-away mode.
+* FCVTA converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-away mode.
 
 Operation (informative)::
 +
@@ -10489,7 +11089,7 @@ image::encodings/enc_fcvtm.svg[FCVTM encoding form fcvtm_32_9a1ae5d79987,align="
 
 Encoding notes (informative)::
 +
-* FCVTM converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-down mode.
+* FCVTM converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-down mode.
 
 Operation (informative)::
 +
@@ -10517,7 +11117,7 @@ image::encodings/enc_fcvtn.svg[FCVTN encoding form fcvtn_32_a24d859f77cf,align="
 
 Encoding notes (informative)::
 +
-* FCVTN converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-nearest mode.
+* FCVTN converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-nearest mode.
 
 Operation (informative)::
 +
@@ -10545,7 +11145,7 @@ image::encodings/enc_fcvtp.svg[FCVTP encoding form fcvtp_32_20805e380dd5,align="
 
 Encoding notes (informative)::
 +
-* FCVTP converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-up mode.
+* FCVTP converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-up mode.
 
 Operation (informative)::
 +
@@ -10573,7 +11173,7 @@ image::encodings/enc_fcvtz.svg[FCVTZ encoding form fcvtz_32_d9465be494b6,align="
 
 Encoding notes (informative)::
 +
-* FCVTZ converts a selected FP64 or FP32 carrier to integer carrier code 0 through 14 with fixed round-toward-zero mode.
+* FCVTZ converts an FP64, FP32, FP16, or E4M3 source to U64/U32/U16/U8 or S64/S32/S16/S8 with fixed round-toward-zero mode.
 
 Operation (informative)::
 +
@@ -11201,7 +11801,7 @@ image::encodings/enc_scvtf.svg[SCVTF encoding form scvtf_32_1dad03d9ab31,align="
 
 Encoding notes (informative)::
 +
-* SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+* SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 
 Operation (informative)::
 +
@@ -11229,7 +11829,7 @@ image::encodings/enc_ucvtf.svg[UCVTF encoding form ucvtf_32_828c970cf295,align="
 
 Encoding notes (informative)::
 +
-* UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+* UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 
 Operation (informative)::
 +
@@ -11449,11 +12049,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lb_po_48_6681088ab2a9` — `hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lb_po_48_6681088ab2a9` — `hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lb_po.svg[HL.LB.PO encoding form hl_lb_po_48_6681088ab2a9,align="center"]
 
 
@@ -11505,11 +12105,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbu_po_48_7269ae6c8b57` — `hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbu_po_48_7269ae6c8b57` — `hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbu_po.svg[HL.LBU.PO encoding form hl_lbu_po_48_7269ae6c8b57,align="center"]
 
 
@@ -11561,11 +12161,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_ld_po_48_bf5a47212c1e` — `hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_ld_po_48_bf5a47212c1e` — `hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_ld_po.svg[HL.LD.PO encoding form hl_ld_po_48_bf5a47212c1e,align="center"]
 
 
@@ -11645,11 +12245,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lh_po_48_94154c7cdaba` — `hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lh_po_48_94154c7cdaba` — `hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lh_po.svg[HL.LH.PO encoding form hl_lh_po_48_94154c7cdaba,align="center"]
 
 
@@ -11729,11 +12329,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhu_po_48_70fcb01a2cd1` — `hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhu_po_48_70fcb01a2cd1` — `hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhu_po.svg[HL.LHU.PO encoding form hl_lhu_po_48_70fcb01a2cd1,align="center"]
 
 
@@ -11813,11 +12413,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lw_po_48_e8f3606964a3` — `hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lw_po_48_e8f3606964a3` — `hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lw_po.svg[HL.LW.PO encoding form hl_lw_po_48_e8f3606964a3,align="center"]
 
 
@@ -11897,11 +12497,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwu_po_48_ec309139d376` — `hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwu_po_48_ec309139d376` — `hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwu_po.svg[HL.LWU.PO encoding form hl_lwu_po_48_ec309139d376,align="center"]
 
 
@@ -11984,11 +12584,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lb_pr_48_7dd145c8dca5` — `hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lb_pr_48_7dd145c8dca5` — `hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lb_pr.svg[HL.LB.PR encoding form hl_lb_pr_48_7dd145c8dca5,align="center"]
 
 
@@ -12040,11 +12640,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbu_pr_48_38f53bbd7a7d` — `hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbu_pr_48_38f53bbd7a7d` — `hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbu_pr.svg[HL.LBU.PR encoding form hl_lbu_pr_48_38f53bbd7a7d,align="center"]
 
 
@@ -12096,11 +12696,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_ld_pr_48_b3cce95b31c8` — `hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_ld_pr_48_b3cce95b31c8` — `hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_ld_pr.svg[HL.LD.PR encoding form hl_ld_pr_48_b3cce95b31c8,align="center"]
 
 
@@ -12180,11 +12780,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lh_pr_48_d39cc9e74fc5` — `hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lh_pr_48_d39cc9e74fc5` — `hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lh_pr.svg[HL.LH.PR encoding form hl_lh_pr_48_d39cc9e74fc5,align="center"]
 
 
@@ -12264,11 +12864,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhu_pr_48_2b52029d8c1e` — `hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhu_pr_48_2b52029d8c1e` — `hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhu_pr.svg[HL.LHU.PR encoding form hl_lhu_pr_48_2b52029d8c1e,align="center"]
 
 
@@ -12348,11 +12948,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lw_pr_48_18db10ea88bf` — `hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lw_pr_48_18db10ea88bf` — `hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lw_pr.svg[HL.LW.PR encoding form hl_lw_pr_48_18db10ea88bf,align="center"]
 
 
@@ -12432,11 +13032,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwu_pr_48_319ed7e2c7d1` — `hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwu_pr_48_319ed7e2c7d1` — `hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwu_pr.svg[HL.LWU.PR encoding form hl_lwu_pr_48_319ed7e2c7d1,align="center"]
 
 
@@ -12886,11 +13486,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbp_48_2fcf575fd0c8` — `hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbp_48_2fcf575fd0c8` — `hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbp.svg[HL.LBP encoding form hl_lbp_48_2fcf575fd0c8,align="center"]
 
 
@@ -12942,11 +13542,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lbup_48_c9bf719605ca` — `hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lbup_48_c9bf719605ca` — `hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lbup.svg[HL.LBUP encoding form hl_lbup_48_c9bf719605ca,align="center"]
 
 
@@ -13026,11 +13626,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_ldp_48_bacfe47cfd0b` — `hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_ldp_48_bacfe47cfd0b` — `hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_ldp.svg[HL.LDP encoding form hl_ldp_48_bacfe47cfd0b,align="center"]
 
 
@@ -13110,11 +13710,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhp_48_1a5646453ffe` — `hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhp_48_1a5646453ffe` — `hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhp.svg[HL.LHP encoding form hl_lhp_48_1a5646453ffe,align="center"]
 
 
@@ -13194,11 +13794,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lhup_48_0ba242a670ec` — `hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lhup_48_0ba242a670ec` — `hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lhup.svg[HL.LHUP encoding form hl_lhup_48_0ba242a670ec,align="center"]
 
 
@@ -13278,11 +13878,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwp_48_7a46de902d85` — `hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwp_48_7a46de902d85` — `hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwp.svg[HL.LWP encoding form hl_lwp_48_7a46de902d85,align="center"]
 
 
@@ -13362,11 +13962,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+* `hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 Encoding::
 +
-.`hl_lwup_48_9af645913747` — `hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+.`hl_lwup_48_9af645913747` — `hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 image::encodings/enc_hl_lwup.svg[HL.LWUP encoding form hl_lwup_48_9af645913747,align="center"]
 
 
@@ -13393,11 +13993,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+* `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 
 Encoding::
 +
-.`hl_prf_48_6a2f3688490f` — `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+.`hl_prf_48_6a2f3688490f` — `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 image::encodings/enc_hl_prf.svg[HL.PRF encoding form hl_prf_48_6a2f3688490f,align="center"]
 
 
@@ -13422,11 +14022,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_prf_a_48_1dc197c8b5a5` — `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`hl_prf_a_48_1dc197c8b5a5` — `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_hl_prf_a.svg[HL.PRF.A encoding form hl_prf_a_48_1dc197c8b5a5,align="center"]
 
 
@@ -13912,11 +14512,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sb_po_48_bb1ccb3da24b` — `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sb_po_48_bb1ccb3da24b` — `hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sb_po.svg[HL.SB.PO encoding form hl_sb_po_48_bb1ccb3da24b,align="center"]
 
 
@@ -13968,11 +14568,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+* `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_po_48_f335328a7f87` — `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+.`hl_sd_po_48_f335328a7f87` — `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_po.svg[HL.SD.PO encoding form hl_sd_po_48_f335328a7f87,align="center"]
 
 
@@ -13996,11 +14596,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_upo_48_7d91573c6555` — `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sd_upo_48_7d91573c6555` — `hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_upo.svg[HL.SD.UPO encoding form hl_sd_upo_48_7d91573c6555,align="center"]
 
 
@@ -14080,11 +14680,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+* `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_po_48_2b20a782f566` — `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+.`hl_sh_po_48_2b20a782f566` — `hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_po.svg[HL.SH.PO encoding form hl_sh_po_48_2b20a782f566,align="center"]
 
 
@@ -14108,11 +14708,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_upo_48_d28769e5b16f` — `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sh_upo_48_d28769e5b16f` — `hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_upo.svg[HL.SH.UPO encoding form hl_sh_upo_48_d28769e5b16f,align="center"]
 
 
@@ -14192,11 +14792,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+* `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_po_48_3183f373cc63` — `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+.`hl_sw_po_48_3183f373cc63` — `hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_po.svg[HL.SW.PO encoding form hl_sw_po_48_3183f373cc63,align="center"]
 
 
@@ -14220,11 +14820,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_upo_48_bab8d2d69b0b` — `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sw_upo_48_bab8d2d69b0b` — `hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_upo.svg[HL.SW.UPO encoding form hl_sw_upo_48_bab8d2d69b0b,align="center"]
 
 
@@ -14307,11 +14907,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sb_pr_48_6355032ffe23` — `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sb_pr_48_6355032ffe23` — `hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sb_pr.svg[HL.SB.PR encoding form hl_sb_pr_48_6355032ffe23,align="center"]
 
 
@@ -14363,11 +14963,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+* `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_pr_48_a9ff27c38e8d` — `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+.`hl_sd_pr_48_a9ff27c38e8d` — `hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_pr.svg[HL.SD.PR encoding form hl_sd_pr_48_a9ff27c38e8d,align="center"]
 
 
@@ -14391,11 +14991,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sd_upr_48_9dcf6a32e5df` — `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sd_upr_48_9dcf6a32e5df` — `hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sd_upr.svg[HL.SD.UPR encoding form hl_sd_upr_48_9dcf6a32e5df,align="center"]
 
 
@@ -14475,11 +15075,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+* `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_pr_48_ec007e4fe531` — `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd}`
+.`hl_sh_pr_48_ec007e4fe531` — `hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_pr.svg[HL.SH.PR encoding form hl_sh_pr_48_ec007e4fe531,align="center"]
 
 
@@ -14503,11 +15103,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sh_upr_48_d53d5eeaff29` — `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sh_upr_48_d53d5eeaff29` — `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sh_upr.svg[HL.SH.UPR encoding form hl_sh_upr_48_d53d5eeaff29,align="center"]
 
 
@@ -14587,11 +15187,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+* `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_pr_48_f2ebdd2d507e` — `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}`
+.`hl_sw_pr_48_f2ebdd2d507e` — `hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_pr.svg[HL.SW.PR encoding form hl_sw_pr_48_f2ebdd2d507e,align="center"]
 
 
@@ -14615,11 +15215,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+* `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`hl_sw_upr_48_0710e763bdf1` — `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+.`hl_sw_upr_48_0710e763bdf1` — `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 image::encodings/enc_hl_sw_upr.svg[HL.SW.UPR encoding form hl_sw_upr_48_0710e763bdf1,align="center"]
 
 
@@ -14929,11 +15529,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_sbp_48_4e0c7cb0c724` — `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_sbp_48_4e0c7cb0c724` — `hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_sbp.svg[HL.SBP encoding form hl_sbp_48_4e0c7cb0c724,align="center"]
 
 
@@ -15013,11 +15613,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+* `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]`
 
 Encoding::
 +
-.`hl_sdp_48_355cef372d62` — `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+.`hl_sdp_48_355cef372d62` — `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]`
 image::encodings/enc_hl_sdp.svg[HL.SDP encoding form hl_sdp_48_355cef372d62,align="center"]
 
 
@@ -15041,11 +15641,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_sdp_u_48_30e8e0d29477` — `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_sdp_u_48_30e8e0d29477` — `hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_sdp_u.svg[HL.SDP.U encoding form hl_sdp_u_48_30e8e0d29477,align="center"]
 
 
@@ -15125,11 +15725,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+* `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]`
 
 Encoding::
 +
-.`hl_shp_48_c360aaff00b3` — `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+.`hl_shp_48_c360aaff00b3` — `hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1]`
 image::encodings/enc_hl_shp.svg[HL.SHP encoding form hl_shp_48_c360aaff00b3,align="center"]
 
 
@@ -15153,11 +15753,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_shp_u_48_f36739d9d0e0` — `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_shp_u_48_f36739d9d0e0` — `hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_shp_u.svg[HL.SHP.U encoding form hl_shp_u_48_f36739d9d0e0,align="center"]
 
 
@@ -15237,11 +15837,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+* `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]`
 
 Encoding::
 +
-.`hl_swp_48_86359b86a0ae` — `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+.`hl_swp_48_86359b86a0ae` — `hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2]`
 image::encodings/enc_hl_swp.svg[HL.SWP encoding form hl_swp_48_86359b86a0ae,align="center"]
 
 
@@ -15265,11 +15865,11 @@ Catalog forms:: 1 form(s) (48 bits).
 
 Assembly forms::
 +
-* `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`hl_swp_u_48_31bb1fa06039` — `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`hl_swp_u_48_31bb1fa06039` — `hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_hl_swp_u.svg[HL.SWP.U encoding form hl_swp_u_48_31bb1fa06039,align="center"]
 
 
@@ -15296,11 +15896,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lb_32_69fa62bab890` — `lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lb_32_69fa62bab890` — `lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lb.svg[LB encoding form lb_32_69fa62bab890,align="center"]
 
 
@@ -15324,11 +15924,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lbu_32_3dba99c3867b` — `lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lbu_32_3dba99c3867b` — `lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lbu.svg[LBU encoding form lbu_32_3dba99c3867b,align="center"]
 
 
@@ -15352,11 +15952,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`ld_32_6ccb1c483bc5` — `ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`ld_32_6ccb1c483bc5` — `ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_ld.svg[LD encoding form ld_32_6ccb1c483bc5,align="center"]
 
 
@@ -15380,11 +15980,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lh_32_ba0f2afd9b3f` — `lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lh_32_ba0f2afd9b3f` — `lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lh.svg[LH encoding form lh_32_ba0f2afd9b3f,align="center"]
 
 
@@ -15408,11 +16008,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lhu_32_050c45d23cc9` — `lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lhu_32_050c45d23cc9` — `lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lhu.svg[LHU encoding form lhu_32_050c45d23cc9,align="center"]
 
 
@@ -15436,11 +16036,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lw_32_3ab9351b5a00` — `lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lw_32_3ab9351b5a00` — `lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lw.svg[LW encoding form lw_32_3ab9351b5a00,align="center"]
 
 
@@ -15464,11 +16064,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+* `lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 Encoding::
 +
-.`lwu_32_59dfc83ee4f4` — `lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+.`lwu_32_59dfc83ee4f4` — `lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 image::encodings/enc_lwu.svg[LWU encoding form lwu_32_59dfc83ee4f4,align="center"]
 
 
@@ -15492,11 +16092,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+* `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 
 Encoding::
 +
-.`prf_32_a91e5e18a496` — `prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+.`prf_32_a91e5e18a496` — `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 image::encodings/enc_prf.svg[PRF encoding form prf_32_a91e5e18a496,align="center"]
 
 
@@ -15696,11 +16296,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sb SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sb_32_f0f61f5c7063` — `sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sb_32_f0f61f5c7063` — `sb SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sb.svg[SB encoding form sb_32_f0f61f5c7063,align="center"]
 
 
@@ -15724,11 +16324,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+* `sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]`
 
 Encoding::
 +
-.`sd_32_324dd0ff5d29` — `sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+.`sd_32_324dd0ff5d29` — `sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3]`
 image::encodings/enc_sd.svg[SD encoding form sd_32_324dd0ff5d29,align="center"]
 
 
@@ -15752,11 +16352,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sd_u_32_854cc53e5b65` — `sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sd_u_32_854cc53e5b65` — `sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sd_u.svg[SD.U encoding form sd_u_32_854cc53e5b65,align="center"]
 
 
@@ -15780,11 +16380,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+* `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]`
 
 Encoding::
 +
-.`sh_32_80b2371159a4` — `sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1]`
+.`sh_32_80b2371159a4` — `sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1]`
 image::encodings/enc_sh.svg[SH encoding form sh_32_80b2371159a4,align="center"]
 
 
@@ -15808,11 +16408,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sh_u_32_bf6553f1739e` — `sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sh_u_32_bf6553f1739e` — `sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sh_u.svg[SH.U encoding form sh_u_32_bf6553f1739e,align="center"]
 
 
@@ -15836,11 +16436,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+* `sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]`
 
 Encoding::
 +
-.`sw_32_4fdd666796e5` — `sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2]`
+.`sw_32_4fdd666796e5` — `sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2]`
 image::encodings/enc_sw.svg[SW encoding form sw_32_4fdd666796e5,align="center"]
 
 
@@ -15864,11 +16464,11 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+* `sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 Encoding::
 +
-.`sw_u_32_9f812ca5bf87` — `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+.`sw_u_32_9f812ca5bf87` — `sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 image::encodings/enc_sw_u.svg[SW.U encoding form sw_u_32_9f812ca5bf87,align="center"]
 
 

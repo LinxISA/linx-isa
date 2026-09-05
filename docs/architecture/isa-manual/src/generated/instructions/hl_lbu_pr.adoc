@@ -5,7 +5,7 @@
 [[inst_hl_lbu_pr]]
 ==== HL.LBU.PR
 
-*Syntax:* hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
+*Syntax:* hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
 
 *Description:* HL.LBU.PR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 

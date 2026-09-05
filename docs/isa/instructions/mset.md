@@ -26,7 +26,7 @@
 
 ## Description
 
-Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.
+Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Fills zero through 63 bytes with the low byte of an absolute GPR after complete 
 
 ## Encoding Notes
 
-- `Fills zero through 63 bytes with the low byte of an absolute GPR after complete access preflight.`
+- `Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.`
 
 ## Full Catalog Forms
 

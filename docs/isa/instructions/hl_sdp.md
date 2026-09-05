@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]`
+- `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.SDP snapshots its scalar sources, forms its encoded address, and stores two a
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3]` | 48 | — |
+| `hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3]` | 48 | — |
 
 <div class="insn-nav">
 

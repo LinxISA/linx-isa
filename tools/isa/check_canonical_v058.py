@@ -18,8 +18,8 @@ def validate(root: Path) -> list[str]:
     if not spec_path.is_file():
         return [f"missing LinxISA 0.58 compiled spec: {spec_path}"]
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
-    if spec.get("version") != "0.58.3":
-        errors.append(f"compiled profile version must be 0.58.3, got {spec.get('version')!r}")
+    if spec.get("version") != "0.58.6":
+        errors.append(f"compiled profile version must be 0.58.6, got {spec.get('version')!r}")
     mnemonics = {str(item.get("mnemonic")) for item in spec.get("instructions", [])}
     required = {
         "B.IOS", "BSTART.GMOV", "BSTART.VPAR", "BSTART.VSEQ",

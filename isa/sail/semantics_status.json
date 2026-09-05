@@ -48,6 +48,10 @@
       "mnemonic": "ASSERT",
       "status": "executable-subset"
     },
+    "b_assemble_32_058abbee219d": {
+      "mnemonic": "B.ASSEMBLE",
+      "status": "decode-only"
+    },
     "b_catr_32_18ebd8429b53": {
       "mnemonic": "B.CATR",
       "status": "executable-subset"
@@ -68,7 +72,7 @@
       "mnemonic": "B.DIM",
       "status": "executable-subset"
     },
-    "b_fpatr_32_ecbf4a9b6cf0": {
+    "b_fpatr_32_12243b200432": {
       "mnemonic": "B.FPATR",
       "status": "executable-subset"
     },
@@ -84,7 +88,7 @@
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
-    "b_ios_32_0f62f62d6a81": {
+    "b_ios_32_2f2d1ab83761": {
       "mnemonic": "B.IOS",
       "status": "executable-subset"
     },
@@ -107,6 +111,10 @@
     "b_iot_32_cd6ec8181a49": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
+    },
+    "b_subview_32_48f114b5d12b": {
+      "mnemonic": "B.SUBVIEW",
+      "status": "decode-only"
     },
     "b_text_32_6f2fe6f95841": {
       "mnemonic": "B.TEXT",
@@ -180,13 +188,49 @@
       "mnemonic": "BSTART.MGATHER",
       "status": "executable-subset"
     },
+    "bstart_mgather_add_32_088f8627077f": {
+      "mnemonic": "BSTART.MGATHER.ADD",
+      "status": "decode-only"
+    },
+    "bstart_mgather_and_32_232d20899377": {
+      "mnemonic": "BSTART.MGATHER.AND",
+      "status": "decode-only"
+    },
     "bstart_mgather_cas_32_74d282c28e52": {
       "mnemonic": "BSTART.MGATHER.CAS",
       "status": "executable-subset"
     },
+    "bstart_mgather_dec_32_a4404f381481": {
+      "mnemonic": "BSTART.MGATHER.DEC",
+      "status": "decode-only"
+    },
+    "bstart_mgather_exch_32_c3ad9cf2ffd3": {
+      "mnemonic": "BSTART.MGATHER.EXCH",
+      "status": "decode-only"
+    },
+    "bstart_mgather_inc_32_da1952ec2a27": {
+      "mnemonic": "BSTART.MGATHER.INC",
+      "status": "decode-only"
+    },
     "bstart_mgather_mask_32_c53a0033eb26": {
       "mnemonic": "BSTART.MGATHER.MASK",
       "status": "executable-subset"
+    },
+    "bstart_mgather_max_32_e8ab09c078b5": {
+      "mnemonic": "BSTART.MGATHER.MAX",
+      "status": "decode-only"
+    },
+    "bstart_mgather_min_32_aade0e4a1ded": {
+      "mnemonic": "BSTART.MGATHER.MIN",
+      "status": "decode-only"
+    },
+    "bstart_mgather_or_32_0c2334253cc3": {
+      "mnemonic": "BSTART.MGATHER.OR",
+      "status": "decode-only"
+    },
+    "bstart_mgather_xor_32_f8b9f1a43450": {
+      "mnemonic": "BSTART.MGATHER.XOR",
+      "status": "decode-only"
     },
     "bstart_mpar_32_beccb0565e7d": {
       "mnemonic": "BSTART.MPAR",
@@ -196,9 +240,45 @@
       "mnemonic": "BSTART.MSCATTER",
       "status": "executable-subset"
     },
+    "bstart_mscatter_add_32_f0caf08d9183": {
+      "mnemonic": "BSTART.MSCATTER.ADD",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_and_32_035c8fd2a29c": {
+      "mnemonic": "BSTART.MSCATTER.AND",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_dec_32_d307499ccedc": {
+      "mnemonic": "BSTART.MSCATTER.DEC",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_inc_32_2c10d5f5e1af": {
+      "mnemonic": "BSTART.MSCATTER.INC",
+      "status": "decode-only"
+    },
     "bstart_mscatter_mask_32_6037e1cd885f": {
       "mnemonic": "BSTART.MSCATTER.MASK",
       "status": "executable-subset"
+    },
+    "bstart_mscatter_max_32_7d06140ba225": {
+      "mnemonic": "BSTART.MSCATTER.MAX",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_min_32_1a9b89a73ebc": {
+      "mnemonic": "BSTART.MSCATTER.MIN",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_or_32_344e52424e47": {
+      "mnemonic": "BSTART.MSCATTER.OR",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_popc_32_97e1aec263ac": {
+      "mnemonic": "BSTART.MSCATTER.POPC",
+      "status": "decode-only"
+    },
+    "bstart_mscatter_xor_32_fa03881618df": {
+      "mnemonic": "BSTART.MSCATTER.XOR",
+      "status": "decode-only"
     },
     "bstart_mseq_32_2cdcceaf89d4": {
       "mnemonic": "BSTART.MSEQ",
@@ -256,6 +336,10 @@
       "mnemonic": "BSTART.TGEMVMX.BIAS",
       "status": "executable-subset"
     },
+    "bstart_timg2col_32_557b5cf18709": {
+      "mnemonic": "BSTART.TIMG2COL",
+      "status": "decode-only"
+    },
     "bstart_tload_32_5178a1794614": {
       "mnemonic": "BSTART.TLOAD",
       "status": "executable-subset"
@@ -288,28 +372,8 @@
       "mnemonic": "BSTART.TMOV",
       "status": "executable-subset"
     },
-    "bstart_tmov_32_34d0ab432974": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
-    "bstart_tmov_32_472804576301": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
-    "bstart_tmov_32_d96181e99f01": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
-    "bstart_tmov_32_efe5c49fcb78": {
-      "mnemonic": "BSTART.TMOV",
-      "status": "executable-subset"
-    },
     "bstart_tprefetch_32_3c9e83c5a42f": {
       "mnemonic": "BSTART.TPREFETCH",
-      "status": "executable-subset"
-    },
-    "bstart_tstore_32_6bed4bf0e415": {
-      "mnemonic": "BSTART.TSTORE",
       "status": "executable-subset"
     },
     "bstart_tstore_32_d592de9e15a8": {
@@ -3029,6 +3093,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.58.3",
-  "spec_version": "0.58.3"
+  "schema_version": "linx-sail-status-v0.58.6",
+  "spec_version": "0.58.6"
 }

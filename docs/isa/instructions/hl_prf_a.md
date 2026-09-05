@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}`
+- `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.PRF.A snapshots its scalar sources, forms its encoded address, and issues a n
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 48 | — |
+| `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` | 48 | — |
 
 <div class="insn-nav">
 

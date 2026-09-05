@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **Bundle Offset** group of the LinxISA v0.58.3 catalog.
+Instructions in the **Bundle Offset** group of the LinxISA v0.58.6 catalog.
 
 ## Instructions
 

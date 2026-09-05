@@ -4,7 +4,7 @@
 
 `B.IOT` 按编码顺序绑定 Local Tile 源和目的寄存器。它只使用
 `T#1..T#16`、`U#1..U#16`、`M#1..M#16` 与 `N#1..N#16` 的相对
-Local 队列空间，不绑定 Shared `S0..S255`。
+Local 队列空间，不绑定 Shared `S0..S63`。
 
 机器可读目录 `isa/v0.58/linxisa-v0.58.json` 是编码唯一权威来源。
 
@@ -34,7 +34,7 @@ B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>
 | 8:7 | `DstTile` | 0 T、1 U、2 M、3 N |
 | 6:0 | 固定 `0010011` | 次编码 |
 
-`PEMode` 使用 PTO ISA 0.58.3 的公共固定译码表：
+`PEMode` 使用 PTO ISA 0.58.6 的公共固定译码表：
 
 | `PEMode` | 语义 mask |
 | --- | --- |

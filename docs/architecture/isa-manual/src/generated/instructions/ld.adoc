@@ -5,7 +5,7 @@
 [[inst_ld]]
 ==== LD
 
-*Syntax:* ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
+*Syntax:* ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}
 
 *Description:* LD snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 8-byte value.
 

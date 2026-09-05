@@ -5,7 +5,7 @@
 [[inst_hl_sw_po]]
 ==== HL.SW.PO
 
-*Syntax:* hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd}
+*Syntax:* hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd}
 
 *Description:* HL.SW.PO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value.
 

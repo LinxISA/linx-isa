@@ -5,7 +5,7 @@
 [[inst_hl_sh_upo]]
 ==== HL.SH.UPO
 
-*Syntax:* hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}
+*Syntax:* hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}
 
 *Description:* HL.SH.UPO snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 

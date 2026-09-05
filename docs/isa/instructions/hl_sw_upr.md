@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+- `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.SW.UPR snapshots its scalar sources, forms its encoded address, and stores on
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` | 48 | — |
+| `hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` | 48 | — |
 
 <div class="insn-nav">
 

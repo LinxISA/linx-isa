@@ -26,7 +26,7 @@
 
 ## Description
 
-UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to flo
 
 ## Encoding Notes
 
-- `UCVTF converts an unsigned 64-bit or zero-extended unsigned 32-bit source to floating carrier code 0 through 14 through the active numeric profile.`
+- `UCVTF converts a U64, U32, U16, or U8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.`
 
 ## Full Catalog Forms
 

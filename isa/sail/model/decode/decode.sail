@@ -447,7 +447,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b000_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b0000001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0000001_funct3_0b000_match_0(inst) then {
-    // BSTOP | BSTOP | {'file': 'opcodes/lx_32.opc', 'line': 334}
+    // BSTOP | BSTOP | {'file': 'opcodes/lx_32.opc', 'line': 329}
     exec_bstop()
   }
   else {
@@ -492,106 +492,162 @@ function decode_execute32_opcode_0b0000001_funct3_0b001_match_8(inst : bits(32))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_9(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00811181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00c11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_10(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00611181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01011181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_11(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00511181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00811181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_12(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00711181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00f11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_13(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01031181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00911181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_14(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01231181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00e11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_15(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01131181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00611181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_16(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01431181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00a11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_17(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01631181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00b11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_18(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01531181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01111181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_19(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00011181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01211181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_20(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00031181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00511181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_21(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00231181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01511181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_22(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00131181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01811181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_23(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00431181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01711181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_24(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00631181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01611181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_25(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00531181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00711181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_26(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00211181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), (inst[31..27] != 0b11110)))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01311181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_27(inst : bits(32)) -> bool = {
-  (inst & 0x07ffffff) == 0x00a11181
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01411181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_28(inst : bits(32)) -> bool = {
-  (inst & 0x07ffffff) == 0x00c11181
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01911181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_29(inst : bits(32)) -> bool = {
-  (inst & 0x07ffffff) == 0x00b11181
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01b11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_30(inst : bits(32)) -> bool = {
-  (inst & 0x07ffffff) == 0x00911181
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01a11181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_31(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00311181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01031181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_32(inst : bits(32)) -> bool = {
-  (inst & 0x07ffffff) == 0x00e11181
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01231181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_33(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00111181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01131181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b0000001_funct3_0b001_match_34(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01431181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_35(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01631181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_36(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01531181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_37(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x01c11181, (inst[31..27] != 0b00000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01110), (inst[31..27] != 0b01111)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101))))), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111)))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_38(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00011181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_39(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00031181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_40(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00231181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_41(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00131181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_42(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00431181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_43(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00631181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_44(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00531181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_45(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00211181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), (inst[31..27] != 0b11110)))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_46(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00311181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_47(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x07ffffff) == 0x00111181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+}
+
+function decode_execute32_opcode_0b0000001_funct3_0b001_match_48(inst : bits(32)) -> bool = {
   and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x000fffff) == 0x00019181, (inst[31..27] != 0b01111)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
 }
 
@@ -657,7 +713,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     exec_bstart_vseq()
   }
   else if decode_execute32_opcode_0b0000001_funct3_0b001_match_7(inst) then {
-    // BSTART.GMOV | BSTART.GMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 330}
+    // BSTART.GMOV | BSTART.GMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 326}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
     decoded_block_type_shadow = 0b0000;
@@ -677,6 +733,26 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     exec_bstart_mgather()
   }
   else if decode_execute32_opcode_0b0000001_funct3_0b001_match_9(inst) then {
+    // BSTART.MGATHER.ADD | BSTART.MGATHER.ADD DataType | {'file': 'opcodes/lx_32.opc', 'line': 346}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_add(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_10(inst) then {
+    // BSTART.MGATHER.AND | BSTART.MGATHER.AND DataType | {'file': 'opcodes/lx_32.opc', 'line': 349}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_and(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_11(inst) then {
     // BSTART.MGATHER.CAS | BSTART.MGATHER.CAS DataType | {'file': 'opcodes/lx_32.opc', 'line': 301}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -686,7 +762,37 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_mgather_cas()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_10(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_12(inst) then {
+    // BSTART.MGATHER.DEC | BSTART.MGATHER.DEC DataType | {'file': 'opcodes/lx_32.opc', 'line': 348}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_dec(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_13(inst) then {
+    // BSTART.MGATHER.EXCH | BSTART.MGATHER.EXCH DataType | {'file': 'opcodes/lx_32.opc', 'line': 343}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_exch(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_14(inst) then {
+    // BSTART.MGATHER.INC | BSTART.MGATHER.INC DataType | {'file': 'opcodes/lx_32.opc', 'line': 347}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_inc(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_15(inst) then {
     // BSTART.MGATHER.MASK | BSTART.MGATHER.MASK DataType | {'file': 'opcodes/lx_32.opc', 'line': 302}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -696,7 +802,47 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_mgather_mask()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_11(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_16(inst) then {
+    // BSTART.MGATHER.MAX | BSTART.MGATHER.MAX DataType | {'file': 'opcodes/lx_32.opc', 'line': 344}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_max(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_17(inst) then {
+    // BSTART.MGATHER.MIN | BSTART.MGATHER.MIN DataType | {'file': 'opcodes/lx_32.opc', 'line': 345}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_min(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_18(inst) then {
+    // BSTART.MGATHER.OR | BSTART.MGATHER.OR DataType | {'file': 'opcodes/lx_32.opc', 'line': 350}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_or(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_19(inst) then {
+    // BSTART.MGATHER.XOR | BSTART.MGATHER.XOR DataType | {'file': 'opcodes/lx_32.opc', 'line': 351}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mgather_xor(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_20(inst) then {
     // BSTART.MSCATTER | BSTART.MSCATTER DataType | {'file': 'opcodes/lx_32.opc', 'line': 304}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -706,7 +852,47 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_mscatter()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_12(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_21(inst) then {
+    // BSTART.MSCATTER.ADD | BSTART.MSCATTER.ADD DataType | {'file': 'opcodes/lx_32.opc', 'line': 354}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_add(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_22(inst) then {
+    // BSTART.MSCATTER.AND | BSTART.MSCATTER.AND DataType | {'file': 'opcodes/lx_32.opc', 'line': 357}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_and(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_23(inst) then {
+    // BSTART.MSCATTER.DEC | BSTART.MSCATTER.DEC DataType | {'file': 'opcodes/lx_32.opc', 'line': 356}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_dec(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_24(inst) then {
+    // BSTART.MSCATTER.INC | BSTART.MSCATTER.INC DataType | {'file': 'opcodes/lx_32.opc', 'line': 355}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_inc(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_25(inst) then {
     // BSTART.MSCATTER.MASK | BSTART.MSCATTER.MASK DataType | {'file': 'opcodes/lx_32.opc', 'line': 303}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -716,7 +902,57 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_mscatter_mask()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_13(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_26(inst) then {
+    // BSTART.MSCATTER.MAX | BSTART.MSCATTER.MAX DataType | {'file': 'opcodes/lx_32.opc', 'line': 352}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_max(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_27(inst) then {
+    // BSTART.MSCATTER.MIN | BSTART.MSCATTER.MIN DataType | {'file': 'opcodes/lx_32.opc', 'line': 353}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_min(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_28(inst) then {
+    // BSTART.MSCATTER.OR | BSTART.MSCATTER.OR DataType | {'file': 'opcodes/lx_32.opc', 'line': 358}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_or(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_29(inst) then {
+    // BSTART.MSCATTER.POPC | BSTART.MSCATTER.POPC DataType | {'file': 'opcodes/lx_32.opc', 'line': 360}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_popc(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_30(inst) then {
+    // BSTART.MSCATTER.XOR | BSTART.MSCATTER.XOR DataType | {'file': 'opcodes/lx_32.opc', 'line': 359}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_mscatter_xor(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_31(inst) then {
     // BSTART.TGEMV | BSTART.TGEMV DataType | {'file': 'opcodes/lx_32.opc', 'line': 312}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -726,7 +962,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tgemv()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_14(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_32(inst) then {
     // BSTART.TGEMV.ACC | BSTART.TGEMV.ACC DataType | {'file': 'opcodes/lx_32.opc', 'line': 313}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -736,7 +972,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tgemv_acc()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_15(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_33(inst) then {
     // BSTART.TGEMV.BIAS | BSTART.TGEMV.BIAS DataType | {'file': 'opcodes/lx_32.opc', 'line': 314}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -746,7 +982,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tgemv_bias()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_16(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_34(inst) then {
     // BSTART.TGEMVMX | BSTART.TGEMVMX DataType | {'file': 'opcodes/lx_32.opc', 'line': 315}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -756,7 +992,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tgemvmx()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_17(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_35(inst) then {
     // BSTART.TGEMVMX.ACC | BSTART.TGEMVMX.ACC DataType | {'file': 'opcodes/lx_32.opc', 'line': 316}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -766,7 +1002,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tgemvmx_acc()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_18(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_36(inst) then {
     // BSTART.TGEMVMX.BIAS | BSTART.TGEMVMX.BIAS DataType | {'file': 'opcodes/lx_32.opc', 'line': 317}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -776,7 +1012,17 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tgemvmx_bias()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_19(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_37(inst) then {
+    // BSTART.TIMG2COL | BSTART.TIMG2COL DataType | {'file': 'opcodes/lx_32.opc', 'line': 361}
+    let datatype : bits(5) = inst[31..27];
+    decoded_block_target_pc_shadow = read_pc_or_tpc();
+    decoded_block_type_shadow = 0b0000;
+    decoded_block_xfer_kind_shadow = block_xfer_fall();
+    decoded_block_contract_kind_shadow = 0b0000;
+    decoded_tile_datatype_shadow = datatype;
+    exec_bstart_timg2col(datatype)
+  }
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_38(inst) then {
     // BSTART.TLOAD | BSTART.TLOAD DataType | {'file': 'opcodes/lx_32.opc', 'line': 318}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -786,7 +1032,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tload()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_20(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_39(inst) then {
     // BSTART.TMATMUL | BSTART.TMATMUL DataType | {'file': 'opcodes/lx_32.opc', 'line': 319}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -796,7 +1042,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmatmul()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_21(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_40(inst) then {
     // BSTART.TMATMUL.ACC | BSTART.TMATMUL.ACC DataType | {'file': 'opcodes/lx_32.opc', 'line': 320}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -806,7 +1052,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmatmul_acc()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_22(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_41(inst) then {
     // BSTART.TMATMUL.BIAS | BSTART.TMATMUL.BIAS DataType | {'file': 'opcodes/lx_32.opc', 'line': 321}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -816,7 +1062,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmatmul_bias()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_23(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_42(inst) then {
     // BSTART.TMATMULMX | BSTART.TMATMULMX DataType | {'file': 'opcodes/lx_32.opc', 'line': 322}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -826,7 +1072,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmatmulmx()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_24(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_43(inst) then {
     // BSTART.TMATMULMX.ACC | BSTART.TMATMULMX.ACC DataType | {'file': 'opcodes/lx_32.opc', 'line': 323}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -836,7 +1082,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmatmulmx_acc()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_25(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_44(inst) then {
     // BSTART.TMATMULMX.BIAS | BSTART.TMATMULMX.BIAS DataType | {'file': 'opcodes/lx_32.opc', 'line': 324}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -846,7 +1092,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmatmulmx_bias()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_26(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_45(inst) then {
     // BSTART.TMOV | BSTART.TMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 325}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
@@ -856,48 +1102,8 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tmov()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_27(inst) then {
-    // BSTART.TMOV | BSTART.TMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 327}
-    let datatype : bits(5) = inst[31..27];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b1010;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0011;
-    decoded_tile_datatype_shadow = datatype;
-    exec_bstart_tmov()
-  }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_28(inst) then {
-    // BSTART.TMOV | BSTART.TMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 329}
-    let datatype : bits(5) = inst[31..27];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b1010;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0011;
-    decoded_tile_datatype_shadow = datatype;
-    exec_bstart_tmov()
-  }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_29(inst) then {
-    // BSTART.TMOV | BSTART.TMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 328}
-    let datatype : bits(5) = inst[31..27];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b1010;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0011;
-    decoded_tile_datatype_shadow = datatype;
-    exec_bstart_tmov()
-  }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_30(inst) then {
-    // BSTART.TMOV | BSTART.TMOV DataType | {'file': 'opcodes/lx_32.opc', 'line': 326}
-    let datatype : bits(5) = inst[31..27];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b1010;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0011;
-    decoded_tile_datatype_shadow = datatype;
-    exec_bstart_tmov()
-  }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_31(inst) then {
-    // BSTART.TPREFETCH | BSTART.TPREFETCH DataType | {'file': 'opcodes/lx_32.opc', 'line': 331}
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_46(inst) then {
+    // BSTART.TPREFETCH | BSTART.TPREFETCH DataType | {'file': 'opcodes/lx_32.opc', 'line': 327}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
     decoded_block_type_shadow = 0b1000;
@@ -906,8 +1112,8 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tprefetch()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_32(inst) then {
-    // BSTART.TSTORE | BSTART.TSTORE DataType | {'file': 'opcodes/lx_32.opc', 'line': 333}
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_47(inst) then {
+    // BSTART.TSTORE | BSTART.TSTORE DataType | {'file': 'opcodes/lx_32.opc', 'line': 328}
     let datatype : bits(5) = inst[31..27];
     decoded_block_target_pc_shadow = read_pc_or_tpc();
     decoded_block_type_shadow = 0b1001;
@@ -916,17 +1122,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b001(inst : bits(32)) -> unit
     decoded_tile_datatype_shadow = datatype;
     exec_bstart_tstore()
   }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_33(inst) then {
-    // BSTART.TSTORE | BSTART.TSTORE DataType | {'file': 'opcodes/lx_32.opc', 'line': 332}
-    let datatype : bits(5) = inst[31..27];
-    decoded_block_target_pc_shadow = read_pc_or_tpc();
-    decoded_block_type_shadow = 0b1001;
-    decoded_block_xfer_kind_shadow = block_xfer_fall();
-    decoded_block_contract_kind_shadow = 0b0010;
-    decoded_tile_datatype_shadow = datatype;
-    exec_bstart_tstore()
-  }
-  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_34(inst) then {
+  else if decode_execute32_opcode_0b0000001_funct3_0b001_match_48(inst) then {
     // BSTART.TEPL | BSTART.TEPL Mode, Function, DataType | {'file': 'opcodes/lx_32.opc', 'line': 311}
     let datatype : bits(5) = inst[31..27];
     let function_field : bits(5) = inst[24..20];
@@ -1056,7 +1252,7 @@ function decode_execute32_opcode_0b0000001_funct3_0b110(inst : bits(32)) -> unit
     exec_bstart_icall(uimm5)
   }
   else if decode_execute32_opcode_0b0000001_funct3_0b110_match_1(inst) then {
-    // XB | XB ACR-ID, C-ID | {'file': 'opcodes/lx_32.opc', 'line': 344}
+    // XB | XB ACR-ID, C-ID | {'file': 'opcodes/lx_32.opc', 'line': 339}
     let acr_id : bits(10) = inst[24..15];
     let cross_bid : bits(7) = inst[31..25];
     exec_xb(sail_zero_extend(acr_id, 12), sail_zero_extend(cross_bid, 8))
@@ -1322,12 +1518,12 @@ function decode_execute32_opcode_0b0000111(inst : bits(32)) -> unit = {
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b000_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00000009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00000009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b000_match_0(inst) then {
-    // LB | lb [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 120}
+    // LB | lb [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 120}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1341,12 +1537,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00001009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00001009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b001_match_0(inst) then {
-    // LH | lh [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 138}
+    // LH | lh [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 138}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1360,12 +1556,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b001(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b010_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00002009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00002009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b010_match_0(inst) then {
-    // LW | lw [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 152}
+    // LW | lw [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 152}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1379,12 +1575,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b010(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b011_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00003009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00003009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b011(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b011_match_0(inst) then {
-    // LD | ld [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 126}
+    // LD | ld [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 126}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1398,12 +1594,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b011(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b100_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00004009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00004009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b100(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b100_match_0(inst) then {
-    // LBU | lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 123}
+    // LBU | lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 123}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1417,12 +1613,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b100(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b101_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00005009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00005009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b101(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b101_match_0(inst) then {
-    // LHU | lhu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 142}
+    // LHU | lhu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 142}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1436,12 +1632,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b101(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b110_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00006009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00006009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b110(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b110_match_0(inst) then {
-    // LWU | lwu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 164}
+    // LWU | lwu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_32.opc', 'line': 164}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -1455,12 +1651,12 @@ function decode_execute32_opcode_0b0001001_funct3_0b110(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b111_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x0000707f) == 0x00007009
+  and_bool_no_flow((inst & 0x0000707f) == 0x00007009, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b0001001_funct3_0b111(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0001001_funct3_0b111_match_0(inst) then {
-    // PRF | prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | {'file': 'opcodes/lx_32.opc', 'line': 182}
+    // PRF | prf [SrcL, SrcR<{.sw,.uw}><<<shamt>] | {'file': 'opcodes/lx_32.opc', 'line': 182}
     let regdst : bits(5) = inst[11..7];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -2188,16 +2384,16 @@ function decode_execute32_opcode_0b0010011_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0010011_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow((inst & 0xf00871ff) == 0x00001013, (inst[18..15] != 0b1101)), and_bool_no_flow((inst[18..15] != 0b1110), (inst[18..15] != 0b1111)))
+  and_bool_no_flow(and_bool_no_flow((inst & 0xfc0871ff) == 0x00001013, (inst[18..15] != 0b1101)), and_bool_no_flow((inst[18..15] != 0b1110), (inst[18..15] != 0b1111)))
 }
 
 function decode_execute32_opcode_0b0010011_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0010011_funct3_0b001_match_0(inst) then {
-    // B.IOS | B.IOS S<SharedTID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode> | {'file': 'opcodes/lx_32.opc', 'line': 335}
+    // B.IOS | B.IOS S<SharedTileID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode> | {'file': 'opcodes/lx_32.opc', 'line': 330}
     let pemode : bits(3) = inst[11..9];
-    let sharedtid : bits(8) = inst[27..20];
+    let sharedtileid : bits(6) = inst[25..20];
     let sizecode : bits(4) = inst[18..15];
-    exec_b_ios(sharedtid, sizecode, pemode)
+    exec_b_ios(sharedtileid, sizecode, pemode)
   }
   else {
     trap_illegal_inst(read_pc_or_tpc())
@@ -2745,7 +2941,7 @@ function decode_execute32_opcode_0b0100011_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0100011_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x000c707f) == 0x00001023, (inst[31..29] != 0b110)), and_bool_no_flow((inst[31..29] != 0b111), (inst[24..20] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[24..20] != 0b10101), (inst[24..20] != 0b10110)), and_bool_no_flow((inst[24..20] != 0b10111), (inst[24..20] != 0b11101)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[24..20] != 0b11110), (inst[11..7] != 0b00010)), and_bool_no_flow((inst[11..7] != 0b00101), (inst[11..7] != 0b00111))), and_bool_no_flow(and_bool_no_flow((inst[11..7] != 0b01010), (inst[11..7] != 0b01011)), and_bool_no_flow((inst[11..7] != 0b01100), (inst[11..7] != 0b01101))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[11..7] != 0b01110), (inst[11..7] != 0b01111)), and_bool_no_flow((inst[11..7] != 0b10000), (inst[11..7] != 0b10011))), and_bool_no_flow((inst[11..7] != 0b11101), (inst[11..7] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x000c707f) == 0x00001023, (inst[31..29] != 0b110)), and_bool_no_flow((inst[31..29] != 0b111), (inst[24..20] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[24..20] != 0b10101), (inst[24..20] != 0b10110)), and_bool_no_flow((inst[24..20] != 0b10111), (inst[24..20] != 0b11101)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[24..20] != 0b11110), (inst[11..7] != 0b00010)), and_bool_no_flow((inst[11..7] != 0b00101), (inst[11..7] != 0b00111))), and_bool_no_flow(and_bool_no_flow((inst[11..7] != 0b01010), (inst[11..7] != 0b01011)), and_bool_no_flow((inst[11..7] != 0b01100), (inst[11..7] != 0b01101))))), and_bool_no_flow(and_bool_no_flow((inst[11..7] != 0b01110), (inst[11..7] != 0b01111)), and_bool_no_flow((inst[11..7] != 0b10000), (inst[11..7] != 0b10011))))
 }
 
 function decode_execute32_opcode_0b0100011_funct3_0b001(inst : bits(32)) -> unit = {
@@ -2767,12 +2963,13 @@ function decode_execute32_opcode_0b0100011_funct3_0b001(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b0100011_funct3_0b010_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x00007e7f) == 0x00002023, (inst[31..26] != 0b000110)), and_bool_no_flow((inst[31..26] != 0b000111), (inst[31..26] != 0b001000))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b001001), (inst[31..26] != 0b001010)), and_bool_no_flow((inst[31..26] != 0b001011), (inst[31..26] != 0b001110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b001111), (inst[31..26] != 0b010101)), and_bool_no_flow((inst[31..26] != 0b010110), (inst[31..26] != 0b011101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b011110), (inst[31..26] != 0b011111)), and_bool_no_flow((inst[31..26] != 0b101000), (inst[31..26] != 0b101001))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b101010), (inst[31..26] != 0b101011)), and_bool_no_flow((inst[31..26] != 0b101100), (inst[31..26] != 0b101101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b101110), (inst[31..26] != 0b101111)), and_bool_no_flow((inst[31..26] != 0b110000), (inst[31..26] != 0b110001)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b110010), (inst[31..26] != 0b110011)), and_bool_no_flow((inst[31..26] != 0b110100), (inst[31..26] != 0b110101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b110110), (inst[31..26] != 0b110111)), and_bool_no_flow((inst[31..26] != 0b111000), (inst[31..26] != 0b111001)))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b111010), (inst[31..26] != 0b111011)), and_bool_no_flow((inst[31..26] != 0b111100), (inst[31..26] != 0b111101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b111110), (inst[31..26] != 0b111111)), and_bool_no_flow((inst[25..23] != 0b100), (inst[25..23] != 0b101)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[25..23] != 0b110), (inst[25..23] != 0b111)), and_bool_no_flow((inst[22..19] != 0b1010), (inst[22..19] != 0b1011))), and_bool_no_flow(and_bool_no_flow((inst[22..19] != 0b1100), (inst[22..19] != 0b1101)), and_bool_no_flow((inst[22..19] != 0b1110), (inst[22..19] != 0b1111))))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x00007c7f) == 0x00002023, (inst[31..26] != 0b000110)), and_bool_no_flow((inst[31..26] != 0b000111), (inst[31..26] != 0b001000))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b001001), (inst[31..26] != 0b001010)), and_bool_no_flow((inst[31..26] != 0b001011), (inst[31..26] != 0b001110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b001111), (inst[31..26] != 0b010101)), and_bool_no_flow((inst[31..26] != 0b010110), (inst[31..26] != 0b011101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b011110), (inst[31..26] != 0b011111)), and_bool_no_flow((inst[31..26] != 0b101000), (inst[31..26] != 0b101001))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b101010), (inst[31..26] != 0b101011)), and_bool_no_flow((inst[31..26] != 0b101100), (inst[31..26] != 0b101101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b101110), (inst[31..26] != 0b101111)), and_bool_no_flow((inst[31..26] != 0b110000), (inst[31..26] != 0b110001)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b110010), (inst[31..26] != 0b110011)), and_bool_no_flow((inst[31..26] != 0b110100), (inst[31..26] != 0b110101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b110110), (inst[31..26] != 0b110111)), and_bool_no_flow((inst[31..26] != 0b111000), (inst[31..26] != 0b111001)))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b111010), (inst[31..26] != 0b111011)), and_bool_no_flow((inst[31..26] != 0b111100), (inst[31..26] != 0b111101))), and_bool_no_flow(and_bool_no_flow((inst[31..26] != 0b111110), (inst[31..26] != 0b111111)), and_bool_no_flow((inst[25..23] != 0b100), (inst[25..23] != 0b101)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[25..23] != 0b110), (inst[25..23] != 0b111)), and_bool_no_flow((inst[22..19] != 0b1010), (inst[22..19] != 0b1011))), and_bool_no_flow(and_bool_no_flow((inst[22..19] != 0b1100), (inst[22..19] != 0b1101)), and_bool_no_flow((inst[22..19] != 0b1110), (inst[22..19] != 0b1111))))))
 }
 
 function decode_execute32_opcode_0b0100011_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0100011_funct3_0b010_match_0(inst) then {
-    // B.FPATR | B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB | {'file': 'opcodes/lx_32.opc', 'line': 345}
+    // B.FPATR | B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn | {'file': 'opcodes/lx_32.opc', 'line': 340}
+    let cscaleen : bits(1) = inst[9];
     let groupmaxen : bits(1) = inst[17];
     let groupncode : bits(4) = inst[22..19];
     let maxabsen : bits(1) = inst[15];
@@ -3394,7 +3591,7 @@ function decode_execute32_opcode_0b0110001_funct3_0b000_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b0110001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0110001_funct3_0b000_match_0(inst) then {
-    // MCOPY | MCOPY [RegSrc0, RegSrc1, RegSrc2] | {'file': 'opcodes/lx_32.opc', 'line': 342}
+    // MCOPY | MCOPY [RegSrc0, RegSrc1, RegSrc2] | {'file': 'opcodes/lx_32.opc', 'line': 337}
     let regsrc0 : bits(5) = inst[19..15];
     let regsrc1 : bits(5) = inst[24..20];
     let regsrc2 : bits(5) = inst[31..27];
@@ -3411,7 +3608,7 @@ function decode_execute32_opcode_0b0110001_funct3_0b001_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b0110001_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0110001_funct3_0b001_match_0(inst) then {
-    // MSET | MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes] | {'file': 'opcodes/lx_32.opc', 'line': 343}
+    // MSET | MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes] | {'file': 'opcodes/lx_32.opc', 'line': 338}
     let regsrc0 : bits(5) = inst[19..15];
     let regsrc1 : bits(5) = inst[24..20];
     let regsrc2 : bits(5) = inst[31..27];
@@ -3428,7 +3625,7 @@ function decode_execute32_opcode_0b0110001_funct3_0b010_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b0110001_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0110001_funct3_0b010_match_0(inst) then {
-    // ESAVE | ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | {'file': 'opcodes/lx_32.opc', 'line': 337}
+    // ESAVE | ESAVE [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | {'file': 'opcodes/lx_32.opc', 'line': 332}
     let regsrc0 : bits(5) = inst[19..15];
     let regsrc1 : bits(5) = inst[24..20];
     let regsrc2 : bits(5) = inst[31..27];
@@ -3445,7 +3642,7 @@ function decode_execute32_opcode_0b0110001_funct3_0b011_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b0110001_funct3_0b011(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b0110001_funct3_0b011_match_0(inst) then {
-    // ERCOV | ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | {'file': 'opcodes/lx_32.opc', 'line': 336}
+    // ERCOV | ERCOV [RegSrc0=BasePtr, RegSrc1=LenBytes, RegSrc2=Kind] | {'file': 'opcodes/lx_32.opc', 'line': 331}
     let regsrc0 : bits(5) = inst[19..15];
     let regsrc1 : bits(5) = inst[24..20];
     let regsrc2 : bits(5) = inst[31..27];
@@ -3901,7 +4098,7 @@ function decode_execute32_opcode_0b1000001_funct3_0b000_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b1000001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1000001_funct3_0b000_match_0(inst) then {
-    // FENTRY | FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 338}
+    // FENTRY | FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 333}
     let srcbegin : bits(5) = inst[19..15];
     let srcend : bits(5) = inst[24..20];
     let uimm : bits(15) = inst[11..7] @ inst[31..25] @ 0b000;
@@ -3918,7 +4115,7 @@ function decode_execute32_opcode_0b1000001_funct3_0b001_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b1000001_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1000001_funct3_0b001_match_0(inst) then {
-    // FEXIT | FEXIT [RegDst0 ~ RegDstn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 339}
+    // FEXIT | FEXIT [RegDst0 ~ RegDstn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 334}
     let dstbegin : bits(5) = inst[19..15];
     let dstend : bits(5) = inst[24..20];
     let uimm : bits(15) = inst[11..7] @ inst[31..25] @ 0b000;
@@ -3935,7 +4132,7 @@ function decode_execute32_opcode_0b1000001_funct3_0b010_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b1000001_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1000001_funct3_0b010_match_0(inst) then {
-    // FRET.RA | FRET.RA [RegDst0 ~ RegDstn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 340}
+    // FRET.RA | FRET.RA [RegDst0 ~ RegDstn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 335}
     let dstbegin : bits(5) = inst[19..15];
     let dstend : bits(5) = inst[24..20];
     let uimm : bits(15) = inst[11..7] @ inst[31..25] @ 0b000;
@@ -3952,7 +4149,7 @@ function decode_execute32_opcode_0b1000001_funct3_0b011_match_0(inst : bits(32))
 
 function decode_execute32_opcode_0b1000001_funct3_0b011(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1000001_funct3_0b011_match_0(inst) then {
-    // FRET.STK | FRET.STK [ra ~ RegDstn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 341}
+    // FRET.STK | FRET.STK [ra ~ RegDstn], sp!, uimm | {'file': 'opcodes/lx_32.opc', 'line': 336}
     let dstend : bits(5) = inst[24..20];
     let uimm : bits(15) = inst[11..7] @ inst[31..25] @ 0b000;
     exec_fret_stk(0b01010, dstend, uimm)
@@ -4310,12 +4507,12 @@ function decode_execute32_opcode_0b1000111(inst : bits(32)) -> unit = {
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b000_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00000049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00000049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b000(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b000_match_0(inst) then {
-    // SB | sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 189}
+    // SB | sb SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 189}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4328,12 +4525,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00001049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00001049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b001(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b001_match_0(inst) then {
-    // SH | sh SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | {'file': 'opcodes/lx_32.opc', 'line': 228}
+    // SH | sh SrcD, [SrcL, SrcR<{.sw,.uw}><<1] | {'file': 'opcodes/lx_32.opc', 'line': 228}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4346,12 +4543,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b001(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b010_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00002049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00002049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b010(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b010_match_0(inst) then {
-    // SW | sw SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | {'file': 'opcodes/lx_32.opc', 'line': 252}
+    // SW | sw SrcD, [SrcL, SrcR<{.sw,.uw}><<2] | {'file': 'opcodes/lx_32.opc', 'line': 252}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4364,12 +4561,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b010(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b011_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00003049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00003049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b011(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b011_match_0(inst) then {
-    // SD | sd SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | {'file': 'opcodes/lx_32.opc', 'line': 197}
+    // SD | sd SrcD, [SrcL, SrcR<{.sw,.uw}><<3] | {'file': 'opcodes/lx_32.opc', 'line': 197}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4382,12 +4579,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b011(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b101_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00005049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00005049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b101(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b101_match_0(inst) then {
-    // SH.U | sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 230}
+    // SH.U | sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 230}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4400,12 +4597,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b101(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b110_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00006049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00006049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b110(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b110_match_0(inst) then {
-    // SW.U | sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 259}
+    // SW.U | sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 259}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4418,12 +4615,12 @@ function decode_execute32_opcode_0b1001001_funct3_0b110(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b111_match_0(inst : bits(32)) -> bool = {
-  (inst & 0x00007fff) == 0x00007049
+  and_bool_no_flow((inst & 0x00007fff) == 0x00007049, (inst[26..25] != 0b11))
 }
 
 function decode_execute32_opcode_0b1001001_funct3_0b111(inst : bits(32)) -> unit = {
   if decode_execute32_opcode_0b1001001_funct3_0b111_match_0(inst) then {
-    // SD.U | sd.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_32.opc', 'line': 204}
+    // SD.U | sd.u SrcD, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_32.opc', 'line': 204}
     let srcd : bits(5) = inst[31..27];
     let srcl : bits(5) = inst[19..15];
     let srcr : bits(5) = inst[24..20];
@@ -4606,6 +4803,51 @@ function decode_execute32_opcode_0b1001011(inst : bits(32)) -> unit = {
     0b101 => decode_execute32_opcode_0b1001011_funct3_0b101(inst),
     0b110 => decode_execute32_opcode_0b1001011_funct3_0b110(inst),
     0b111 => decode_execute32_opcode_0b1001011_funct3_0b111(inst),
+    _ => trap_illegal_inst(read_pc_or_tpc())
+  }
+}
+
+function decode_execute32_opcode_0b1010011_funct3_0b000_match_0(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x0000787f) == 0x00000053, (inst[19..15] != 0b11000)), and_bool_no_flow((inst[19..15] != 0b11001), (inst[19..15] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[19..15] != 0b11011), (inst[19..15] != 0b11100)), and_bool_no_flow((inst[19..15] != 0b11101), (inst[19..15] != 0b11110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[19..15] != 0b11111), (inst[10..7] != 0b0000)), and_bool_no_flow((inst[10..7] != 0b1101), (inst[10..7] != 0b1110))), (inst[10..7] != 0b1111)))
+}
+
+function decode_execute32_opcode_0b1010011_funct3_0b000(inst : bits(32)) -> unit = {
+  if decode_execute32_opcode_0b1010011_funct3_0b000_match_0(inst) then {
+    // B.SUBVIEW | B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode | {'file': 'opcodes/lx_32.opc', 'line': 341}
+    let regsrc : bits(5) = inst[19..15];
+    let srcselect : bits(1) = inst[31];
+    let subviewsizecode : bits(4) = inst[10..7];
+    let uimm11 : bits(11) = inst[30..20];
+    exec_b_subview(srcselect, uimm11, regsrc, subviewsizecode)
+  }
+  else {
+    trap_illegal_inst(read_pc_or_tpc())
+  }
+}
+
+function decode_execute32_opcode_0b1010011_funct3_0b001_match_0(inst : bits(32)) -> bool = {
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x0000707f) == 0x00001053, (inst[19..15] != 0b11000)), and_bool_no_flow((inst[19..15] != 0b11001), (inst[19..15] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[19..15] != 0b11011), (inst[19..15] != 0b11100)), and_bool_no_flow((inst[19..15] != 0b11101), (inst[19..15] != 0b11110)))), and_bool_no_flow(and_bool_no_flow((inst[19..15] != 0b11111), (inst[10..7] != 0b1101)), and_bool_no_flow((inst[10..7] != 0b1110), (inst[10..7] != 0b1111))))
+}
+
+function decode_execute32_opcode_0b1010011_funct3_0b001(inst : bits(32)) -> unit = {
+  if decode_execute32_opcode_0b1010011_funct3_0b001_match_0(inst) then {
+    // B.ASSEMBLE | B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode | {'file': 'opcodes/lx_32.opc', 'line': 342}
+    let init : bits(1) = inst[31];
+    let last : bits(1) = inst[11];
+    let parentsizecode : bits(4) = inst[10..7];
+    let regsrc : bits(5) = inst[19..15];
+    let uimm11 : bits(11) = inst[30..20];
+    exec_b_assemble(init, uimm11, regsrc, last, parentsizecode)
+  }
+  else {
+    trap_illegal_inst(read_pc_or_tpc())
+  }
+}
+
+function decode_execute32_opcode_0b1010011(inst : bits(32)) -> unit = {
+  match inst[14..12] {
+    0b000 => decode_execute32_opcode_0b1010011_funct3_0b000(inst),
+    0b001 => decode_execute32_opcode_0b1010011_funct3_0b001(inst),
     _ => trap_illegal_inst(read_pc_or_tpc())
   }
 }
@@ -5651,7 +5893,7 @@ function decode_execute32_opcode_0b1101001(inst : bits(32)) -> unit = {
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b000_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000006b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000006b, (inst[31..27] != 0b00100)), and_bool_no_flow((inst[31..27] != 0b00101), (inst[31..27] != 0b00110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b00111), (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110))), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b000(inst : bits(32)) -> unit = {
@@ -5669,7 +5911,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b000(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b001_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000106b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000106b, (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110)))), (inst[31..27] != 0b11111)))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b001(inst : bits(32)) -> unit = {
@@ -5687,7 +5929,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b001(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b010_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000206b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000206b, (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110)))), (inst[31..27] != 0b11111)))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b010(inst : bits(32)) -> unit = {
@@ -5705,7 +5947,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b010(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b011_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000306b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000306b, (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110)))), (inst[31..27] != 0b11111)))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b011(inst : bits(32)) -> unit = {
@@ -5723,7 +5965,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b011(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b100_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000406b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000406b, (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110)))), (inst[31..27] != 0b11111)))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b100(inst : bits(32)) -> unit = {
@@ -5741,7 +5983,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b100(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b101_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000506b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000506b, (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110)))), (inst[31..27] != 0b11111)))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b101(inst : bits(32)) -> unit = {
@@ -5759,7 +6001,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b101(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b110_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000606b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000606b, (inst[31..27] != 0b00100)), and_bool_no_flow((inst[31..27] != 0b00101), (inst[31..27] != 0b00110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b00111), (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110))), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b110(inst : bits(32)) -> unit = {
@@ -5777,7 +6019,7 @@ function decode_execute32_opcode_0b1101011_funct3_0b110(inst : bits(32)) -> unit
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b111_match_0(inst : bits(32)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000706b, (inst[26..25] != 0b10)), and_bool_no_flow((inst[26..25] != 0b11), (inst[31..27] != 0b01111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10000), (inst[31..27] != 0b10001)), and_bool_no_flow((inst[31..27] != 0b10010), (inst[31..27] != 0b10011)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10100), (inst[31..27] != 0b10101)), and_bool_no_flow((inst[31..27] != 0b10110), (inst[31..27] != 0b10111))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11000), (inst[31..27] != 0b11001)), and_bool_no_flow((inst[31..27] != 0b11010), (inst[31..27] != 0b11011))))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11100), (inst[31..27] != 0b11101)), and_bool_no_flow((inst[31..27] != 0b11110), (inst[31..27] != 0b11111))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x01f0707f) == 0x0000706b, (inst[31..27] != 0b00100)), and_bool_no_flow((inst[31..27] != 0b00101), (inst[31..27] != 0b00110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b00111), (inst[31..27] != 0b01000)), and_bool_no_flow((inst[31..27] != 0b01001), (inst[31..27] != 0b01010)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01011), (inst[31..27] != 0b01100)), and_bool_no_flow((inst[31..27] != 0b01101), (inst[31..27] != 0b01110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b01111), (inst[31..27] != 0b10000)), and_bool_no_flow((inst[31..27] != 0b10001), (inst[31..27] != 0b10010))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10011), (inst[31..27] != 0b10100)), and_bool_no_flow((inst[31..27] != 0b10101), (inst[31..27] != 0b10110))), and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b10111), (inst[31..27] != 0b11000)), and_bool_no_flow((inst[31..27] != 0b11001), (inst[31..27] != 0b11010)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[31..27] != 0b11011), (inst[31..27] != 0b11100)), and_bool_no_flow((inst[31..27] != 0b11101), (inst[31..27] != 0b11110))), (inst[31..27] != 0b11111))))
 }
 
 function decode_execute32_opcode_0b1101011_funct3_0b111(inst : bits(32)) -> unit = {
@@ -6105,6 +6347,7 @@ function decode_execute32(inst : bits(32)) -> unit = {
       0b1000111 => decode_execute32_opcode_0b1000111(inst),
       0b1001001 => decode_execute32_opcode_0b1001001(inst),
       0b1001011 => decode_execute32_opcode_0b1001011(inst),
+      0b1010011 => decode_execute32_opcode_0b1010011(inst),
       0b1010101 => decode_execute32_opcode_0b1010101(inst),
       0b1010111 => decode_execute32_opcode_0b1010111(inst),
       0b1011001 => decode_execute32_opcode_0b1011001(inst),
@@ -6174,91 +6417,91 @@ function decode_execute48_match_12(inst : bits(48)) -> bool = {
 }
 
 function decode_execute48_match_13(inst : bits(48)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x00007fff07ff) == 0x00007009000e, (inst[15..11] != 0b00011)), and_bool_no_flow((inst[15..11] != 0b00100), (inst[15..11] != 0b00101))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b00110), (inst[15..11] != 0b00111)), and_bool_no_flow((inst[15..11] != 0b01000), (inst[15..11] != 0b01001)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01010), (inst[15..11] != 0b01011)), and_bool_no_flow((inst[15..11] != 0b01100), (inst[15..11] != 0b01101))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01110), (inst[15..11] != 0b01111)), and_bool_no_flow((inst[15..11] != 0b10000), (inst[15..11] != 0b10001))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10010), (inst[15..11] != 0b10011)), and_bool_no_flow((inst[15..11] != 0b10100), (inst[15..11] != 0b10101))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10110), (inst[15..11] != 0b10111)), and_bool_no_flow((inst[15..11] != 0b11000), (inst[15..11] != 0b11001)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b11010), (inst[15..11] != 0b11011)), and_bool_no_flow((inst[15..11] != 0b11100), (inst[15..11] != 0b11101))), and_bool_no_flow((inst[15..11] != 0b11110), (inst[15..11] != 0b11111)))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x00007fff07ff) == 0x00007009000e, (inst[42..41] != 0b11)), and_bool_no_flow((inst[15..11] != 0b00011), (inst[15..11] != 0b00100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b00101), (inst[15..11] != 0b00110)), and_bool_no_flow((inst[15..11] != 0b00111), (inst[15..11] != 0b01000)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01001), (inst[15..11] != 0b01010)), and_bool_no_flow((inst[15..11] != 0b01011), (inst[15..11] != 0b01100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01101), (inst[15..11] != 0b01110)), and_bool_no_flow((inst[15..11] != 0b01111), (inst[15..11] != 0b10000))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10001), (inst[15..11] != 0b10010)), and_bool_no_flow((inst[15..11] != 0b10011), (inst[15..11] != 0b10100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10101), (inst[15..11] != 0b10110)), and_bool_no_flow((inst[15..11] != 0b10111), (inst[15..11] != 0b11000)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b11001), (inst[15..11] != 0b11010)), and_bool_no_flow((inst[15..11] != 0b11011), (inst[15..11] != 0b11100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b11101), (inst[15..11] != 0b11110)), (inst[15..11] != 0b11111)))))
 }
 
 function decode_execute48_match_14(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00000049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00000049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_15(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00000049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00000049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_16(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00000049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00000049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_17(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00003049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00003049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_18(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00003049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00003049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_19(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00007049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00007049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_20(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00007049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00007049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_21(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00003049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00003049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_22(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00007049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00007049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_23(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00001049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00001049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_24(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00001049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00001049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_25(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00005049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00005049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_26(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00005049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00005049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_27(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00001049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00001049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_28(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00005049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00005049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_29(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00002049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00002049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_30(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00002049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00002049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_31(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00006049003e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00006049003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_32(inst : bits(48)) -> bool = {
-  (inst & 0x00007fff07ff) == 0x00006049002e
+  and_bool_no_flow((inst & 0x00007fff07ff) == 0x00006049002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_33(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00002049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00002049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_34(inst : bits(48)) -> bool = {
-  (inst & 0x00007ffff83f) == 0x00006049001e
+  and_bool_no_flow((inst & 0x00007ffff83f) == 0x00006049001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_35(inst : bits(48)) -> bool = {
@@ -6298,91 +6541,91 @@ function decode_execute48_match_43(inst : bits(48)) -> bool = {
 }
 
 function decode_execute48_match_44(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00000009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00000009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_45(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00000009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00000009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_46(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00000009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00000009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_47(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00004009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00004009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_48(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00004009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00004009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_49(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00004009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00004009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_50(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00003009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00003009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_51(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00003009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00003009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_52(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00003009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00003009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_53(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00001009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00001009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_54(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00001009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00001009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_55(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00001009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00001009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_56(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00005009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00005009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_57(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00005009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00005009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_58(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00005009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00005009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_59(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00002009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00002009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_60(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00002009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00002009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_61(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00002009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00002009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_62(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00006009003e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00006009003e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_63(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00006009002e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00006009002e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_64(inst : bits(48)) -> bool = {
-  (inst & 0x0000707f07ff) == 0x00006009001e
+  and_bool_no_flow((inst & 0x0000707f07ff) == 0x00006009001e, (inst[42..41] != 0b11))
 }
 
 function decode_execute48_match_65(inst : bits(48)) -> bool = {
-  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x0000707f07ff) == 0x00007009001e, (inst[15..11] != 0b00011)), and_bool_no_flow((inst[15..11] != 0b00100), (inst[15..11] != 0b00101))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b00110), (inst[15..11] != 0b00111)), and_bool_no_flow((inst[15..11] != 0b01000), (inst[15..11] != 0b01001)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01010), (inst[15..11] != 0b01011)), and_bool_no_flow((inst[15..11] != 0b01100), (inst[15..11] != 0b01101))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01110), (inst[15..11] != 0b01111)), and_bool_no_flow((inst[15..11] != 0b10000), (inst[15..11] != 0b10001))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10010), (inst[15..11] != 0b10011)), and_bool_no_flow((inst[15..11] != 0b10100), (inst[15..11] != 0b10101))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10110), (inst[15..11] != 0b10111)), and_bool_no_flow((inst[15..11] != 0b11000), (inst[15..11] != 0b11001)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b11010), (inst[15..11] != 0b11011)), and_bool_no_flow((inst[15..11] != 0b11100), (inst[15..11] != 0b11101))), and_bool_no_flow((inst[15..11] != 0b11110), (inst[15..11] != 0b11111)))))
+  and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst & 0x0000707f07ff) == 0x00007009001e, (inst[42..41] != 0b11)), and_bool_no_flow((inst[15..11] != 0b00011), (inst[15..11] != 0b00100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b00101), (inst[15..11] != 0b00110)), and_bool_no_flow((inst[15..11] != 0b00111), (inst[15..11] != 0b01000)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01001), (inst[15..11] != 0b01010)), and_bool_no_flow((inst[15..11] != 0b01011), (inst[15..11] != 0b01100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b01101), (inst[15..11] != 0b01110)), and_bool_no_flow((inst[15..11] != 0b01111), (inst[15..11] != 0b10000))))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10001), (inst[15..11] != 0b10010)), and_bool_no_flow((inst[15..11] != 0b10011), (inst[15..11] != 0b10100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b10101), (inst[15..11] != 0b10110)), and_bool_no_flow((inst[15..11] != 0b10111), (inst[15..11] != 0b11000)))), and_bool_no_flow(and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b11001), (inst[15..11] != 0b11010)), and_bool_no_flow((inst[15..11] != 0b11011), (inst[15..11] != 0b11100))), and_bool_no_flow(and_bool_no_flow((inst[15..11] != 0b11101), (inst[15..11] != 0b11110)), (inst[15..11] != 0b11111)))))
 }
 
 function decode_execute48_match_66(inst : bits(48)) -> bool = {
@@ -7033,7 +7276,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_remw(regdst0, regdst1, srcl, srcr)
   }
   else if decode_execute48_match_13(inst) then {
-    // HL.PRF | hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>] | {'file': 'opcodes/lx_hl48.opc', 'line': 135}
+    // HL.PRF | hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>] | {'file': 'opcodes/lx_hl48.opc', 'line': 135}
     let srcl : bits(5) = inst[35..31];
     let srcr : bits(5) = inst[40..36];
     let srcrtype : bits(2) = inst[42..41];
@@ -7042,7 +7285,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_prf(srcl, srcr, srcrtype, model, shamt)
   }
   else if decode_execute48_match_14(inst) then {
-    // HL.SB.PO | hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 144}
+    // HL.SB.PO | hl.sb.po SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 144}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7051,7 +7294,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sb_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_15(inst) then {
-    // HL.SB.PR | hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 145}
+    // HL.SB.PR | hl.sb.pr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 145}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7060,7 +7303,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sb_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_16(inst) then {
-    // HL.SBP | hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 150}
+    // HL.SBP | hl.sbp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 150}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7069,7 +7312,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sbp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_17(inst) then {
-    // HL.SD.PO | hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 152}
+    // HL.SD.PO | hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 152}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7078,7 +7321,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_18(inst) then {
-    // HL.SD.PR | hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 153}
+    // HL.SD.PR | hl.sd.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 153}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7087,7 +7330,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_19(inst) then {
-    // HL.SD.UPO | hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 154}
+    // HL.SD.UPO | hl.sd.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 154}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7096,7 +7339,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_upo(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_20(inst) then {
-    // HL.SD.UPR | hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 155}
+    // HL.SD.UPR | hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 155}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7105,7 +7348,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sd_upr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_21(inst) then {
-    // HL.SDP | hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<3] | {'file': 'opcodes/lx_hl48.opc', 'line': 164}
+    // HL.SDP | hl.sdp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<3] | {'file': 'opcodes/lx_hl48.opc', 'line': 164}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7114,7 +7357,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sdp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_22(inst) then {
-    // HL.SDP.U | hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 165}
+    // HL.SDP.U | hl.sdp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 165}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7123,7 +7366,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sdp_u(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_23(inst) then {
-    // HL.SH.PO | hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 176}
+    // HL.SH.PO | hl.sh.po SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 176}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7132,7 +7375,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_24(inst) then {
-    // HL.SH.PR | hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 177}
+    // HL.SH.PR | hl.sh.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<1], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 177}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7141,7 +7384,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_25(inst) then {
-    // HL.SH.UPO | hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 178}
+    // HL.SH.UPO | hl.sh.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 178}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7150,7 +7393,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_upo(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_26(inst) then {
-    // HL.SH.UPR | hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 179}
+    // HL.SH.UPR | hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 179}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7159,7 +7402,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sh_upr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_27(inst) then {
-    // HL.SHP | hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<1] | {'file': 'opcodes/lx_hl48.opc', 'line': 188}
+    // HL.SHP | hl.shp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<1] | {'file': 'opcodes/lx_hl48.opc', 'line': 188}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7168,7 +7411,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_shp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_28(inst) then {
-    // HL.SHP.U | hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 189}
+    // HL.SHP.U | hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 189}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7177,7 +7420,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_shp_u(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_29(inst) then {
-    // HL.SW.PO | hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 195}
+    // HL.SW.PO | hl.sw.po SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 195}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7186,7 +7429,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_po(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_30(inst) then {
-    // HL.SW.PR | hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 196}
+    // HL.SW.PR | hl.sw.pr SrcD, [SrcL, SrcR<{.sw,.uw}><<2], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 196}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7195,7 +7438,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_pr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_31(inst) then {
-    // HL.SW.UPO | hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 197}
+    // HL.SW.UPO | hl.sw.upo SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 197}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7204,7 +7447,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_upo(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_32(inst) then {
-    // HL.SW.UPR | hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 198}
+    // HL.SW.UPR | hl.sw.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 198}
     let regdst : bits(5) = inst[15..11];
     let srcd : bits(5) = inst[47..43];
     let srcl : bits(5) = inst[35..31];
@@ -7213,7 +7456,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_sw_upr(regdst, srcd, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_33(inst) then {
-    // HL.SWP | hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}><<2] | {'file': 'opcodes/lx_hl48.opc', 'line': 207}
+    // HL.SWP | hl.swp SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}><<2] | {'file': 'opcodes/lx_hl48.opc', 'line': 207}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7222,7 +7465,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_swp(srcd, srcd1, srcl, srcr, srcrtype)
   }
   else if decode_execute48_match_34(inst) then {
-    // HL.SWP.U | hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 208}
+    // HL.SWP.U | hl.swp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>] | {'file': 'opcodes/lx_hl48.opc', 'line': 208}
     let srcd : bits(5) = inst[47..43];
     let srcd1 : bits(5) = inst[10..6];
     let srcl : bits(5) = inst[35..31];
@@ -7320,7 +7563,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ccatw(regdst0, regdst1, srcl, srcr, shamt)
   }
   else if decode_execute48_match_44(inst) then {
-    // HL.LB.PO | hl.lb.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 49}
+    // HL.LB.PO | hl.lb.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 49}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7330,7 +7573,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lb_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_45(inst) then {
-    // HL.LB.PR | hl.lb.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 50}
+    // HL.LB.PR | hl.lb.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 50}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7340,7 +7583,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lb_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_46(inst) then {
-    // HL.LBP | hl.lbp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 55}
+    // HL.LBP | hl.lbp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 55}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7350,7 +7593,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_47(inst) then {
-    // HL.LBU.PO | hl.lbu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 57}
+    // HL.LBU.PO | hl.lbu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 57}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7360,7 +7603,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbu_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_48(inst) then {
-    // HL.LBU.PR | hl.lbu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 58}
+    // HL.LBU.PR | hl.lbu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 58}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7370,7 +7613,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbu_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_49(inst) then {
-    // HL.LBUP | hl.lbup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 63}
+    // HL.LBUP | hl.lbup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 63}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7380,7 +7623,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lbup(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_50(inst) then {
-    // HL.LD.PO | hl.ld.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 65}
+    // HL.LD.PO | hl.ld.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 65}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7390,7 +7633,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ld_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_51(inst) then {
-    // HL.LD.PR | hl.ld.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 66}
+    // HL.LD.PR | hl.ld.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 66}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7400,7 +7643,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ld_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_52(inst) then {
-    // HL.LDP | hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 75}
+    // HL.LDP | hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 75}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7410,7 +7653,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_ldp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_53(inst) then {
-    // HL.LH.PO | hl.lh.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 77}
+    // HL.LH.PO | hl.lh.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 77}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7420,7 +7663,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lh_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_54(inst) then {
-    // HL.LH.PR | hl.lh.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 78}
+    // HL.LH.PR | hl.lh.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 78}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7430,7 +7673,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lh_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_55(inst) then {
-    // HL.LHP | hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 87}
+    // HL.LHP | hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 87}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7440,7 +7683,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_56(inst) then {
-    // HL.LHU.PO | hl.lhu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 89}
+    // HL.LHU.PO | hl.lhu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 89}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7450,7 +7693,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhu_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_57(inst) then {
-    // HL.LHU.PR | hl.lhu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 90}
+    // HL.LHU.PR | hl.lhu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 90}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7460,7 +7703,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhu_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_58(inst) then {
-    // HL.LHUP | hl.lhup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 99}
+    // HL.LHUP | hl.lhup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 99}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7470,7 +7713,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lhup(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_59(inst) then {
-    // HL.LW.PO | hl.lw.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 104}
+    // HL.LW.PO | hl.lw.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 104}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7480,7 +7723,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lw_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_60(inst) then {
-    // HL.LW.PR | hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 105}
+    // HL.LW.PR | hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 105}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7490,7 +7733,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lw_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_61(inst) then {
-    // HL.LWP | hl.lwp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 114}
+    // HL.LWP | hl.lwp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 114}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7500,7 +7743,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwp(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_62(inst) then {
-    // HL.LWU.PO | hl.lwu.po [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 116}
+    // HL.LWU.PO | hl.lwu.po [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 116}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7510,7 +7753,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwu_po(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_63(inst) then {
-    // HL.LWU.PR | hl.lwu.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 117}
+    // HL.LWU.PR | hl.lwu.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 117}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7520,7 +7763,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwu_pr(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_64(inst) then {
-    // HL.LWUP | hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 126}
+    // HL.LWUP | hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1 | {'file': 'opcodes/lx_hl48.opc', 'line': 126}
     let regdst0 : bits(5) = inst[27..23];
     let regdst1 : bits(5) = inst[15..11];
     let srcl : bits(5) = inst[35..31];
@@ -7530,7 +7773,7 @@ function decode_execute48(inst : bits(48)) -> unit = {
     exec_hl_lwup(regdst0, regdst1, srcl, srcr, srcrtype, shamt)
   }
   else if decode_execute48_match_65(inst) then {
-    // HL.PRF.A | hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 136}
+    // HL.PRF.A | hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd} | {'file': 'opcodes/lx_hl48.opc', 'line': 136}
     let regdst : bits(5) = inst[27..23];
     let srcl : bits(5) = inst[35..31];
     let srcr : bits(5) = inst[40..36];

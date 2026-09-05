@@ -5,7 +5,7 @@
 [[inst_hl_ldp]]
 ==== HL.LDP
 
-*Syntax:* hl.ldp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
+*Syntax:* hl.ldp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
 
 *Description:* HL.LDP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 8-byte values.
 

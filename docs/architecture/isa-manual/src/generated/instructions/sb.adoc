@@ -5,7 +5,7 @@
 [[inst_sb]]
 ==== SB
 
-*Syntax:* sb SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
+*Syntax:* sb SrcD, [SrcL, SrcR<{.sw,.uw}>]
 
 *Description:* SB snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value.
 

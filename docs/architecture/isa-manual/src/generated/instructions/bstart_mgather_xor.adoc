@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_mgather_xor]]
+==== BSTART.MGATHER.XOR
+
+*Syntax:* BSTART.MGATHER.XOR DataType
+
+*Description:* Starts GM indexed mgather.xor operation.
+
+*Encoding:*
+
+image::encodings/enc_bstart_mgather_xor.svg[BSTART.MGATHER.XOR encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "PTO ISA 0.58.6 canonical bundle-start form", "source": "group_rule", "uop_kind": "CMD"}`

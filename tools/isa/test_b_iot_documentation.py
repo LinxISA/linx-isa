@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression checks for the bilingual PTO ISA 0.58.3 B.IOT page."""
+"""Regression checks for the bilingual PTO ISA v0.58 B.IOT page."""
 
 from __future__ import annotations
 

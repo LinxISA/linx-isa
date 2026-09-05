@@ -5,30 +5,16 @@
 [[inst_bstart_tstore]]
 ==== BSTART.TSTORE
 
+*Syntax:* BSTART.TSTORE DataType
+
 *Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_bstart_tstore_32_6bed4bf0e415]]
-===== Form `bstart_tstore_32_6bed4bf0e415`
-
-*Syntax:* BSTART.TSTORE DataType
-
 *Encoding:*
 
-image::encodings/enc_bstart_tstore_32_6bed4bf0e415.svg[BSTART.TSTORE encoding form bstart_tstore_32_6bed4bf0e415,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_tstore_32_d592de9e15a8]]
-===== Form `bstart_tstore_32_d592de9e15a8`
-
-*Syntax:* BSTART.TSTORE DataType
-
-*Encoding:*
-
-image::encodings/enc_bstart_tstore_32_d592de9e15a8.svg[BSTART.TSTORE encoding form bstart_tstore_32_d592de9e15a8,width=800]
-
-*Compression:* L32 (len=32)
+image::encodings/enc_bstart_tstore.svg[BSTART.TSTORE encoding,width=800]
 
 *Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
 
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

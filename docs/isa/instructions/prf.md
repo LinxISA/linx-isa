@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]`
+- `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ PRF snapshots its scalar sources, forms its encoded address, and issues a non-bi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `prf [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` | 32 | — |
+| `prf [SrcL, SrcR<{.sw,.uw}><<<shamt>]` | 32 | — |
 
 <div class="insn-nav">
 

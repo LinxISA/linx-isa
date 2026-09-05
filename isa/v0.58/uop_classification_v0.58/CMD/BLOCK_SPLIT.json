@@ -1,6 +1,6 @@
 {
   "big_kind": "CMD",
-  "count": 44,
+  "count": 63,
   "instructions": [
     {
       "class": {
@@ -31,6 +31,175 @@
     {
       "class": {
         "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=13",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.GMOV"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=4",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.ADD"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.AND"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=8",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.CAS"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.DEC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.EXCH"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.INC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=6",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.MASK"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.MAX"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.MIN"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.OR"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MGATHER.XOR"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
         "note": "User corrected to A",
         "source": "group_rule",
         "uop_kind": "CMD"
@@ -40,6 +209,149 @@
         32
       ],
       "mnemonic": "BSTART.MPAR"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=5",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.ADD"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.AND"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.DEC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.INC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58 TLSU Function=7",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.MASK"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.MAX"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.MIN"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.OR"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.POPC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.MSCATTER.XOR"
     },
     {
       "class": {
@@ -96,6 +408,97 @@
     {
       "class": {
         "cmd_kind": "BLOCK_SPLIT",
+        "note": "v0.58 CUBE Function=16",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TGEMV"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "v0.58 CUBE Function=18",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TGEMV.ACC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "v0.58 CUBE Function=17",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TGEMV.BIAS"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "v0.58 CUBE Function=20",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TGEMVMX"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "v0.58 CUBE Function=22",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TGEMVMX.ACC"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "v0.58 CUBE Function=21",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TGEMVMX.BIAS"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO ISA 0.58.6 canonical bundle-start form",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "BSTART.TIMG2COL"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
         "note": "User corrected to A",
         "source": "group_rule",
         "uop_kind": "CMD"
@@ -105,84 +508,6 @@
         32
       ],
       "mnemonic": "BSTART.TLOAD"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TLSU Function=4",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.MGATHER"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TLSU Function=6",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.MGATHER.MASK"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TLSU Function=8",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.MGATHER.CAS"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TLSU Function=5",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.MSCATTER"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TLSU Function=7",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.MSCATTER.MASK"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO ISA 0.58 TLSU Function=13",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.GMOV"
     },
     {
       "class": {
@@ -239,19 +564,6 @@
     {
       "class": {
         "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=5",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.TMATMULMX.BIAS"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
         "note": "v0.58 CUBE Function=6",
         "source": "group_rule",
         "uop_kind": "CMD"
@@ -265,7 +577,7 @@
     {
       "class": {
         "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=16",
+        "note": "v0.58 CUBE Function=5",
         "source": "group_rule",
         "uop_kind": "CMD"
       },
@@ -273,72 +585,7 @@
       "length_bits": [
         32
       ],
-      "mnemonic": "BSTART.TGEMV"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=17",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.TGEMV.BIAS"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=18",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.TGEMV.ACC"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=20",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.TGEMVMX"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=21",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.TGEMVMX.BIAS"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "v0.58 CUBE Function=22",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Block Split",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.TGEMVMX.ACC"
+      "mnemonic": "BSTART.TMATMULMX.BIAS"
     },
     {
       "class": {
@@ -417,19 +664,6 @@
         32
       ],
       "mnemonic": "BSTOP"
-    },
-    {
-      "class": {
-        "cmd_kind": "BLOCK_SPLIT",
-        "note": "PTO long-form block stop",
-        "source": "group_rule",
-        "uop_kind": "CMD"
-      },
-      "group": "Bundle Split",
-      "length_bits": [
-        64
-      ],
-      "mnemonic": "L.BSTOP"
     },
     {
       "class": {
@@ -534,6 +768,19 @@
         32
       ],
       "mnemonic": "FRET.STK"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "PTO long-form block stop",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Bundle Split",
+      "length_bits": [
+        64
+      ],
+      "mnemonic": "L.BSTOP"
     },
     {
       "class": {

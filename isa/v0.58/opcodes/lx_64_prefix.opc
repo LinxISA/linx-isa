@@ -204,5 +204,5 @@ L.BSTART.STD [{"asm":"L.BSTART.STD COND, <label>","group":"BSTART","length_bits"
 L.BSTART.STD [{"asm":"L.BSTART.STD FALL<, fixup_label>","group":"BSTART","length_bits":64,"note":"Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.","pto_source_constraints":[]}] : 31..7=simm[24:0] 6..0=7'b0001111 | 31..15=simm[41:25] 14..0=15'b001000000000001 ; simm ; -
 L.BSTART.SYS [{"asm":"L.BSTART.SYS FALL<, fixup_label>","group":"BSTART","length_bits":64,"note":"Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.","pto_source_constraints":[]}] : 31..7=simm[24:0] 6..0=7'b0001111 | 31..15=simm[41:25] 14..0=15'b001000000010001 ; simm ; -
 
-# PTO ISA 0.58.3 canonical scalar and command forms
+# PTO ISA 0.58.6 canonical scalar and command forms
 L.BSTOP [{"asm":"L.BSTOP","group":"Bundle Split","length_bits":64,"note":"Commits the current bundle and transfers to its selected continuation.","pto_source_constraints":[]}] : 31..0=32'b00000000000000000000000000001111 | 31..0=32'b00000000000000000000000000000001 ;  ; -

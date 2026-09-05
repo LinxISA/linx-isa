@@ -14,14 +14,25 @@ SPEC = ROOT / "isa" / "v0.58" / "linxisa-v0.58.json"
 
 
 class CCodecGeneratorTest(unittest.TestCase):
-    def test_emits_distinct_source_variants_for_shared_encodings(self) -> None:
+    def test_replaces_legacy_shared_encoding_variants_with_canonical_forms(self) -> None:
         spec = json.loads(SPEC.read_text(encoding="utf-8"))
-        expected = {
-            instruction["id"]: instruction["pto_source_form_variant"]
+        variants = [
+            instruction
             for instruction in spec["instructions"]
             if instruction.get("pto_source_form_variant")
-        }
-        self.assertEqual(len(expected), 5)
+        ]
+        self.assertEqual(variants, [])
+        canonical = {instruction["mnemonic"] for instruction in spec["instructions"]}
+        self.assertTrue(
+            {
+                "BSTART.MGATHER.EXCH",
+                "BSTART.MGATHER.MAX",
+                "BSTART.MGATHER.MIN",
+                "BSTART.MGATHER.ADD",
+                "BSTART.MGATHER.INC",
+            }
+            <= canonical
+        )
 
         with tempfile.TemporaryDirectory(prefix="linx-c-codec-") as directory:
             output = Path(directory)
@@ -41,10 +52,11 @@ class CCodecGeneratorTest(unittest.TestCase):
             source = (output / "linxisa_opcodes.c").read_text(encoding="utf-8")
 
         self.assertIn("const char *source_variant", header)
-        for form_id, source_variant in expected.items():
-            start = source.index(f'.id = "{form_id}"')
-            row = source[start : source.index("\n", start)]
-            self.assertIn(f'.source_variant = "{source_variant}"', row)
+        self.assertNotIn("TMOV.L2S.INSERT", source)
+        self.assertNotIn("TMOV.L2S.PUBLISH", source)
+        self.assertNotIn("TMOV.S2L.BROADCAST", source)
+        self.assertNotIn("TMOV.S2L.EXTRACT", source)
+        self.assertNotIn("TSTORE.SPART", source)
 
 
 if __name__ == "__main__":

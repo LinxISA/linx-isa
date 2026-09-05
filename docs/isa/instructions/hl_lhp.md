@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+- `hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.LHP snapshots its scalar sources, forms its encoded address, and loads two ad
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` | 48 | — |
+| `hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` | 48 | — |
 
 <div class="insn-nav">
 

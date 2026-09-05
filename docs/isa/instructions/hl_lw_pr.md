@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1`
+- `hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.LW.PR snapshots its scalar sources, forms its encoded address, and loads one 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.lw.pr [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1` | 48 | — |
+| `hl.lw.pr [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1` | 48 | — |
 
 <div class="insn-nav">
 

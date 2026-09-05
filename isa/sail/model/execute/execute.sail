@@ -1002,7 +1002,7 @@ function exec_c_setc_tgt(SrcL : bits(5)) -> unit = {
 // -----------------------------------------------------------------------------
 // BRU: control-transfer (vec-engine scalar lane; updates TPC)
 //
-// Contract summary (PTO ISA 0.58.3):
+// Contract summary (PTO ISA 0.58.6):
 // - Updates TPC (body-local PC), not architectural global PC.
 // - PC-relative base is *current instruction* TPC.
 // - Immediate offsets are halfword-scaled: target = base + sail_shiftleft(sext(offset, 1)).
@@ -2806,7 +2806,7 @@ function tile_effect_append_iot(raw : bits(64)) -> unit = {
   let dst : bits(2) = raw[8..7];
   let output_active = (unsigned(size) >= 1) & (unsigned(size) <= 10);
   let last = raw[19] == 0b1;
-  // PTO 0.58.3 makes PEMode=000 a strict no-effect path before placement,
+  // PTO 0.58.6 makes PEMode=000 a strict no-effect path before placement,
   // duplicate, schema, allocation, descriptor, memory, and fault checks.
   if pe_mask == 0x0 then ()
   else if not_bool(tile_effect_iot_legal) then ()
@@ -2835,7 +2835,7 @@ function tile_effect_append_iot(raw : bits(64)) -> unit = {
     if (size != 0b0000) & not_bool(output_active) then tile_effect_iot_legal = false else ();
     if (func == 0b110) & not_bool(output_active) then tile_effect_iot_legal = false else ();
     // L terminates only the effective binding sequence; it never releases a
-    // source in the 0.58.3 contract.
+    // source in the 0.58.6 contract.
     bdesc_mark_iot()
   }
 }
@@ -3079,6 +3079,30 @@ function exec_bstart_mgather_cas() -> unit = { exec_tile_bstart(0b01, 0b01000) }
 function exec_bstart_mgather_mask() -> unit = { exec_tile_bstart(0b01, 0b00110) }
 function exec_bstart_mscatter() -> unit = { exec_tile_bstart(0b01, 0b00101) }
 function exec_bstart_mscatter_mask() -> unit = { exec_tile_bstart(0b01, 0b00111) }
+// PTO 0.58.6 adds the GM atomic/reduction and TIMG2COL start forms. Their
+// exact encodings are decoded here, while the Linx Sail transaction model
+// deliberately fails closed until it represents their full operand and
+// atomic-publication contracts. semantics_policy.json grades these forms as
+// decode-only so this cannot be mistaken for executable semantic coverage.
+function exec_bstart_mgather_exch(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_max(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_min(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_add(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_inc(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_dec(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_and(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_or(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mgather_xor(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_max(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_min(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_add(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_inc(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_dec(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_and(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_or(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_xor(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_mscatter_popc(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
+function exec_bstart_timg2col(DataType : bits(5)) -> unit = { trap_illegal_inst(read_pc_or_tpc()) }
 function exec_bstart_tgemv() -> unit = { exec_tile_bstart(0b10, 0b10000) }
 function exec_bstart_tgemv_acc() -> unit = { exec_tile_bstart(0b10, 0b10010) }
 function exec_bstart_tgemv_bias() -> unit = { exec_tile_bstart(0b10, 0b10001) }
@@ -3196,14 +3220,14 @@ function exec_b_dim() -> unit = {
 }
 function exec_c_b_dim() -> unit = { exec_b_dim() }
 function exec_c_b_dimi() -> unit = { exec_b_dim() }
-function exec_b_ios(SharedTID : bits(8), SizeCode : bits(4), PEMode : bits(3)) -> unit = {
+function exec_b_ios(SharedTileID : bits(6), SizeCode : bits(4), PEMode : bits(3)) -> unit = {
   // Role is consumed by the surrounding BSTART schema. The architectural
-  // index is absolute (S0..S255). PEMode expands to the fixed four-PE mask;
+  // index is absolute (S0..S63). PEMode expands to the fixed four-PE mask;
   // mode zero is a strict no-op and does not mutate descriptors.
   let pe_mask = decode_pe_mode(PEMode);
   if pe_mask == 0x0 then ()
   else {
-    shared_tile_binding_id = SharedTID;
+    shared_tile_binding_id = sail_zero_extend(SharedTileID, 8);
     shared_tile_binding_pe_mode = PEMode;
     shared_tile_binding_pe_mask = pe_mask;
     shared_tile_binding_size_code = SizeCode;
@@ -3227,6 +3251,17 @@ function exec_b_ior() -> unit = {
   bdesc_mark_ior()
 }
 function exec_b_iot() -> unit = { tile_effect_append_iot(decoded_biot_raw()) }
+
+// PTO 0.58.6 range modifiers are present in the canonical decoder, but their
+// generation/range state is not yet represented in this Sail subset. Reject
+// them before effects and keep their coverage grade decode-only.
+function exec_b_subview(SrcSelect : bits(1), uimm11 : bits(11), RegSrc : bits(5), SubviewSizeCode : bits(4)) -> unit = {
+  trap_illegal_inst(read_pc_or_tpc())
+}
+
+function exec_b_assemble(INIT : bits(1), uimm11 : bits(11), RegSrc : bits(5), LAST : bits(1), ParentSizeCode : bits(4)) -> unit = {
+  trap_illegal_inst(read_pc_or_tpc())
+}
 
 function exec_b_catr() -> unit = {
   // Staged semantics: latch raw control-attribute word so DR (bit 26) can be consulted.
