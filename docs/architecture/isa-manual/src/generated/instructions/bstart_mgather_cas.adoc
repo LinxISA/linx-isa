@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MGATHER.CAS DataType
 
-*Description:* Begins a TLSU byte-displacement atomic compare-and-swap gather block.
+*Description:* Begins an atomic compare-and-swap strided indexed TLSU gather block.
 
 *Encoding:*
 

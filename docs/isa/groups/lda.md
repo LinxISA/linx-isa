@@ -10,14 +10,14 @@
 
 </div>
 
-Instructions in the **LDA** group of the LinxISA v0.58.3 catalog.
+Instructions in the **LDA** group of the LinxISA v0.58.6 catalog.
 
 ## Instructions
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [HL.PRF](../instructions/hl_prf.md) | `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>]` | 48 | — | HL.PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect. |
-| [HL.PRF.A](../instructions/hl_prf_a.md) | `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}` | 48 | — | HL.PRF.A snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address. |
+| [HL.PRF](../instructions/hl_prf.md) | `hl.prf{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>]` | 48 | — | HL.PRF snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect. |
+| [HL.PRF.A](../instructions/hl_prf_a.md) | `hl.prf.a{.l1,.l2,.l3} [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}` | 48 | — | HL.PRF.A snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address. |
 | [HL.PRFI.U](../instructions/hl_prfi_u.md) | `hl.prfi.u{.l1,.l2,.l3} [SrcL, simm]` | 48 | — | HL.PRFI.U snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint with no destination effect. |
 | [HL.PRFI.UA](../instructions/hl_prfi_ua.md) | `hl.prfi.ua{.l1,.l2,.l3} [SrcL, simm], ->{t, u, Rd}` | 48 | — | HL.PRFI.UA snapshots its scalar sources, forms its encoded address, and issues a non-binding 1-byte-granularity prefetch hint and publishes the effective address. |
 | [LB.PCR](../instructions/lb_pcr.md) | `lb.pcr [symbol], ->{t, u, Rd}` | 32 | — | LB.PCR snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value. |

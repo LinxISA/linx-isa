@@ -4,7 +4,7 @@
 
 `B.IOT` binds ordered Local Tile sources and destinations. It uses only the
 relative `T#1..T#16`, `U#1..U#16`, `M#1..M#16`, and `N#1..N#16` queue
-namespace; Shared `S0..S255` registers are bound by `B.IOS` instead.
+namespace; Shared `S0..S63` registers are bound by `B.IOS` instead.
 
 The machine-readable catalog is the sole encoding authority.
 

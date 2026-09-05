@@ -5,7 +5,7 @@
 [[inst_hl_lwup]]
 ==== HL.LWUP
 
-*Syntax:* hl.lwup [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
+*Syntax:* hl.lwup [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
 
 *Description:* HL.LWUP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 4-byte values.
 

@@ -1,7 +1,20 @@
 {
   "big_kind": "CMD",
-  "count": 3,
+  "count": 5,
   "instructions": [
+    {
+      "class": {
+        "cmd_kind": "BLOCK_IO",
+        "note": "PTO 0.58.5 common block range contract",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Bundle Range Modifier",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "B.ASSEMBLE"
+    },
     {
       "class": {
         "cmd_kind": "BLOCK_IO",
@@ -27,6 +40,19 @@
         32
       ],
       "mnemonic": "B.IOT"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_IO",
+        "note": "PTO 0.58.5 common block range contract",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Bundle Range Modifier",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "B.SUBVIEW"
     },
     {
       "class": {

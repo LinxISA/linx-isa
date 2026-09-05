@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]`
+- `sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.U snapshots its scalar sources, forms its encoded address, and stores one ali
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]` | 32 | — |
+| `sw.u SrcD, [SrcL, SrcR<{.sw,.uw}>]` | 32 | — |
 
 <div class="insn-nav">
 

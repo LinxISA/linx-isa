@@ -1,7 +1,28 @@
 {
   "default_status": "executable-subset",
   "form_overrides": {
+    "b_assemble_32_058abbee219d": "decode-only",
+    "b_subview_32_48f114b5d12b": "decode-only",
+    "bstart_mgather_add_32_088f8627077f": "decode-only",
+    "bstart_mgather_and_32_232d20899377": "decode-only",
+    "bstart_mgather_dec_32_a4404f381481": "decode-only",
+    "bstart_mgather_exch_32_c3ad9cf2ffd3": "decode-only",
+    "bstart_mgather_inc_32_da1952ec2a27": "decode-only",
+    "bstart_mgather_max_32_e8ab09c078b5": "decode-only",
+    "bstart_mgather_min_32_aade0e4a1ded": "decode-only",
+    "bstart_mgather_or_32_0c2334253cc3": "decode-only",
+    "bstart_mgather_xor_32_f8b9f1a43450": "decode-only",
+    "bstart_mscatter_add_32_f0caf08d9183": "decode-only",
+    "bstart_mscatter_and_32_035c8fd2a29c": "decode-only",
+    "bstart_mscatter_dec_32_d307499ccedc": "decode-only",
+    "bstart_mscatter_inc_32_2c10d5f5e1af": "decode-only",
+    "bstart_mscatter_max_32_7d06140ba225": "decode-only",
+    "bstart_mscatter_min_32_1a9b89a73ebc": "decode-only",
+    "bstart_mscatter_or_32_344e52424e47": "decode-only",
+    "bstart_mscatter_popc_32_97e1aec263ac": "decode-only",
+    "bstart_mscatter_xor_32_fa03881618df": "decode-only",
+    "bstart_timg2col_32_557b5cf18709": "decode-only",
     "dma_32_a168aeca5fa5": "decode-only"
   },
-  "schema_version": "linx-sail-policy-v0.58.3"
+  "schema_version": "linx-sail-policy-v0.58.6"
 }

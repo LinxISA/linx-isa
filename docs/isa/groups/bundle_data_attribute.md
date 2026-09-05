@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **Bundle Data Attribute** group of the LinxISA v0.58.3 catalog.
+Instructions in the **Bundle Data Attribute** group of the LinxISA v0.58.6 catalog.
 
 ## Instructions
 

@@ -5,7 +5,7 @@
 [[inst_lbu]]
 ==== LBU
 
-*Syntax:* lbu [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->{t, u, Rd}
+*Syntax:* lbu [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->{t, u, Rd}
 
 *Description:* LBU snapshots its scalar sources, forms its encoded address, and loads one aligned little-endian 1-byte value.
 

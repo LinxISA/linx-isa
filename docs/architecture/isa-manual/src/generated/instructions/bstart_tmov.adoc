@@ -5,63 +5,16 @@
 [[inst_bstart_tmov]]
 ==== BSTART.TMOV
 
+*Syntax:* BSTART.TMOV DataType
+
 *Description:* Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 
-[[inst_bstart_tmov_32_3079328b98d6]]
-===== Form `bstart_tmov_32_3079328b98d6`
-
-*Syntax:* BSTART.TMOV DataType
-
 *Encoding:*
 
-image::encodings/enc_bstart_tmov_32_3079328b98d6.svg[BSTART.TMOV encoding form bstart_tmov_32_3079328b98d6,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_tmov_32_34d0ab432974]]
-===== Form `bstart_tmov_32_34d0ab432974`
-
-*Syntax:* BSTART.TMOV DataType
-
-*Encoding:*
-
-image::encodings/enc_bstart_tmov_32_34d0ab432974.svg[BSTART.TMOV encoding form bstart_tmov_32_34d0ab432974,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_tmov_32_472804576301]]
-===== Form `bstart_tmov_32_472804576301`
-
-*Syntax:* BSTART.TMOV DataType
-
-*Encoding:*
-
-image::encodings/enc_bstart_tmov_32_472804576301.svg[BSTART.TMOV encoding form bstart_tmov_32_472804576301,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_tmov_32_d96181e99f01]]
-===== Form `bstart_tmov_32_d96181e99f01`
-
-*Syntax:* BSTART.TMOV DataType
-
-*Encoding:*
-
-image::encodings/enc_bstart_tmov_32_d96181e99f01.svg[BSTART.TMOV encoding form bstart_tmov_32_d96181e99f01,width=800]
-
-*Compression:* L32 (len=32)
-
-[[inst_bstart_tmov_32_efe5c49fcb78]]
-===== Form `bstart_tmov_32_efe5c49fcb78`
-
-*Syntax:* BSTART.TMOV DataType
-
-*Encoding:*
-
-image::encodings/enc_bstart_tmov_32_efe5c49fcb78.svg[BSTART.TMOV encoding form bstart_tmov_32_efe5c49fcb78,width=800]
-
-*Compression:* L32 (len=32)
+image::encodings/enc_bstart_tmov.svg[BSTART.TMOV encoding,width=800]
 
 *Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
 
 *Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

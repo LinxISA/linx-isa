@@ -10,13 +10,13 @@
 
 </div>
 
-Instructions in the **Bundle Fixed-Point PostProcess Attribute** group of the LinxISA v0.58.3 catalog.
+Instructions in the **Bundle Fixed-Point PostProcess Attribute** group of the LinxISA v0.58.6 catalog.
 
 ## Instructions
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.FPATR](../instructions/b_fpatr.md) | `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB` | 32 | — | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
+| [B.FPATR](../instructions/b_fpatr.md) | `B.FPATR PreQuantMode, ReluMode, GroupNCode, RowMaxEn, GroupMaxEn, RowMaxInit, MaxAbsEn, TransA, TransB, CScaleEn` | 32 | — | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
 
 ## See Also
 

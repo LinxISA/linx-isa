@@ -20,7 +20,7 @@ TARGETS = {
     48: PROFILE / "opcodes/lx_hl48.opc",
     64: PROFILE / "opcodes/lx_64_prefix.opc",
 }
-GENERATED_MARKER = "# PTO ISA 0.58.3 canonical scalar and command forms"
+GENERATED_MARKER = "# PTO ISA 0.58.6 canonical scalar and command forms"
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -221,7 +221,7 @@ def opcode_line(
         "asm": form["asm"],
         "group": form["semantic_group"],
         "length_bits": form["length_bits"],
-        "note": form.get("semantic_summary", "PTO ISA 0.58.3 canonical form."),
+        "note": form.get("semantic_summary", "PTO ISA 0.58.6 canonical form."),
         "pto_source_constraints": form.get("constraints", []),
     }
     fixed_fields = singleton_pto_fields(form)
@@ -269,12 +269,12 @@ def main() -> int:
     reservations = load(
         args.source_root / "spec/catalog/extension-encoding-reservations.json"
     )
-    if command_catalog.get("form_count") != 74:
-        raise ValueError("PTO 0.58.3 must publish exactly 74 command forms")
+    if command_catalog.get("form_count") != 95:
+        raise ValueError("PTO 0.58.6 must publish exactly 95 command forms")
     if scalar_catalog.get("form_count") != 466:
-        raise ValueError("PTO 0.58.3 must publish exactly 466 scalar forms")
-    if reservations.get("reservation_count") != 40:
-        raise ValueError("PTO 0.58.3 must publish exactly 40 extension reservations")
+        raise ValueError("PTO 0.58.6 must publish exactly 466 scalar forms")
+    if reservations.get("reservation_count") != 46:
+        raise ValueError("PTO 0.58.6 must publish exactly 46 extension reservations")
 
     removals, preserved = current_owned_lines(
         scalar_catalog, command_catalog, reservations

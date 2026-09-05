@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}`
+- `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.SH.UPR snapshots its scalar sources, forms its encoded address, and stores on
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}` | 48 | — |
+| `hl.sh.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}` | 48 | — |
 
 <div class="insn-nav">
 

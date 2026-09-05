@@ -23,9 +23,9 @@ Tile/vector block headers use the standard descriptor families:
 
 * `B.DIM`  — dimension/loop counters and/or operand extents
 * `B.DATR` — operation-applicable datatype, layout, rounding, comparison, and pad/byte controls
-* `B.IOR`  — absolute GPR bindings; TLSU source 0 is GM base and source 1 is logical row stride
-* `B.IOT` — Local tile binding and per-PE tile size (`TSize=1..7` means 128 B through 8 KiB)
-* `B.IOS` — Shared S0..S255 binding, PE mask, and the same per-PE `TSize` map
+* `B.IOR`  — absolute GPR bindings; TLOAD/TSTORE source 1 is byte row stride, while indexed TLSU source 1 is element row stride
+* `B.IOT` — Local tile binding; destination `SizeCode=1..10` means 128 B through 64 KiB per participating PE
+* `B.IOS` — Shared S0..S63 binding; destination `SizeCode=1..12` means 128 B through 256 KiB for the complete Core-wide object
 * `B.TEXT` — body pointer for SIMT vector blocks (group-granular kernel body)
 
 [[tileblocks-vvec]]

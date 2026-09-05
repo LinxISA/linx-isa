@@ -1,22 +1,23 @@
 # ISA vs QEMU Decoder/Source Mapping Snapshot
 
-- Generated (UTC): `2026-08-23 06:45:09Z`
+- Generated (UTC): `2026-09-05 18:26:49Z`
 - Evidence level: `L1`
 - Claim: `decoder_source_mapping`
 - L2 runtime execution: `unavailable`
 - L3 semantic oracle: `unavailable`
 - Limitation: this report does not prove that an instruction executed in QEMU or produced an architecturally correct result.
-- Spec unique mnemonics: `723`
-- QEMU unique decode mnemonics (non-internal): `837`
-- QEMU mapped spec mnemonics: `723`
-- L1 mnemonic mapping: `723/723` (`100.0%`)
-- Spec legal forms: `757`
-- QEMU mapped spec forms: `757`
-- L1 form mapping: `757/757` (`100.0%`)
+- Spec unique mnemonics: `744`
+- QEMU unique decode mnemonics (non-internal): `838`
+- QEMU mapped spec mnemonics: `744`
+- L1 mnemonic mapping: `744/744` (`100.0%`)
+- Spec legal forms: `773`
+- QEMU mapped spec forms: `773`
+- L1 form mapping: `773/773` (`100.0%`)
 - Missing spec mnemonics: `0`
 - Missing spec forms: `0`
 - Reserved spec forms: `1`
-- Unmapped QEMU mnemonics: `87`
+- Unmapped QEMU mnemonics: `72`
+- Retired QEMU mnemonics: `0`
 
 ## L1 Mnemonic Mapping By Prefix
 
@@ -32,13 +33,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `9`
+- `B`: `11`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `33`
+- `BSTART`: `52`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -201,13 +202,13 @@
 - `ANDIW`: `1`
 - `ANDW`: `1`
 - `ASSERT`: `1`
-- `B`: `16`
+- `B`: `18`
 - `BC`: `2`
 - `BCNT`: `1`
 - `BIC`: `1`
 - `BIS`: `1`
 - `BSE`: `1`
-- `BSTART`: `47`
+- `BSTART`: `61`
 - `BSTOP`: `1`
 - `BWE`: `1`
 - `BWI`: `1`
@@ -380,37 +381,24 @@
 - `bstart_tcolmin`
 - `bstart_tcolprod`
 - `bstart_tcolsum`
-- `bstart_tconcat`
 - `bstart_tcvt`
-- `bstart_tdequant`
 - `bstart_tdiv`
 - `bstart_tdivs`
 - `bstart_texp`
 - `bstart_texpands`
-- `bstart_textract`
-- `bstart_tfillpad`
 - `bstart_tfma`
 - `bstart_tgather`
-- `bstart_thistogram`
-- `bstart_timg2col`
-- `bstart_tinsert`
 - `bstart_tlog`
 - `bstart_tmax`
 - `bstart_tmaxs`
 - `bstart_tmin`
 - `bstart_tmins`
-- `bstart_tmrgsort`
 - `bstart_tmul`
 - `bstart_tmuls`
 - `bstart_tneg`
 - `bstart_tnot`
 - `bstart_tor`
 - `bstart_tors`
-- `bstart_tpartadd`
-- `bstart_tpartmax`
-- `bstart_tpartmin`
-- `bstart_tpartmul`
-- `bstart_tquant`
 - `bstart_trecip`
 - `bstart_trelu`
 - `bstart_trem`
@@ -437,11 +425,9 @@
 - `bstart_tshls`
 - `bstart_tshr`
 - `bstart_tshrs`
-- `bstart_tsort`
 - `bstart_tsqrt`
 - `bstart_tsub`
 - `bstart_tsubs`
-- `bstart_ttrans`
 - `bstart_ttri`
 - `bstart_txor`
 - `bstart_txors`

@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_bstart_mscatter_min]]
+==== BSTART.MSCATTER.MIN
+
+*Syntax:* BSTART.MSCATTER.MIN DataType
+
+*Description:* Starts GM indexed mscatter.min operation.
+
+*Encoding:*
+
+image::encodings/enc_bstart_mscatter_min.svg[BSTART.MSCATTER.MIN encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "PTO ISA 0.58.6 canonical bundle-start form", "source": "group_rule", "uop_kind": "CMD"}`

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PTO ISA 0.58.3 retired conditional branch closure."""
+"""PTO ISA v0.58 retired conditional branch closure."""
 
 from __future__ import annotations
 

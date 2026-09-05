@@ -2,123 +2,70 @@
 
 ## 功能
 
-`B.IOS` 为一个块操作绑定一个绝对索引的 Shared Tile 寄存器。每个 core
-拥有一组私有的 `S0` 到 `S255`；同一 core 的四个 PE 都能访问该组中的
-全部寄存器。另一个 core 中同名的 `Sx` 属于另一组寄存器。Shared
-寄存器的架构编号由编译器分配，硬件可以对选中的架构寄存器进行重命名。
+`B.IOS` 为块操作绑定一个 core 私有的 Shared Tile 寄存器。每个 core
+拥有 `S0` 到 `S63`，该 core 的四个 PE 共享这组寄存器；另一个 core 中
+同名的寄存器属于另一组 bank。
 
-机器可读指令目录是编码的唯一权威来源。本页只解释该记录，不建立另一套编码定义。
+生成页 [`B.IOS`](/isa/instructions/b_ios/) 与机器可读目录是编码和
+合法性的权威来源。本页只解释 Shared 寄存器模型，不建立第二套指令合约。
 
-## 汇编语法
-
-源绑定：
+## 汇编
 
 ```asm
-B.IOS S<SharedTID>, mask=<PE_MASK>
+B.IOS S<SharedTileID>, mask=<PE_MASK>
+B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>
 ```
 
-目的绑定：
+`SharedTileID` 是 6 bit 绝对索引，规范名称为 `S0` 到 `S63`；不接受
+`S#1` 这样的相对编号。
 
-```asm
-B.IOS mask=<PE_MASK>, ->S<SharedTID><SizeCode>
-```
-
-`SharedTID` 是 0 到 255 的绝对整数。规范汇编名称因此是 `S0` 到
-`S255`；不接受 `S#1` 这样的相对编号写法。
-
-## 编码
+## 编码身份
 
 ![B.IOS 编码](../wavedrom/enc_b_ios.svg)
 
 | 位 | 字段 | 含义 |
 | --- | --- | --- |
-| 31:28 | 固定 `0000` | 主编码 |
-| 27:20 | `SharedTID` | 0 到 255 的 Shared 寄存器绝对索引 |
-| 19 | 固定 `0` | 固定保留位；其他值不属于 `B.IOS` |
-| 18:15 | `SizeCode` | 源/目的角色与目的寄存器单 PE 容量 |
+| 31:26 | 固定零 | 保留位 |
+| 25:20 | `SharedTileID` | `S0` 到 `S63` 的绝对索引 |
+| 19 | 固定零 | 保留位 |
+| 18:15 | `SizeCode` | 源角色或完整 Shared 对象容量 |
 | 14:12 | 固定 `001` | 功能选择码 |
 | 11:9 | `PEMode` | 固定四 PE 参与模式 |
 | 8:0 | 固定 `000010011` | 次编码 |
 
-32 位解码标识为 mask `0xf00871ff`、match `0x00001013`。PTO 来源
-form 是 `b_ios_32_4ba5ef98fdaa`，独立 Linx 目录中的 form 是
-`b_ios_32_0f62f62d6a81`。
+解码 mask 为 `0xfc0871ff`，match 为 `0x00001013`。PTO 来源 form 是
+`b_ios_32_4ba5ef98fdaa`，编译后的 Linx form 是
+`b_ios_32_2f2d1ab83761`。
 
-全部 256 个 `SharedTID` 值和全部八个 `PEMode` 值均已分配。
-`PEMode` 按下表译码：
+`PEMode` 的 0 到 7 依次映射为 `0000`、`1000`、`0100`、`0010`、
+`0001`、`1100`、`1110`、`1111`。`PEMode=000` 在 placement、重复、
+schema、allocation、描述符（descriptor）、memory 与 fault 检查之前就是严格无副作用
+路径。
 
-| `PEMode` | 语义 mask |
-| --- | --- |
-| 0 | `0000`（无 PE） |
-| 1 | `1000`（PE0） |
-| 2 | `0100`（PE1） |
-| 3 | `0010`（PE2） |
-| 4 | `0001`（PE3） |
-| 5 | `1100`（PE0+PE1） |
-| 6 | `1110`（PE0+PE1+PE2） |
-| 7 | `1111`（四个 PE） |
+`SizeCode=0` 表示源。目的代码 `SizeCode=1` 到 `SizeCode=12` 分别表示完整 core-wide Shared
+对象的 128 B、256 B、512 B、1 KiB、2 KiB、4 KiB、8 KiB、16 KiB、
+32 KiB、64 KiB、128 KiB 与 256 KiB；`13..15` 非法。该容量不会乘以
+参与 PE 数量。
 
-四位 `SizeCode` 按下表分配：
+## 状态行为
 
-| `SizeCode` | 形式 | 每个 PE 的目的容量 |
-| --- | --- | --- |
-| 0 | 源绑定 | 不适用；不分配目的寄存器 |
-| 1 | 目的绑定 | 128 B |
-| 2 | 目的绑定 | 256 B |
-| 3 | 目的绑定 | 512 B |
-| 4 | 目的绑定 | 1 KiB |
-| 5 | 目的绑定 | 2 KiB |
-| 6 | 目的绑定 | 4 KiB |
-| 7 | 目的绑定 | 8 KiB |
-| 8 | 目的绑定 | 16 KiB |
-| 9 | 目的绑定 | 32 KiB |
-| 10 | 目的绑定 | 64 KiB |
-| 11 | 目的绑定 | 128 KiB |
-| 12 | 目的绑定 | 256 KiB |
-| 13..15 | 保留 | 非法指令 |
+源绑定只读，不改变 Shared descriptor、allocation mask、initialized mask
+或 payload；读取未初始化寄存器得到 undefined-register value。
 
-固定字段不匹配的字不解码为 `B.IOS`。
+单 PE 目的原子发布完整 Shared parent。多 PE 目的通过 `B.ASSEMBLE`
+给出互不重叠的显式范围，并只在 `LAST` 时发布。schema、容量、范围、
+readiness 和 allocation 检查必须先于任何可见 descriptor 或 payload
+效果完成。
 
-## 操作
-
-汇编操作数 `PE_MASK` 必须是上表八种语义 mask 之一；汇编器将其编码为
-对应的 `PEMode`。`PEMode=000` 是所有 placement、
-duplicate、schema、allocation、descriptor、memory 和 fault 检查之前的
-严格无副作用路径。目的绑定选择的总容量等于单 PE 容量乘以参与 PE 数量。
-
-源绑定使用 `SizeCode=0`。参与的 PE 读取指定 Shared 寄存器，并且读取
-不会修改描述符。读取未初始化的 Shared 寄存器会得到未定义值，其行为
-与读取未定义的标量寄存器相同。
-
-目的绑定使用 `SizeCode=1` 到 `SizeCode=12`。选中的 Shared 架构寄存器需要
-获得新的分配，同时更新其描述符。Shared 写操作以一次原子的
-read-modify-write 同时更新描述符和 payload 状态。除了该原子属性之外，
-架构不规定 PE 之间的顺序；软件必须避免不同 PE 使用冲突的 offset。
-
-表中的容量始终是单 PE 容量。描述符中的 rows 和 columns 都必须是 2
-的次幂。rows 由 `SizeCode`、columns 和元素大小推导；valid rows 和 valid
-columns 不能超过已分配 shape。矩阵操作也遵循同一 shape 约束。
+除原子发布规则外，架构不规定冲突 PE 访问之间的顺序；软件必须避免冲突
+或建立独立同步。
 
 ## 示例
 
-将 `S7` 作为 PE0 和 PE1 的源：
-
 ```asm
 B.IOS S7, mask=1100
-```
-
-在 `S23` 中为每个参与 PE 分配 128 B；四个 PE 全部参与时总容量为
-512 B：
-
-```asm
-B.IOS mask=1111, ->S23<128B>
-```
-
-完全禁止该绑定：
-
-```asm
+B.IOS mask=1111, ->S23<0001>
 B.IOS S7, mask=0000
 ```
 
-`B.IOT` 仍是独立的 Local Tile 绑定指令，不绑定 Shared `S0` 到
-`S255` 寄存器组。
+`B.IOT` 仍绑定 Local Tile，不命名 Shared `S0` 到 `S63` bank。

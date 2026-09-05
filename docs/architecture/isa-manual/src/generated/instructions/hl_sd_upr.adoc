@@ -5,7 +5,7 @@
 [[inst_hl_sd_upr]]
 ==== HL.SD.UPR
 
-*Syntax:* hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>], ->{t, u, Rd}
+*Syntax:* hl.sd.upr SrcD, [SrcL, SrcR<{.sw,.uw}>], ->{t, u, Rd}
 
 *Description:* HL.SD.UPR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value.
 

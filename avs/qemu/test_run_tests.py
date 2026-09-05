@@ -52,11 +52,11 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
             system_source,
         )
 
-    def test_active_catalog_is_the_exact_v0583_catalog(self) -> None:
+    def test_active_catalog_is_the_exact_v0586_catalog(self) -> None:
         self.assertEqual(run_tests.LLVM_AVS_SPEC, run_tests.REPO_ROOT / "isa/v0.58/linxisa-v0.58.json")
         catalog = json.loads(run_tests.LLVM_AVS_SPEC.read_text())
-        self.assertEqual(catalog["version"], "0.58.3")
-        self.assertEqual(catalog["instruction_count"], 757)
+        self.assertEqual(catalog["version"], "0.58.6")
+        self.assertEqual(catalog["instruction_count"], 773)
 
     def test_v0583_tile_engine_suites_have_exact_carriers(self) -> None:
         expected = {
@@ -86,7 +86,7 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
             "B.DATR ND2M16, DTYPE_NONE, Null",
             "B.DATR ND2N8, DTYPE_NONE, Null",
             "BSTART.TMATMUL U8",
-            "B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0",
+            "B.FPATR 0, 0, 0, 0, 0, 0, 0, 0, 0, 0",
             "B.DATR M162ND, DTYPE_NONE, Null",
             "BSTART.TSTORE U32",
             "B.IOT mask=0001, last, ->m<256B>",
@@ -97,27 +97,55 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
             self.assertNotIn(retired, source)
         self.assertNotIn("BSTART.TMATMUL U32", source)
 
+    def test_v0586_gm_atom_red_suite_has_runtime_oracles(self) -> None:
+        suite = "tile_v0586_gm_atom_red"
+        self.assertEqual(
+            run_tests.EXTRA_SOURCES_BY_SUITE[suite],
+            ["avs/qemu/tests/32_v0586_gm_atom_red_carrier.S"],
+        )
+        self.assertEqual(run_tests.COMPLETION_TEST_IDS_BY_SUITE[suite], 0x2E01)
+        carrier = (run_tests.SCRIPT_DIR / "tests/32_v0586_gm_atom_red_carrier.S").read_text()
+        source = (run_tests.SCRIPT_DIR / "tests/32_v0586_gm_atom_red.c").read_text()
+        self.assertIn("BSTART.MGATHER.ADD U32", carrier)
+        self.assertIn("BSTART.MSCATTER.POPC U32", carrier)
+        self.assertIn("TEST_EQ32(old_values[i], 3u + i", source)
+        self.assertIn("TEST_EQ32(target[i], 9u + i", source)
+
+    def test_v0586_timg2col_suite_has_runtime_oracle(self) -> None:
+        suite = "tile_v0586_timg2col"
+        self.assertEqual(
+            run_tests.EXTRA_SOURCES_BY_SUITE[suite],
+            ["avs/qemu/tests/33_v0586_timg2col_carrier.S"],
+        )
+        self.assertEqual(run_tests.COMPLETION_TEST_IDS_BY_SUITE[suite], 0x2F01)
+        carrier = (run_tests.SCRIPT_DIR / "tests/33_v0586_timg2col_carrier.S").read_text()
+        source = (run_tests.SCRIPT_DIR / "tests/33_v0586_timg2col.c").read_text()
+        self.assertIn(".4byte 0xc9c11181", carrier)
+        self.assertIn("B.DATR ND2M16, DTYPE_NONE, Zero", carrier)
+        self.assertIn("B.IOT mask=1111, last, ->m<512B>", carrier)
+        self.assertIn("TEST_EQ32(output[i], input[i]", source)
+
     def test_v0571_executable_evidence_is_explicitly_archived(self) -> None:
         manifest = json.loads(
             (run_tests.SCRIPT_DIR / "qemu_executable_coverage_manifest.json").read_text()
         )
         self.assertEqual(manifest["release"], "0.57.1")
         self.assertFalse(manifest["active_release"])
-        self.assertEqual(manifest["superseded_by"], "0.58.3")
+        self.assertEqual(manifest["superseded_by"], "0.58.6")
 
     def test_elf_identity_fixture_matrix_is_exact(self) -> None:
         expected = (
-            b'{"encoding_abi":"pto-isa-0.58.3-mode-function-v1",'
+            b'{"encoding_abi":"pto-isa-0.58.6-mode-function-v1",'
             b'"encoding_projection_sha256":'
-            b'"8a48b80e04484c70870f155bf9efc79d2a805cf99e809f4e4e8a7e6a7eb34172",'
-            b'"release":"0.58.3"}'
+            b'"a757f2e50ec8050d2131b6b9ad38657511df80cf3f9424d5f009ea6e0cc35839",'
+            b'"release":"0.58.6"}'
         )
         self.assertEqual(elf_identity.IDENTITY, expected)
         self.assertEqual(len(elf_identity.IDENTITY), 165)
         self.assertTrue(elf_identity._note(elf_identity.IDENTITY).startswith(
             b"\x04\x00\x00\x00\xa5\x00\x00\x00\x01\x00\x00\x00PTO\0"
         ))
-        self.assertIn(b'"release":"0.58.1"', elf_identity.OLD_IDENTITY)
+        self.assertIn(b'"release":"0.58.3"', elf_identity.OLD_IDENTITY)
         self.assertNotEqual(elf_identity.IDENTITY, elf_identity.OLD_IDENTITY)
 
     def test_evidence_paths_remain_relative_in_repo_and_absolute_outside(self) -> None:

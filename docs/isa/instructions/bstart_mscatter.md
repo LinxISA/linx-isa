@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Begins a TLSU byte-displacement scatter block and selects its transfer DataType.`
+- `Begins a strided indexed TLSU scatter block.`
 
 ## Full Catalog Forms
 

@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_b_subview]]
+==== B.SUBVIEW
+
+*Syntax:* B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode
+
+*Description:* Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+
+*Encoding:*
+
+image::encodings/enc_b_subview.svg[B.SUBVIEW encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_IO", "note": "PTO 0.58.5 common block range contract", "source": "group_rule", "uop_kind": "CMD"}`

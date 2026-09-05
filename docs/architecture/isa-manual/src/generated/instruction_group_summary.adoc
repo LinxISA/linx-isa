@@ -9,6 +9,7 @@
 |SYS |35 |35
 |ALU |107 |107
 |BRU |58 |58
+|Bundle Range Modifier |2 |2
 |Bundle Control Attribute |1 |1
 |Bundle Data Attribute |1 |1
 |Bundle Argument |3 |1
@@ -16,7 +17,7 @@
 |Bundle Hint |2 |1
 |Bundle Input & Output |7 |3
 |Bundle Offset |1 |1
-|Bundle Split |57 |42
+|Bundle Split |71 |61
 |BSTART |21 |9
 |Block Split |2 |2
 |Bundle Dimension |1 |1

@@ -56,6 +56,12 @@
 #ifndef LINX_TEST_ENABLE_MADDW_BFI_MI
 #define LINX_TEST_ENABLE_MADDW_BFI_MI 0
 #endif
+#ifndef LINX_TEST_ENABLE_TILE_V0586_GM_ATOM_RED
+#define LINX_TEST_ENABLE_TILE_V0586_GM_ATOM_RED 0
+#endif
+#ifndef LINX_TEST_ENABLE_TILE_V0586_TIMG2COL
+#define LINX_TEST_ENABLE_TILE_V0586_TIMG2COL 0
+#endif
 #ifndef LINX_TEST_ENABLE_TILE_V0583_TLSU
 #define LINX_TEST_ENABLE_TILE_V0583_TLSU 0
 #endif
@@ -117,6 +123,12 @@ void run_setc_imm_tests(void);
 #endif
 #if LINX_TEST_ENABLE_MADDW_BFI_MI
 void run_maddw_bfi_mi_tests(void);
+#endif
+#if LINX_TEST_ENABLE_TILE_V0586_GM_ATOM_RED
+void run_tile_v0586_gm_atom_red_tests(void);
+#endif
+#if LINX_TEST_ENABLE_TILE_V0586_TIMG2COL
+void run_tile_v0586_timg2col_tests(void);
 #endif
 #if LINX_TEST_ENABLE_TILE_V0583_TLSU
 void run_tile_v0583_tlsu_tests(void);
@@ -185,6 +197,12 @@ void _start(void) {
 #if LINX_TEST_ENABLE_MADDW_BFI_MI
     run_maddw_bfi_mi_tests();
 #endif
+#if LINX_TEST_ENABLE_TILE_V0586_GM_ATOM_RED
+    run_tile_v0586_gm_atom_red_tests();
+#endif
+#if LINX_TEST_ENABLE_TILE_V0586_TIMG2COL
+    run_tile_v0586_timg2col_tests();
+#endif
 #if LINX_TEST_ENABLE_TILE_V0583_TLSU
     run_tile_v0583_tlsu_tests();
 #endif
@@ -216,7 +234,11 @@ void _start(void) {
     uart_puts("\r\n");
 #else
     /* Quiet runs still need one bounded completion oracle. */
-    uart_puts("LINX TESTS PASS\r\n");
+    uart_putc('L'); uart_putc('I'); uart_putc('N'); uart_putc('X');
+    uart_putc(' '); uart_putc('T'); uart_putc('E'); uart_putc('S');
+    uart_putc('T'); uart_putc('S'); uart_putc(' '); uart_putc('P');
+    uart_putc('A'); uart_putc('S'); uart_putc('S');
+    uart_putc('\r'); uart_putc('\n');
 #endif
     
     linx_test_exit(0);

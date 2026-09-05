@@ -50,7 +50,7 @@
 
 ## Description
 
-Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.
+Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 
 ## Pseudocode (informative)
 
@@ -60,7 +60,7 @@ Binds an ordered Local Tile source/destination sequence with one common four-PE 
 
 ## Encoding Notes
 
-- `Binds an ordered Local Tile source/destination sequence with one common four-PE participation mode decoded to a fixed mask; L terminates only that sequence and never releases a source.`
+- `Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.`
 
 ## Full Catalog Forms
 

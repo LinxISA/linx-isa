@@ -5,7 +5,7 @@
 [[inst_hl_lhp]]
 ==== HL.LHP
 
-*Syntax:* hl.lhp [SrcL, SrcR<{.sw,.uw,.neg}><<<shamt>], ->Dst0, Dst1
+*Syntax:* hl.lhp [SrcL, SrcR<{.sw,.uw}><<<shamt>], ->Dst0, Dst1
 
 *Description:* HL.LHP snapshots its scalar sources, forms its encoded address, and loads two adjacent aligned little-endian 2-byte values.
 

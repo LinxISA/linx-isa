@@ -23,14 +23,14 @@ def main() -> int:
     record = records[0]
     assert len(record["encoding"]["parts"]) == 1
     encoding = record["encoding"]["parts"][0]
-    assert encoding["mask"] == "0xf00871ff"
+    assert encoding["mask"] == "0xfc0871ff"
     assert encoding["match"] == "0x00001013"
     fields = {
         field["name"]: field["pieces"]
         for field in encoding["fields"]
     }
-    assert fields["SharedTID"] == [
-        {"insn_lsb": 20, "insn_msb": 27, "token": "SharedTID", "width": 8}
+    assert fields["SharedTileID"] == [
+        {"insn_lsb": 20, "insn_msb": 25, "token": "SharedTileID", "width": 6}
     ]
     assert fields["SizeCode"] == [
         {"insn_lsb": 15, "insn_msb": 18, "token": "SizeCode", "width": 4}
@@ -42,7 +42,7 @@ def main() -> int:
     syntax = tuple(record["asm"].split(" | "))
     common = syntax + (
         "S0",
-        "S255",
+        "S63",
         "PEMode=000",
         "PE_MASK",
         "SizeCode=0",
@@ -50,8 +50,8 @@ def main() -> int:
         "13..15",
         "1000",
         "1111",
-        "b_ios_32_0f62f62d6a81",
-        "0xf00871ff",
+        "b_ios_32_2f2d1ab83761",
+        "0xfc0871ff",
         "0x00001013",
     )
     require_tokens(

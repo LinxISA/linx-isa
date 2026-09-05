@@ -5,7 +5,7 @@
 [[inst_sh_u]]
 ==== SH.U
 
-*Syntax:* sh.u SrcD, [SrcL, SrcR<{.sw,.uw,.neg}>]
+*Syntax:* sh.u SrcD, [SrcL, SrcR<{.sw,.uw}>]
 
 *Description:* SH.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value.
 

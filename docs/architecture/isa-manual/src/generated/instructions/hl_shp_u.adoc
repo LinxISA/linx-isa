@@ -5,7 +5,7 @@
 [[inst_hl_shp_u]]
 ==== HL.SHP.U
 
-*Syntax:* hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw,.neg}>]
+*Syntax:* hl.shp.u SrcD, SrcD1, [SrcL, SrcR<{.sw,.uw}>]
 
 *Description:* HL.SHP.U snapshots its scalar sources, forms its encoded address, and stores two adjacent aligned little-endian 2-byte values.
 

@@ -85,7 +85,7 @@ function assert_reserved_branch_word(word : bits(32), at_pc : bits(64)) -> unit 
 }
 
 function main() : unit -> unit = {
-  // PTO ISA 0.58.3 reserves all eight former standalone conditional branch
+  // PTO ISA 0.58.6 retains the reservation of all eight former standalone conditional branch
   // encodings. They must reject before the armed first-use profile can fire.
   assert_reserved_branch_word(0x0000_0027, 0x0000_0000_0000_0700); // B.EQ
   assert_reserved_branch_word(0x0000_1027, 0x0000_0000_0000_0710); // B.NE

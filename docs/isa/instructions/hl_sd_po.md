@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}`
+- `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ HL.SD.PO snapshots its scalar sources, forms its encoded address, and stores one
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw,.neg}><<3], ->{t, u, Rd}` | 48 | — |
+| `hl.sd.po SrcD, [SrcL, SrcR<{.sw,.uw}><<3], ->{t, u, Rd}` | 48 | — |
 
 <div class="insn-nav">
 

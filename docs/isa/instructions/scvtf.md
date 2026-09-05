@@ -26,7 +26,7 @@
 
 ## Description
 
-SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.
+SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating
 
 ## Encoding Notes
 
-- `SCVTF converts a signed 64-bit or sign-extended signed 32-bit source to floating carrier code 0 through 14 through the active numeric profile.`
+- `SCVTF converts an S64, S32, S16, or S8 source to FP64, FP32, FP16, or E4M3 through the common scalar/TCVT profile.`
 
 ## Full Catalog Forms
 

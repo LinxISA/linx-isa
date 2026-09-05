@@ -42,8 +42,8 @@ def check(root: Path, pto_root: Path | None = None) -> list[str]:
     hook = (lock.get("profile_hooks") or {}).get("extension_first_use") or {}
     source = hook.get("source") or {}
 
-    if lock.get("common_pto_release") != "0.58.3":
-        errors.append("common PTO release must remain 0.58.3")
+    if lock.get("common_pto_release") != "0.58.6":
+        errors.append("common PTO release must remain 0.58.6")
     common_lock_path = root / str(lock.get("common_pto_lock") or "")
     if not common_lock_path.is_file():
         errors.append(f"common PTO lock is missing: {common_lock_path}")
@@ -52,7 +52,7 @@ def check(root: Path, pto_root: Path | None = None) -> list[str]:
         if common_sha != lock.get("common_pto_lock_sha256"):
             errors.append("common PTO lock SHA-256 mismatch")
         common = json.loads(common_lock_path.read_text(encoding="utf-8"))
-        if common.get("release") != "0.58.3":
+        if common.get("release") != "0.58.6":
             errors.append("common PTO lock release changed")
 
     if hook.get("profile_id") != EXPECTED_PROFILE_ID:

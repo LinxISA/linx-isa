@@ -1,7 +1,7 @@
 {
   "isa": "PTO Instruction Set Architecture",
-  "release": "0.58.3",
-  "reservation_count": 40,
+  "release": "0.58.6",
+  "reservation_count": 46,
   "reservations": [
     {
       "encoding": [
@@ -1451,6 +1451,96 @@
       "length_bits": 32,
       "mnemonic": "B.NZ",
       "owner": "PTO reserved two-level block-body conditional branch extension space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x6519181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL selector 0x065",
+      "owner": "PTO reserved deleted TEPL selector space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x6e19181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL selector 0x06E",
+      "owner": "PTO reserved deleted TEPL selector space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x7119181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL selector 0x071",
+      "owner": "PTO reserved deleted TEPL selector space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x7219181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL selector 0x072",
+      "owner": "PTO reserved deleted TEPL selector space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x7319181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL selector 0x073",
+      "owner": "PTO reserved deleted TEPL selector space",
+      "status": "reserved-in-pto"
+    },
+    {
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x000fffff",
+          "match": "0x7419181",
+          "width_bits": 32
+        }
+      ],
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "BSTART.TEPL selector 0x074",
+      "owner": "PTO reserved deleted TEPL selector space",
       "status": "reserved-in-pto"
     }
   ],

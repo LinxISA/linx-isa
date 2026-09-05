@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import the canonical PTO ISA 0.58.3 release into the Linx v0.58 profile."""
+"""Import the canonical PTO ISA 0.58.6 release into the Linx v0.58 profile."""
 
 from __future__ import annotations
 
@@ -16,11 +16,17 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = ROOT / "isa" / "v0.58"
 LOCK_PATH = PROFILE / "pto-spec.lock.json"
-RELEASE = "0.58.3"
-EXPECTED_ABI = "pto-isa-0.58.3-mode-function-v1"
-VECTOR_BASENAME = "pto-isa-0583-hardware-numeric-vectors.json"
+RELEASE = "0.58.6"
+PUBLICATION_VERSION = "0.58.6.0"
+PUBLICATION_TAG = "v0.58.6.0"
+SOURCE_COMMIT = "dea0b75e803cffa873982c90f9aa0cd17c6d243b"
+SOURCE_TREE = "64571b898e5acb437b93fdedb415e193bb63f60f"
+EXPECTED_ABI = "pto-isa-0.58.6-mode-function-v1"
+VECTOR_BASENAME = "pto-isa-0586-hardware-numeric-vectors.json"
 SCALAR_FORM_COUNT = 466
-EXTENSION_RESERVATION_COUNT = 40
+COMMAND_FORM_COUNT = 95
+TILE_OPERATION_COUNT = 117
+EXTENSION_RESERVATION_COUNT = 46
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -51,30 +57,82 @@ def source_paths(source_root: Path) -> dict[str, Path]:
     }
 
 
+def git_value(source_root: Path, *arguments: str) -> str:
+    try:
+        return subprocess.run(
+            ["git", "-C", str(source_root), *arguments],
+            check=True,
+            text=True,
+            capture_output=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise ValueError(f"cannot resolve upstream git identity: {exc}") from exc
+
+
+def validate_source_git_identity(
+    source_root: Path,
+    paths: dict[str, Path],
+    *,
+    expected_commit: str = SOURCE_COMMIT,
+    expected_tree: str = SOURCE_TREE,
+    publication_tag: str = PUBLICATION_TAG,
+) -> tuple[str, str]:
+    commit = git_value(source_root, "rev-parse", "HEAD")
+    tree = git_value(source_root, "rev-parse", "HEAD^{tree}")
+    tag_ref = f"refs/tags/{publication_tag}"
+    if git_value(source_root, "cat-file", "-t", tag_ref) != "tag":
+        raise ValueError(f"upstream publication tag must be annotated: {publication_tag}")
+    if git_value(source_root, "rev-parse", f"{tag_ref}^{{}}") != commit:
+        raise ValueError(f"upstream publication tag does not peel to HEAD: {publication_tag}")
+    if commit != expected_commit or tree != expected_tree:
+        raise ValueError(
+            "upstream PTO checkout is not the frozen publication identity: "
+            f"commit={commit} tree={tree}"
+        )
+    for path in paths.values():
+        relative = path.relative_to(source_root).as_posix()
+        try:
+            object_bytes = subprocess.run(
+                ["git", "-C", str(source_root), "show", f"{commit}:{relative}"],
+                check=True,
+                capture_output=True,
+            ).stdout
+        except (OSError, subprocess.CalledProcessError) as exc:
+            raise ValueError(f"upstream canonical input is not tracked: {relative}") from exc
+        if path.read_bytes() != object_bytes:
+            raise ValueError(f"upstream canonical input differs from {commit}: {relative}")
+    return commit, tree
+
+
 def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     paths = source_paths(source_root)
     for path in paths.values():
         if not path.is_file():
             raise ValueError(f"missing upstream PTO source: {path}")
+    validate_source_git_identity(source_root, paths)
     docs = {name: load_json(path) for name, path in paths.items()}
     manifest = docs["manifest"]
-    if manifest.get("release") != RELEASE or manifest.get("encoding_abi") != EXPECTED_ABI:
-        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.3 contract")
+    if (
+        manifest.get("release") != RELEASE
+        or manifest.get("publication_version") != PUBLICATION_VERSION
+        or manifest.get("encoding_abi") != EXPECTED_ABI
+    ):
+        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.6 contract")
     counts = manifest.get("catalog_counts") or {}
     expected = {
-        "tile_operations_total": 109,
-        "command_forms": 74,
+        "tile_operations_total": TILE_OPERATION_COUNT,
+        "command_forms": COMMAND_FORM_COUNT,
         "scalar_forms": SCALAR_FORM_COUNT,
         "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
     }
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
     if Counter(item["family"] for item in docs["tiles"]["operations"]) != Counter(
-        {"TEPL": 87, "TLSU": 10, "CUBE": 12}
+        {"TEPL": 77, "TLSU": 28, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
     if Counter(item["engine"] for item in docs["tiles"]["operations"]) != Counter(
-        {"VEC": 31, "SFU": 56, "TLSU": 10, "CUBE": 12}
+        {"VEC": 31, "SFU": 46, "TLSU": 28, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 semantic engine counts")
     if Counter(item["classification"] for item in docs["tiles"]["operations"]) != Counter(
@@ -82,15 +140,15 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
             "elementwise-tile-tile": 25,
             "tile-scalar-and-immediate": 15,
             "reduce-and-expand": 28,
-            "memory-and-data-movement": 9,
+            "memory-and-data-movement": 27,
             "matrix-and-matrix-vector": 12,
-            "layout-and-rearrangement": 7,
-            "irregular-and-complex": 13,
+            "layout-and-rearrangement": 6,
+            "irregular-and-complex": 4,
         }
     ):
         raise ValueError("unexpected PTO 0.58 tile classification counts")
     if Counter(item["semantic_family"] for item in docs["commands"]["forms"]) != Counter(
-        {"CMD": 69, "BBD": 5}
+        {"CMD": 90, "BBD": 5}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
     if (
@@ -121,17 +179,13 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
 
 def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, Any]:
     paths = source_paths(source_root)
-    try:
-        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source_root, text=True).strip()
-        tree = subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], cwd=source_root, text=True).strip()
-    except (OSError, subprocess.CalledProcessError) as exc:
-        raise ValueError(f"cannot resolve upstream git identity: {exc}") from exc
+    commit, tree = validate_source_git_identity(source_root, paths)
     manifest = docs["manifest"]
     catalogs = {}
     for name, relative, count in (
-        ("command_forms", "spec/catalog/command-forms.json", 74),
+        ("command_forms", "spec/catalog/command-forms.json", COMMAND_FORM_COUNT),
         ("scalar_forms", "spec/catalog/scalar-forms.json", SCALAR_FORM_COUNT),
-        ("tile_operations", "spec/catalog/tile-operations.json", 109),
+        ("tile_operations", "spec/catalog/tile-operations.json", TILE_OPERATION_COUNT),
         (
             "extension_encoding_reservations",
             "spec/catalog/extension-encoding-reservations.json",
@@ -155,7 +209,13 @@ def build_lock(source_root: Path, docs: dict[str, dict[str, Any]]) -> dict[str, 
             "path": f"spec/evidence/{VECTOR_BASENAME}",
             "sha256": sha256(paths["vectors"]),
         },
+        "publication": {
+            "tag": PUBLICATION_TAG,
+            "version": PUBLICATION_VERSION,
+            "release_url": f"https://github.com/PTO-ISA/pto-spec/releases/tag/{PUBLICATION_TAG}",
+        },
         "release": RELEASE,
+        "specification_status": manifest["specification_status"],
         "release_manifest": {"path": "spec/release-manifest.json", "sha256": sha256(paths["manifest"])},
         "source": {
             "commit": commit,
@@ -315,7 +375,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "selector_formula": "(mode << 5) | function",
         "mode_field_bits": [0, 1],
         "function_field_bits": [0, 4],
-        "accepted_selector_count": 87,
+        "accepted_selector_count": 77,
         "reserved_selector_ranges": tiles["reserved"]["tepl_selector_ranges"],
         "migration_aliases": {},
         "ops": tepl_ops,
@@ -348,8 +408,8 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "physical_contiguity": "required",
     }
     current["shared_tile_registers"] = {
-        "registers_per_core": 256,
-        "assembly_names": "S0..S255",
+        "registers_per_core": 64,
+        "assembly_names": "S0..S63",
         "addressing": "absolute-index",
         "sharing_domain": "one bank private to each core and shared by its four PEs",
         "quarter_selection": "B.IOS 3-bit PEMode decoded to the fixed four-PE mask; zero means NOP",
@@ -368,8 +428,8 @@ def shared_register_state() -> dict[str, Any]:
         "profile": "v0.58",
         "version": RELEASE,
         "source_lock": "isa/v0.58/pto-spec.lock.json",
-        "register_count": 256,
-        "register_names": {"first": "S0", "last": "S255", "syntax": "S<absolute-index>"},
+        "register_count": 64,
+        "register_names": {"first": "S0", "last": "S63", "syntax": "S<absolute-index>"},
         "scope": {"private_to": "core", "shared_by": "four PEs in that core"},
         "semantics": {
             "atomicity": "descriptor-and-payload read-modify-write",

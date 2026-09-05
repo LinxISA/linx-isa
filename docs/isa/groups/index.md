@@ -1,6 +1,6 @@
 # Instruction Groups
 
-Alphabetical list of all 54 instruction groups in the LinxISA v0.58.3 catalog.
+Alphabetical list of all 55 instruction groups in the LinxISA v0.58.6 catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
@@ -8,6 +8,7 @@ See the [chapter index](index.md) for the manual organization.
 | [SYS](sys.md) | 35 | **Ch 19** — [source](index.md) | `ACRC`, `ACRE`, `ASSERT`, `BC.IALL`, `BC.IVA`, `BSE`, `BWE`, `BWI` +27 |
 | [ALU](alu.md) | 107 | **Ch 12** — [source](index.md) | `ADD`, `ADDI`, `ADDIW`, `ADDW`, `AND`, `ANDI`, `ANDIW`, `ANDW` +99 |
 | [BRU](bru.md) | 58 | **Ch 16** — [source](index.md) | `ADDTPC`, `C.CMP.EQI`, `C.CMP.NEI`, `C.SETC.EQ`, `C.SETC.NE`, `CMP.AND`, `CMP.ANDI`, `CMP.EQ` +50 |
+| [Bundle Range Modifier](bundle_range_modifier.md) | 2 | **Ch 4** — [source](index.md) | `B.ASSEMBLE`, `B.SUBVIEW` |
 | [Bundle Control Attribute](bundle_control_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.CATR` |
 | [Bundle Data Attribute](bundle_data_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.DATR` |
 | [Bundle Argument](bundle_argument.md) | 3 | **Ch 4** — [source](index.md) | `B.DIM` |
@@ -15,7 +16,7 @@ See the [chapter index](index.md) for the manual organization.
 | [Bundle Hint](bundle_hint.md) | 2 | **Ch 17** — [source](index.md) | `B.HINT` |
 | [Bundle Input & Output](bundle_input_output.md) | 7 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOS`, `B.IOT` |
 | [Bundle Offset](bundle_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
-| [Bundle Split](bundle_split.md) | 57 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.MASK`, `BSTART.MPAR`, `BSTART.MSCATTER` +34 |
+| [Bundle Split](bundle_split.md) | 71 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.ADD`, `BSTART.MGATHER.AND`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.DEC` +53 |
 | [BSTART](bstart.md) | 21 | **Ch 4** — [source](index.md) | `BSTART.CALL`, `BSTART.ICALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD` +1 |
 | [Block Split](block_split.md) | 2 | **Ch 4** — [source](index.md) | `BSTART.VPAR`, `BSTART.VSEQ` |
 | [Bundle Dimension](bundle_dimension.md) | 1 | **Ch 4** — [source](index.md) | `C.B.DIMI` |
