@@ -21,12 +21,17 @@ REQUIRED_COMPONENTS = {
     "tools/Linx-TileOP-API",
     "workloads/pto_kernels",
 }
-RELEASE_0583_COMPONENTS = REQUIRED_COMPONENTS | {
-    "compiler/ptoas",
-    "lib/glibc",
-    "lib/musl",
-    "skills/linx-skills",
-    "tools/model",
+EXPECTED_RELEASES = {
+    "compiler/llvm": "0.58.3",
+    "compiler/ptoas": "0.58.3",
+    "emulator/qemu": "0.58.6",
+    "kernel/linux": "0.58.3",
+    "lib/glibc": "0.58.3",
+    "lib/musl": "0.58.3",
+    "skills/linx-skills": "0.58.3",
+    "tools/Linx-TileOP-API": "0.58.3",
+    "tools/model": "0.58.6",
+    "workloads/pto_kernels": "0.58.3",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
 REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
@@ -120,10 +125,12 @@ def validate(
             errors.append(f"invalid locked tree for {path}: {tree!r}")
         if not item.get("role", "").strip():
             errors.append(f"component lock role must be non-empty for {path}")
-        if path in RELEASE_0583_COMPONENTS:
-            if item.get("release") != "0.58.3":
+        expected_release = EXPECTED_RELEASES.get(path)
+        if expected_release is not None:
+            if item.get("release") != expected_release:
                 errors.append(
-                    f"{path} must record release 0.58.3, got {item.get('release')!r}"
+                    f"{path} must record release {expected_release}, "
+                    f"got {item.get('release')!r}"
                 )
         if path in REVIEW_ONLY_OPEN_PR_COMPONENTS:
             if item.get("integration_status") != "review_only_open_pr":

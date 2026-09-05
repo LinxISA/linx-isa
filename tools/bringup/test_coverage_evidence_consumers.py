@@ -74,8 +74,8 @@ class CoverageEvidenceConsumerTests(unittest.TestCase):
             )
         )
         self.assertIn("isa/v0.58/linxisa-v0.58.json", report["spec_path"])
-        self.assertEqual(report["coverage_count"], 728)
-        self.assertEqual(report["legal_mnemonic_count"], 728)
+        self.assertEqual(report["coverage_count"], 744)
+        self.assertEqual(report["legal_mnemonic_count"], 744)
         self.assertEqual(report["evidence"]["L2"]["availability"], "unavailable")
         self.assertEqual(report["evidence"]["L3"]["availability"], "unavailable")
 

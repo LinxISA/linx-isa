@@ -10,14 +10,15 @@
     "C.BSTART.FP [len=16 mask=0xc7ff match=0x80]",
     "C.BSTART.STD [len=16 mask=0xc7ff match=0x0]"
   ],
-  "coverage_count": 723,
+  "coverage_count": 744,
   "coverage_ratio_percent": 100.0,
+  "decode_form_coverage_count": 773,
   "evidence": {
     "L1": {
       "availability": "available",
       "claim": "decoder_source_mapping",
-      "form_count": 757,
-      "mnemonic_count": 723
+      "form_count": 773,
+      "mnemonic_count": 744
     },
     "L2": {
       "availability": "unavailable",
@@ -35,12 +36,12 @@
     }
   },
   "evidence_level": "L1",
-  "form_coverage_count": 757,
+  "form_coverage_count": 773,
   "form_coverage_ratio_percent": 100.0,
   "form_missing_count": 0,
-  "generated_at_utc": "2026-08-23 06:45:09Z",
-  "legal_form_count": 757,
-  "legal_mnemonic_count": 723,
+  "generated_at_utc": "2026-09-05 18:26:49Z",
+  "legal_form_count": 773,
+  "legal_mnemonic_count": 744,
   "limitations": [
     "no_runtime_execution_evidence",
     "no_semantic_oracle_evidence"
@@ -58,13 +59,13 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 9,
+    "B": 11,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 33,
+    "BSTART": 52,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -223,13 +224,13 @@
     "ANDIW": 1,
     "ANDW": 1,
     "ASSERT": 1,
-    "B": 16,
+    "B": 18,
     "BC": 2,
     "BCNT": 1,
     "BIC": 1,
     "BIS": 1,
     "BSE": 1,
-    "BSTART": 47,
+    "BSTART": 61,
     "BSTOP": 1,
     "BWE": 1,
     "BWI": 1,
@@ -415,6 +416,9 @@
     "assert": [
       "ASSERT"
     ],
+    "b_assemble": [
+      "B.ASSEMBLE"
+    ],
     "b_catr": [
       "B.CATR"
     ],
@@ -447,6 +451,9 @@
     ],
     "b_iot": [
       "B.IOT"
+    ],
+    "b_subview": [
+      "B.SUBVIEW"
     ],
     "b_text": [
       "B.TEXT"
@@ -505,11 +512,38 @@
     "bstart_mgather": [
       "BSTART.MGATHER"
     ],
+    "bstart_mgather_add": [
+      "BSTART.MGATHER.ADD"
+    ],
+    "bstart_mgather_and": [
+      "BSTART.MGATHER.AND"
+    ],
     "bstart_mgather_cas": [
       "BSTART.MGATHER.CAS"
     ],
+    "bstart_mgather_dec": [
+      "BSTART.MGATHER.DEC"
+    ],
+    "bstart_mgather_exch": [
+      "BSTART.MGATHER.EXCH"
+    ],
+    "bstart_mgather_inc": [
+      "BSTART.MGATHER.INC"
+    ],
     "bstart_mgather_mask": [
       "BSTART.MGATHER.MASK"
+    ],
+    "bstart_mgather_max": [
+      "BSTART.MGATHER.MAX"
+    ],
+    "bstart_mgather_min": [
+      "BSTART.MGATHER.MIN"
+    ],
+    "bstart_mgather_or": [
+      "BSTART.MGATHER.OR"
+    ],
+    "bstart_mgather_xor": [
+      "BSTART.MGATHER.XOR"
     ],
     "bstart_mpar": [
       "BSTART.MPAR"
@@ -517,8 +551,35 @@
     "bstart_mscatter": [
       "BSTART.MSCATTER"
     ],
+    "bstart_mscatter_add": [
+      "BSTART.MSCATTER.ADD"
+    ],
+    "bstart_mscatter_and": [
+      "BSTART.MSCATTER.AND"
+    ],
+    "bstart_mscatter_dec": [
+      "BSTART.MSCATTER.DEC"
+    ],
+    "bstart_mscatter_inc": [
+      "BSTART.MSCATTER.INC"
+    ],
     "bstart_mscatter_mask": [
       "BSTART.MSCATTER.MASK"
+    ],
+    "bstart_mscatter_max": [
+      "BSTART.MSCATTER.MAX"
+    ],
+    "bstart_mscatter_min": [
+      "BSTART.MSCATTER.MIN"
+    ],
+    "bstart_mscatter_or": [
+      "BSTART.MSCATTER.OR"
+    ],
+    "bstart_mscatter_popc": [
+      "BSTART.MSCATTER.POPC"
+    ],
+    "bstart_mscatter_xor": [
+      "BSTART.MSCATTER.XOR"
     ],
     "bstart_mseq": [
       "BSTART.MSEQ"
@@ -561,6 +622,9 @@
     "bstart_tgemvmx_bias": [
       "BSTART.TGEMVMX.BIAS"
     ],
+    "bstart_timg2col": [
+      "BSTART.TIMG2COL"
+    ],
     "bstart_tload": [
       "BSTART.TLOAD"
     ],
@@ -585,25 +649,10 @@
     "bstart_tmov": [
       "BSTART.TMOV"
     ],
-    "bstart_tmov_l2s_insert": [
-      "BSTART.TMOV"
-    ],
-    "bstart_tmov_l2s_publish": [
-      "BSTART.TMOV"
-    ],
-    "bstart_tmov_s2l_broadcast": [
-      "BSTART.TMOV"
-    ],
-    "bstart_tmov_s2l_extract": [
-      "BSTART.TMOV"
-    ],
     "bstart_tprefetch": [
       "BSTART.TPREFETCH"
     ],
     "bstart_tstore": [
-      "BSTART.TSTORE"
-    ],
-    "bstart_tstore_spart": [
       "BSTART.TSTORE"
     ],
     "bstart_vpar": [
@@ -2658,6 +2707,7 @@
       "XORW"
     ]
   },
+  "metadata_form_coverage_count": 773,
   "missing_by_prefix": {},
   "missing_count": 0,
   "missing_forms_by_prefix": {},
@@ -2666,23 +2716,23 @@
   "qemu_manual_translate_mnemonics": [
     "C.SETRET"
   ],
-  "qemu_mapped_spec_forms": 757,
-  "qemu_mapped_spec_mnemonics": 723,
-  "qemu_meta_mnemonics": 836,
-  "qemu_meta_path": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0583-upgrade/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
-  "qemu_root": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0583-upgrade/emulator/qemu",
+  "qemu_mapped_spec_forms": 773,
+  "qemu_mapped_spec_mnemonics": 744,
+  "qemu_meta_mnemonics": 837,
+  "qemu_meta_path": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0586-isa-upgrade/emulator/qemu/target/linx/linx_opcode_meta_gen.h",
+  "qemu_root": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0586-isa-upgrade/emulator/qemu",
   "qemu_source_kind": "decode",
-  "qemu_unique_forms": 851,
-  "qemu_unique_mnemonics": 837,
+  "qemu_unique_forms": 852,
+  "qemu_unique_mnemonics": 838,
   "reserved_encoding_families": [
     {
       "behavior": "illegal_instruction",
       "family": "TLSU",
       "reserved_range": [
-        15,
+        28,
         31
       ],
-      "reserved_value_count": 17,
+      "reserved_value_count": 4,
       "selector_field": "Function"
     }
   ],
@@ -2692,10 +2742,11 @@
     "classification": "qemu_isa_coverage_report_generated",
     "ok": true
   },
+  "retired_qemu_mnemonics": [],
   "schema_version": "qemu-isa-coverage-v3",
-  "spec_path": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0583-upgrade/isa/v0.58/linxisa-v0.58.json",
-  "spec_total_forms": 757,
-  "spec_unique_mnemonics": 723,
+  "spec_path": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0586-isa-upgrade/isa/v0.58/linxisa-v0.58.json",
+  "spec_total_forms": 773,
+  "spec_unique_mnemonics": 744,
   "unmapped_qemu_mnemonics": [
     "bstart_tabs",
     "bstart_tadd",
@@ -2719,37 +2770,24 @@
     "bstart_tcolmin",
     "bstart_tcolprod",
     "bstart_tcolsum",
-    "bstart_tconcat",
     "bstart_tcvt",
-    "bstart_tdequant",
     "bstart_tdiv",
     "bstart_tdivs",
     "bstart_texp",
     "bstart_texpands",
-    "bstart_textract",
-    "bstart_tfillpad",
     "bstart_tfma",
     "bstart_tgather",
-    "bstart_thistogram",
-    "bstart_timg2col",
-    "bstart_tinsert",
     "bstart_tlog",
     "bstart_tmax",
     "bstart_tmaxs",
     "bstart_tmin",
     "bstart_tmins",
-    "bstart_tmrgsort",
     "bstart_tmul",
     "bstart_tmuls",
     "bstart_tneg",
     "bstart_tnot",
     "bstart_tor",
     "bstart_tors",
-    "bstart_tpartadd",
-    "bstart_tpartmax",
-    "bstart_tpartmin",
-    "bstart_tpartmul",
-    "bstart_tquant",
     "bstart_trecip",
     "bstart_trelu",
     "bstart_trem",
@@ -2776,11 +2814,9 @@
     "bstart_tshls",
     "bstart_tshr",
     "bstart_tshrs",
-    "bstart_tsort",
     "bstart_tsqrt",
     "bstart_tsub",
     "bstart_tsubs",
-    "bstart_ttrans",
     "bstart_ttri",
     "bstart_txor",
     "bstart_txors"

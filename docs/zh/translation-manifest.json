@@ -242,8 +242,8 @@
       "translation_sha256": "900c546670f0c22d80d7d8e01bdff8d4ee2987a41f3516254abcb01011648313"
     },
     "bringup/PROGRESS.md": {
-      "source_sha256": "9833b20c7b69c64846f66bbeca63c3649a30177af4dde7ef465365c3b7e4a901",
-      "translation_sha256": "2897a3c3ebfb9fa186fd2aa72bb2856812ba90a27ebd71a21c92676da8560667"
+      "source_sha256": "37ff5f28071e2e02a7c2bd6d2865f6088b8bcc8b926516a93febfc087abc3e20",
+      "translation_sha256": "945ebedfe9077cdf6bd599ae09c78a4b57f993c89b588bba880aec9e13347568"
     },
     "bringup/README.md": {
       "source_sha256": "5828c2818d24287582376ebf4788b8a2c1022fcb6bc34976335f6cc70cc2e7b5",
@@ -330,12 +330,12 @@
       "translation_sha256": "8a5ba84e690cdd7561f596534a41ba3ee4dcbfcd41e9f863aefba2f25d13c137"
     },
     "bringup/gates/qemu_isa_coverage_latest.md": {
-      "source_sha256": "0399a335f5e681e1011cb7c2dca7b611395e6ed4b0c36985c43759879c5e5e3a",
-      "translation_sha256": "fe429bc63f5837b03aa1e7b12feab1153b1dc07303ed5df6c2db16f25df0f294"
+      "source_sha256": "674c2580610b3fd649950c0fe443dfcae1143bc77a8de02a5756be518fa2dd3f",
+      "translation_sha256": "9c080c0b08ddccb93d68f79876d54d20422c0d592450104e81f34a3af13832c0"
     },
     "bringup/gates/qemu_opcode_sync_latest.md": {
-      "source_sha256": "1663d30e91f21f16795bae79e5d3f052daffb1eb013fe96387a9f89dd9a9ce4f",
-      "translation_sha256": "28aeac6e6fb1afeca0c8a40b888d6969c317d25208ef45ab2b3fd4d078c7956c"
+      "source_sha256": "f03d553c6996bc0536f28adc88d530cb24f2ad4f1f433112b380ba08c17a2957",
+      "translation_sha256": "ce9f0d59f8a91b1a88c3a8ac29a3a1fd784c6fcb87de0f7bd68d2a8bdbb2ba06"
     },
     "bringup/libc_status.md": {
       "source_sha256": "dede42ba6821222d177d36dc398c60130cf18b9870853745a4595e7b5ab2b30a",

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "profile": "v0.58",
-  "description": "Exact reviewed component pins for the LinxISA and PTO ISA v0.58.3 superproject integration surface.",
+  "description": "Exact reviewed component pins for the staged LinxISA and PTO ISA v0.58.3/v0.58.6 superproject integration surface.",
   "components": [
     {
       "path": "compiler/llvm",
@@ -25,10 +25,10 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "0d2f90de253ab6ccdaddf405da1bda7c3908dcf7",
-      "tree": "1d23b74996f34d3343a80a580567f2b61ab150f8",
-      "release": "0.58.3",
-      "role": "v0.58.3 emulator"
+      "commit": "bfd46ef40864cd3c0536c54722359e667babd8a1",
+      "tree": "3e939897aeeabbd9ade9b1e559b8fa3396d55656",
+      "release": "0.58.6",
+      "role": "v0.58.6 emulator and PTO Tile execution subset"
     },
     {
       "path": "kernel/linux",
@@ -105,10 +105,10 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "bf9d73cff60009e9d40e7f3d240411d96af8cf87",
-      "tree": "e1cfb2ff41916573752ba192b38d33ee7bcc8c76",
-      "release": "0.58.3",
-      "role": "v0.58.3 queue-wired model"
+      "commit": "2913db72cf6130a5c604f80d81f958638bdb6d13",
+      "tree": "f003173f7b2aed5c38f80f9c857707f53194d148",
+      "release": "0.58.6",
+      "role": "v0.58.6 queue-wired model codec"
     },
     {
       "path": "tools/pyCircuit",

@@ -1,10 +1,10 @@
 {
-  "allowlist": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/docs/bringup/qemu_opcode_sync_allowlist.json",
+  "allowlist": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0586-isa-upgrade/docs/bringup/qemu_opcode_sync_allowlist.json",
   "decode_only": [],
   "decode_only_unexpected": [],
   "decode_only_unexpected_count": 0,
-  "decode_unique_patterns": 844,
-  "generated_at_utc": "2026-08-16 23:34:25Z",
+  "decode_unique_patterns": 837,
+  "generated_at_utc": "2026-09-05 18:26:48Z",
   "have_opcode_meta": true,
   "id_mismatch": [],
   "id_mismatch_count": 0,
@@ -16,9 +16,9 @@
   "meta_only": [],
   "meta_only_unexpected": [],
   "meta_only_unexpected_count": 0,
-  "meta_unique_decode_patterns": 844,
-  "meta_unique_non_internal": 844,
-  "qemu_root": "/Users/zhoubot/.codex/worktrees/linx-isa/v0581-superproject-upgrade/emulator/qemu",
+  "meta_unique_decode_patterns": 837,
+  "meta_unique_non_internal": 837,
+  "qemu_root": "/Users/zhoubot/.codex/worktrees/linx-isa/pto-0586-isa-upgrade/emulator/qemu",
   "result": {
     "classification": "qemu_opcode_meta_sync_ok",
     "ok": true
