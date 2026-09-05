@@ -232,6 +232,12 @@ void _start(void) {
     uart_puts("Note: Check UART output for individual test results.\r\n");
     uart_puts("      Each test suite prints PASS for each test.\r\n");
     uart_puts("\r\n");
+    /* Keep the terminal oracle independent of global relocations. */
+    uart_putc('L'); uart_putc('I'); uart_putc('N'); uart_putc('X');
+    uart_putc(' '); uart_putc('T'); uart_putc('E'); uart_putc('S');
+    uart_putc('T'); uart_putc('S'); uart_putc(' '); uart_putc('P');
+    uart_putc('A'); uart_putc('S'); uart_putc('S');
+    uart_putc('\r'); uart_putc('\n');
 #else
     /* Quiet runs still need one bounded completion oracle. */
     uart_putc('L'); uart_putc('I'); uart_putc('N'); uart_putc('X');

@@ -26,7 +26,7 @@ views; machine-readable locks and fresh run summaries take precedence.
 | Surface | Status | Current evidence |
 | --- | --- | --- |
 | ISA catalog, Sail, and PTO lock | Verified | Golden/catalog/manifest checks; Sail parser, directed semantics, coverage, and C backend; 744/773 authority |
-| LLVM/LLD | Merged | `b7c83f68bf84125e696a70bec4b665c70a3b584d`; MC 55/55; compile AVS linx32 759/759 and linx64 723/723; fresh pure-CodeGen breadth 146/723 with aliases |
+| LLVM/LLD | Merged and repinned | `3d79447f635b00feb68f5a6acaa2dae31dc43b7a`; PTO 0.58.6 projection identity and six-suite Tile AVS compile/run pass; exhaustive MC/compile evidence remains commit-scoped to `b7c83f68bf84125e696a70bec4b665c70a3b584d` |
 | QEMU | Merged leaf | `bfd46ef40864cd3c0536c54722359e667babd8a1`; PTO 0.58.6 identity, exact decode coverage, integer GM atom/reduction, and Local TIMG2COL gates pass |
 | Linx-TileOP-API | Merged leaf | `bd1ecca97ca47da0edc462c1ce19749c6940780e`; compute PadValue Zero and transport Null contracts pass |
 | PTOAS | Merged | `cbfaefe6d3a42b6cb3de1482ef01663630d4b39e`; exact PTO/TileOP pins, source review, local gates, and all six applicable hosted wheel jobs pass |

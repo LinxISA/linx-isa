@@ -242,8 +242,8 @@
       "translation_sha256": "900c546670f0c22d80d7d8e01bdff8d4ee2987a41f3516254abcb01011648313"
     },
     "bringup/PROGRESS.md": {
-      "source_sha256": "37ff5f28071e2e02a7c2bd6d2865f6088b8bcc8b926516a93febfc087abc3e20",
-      "translation_sha256": "945ebedfe9077cdf6bd599ae09c78a4b57f993c89b588bba880aec9e13347568"
+      "source_sha256": "200ebcaf872dc970a218eeab0fd1deb3810bd57b88bdd70f620388e055087370",
+      "translation_sha256": "751423c5a4abecbc8af0a7b90763c9cf03b2b29e39ea546e0f3574d8120956ad"
     },
     "bringup/README.md": {
       "source_sha256": "5828c2818d24287582376ebf4788b8a2c1022fcb6bc34976335f6cc70cc2e7b5",
