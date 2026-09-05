@@ -77,10 +77,10 @@
       "path": "skills/linx-skills",
       "url": "https://github.com/LinxISA/linx-skills.git",
       "branch": "main",
-      "commit": "fdbf72915439bbf285089bebc73b77a0bf6f3c41",
-      "tree": "2fe966015d3ecf5152be9264e779325736227f0d",
+      "commit": "222b009e7d37430454151013c447b077349de008",
+      "tree": "865ae6432c35bfecd27451ef6e779a0a1d5cf469",
       "release": "0.58.3",
-      "role": "agent routing and v0.58.3 workflow skills"
+      "role": "agent routing and staged v0.58 workflow skills"
     },
     {
       "path": "tools/Linx-TileOP-API",
