@@ -6,7 +6,7 @@
 拥有 `S0` 到 `S63`，该 core 的四个 PE 共享这组寄存器；另一个 core 中
 同名的寄存器属于另一组 bank。
 
-生成页 [`B.IOS`](../../../isa/instructions/b_ios.md) 与机器可读目录是编码和
+生成页 [`B.IOS`](/isa/instructions/b_ios/) 与机器可读目录是编码和
 合法性的权威来源。本页只解释 Shared 寄存器模型，不建立第二套指令合约。
 
 ## 汇编
@@ -39,10 +39,10 @@ B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>
 
 `PEMode` 的 0 到 7 依次映射为 `0000`、`1000`、`0100`、`0010`、
 `0001`、`1100`、`1110`、`1111`。`PEMode=000` 在 placement、重复、
-schema、allocation、descriptor、memory 与 fault 检查之前就是严格无副作用
+schema、allocation、描述符（descriptor）、memory 与 fault 检查之前就是严格无副作用
 路径。
 
-`SizeCode=0` 表示源。目的代码 1 到 12 分别表示完整 core-wide Shared
+`SizeCode=0` 表示源。目的代码 `SizeCode=1` 到 `SizeCode=12` 分别表示完整 core-wide Shared
 对象的 128 B、256 B、512 B、1 KiB、2 KiB、4 KiB、8 KiB、16 KiB、
 32 KiB、64 KiB、128 KiB 与 256 KiB；`13..15` 非法。该容量不会乘以
 参与 PE 数量。

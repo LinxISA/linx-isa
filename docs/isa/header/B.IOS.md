@@ -6,7 +6,7 @@
 operation. Each core owns `S0` through `S63`; its four PEs share that bank. The
 same name in another core refers to another bank.
 
-The generated instruction page at [`B.IOS`](../instructions/b_ios.md) and the
+The generated instruction page at [`B.IOS`](/isa/instructions/b_ios/) and the
 machine-readable catalog are the encoding and legality authority. This page
 explains the Shared-register model without defining a second instruction
 contract.
@@ -44,7 +44,8 @@ form is `b_ios_32_4ba5ef98fdaa`; the compiled Linx form is
 path before placement, duplicate, schema, allocation, descriptor, memory, and
 fault checks.
 
-`SizeCode=0` selects a source. Destination codes 1 through 12 select 128 B,
+`SizeCode=0` selects a source. Destination codes `SizeCode=1` through
+`SizeCode=12` select 128 B,
 256 B, 512 B, 1 KiB, 2 KiB, 4 KiB, 8 KiB, 16 KiB, 32 KiB, 64 KiB, 128 KiB, or
 256 KiB for the complete Core-wide Shared object. Codes `13..15` are illegal.
 The capacity is not multiplied by the number of participating PEs.
