@@ -85,6 +85,22 @@ function assert_reserved_branch_word(word : bits(32), at_pc : bits(64)) -> unit 
 }
 
 function main() : unit -> unit = {
+  // Every new block header starts with value-one dimensions. Presence is not
+  // required for legality, while an explicit zero remains a real write.
+  bdesc_reset();
+  assert(ssr_lb0 == 0x0000_0000_0000_0001);
+  assert(ssr_lb1 == 0x0000_0000_0000_0001);
+  assert(ssr_lb2 == 0x0000_0000_0000_0001);
+  assert(not_bool(bdesc_seen_dim));
+  decoded_bdim_index_shadow = 0b00;
+  decoded_bdim_value_shadow = sail_zeros(64);
+  exec_b_dim();
+  assert(ssr_lb0 == sail_zeros(64));
+  assert(bdesc_seen_dim);
+  assert(tile_cube_dim(sail_zeros(64)) == sail_zeros(64));
+  bdesc_reset();
+  assert(ssr_lb0 == 0x0000_0000_0000_0001);
+
   // PTO ISA 0.58.6 retains the reservation of all eight former standalone conditional branch
   // encodings. They must reject before the armed first-use profile can fire.
   assert_reserved_branch_word(0x0000_0027, 0x0000_0000_0000_0700); // B.EQ
@@ -442,7 +458,8 @@ function main() : unit -> unit = {
   // cover ceil(K/32)=3 groups for K=65 and ordinary/MX writes implicit ACC.
   reset_tile_effect_case();
   bdesc_mark_datr();
-  bdesc_mark_dim();
+  // Nondefault dimensions are already installed by reset_tile_effect_case;
+  // no presence marker is required for CUBE legality.
   decoded_tile_datatype_shadow = 0b00001; // FP32 header/ACC for MX
   tile_effect_begin(0b10, 0b10101);
   exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b1, 0b1);

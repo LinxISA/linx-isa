@@ -2885,7 +2885,7 @@ function tile_numeric_ordinary(dtype : bits(5)) -> bool = {
 }
 
 function tile_cube_dim(value : bits(64)) -> bits(64) = {
-  if value == 0x0000_0000_0000_0000 then 0x0000_0000_0000_0008 else value
+  value
 }
 
 function tile_effect_header_legal() -> bool = {
@@ -2917,7 +2917,9 @@ function tile_effect_header_legal() -> bool = {
       if accumulate then tile_acc_valid & (tile_acc_rows == m) & (tile_acc_cols == n) &
         (tile_acc_k == k) & (tile_acc_datatype == (if mx then 0b00001 else tile_effect_datatype))
       else true;
-    (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_dim & bdesc_seen_iot &
+    let dimensions_ok = (m != sail_zeros(64)) & (n != sail_zeros(64)) &
+      (k != sail_zeros(64));
+    (required != 0b00_0000) & bdesc_seen_datr & bdesc_seen_iot & dimensions_ok &
     bdesc_seen_fpatr &
     not_bool(bdesc_seen_text) & tile_effect_iot_legal & tile_effect_last_seen &
     not_bool(tile_effect_after_last) & (unsigned(tile_effect_iot_count) <= 4) &

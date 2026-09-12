@@ -50,8 +50,8 @@
       "translation_sha256": "01f410e30bb831b3d5ed1c2fd7f6dead644c4978612e91487fc12e6a6e11a208"
     },
     "architecture/v0.58-architecture-contract.md": {
-      "source_sha256": "53c0b9518cacf88aee383d1269f08efd8527d161fc28b1b110ce9df70ea1b43c",
-      "translation_sha256": "df054dba4865c1d0c09f1325d797d87aa94cc2a244d83a57cfc9f521f67bbbec"
+      "source_sha256": "21960e866896d8edd3719457ae38604c62f67bf9c5debb13473d5066de72e4e5",
+      "translation_sha256": "2d588dd5ab6a94ee09adbe4859711fee3889e7cb2a1f7d7efb420e0b304f894f"
     },
     "archive/design-updates/README.md": {
       "source_sha256": "80981e0838933412e77e97cb0abcbc7aa0c1ebff2ad11494f8328bc99139772e",
@@ -8026,8 +8026,8 @@
       "translation_sha256": "7c246a22dd1bd84f54901070f77991be965a9186199822cb42ce0623a6516f30"
     },
     "reference/linxisa-assembly-agent-guide.md": {
-      "source_sha256": "35698cebf322e55c65c8fd9c7a7741f2b486b11efdb520b6079f286e20b7508d",
-      "translation_sha256": "b543296a754d7d23c179b7c3e00751d54be1f1b86aa0aeb93d4c6fc534b7a19b"
+      "source_sha256": "292fbeed97cabac6afebbdb49a6a3b409ff0594792ce31ab15940e1b82638197",
+      "translation_sha256": "48c29be3d104e2ca7ebbbf3992dbe60613022f1fe4811ab0e4ce5d2a3d13938d"
     },
     "reference/linxisa-call-ret-contract.md": {
       "source_sha256": "f32468d8f9a44126a54216c9d340e0d60e20c86f945cbe583f64b82d5c03184e",

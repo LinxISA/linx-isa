@@ -15,6 +15,16 @@ assert pto_lock["release"] == "0.58.6"
 assert pto_lock["publication"]["tag"] == "v0.58.6.0"
 assert pto_lock["publication"]["version"] == "0.58.6.0"
 assert pto_lock["specification_status"] == "draft"
+bundle_dimensions = spec["state"]["architectural_state"]["state"][
+    "bundle_dimensions"
+]
+assert bundle_dimensions["registers"] == ["LB0", "LB1", "LB2"]
+assert bundle_dimensions["omission_default"] == 1
+assert "explicit zero" in bundle_dimensions["explicit_write"]
+assert "never operation legality" in bundle_dimensions["presence_role"]
+assert bundle_dimensions["semantic_equivalence"] == (
+    "an omitted dimension is equivalent to an explicit value one"
+)
 assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 561
 pto_owned_instructions = [
     item
@@ -244,6 +254,16 @@ assert "if SrcRType == 0b10 then sub_bits" in sail_execute
 assert "if SrcRType == 0b11 then sub_bits" not in sail_execute
 assert "tile_tlsu_required_sources" in sail_execute
 assert "tile_tlsu_produces_output" in sail_execute
+assert "if value == 0x0000_0000_0000_0000 then" not in sail_execute
+assert "bdesc_seen_datr & bdesc_seen_iot & dimensions_ok" in sail_execute
+assert "register ssr_lb0  : bits(64) = 0x0000_0000_0000_0001" in sail_state
+assert "register ssr_lb1  : bits(64) = 0x0000_0000_0000_0001" in sail_state
+assert "register ssr_lb2  : bits(64) = 0x0000_0000_0000_0001" in sail_state
+header_validation = sail_state[
+    sail_state.index("function bdesc_validate_header_end") :
+    sail_state.index("function trap_assert_fail")
+]
+assert "not_bool(bdesc_seen_dim)" not in header_validation
 assert "tile_tma_" not in sail_execute
 assert "PTO ISA 0.57" not in sail_execute
 assert "PTO ISA 0.57" not in sail_state
