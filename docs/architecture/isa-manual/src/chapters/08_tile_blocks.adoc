@@ -40,7 +40,7 @@ These blocks execute a SIMT-style body:
 
 Mandatory header descriptors:
 
-* `B.DIM` is **mandatory** (sets up loop counters / extents).
+* `B.DIM` is optional and is emitted only for a nondefault dimension; omitted dimensions equal one.
 * `B.TEXT` is **mandatory** and MUST point to a valid vector body.
   - The `B.TEXT` target is an engine-internal entrypoint and need not begin with a block start marker.
   - Alignment: `B.TEXT` targets MUST be 2-byte aligned. Misalignment MUST raise `E_BLOCK(EC_BFETCH)` with `TRAPARG0` set
@@ -131,7 +131,7 @@ These blocks do not have a SIMT body (`B.TEXT` is not used).
 
 Mandatory header descriptors:
 
-* `B.DIM` is **mandatory** and specifies `m/n/k` via `LB0/LB1/LB2`.
+* `B.DIM` optionally overrides `m/n/k` via `LB0/LB1/LB2`; every omitted value is one.
 * `B.IOT` is **mandatory** (bind operand tiles and sizes).
 * `B.DATR` is required when a non-default, supported matrix layout is selected.
 

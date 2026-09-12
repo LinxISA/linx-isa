@@ -58,6 +58,15 @@ Practical rule:
 
 - Do not emit ad-hoc fallthrough/jump mixes that bypass block enter/exit markers.
 
+Dimension rule:
+
+- Omitted `LB0`, `LB1`, and `LB2` each have effective value 1.
+- Emit `B.DIM` or `C.B.DIMI` only for a nondefault value. Explicit zero is a
+  real zero and is not omission.
+- Presence is only duplicate-write and trap-recovery bookkeeping. Never add a
+  value-1 DIM merely because an operation previously required the field to be
+  present.
+
 ## 3) Precise Call/Ret Contract (Mandatory)
 
 Normal function form:

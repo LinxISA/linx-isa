@@ -7,6 +7,17 @@
     "v0.58 retains the 64-logical-tile model with dynamic capacity descriptors retained by v0.58."
   ],
   "state": {
+    "bundle_dimensions": {
+      "explicit_write": "B.DIM or C.B.DIMI replaces the selected register value, including explicit zero",
+      "omission_default": 1,
+      "presence_role": "write-once duplicate detection and trap recovery only; never operation legality or descriptor inheritance",
+      "registers": [
+        "LB0",
+        "LB1",
+        "LB2"
+      ],
+      "semantic_equivalence": "an omitted dimension is equivalent to an explicit value one"
+    },
     "block_control_predicate": {
       "consumer": [
         "BSTART COND",
