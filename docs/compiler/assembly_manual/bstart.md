@@ -21,6 +21,30 @@ BSTART represents the beginning of block instruction. The assembly starting from
 - Consistent with the directive form
 - Generate compressed header instruction'C.BSTART'. Generating assembly in this form requires that the compiler's instruction compression feature be enabled.
 
+### Fallthrough header elision
+
+A compiler basic block does not require a separate architectural BSTART when
+it remains in the active architectural block. In particular, an active Tile
+block may contain ordinary scalar body instructions. The first decoded scalar
+instruction enters the body phase without changing the Tile block type.
+
+The compiler may therefore omit `BSTART.STD FALL` or `C.BSTART.STD FALL` on a
+unique sequential CFG edge when the following scalar instructions remain in
+the active STD or Tile block. The next real BSTART, Tile block instruction, or
+BSTOP supplies the commit boundary.
+
+Retain an explicit BSTART in these cases:
+
+- the address is a scalar control-flow target;
+- the transfer is `COND`, `DIRECT`, `CALL`, `IND`, `ICALL`, or `RET`;
+- the new block changes the required architectural block type;
+- an explicit commit boundary is required before the following instruction;
+- the instruction closes the final active block.
+
+If a control-flow target begins with a Tile block instruction, that Tile
+instruction is itself the required BSTART; do not insert an empty STD block in
+front of it.
+
 Next, we will mainly describe in detail the <type>, <brType> and <label> in the BSTART pseudo-instruction.
 
 
