@@ -44,6 +44,12 @@ Linx is block-structured; control flow must target legal block boundaries.
 Required patterns:
 
 - Use `BSTART ...` / `BSTOP` or `C.BSTART ...` / `C.BSTOP` around control-flow regions.
+- Treat architectural blocks and compiler basic blocks separately. A unique
+  sequential CFG edge does not require another FALL-STD header when the
+  instructions remain in the active STD or Tile block.
+- Allow ordinary scalar body instructions after a Tile block header. Do not
+  insert an empty `C.BSTART.STD` between adjacent Tile block instructions or
+  between a Tile header and its sequential scalar body.
 - Use direct block branches for static labels: `C.BSTART DIRECT, <label>`.
 - Use conditional block branches with `SETC` predicate in the same block:
   - `C.BSTART COND, <label>`
@@ -56,7 +62,12 @@ Required patterns:
 
 Practical rule:
 
-- Do not emit ad-hoc fallthrough/jump mixes that bypass block enter/exit markers.
+- Emit a BSTART at scalar control-flow targets, non-fallthrough transfers,
+  required block-type changes, and explicit or final commit boundaries.
+- A Tile block instruction already supplies BSTART at its own address,
+  including when that address is a control-flow target.
+- Do not remove a boundary across a CFG merge, indirect edge, exception edge,
+  or block-type transition.
 
 ## 3) Precise Call/Ret Contract (Mandatory)
 
