@@ -362,9 +362,9 @@ function tile_mask_lane_effect(active : bool) -> bits(4) = {
 // NOTE: Sail requires registers to be declared before use, so we declare the
 // small SSR subset needed for vec bring-up here (full SSR block is below).
 register ssr_lcfr : bits(64) = 0x0000_0000_0006_0000 // SSR_ID 0x0024 (RO): LaneNum=6 => vec_length=64 (bring-up)
-register ssr_lb0  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0050
-register ssr_lb1  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0051
-register ssr_lb2  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0052
+register ssr_lb0  : bits(64) = 0x0000_0000_0000_0001 // SSR_ID 0x0050
+register ssr_lb1  : bits(64) = 0x0000_0000_0000_0001 // SSR_ID 0x0051
+register ssr_lb2  : bits(64) = 0x0000_0000_0000_0001 // SSR_ID 0x0052
 register ssr_lc0  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
 register ssr_lc1  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
 register ssr_lc2  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
@@ -1697,6 +1697,10 @@ register bdesc_seen_iot : bool = false
 register bdesc_seen_fpatr : bool = false
 
 function bdesc_reset() -> unit = {
+  // Missing DIM is architecturally identical to an explicit value one.
+  ssr_lb0 = 0x0000_0000_0000_0001;
+  ssr_lb1 = 0x0000_0000_0000_0001;
+  ssr_lb2 = 0x0000_0000_0000_0001;
   bdesc_seen_dim = false;
   bdesc_seen_text = false;
   bdesc_seen_datr = false;
@@ -1751,10 +1755,9 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
   //   B.DATR > B.TEXT > B.IOT > B.IOR > B.DIM
   let k = decoded_block_contract_kind();
   match k {
-    // VEC: SIMT vector blocks (VPAR/VSEQ/MPAR/MSEQ): require DIM + TEXT.
+    // VEC: SIMT vector blocks require TEXT; omitted dimensions are one.
     0b0001 => {
       if not_bool(bdesc_seen_text) then trap_blockfmt(0x02, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
       else {
         // Staged vector bring-up: initialize lane predicate mask for group 0.
         vec_init_p_for_group(ssr_lc1)
@@ -1774,12 +1777,11 @@ function bdesc_validate_header_end(src_pc_or_tpc : bits(64)) -> unit = {
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
       else ()
     },
-    // CUBE: require DIM + IOT + DATR; TEXT illegal.
+    // CUBE: require IOT + DATR; omitted dimensions are one; TEXT is illegal.
     0b0100 => {
       if bdesc_seen_text then bdesc_illegal_combo_or_trap(0x02, src_pc_or_tpc)
       else if not_bool(bdesc_seen_datr) then trap_blockfmt(0x03, 0x00, src_pc_or_tpc)
       else if not_bool(bdesc_seen_iot) then trap_blockfmt(0x05, 0x00, src_pc_or_tpc)
-      else if not_bool(bdesc_seen_dim) then trap_blockfmt(0x01, 0x00, src_pc_or_tpc)
       else ()
     },
     // HDRDRV: header-driven engine ops: TEXT illegal; mandatory families are op-specific.

@@ -414,7 +414,7 @@ v0.58 block split patterns and per-family constraints:
 ** are header-driven block commands (no SIMT body; do not use `B.TEXT`).
 * `BSTART.TMATMUL`, `BSTART.TMATMUL.BIAS`, `BSTART.TMATMUL.ACC`, `BSTART.TMATMULMX*`,
   `BSTART.TGEMV*`, and `BSTART.TGEMVMX*` (assigned named CUBE-family functions):
-** require `B.DIM`/`C.B.DIM*` with `LB0/LB1/LB2` bound as `m/n/k`.
+** consume `LB0/LB1/LB2` as `m/n/k`; each omitted dimension has effective value one.
 ** bind the exact source roles from `pto_ops.json` via `B.IOT` (left/right, plus bias or scale sources where applicable).
 ** bind one explicit destination through `destination0`.
 ** `.ACC` forms bind an explicit accumulator input through `source0`; non-`.ACC` forms have no accumulator input.
@@ -507,9 +507,9 @@ AI-oriented behavior:
 The canonical v0.58 auto-mode profile maps PTO tile primitives to typed TAU block headers and descriptors:
 
 * `PTO TLOAD`:
-  `BSTART.TLOAD` + `B.DIM(LB0/LB1/LB2)` + applicable `B.DATR` + `B.IOR*` + `B.IOT`
+  `BSTART.TLOAD` + optional nondefault `B.DIM(LB0/LB1/LB2)` + applicable `B.DATR` + `B.IOR*` + `B.IOT`
 * `PTO TSTORE`:
-  `BSTART.TSTORE` + `B.DIM(LB0/LB1/LB2)` + applicable `B.DATR` + `B.IOR*` + `B.IOT`
+  `BSTART.TSTORE` + optional nondefault `B.DIM(LB0/LB1/LB2)` + applicable `B.DATR` + `B.IOR*` + `B.IOT`
 * `PTO TMOV`:
   `BSTART.TMOV` + applicable `B.DATR` + optional `B.DIM/B.IOR` + `B.IOT`
 * `PTO TMATMUL`:
@@ -544,7 +544,7 @@ an out-of-line SIMT body selected by `B.TEXT`.
 
 Execution model (normative for v0.58):
 
-* `LB0..LB2` are written by `B.DIM` / `C.B.DIM*` in the block header.
+* `LB0..LB2` default to one and are overridden by `B.DIM` / `C.B.DIM*` in the block header.
 * Hardware exposes lane/group counters `lc0..lc2` to the block body.
 * For the canonical 1-D kernel profile:
 ** `lc0` is the lane index within a group,
