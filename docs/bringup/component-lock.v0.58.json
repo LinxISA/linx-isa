@@ -105,10 +105,12 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "2913db72cf6130a5c604f80d81f958638bdb6d13",
-      "tree": "f003173f7b2aed5c38f80f9c857707f53194d148",
+      "commit": "cc55301d1a4d983af2fa8941b8e4edb5ae889100",
+      "tree": "4f534586877c4f7b004cad24a597c4efd1445b71",
       "release": "0.58.6",
-      "role": "v0.58.6 queue-wired model codec"
+      "role": "v0.58.6 queue-wired model codec",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/LinxISA/linx-model/pull/21"
     },
     {
       "path": "tools/pyCircuit",
