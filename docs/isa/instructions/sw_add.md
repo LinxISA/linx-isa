@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.add<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.add<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.add<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.add<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

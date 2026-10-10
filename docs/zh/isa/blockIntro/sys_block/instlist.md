@@ -19,9 +19,12 @@
 | **加载保留与条件存储** | [LR.B](../../inst/misa_s/LR.B.md), [LR.H](../../inst/misa_s/LR.H.md), [LR.W](../../inst/misa_s/LR.W.md), [LR.D](../../inst/misa_s/LR.D.md), [SC.B](../../inst/misa_s/SC.B.md), [SC.H](../../inst/misa_s/SC.H.md), [SC.W](../../inst/misa_s/SC.W.md), [SC.D](../../inst/misa_s/SC.D.md) |
 | **原子操作·加载字** | [LW.ADD](../../inst/misa_s/LW.ADD.md), [LW.AND](../../inst/misa_s/LW.AND.md), [LW.OR](../../inst/misa_s/LW.OR.md), [LW.XOR](../../inst/misa_s/LW.XOR.md), [LW.SMAX](../../inst/misa_s/LW.SMAX.md), [LW.SMIN](../../inst/misa_s/LW.SMIN.md), [LW.UMAX](../../inst/misa_s/LW.UMAX.md), [LW.UMIN](../../inst/misa_s/LW.UMIN.md) |
 | **原子操作·加载双字** | [LD.ADD](../../inst/misa_s/LD.ADD.md), [LD.AND](../../inst/misa_s/LD.AND.md), [LD.OR](../../inst/misa_s/LD.OR.md), [LD.XOR](../../inst/misa_s/LD.XOR.md), [LD.SMAX](../../inst/misa_s/LD.SMAX.md), [LD.SMIN](../../inst/misa_s/LD.SMIN.md), [LD.UMAX](../../inst/misa_s/LD.UMAX.md), [LD.UMIN](../../inst/misa_s/LD.UMIN.md) |
-| **原子操作·存储字** | [SW.ADD](../../inst/misa_s/SW.ADD.md), [SW.AND](../../inst/misa_s/SW.AND.md), [SW.OR](../../inst/misa_s/SW.OR.md), [SW.XOR](../../inst/misa_s/SW.XOR.md), [SW.SMAX](../../inst/misa_s/SW.SMAX.md), [SW.SMIN](../../inst/misa_s/SW.SMIN.md), [SW.UMAX](../../inst/misa_s/SW.UMAX.md), [SW.UMIN](../../inst/misa_s/SW.UMIN.md) |
-| **原子操作·存储双字** | [SD.ADD](../../inst/misa_s/SD.ADD.md), [SD.AND](../../inst/misa_s/SD.AND.md), [SD.OR](../../inst/misa_s/SD.OR.md), [SD.XOR](../../inst/misa_s/SD.XOR.md), [SD.SMAX](../../inst/misa_s/SD.SMAX.md), [SD.SMIN](../../inst/misa_s/SD.SMIN.md), [SD.UMAX](../../inst/misa_s/SD.UMAX.md), [SD.UMIN](../../inst/misa_s/SD.UMIN.md) |
+| **原子操作·存储字** | [SW.ADD](../../inst/misa_s/SW.ADD.md), [SW.AND](../../inst/misa_s/SW.AND.md), [SW.OR](../../inst/misa_s/SW.OR.md), [SW.XOR](../../inst/misa_s/SW.XOR.md), [SW.SMAX](../../inst/misa_s/SW.SMAX.md), [SW.SMIN](../../inst/misa_s/SW.SMIN.md), [SW.UMAX](../../inst/misa_s/SW.UMAX.md), [SW.UMIN](../../inst/misa_s/SW.UMIN.md), [SW.SUB](../../inst/misa_s/SW.SUB.md) |
+| **原子操作·存储双字** | [SD.ADD](../../inst/misa_s/SD.ADD.md), [SD.AND](../../inst/misa_s/SD.AND.md), [SD.OR](../../inst/misa_s/SD.OR.md), [SD.XOR](../../inst/misa_s/SD.XOR.md), [SD.SMAX](../../inst/misa_s/SD.SMAX.md), [SD.SMIN](../../inst/misa_s/SD.SMIN.md), [SD.UMAX](../../inst/misa_s/SD.UMAX.md), [SD.UMIN](../../inst/misa_s/SD.UMIN.md), [SD.SUB](../../inst/misa_s/SD.SUB.md) |
+| **原子操作·存储字节** | [SB.ADD](../../inst/misa_s/SB.ADD.md), [SB.SUB](../../inst/misa_s/SB.SUB.md) |
+| **原子操作·存储半字** | [SH.ADD](../../inst/misa_s/SH.ADD.md), [SH.SUB](../../inst/misa_s/SH.SUB.md) |
 | **原子交换** | [SWAPB](../../inst/misa_s/SWAPB.md), [SWAPH](../../inst/misa_s/SWAPH.md), [SWAPW](../../inst/misa_s/SWAPW.md), [SWAPD](../../inst/misa_s/SWAPD.md) |
+| **原子比较交换** | [CASB](../../inst/misa_s/CASB.md), [CASH](../../inst/misa_s/CASH.md), [CASW](../../inst/misa_s/CASW.md), [CASD](../../inst/misa_s/CASD.md) |
 
 系统块内独有的48bit指令如下：
 

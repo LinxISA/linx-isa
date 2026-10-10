@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.and<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.and<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.and<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.and<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

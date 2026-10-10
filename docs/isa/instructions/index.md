@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **773** instruction forms in the LinxISA v0.58.6 catalog.
+Complete alphabetical index of all **783** instruction forms in the LinxISA v0.58.6 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -202,6 +202,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [DIVUW](divuw.md) | [ALU](../groups/alu.md) | 32 | 32-bit word unsigned integer division. |
 | [DIVW](divw.md) | [ALU](../groups/alu.md) | 32 | 32-bit word signed integer division. |
 | [DMA](dma.md) | [AMO](../groups/amo.md) | 32 | DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue. |
+| [DMA.FREE.L](dma_free_l.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the address in SrcL under the long-release semantics. Uses reserved DMA sub-class selector 31..25=0000011. |
+| [DMA.FREE.S](dma_free_s.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit DMA free-short variant: releases the DMA resources designated by the address in SrcL under the short-release semantics. Uses reserved DMA sub-class selector 31..25=0000010. |
 
 ### E
 
@@ -541,6 +543,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [MAX](max.md) | [ALU](../groups/alu.md) | 32 | Integer max (signed). |
 | [MAXU](maxu.md) | [ALU](../groups/alu.md) | 32 | MAXU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the maximum operand. |
 | [MCOPY](mcopy.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Copies a non-overlapping byte range in restartable forward memory steps. |
+| [MCOPY.DL](mcopy_dl.md) | [Bundle Split](../groups/bundle_split.md) | 32 | v0.58 32-bit block memory-copy variant with the DL memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=11 and the RegDst field. |
+| [MCOPY.DS](mcopy_ds.md) | [Bundle Split](../groups/bundle_split.md) | 32 | v0.58 32-bit block memory-copy variant with the DS memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=01 and the RegDst field. |
 | [MIN](min.md) | [ALU](../groups/alu.md) | 32 | Integer min (signed). |
 | [MINU](minu.md) | [ALU](../groups/alu.md) | 32 | MINU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the minimum operand. |
 | [MSET](mset.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight. |
@@ -580,7 +584,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
 | [SB](sb.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SB snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SB.ADD](sb_add.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag. |
 | [SB.PCR](sb_pcr.md) | [STA](../groups/sta.md) | 32 | SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SB.SUB](sb_sub.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit atomic store-op subtract byte: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag. |
 | [SBI](sbi.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
 | [SC.B](sc_b.md) | [AMO](../groups/amo.md) | 32 | SC.B conditionally stores one byte when the local 64-byte-line reservation matches. |
 | [SC.D](sc_d.md) | [AMO](../groups/amo.md) | 32 | SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches. |
@@ -594,6 +600,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SD.PCR](sd_pcr.md) | [STA](../groups/sta.md) | 32 | SD.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
 | [SD.SMAX](sd_smax.md) | [AMO](../groups/amo.md) | 32 | SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
 | [SD.SMIN](sd_smin.md) | [AMO](../groups/amo.md) | 32 | SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
+| [SD.SUB](sd_sub.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag. |
 | [SD.U](sd_u.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SD.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
 | [SD.UMAX](sd_umax.md) | [AMO](../groups/amo.md) | 32 | SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
 | [SD.UMIN](sd_umin.md) | [AMO](../groups/amo.md) | 32 | SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
@@ -619,7 +626,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SETC.TGT](setc_tgt.md) | [SYS](../groups/sys.md) | 32 | Sets the block-commit condition. |
 | [SETRET](setret.md) | [BRU](../groups/bru.md) | 32 | Materializes a return address (ra) using a PC-relative offset. Used in call headers. |
 | [SH](sh.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SH.ADD](sh_add.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit atomic store-op add halfword: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag. |
 | [SH.PCR](sh_pcr.md) | [STA](../groups/sta.md) | 32 | SH.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SH.SUB](sh_sub.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit atomic store-op subtract halfword: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag. |
 | [SH.U](sh_u.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SH.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
 | [SHI](shi.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SHI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
 | [SHI.U](shi_u.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
@@ -649,6 +658,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SW.PCR](sw_pcr.md) | [STA](../groups/sta.md) | 32 | SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
 | [SW.SMAX](sw_smax.md) | [AMO](../groups/amo.md) | 32 | SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
 | [SW.SMIN](sw_smin.md) | [AMO](../groups/amo.md) | 32 | SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
+| [SW.SUB](sw_sub.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit atomic store-op subtract word: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag. |
 | [SW.U](sw_u.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SW.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
 | [SW.UMAX](sw_umax.md) | [AMO](../groups/amo.md) | 32 | SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
 | [SW.UMIN](sw_umin.md) | [AMO](../groups/amo.md) | 32 | SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |

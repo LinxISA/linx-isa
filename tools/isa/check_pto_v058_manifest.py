@@ -455,14 +455,43 @@ def validate(root: Path) -> list[str]:
         if item.get("pto_source_constraints") != form.get("constraints", []):
             errors.append(f"compiled PTO command variant constraints differ from source: {key}")
 
+    # v0.58 Linx additive scalar extension: store-op SUB forms (SW.SUB/SD.SUB),
+    # SB/SH size-override forms, DMA free variants, and MCOPY access-mode
+    # variants. These are Linx-only pending PTO adoption (frozen set) and are
+    # exempt from the PTO extension-reservation coverage check below.
+    linx_scalar_extension = {
+        "SB.ADD",
+        "SB.SUB",
+        "SD.SUB",
+        "SH.ADD",
+        "SH.SUB",
+        "SW.SUB",
+        "DMA.FREE.S",
+        "DMA.FREE.L",
+        "MCOPY.DS",
+        "MCOPY.DL",
+    }
     linx_only = [
         item
         for item in docs["spec"].get("instructions", [])
         if not item.get("pto_source_form_id") and not item.get("pto_source_form_variant")
     ]
     vector_form_count = sum(str(item.get("mnemonic")).startswith("V.") for item in linx_only)
-    if len(linx_only) != 212 or vector_form_count != 184:
-        errors.append("Linx-only delta must contain exactly 184 V.* forms and 28 reserved command forms")
+    if len(linx_only) != 222 or vector_form_count != 184:
+        errors.append(
+            "Linx-only delta must contain exactly 184 V.* forms, 28 reserved "
+            "command forms, and the 10 frozen scalar extension forms"
+        )
+    extension_present = sorted(
+        str(item.get("mnemonic"))
+        for item in linx_only
+        if str(item.get("mnemonic")) in linx_scalar_extension
+    )
+    if extension_present != sorted(linx_scalar_extension):
+        errors.append(
+            "frozen Linx scalar extension set must be present exactly once: "
+            f"missing={sorted(set(linx_scalar_extension) - set(extension_present))}"
+        )
 
     required_command_mnemonics = {
         "BSTART.MGATHER.MASK",
@@ -503,7 +532,8 @@ def validate(root: Path) -> list[str]:
     uncovered = sorted(
         str(item.get("asm") or item.get("mnemonic"))
         for item in linx_only
-        if not any(reservation_covers(reservation, item) for reservation in reservations)
+        if str(item.get("mnemonic")) not in linx_scalar_extension
+        and not any(reservation_covers(reservation, item) for reservation in reservations)
     )
     if uncovered:
         errors.append(f"Linx-only forms escape PTO extension reservations: {uncovered}")

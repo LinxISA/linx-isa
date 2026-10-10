@@ -5,7 +5,7 @@
 [[inst_sw_add]]
 ==== SW.ADD
 
-*Syntax:* sw.add<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.add<.{rl}> [SrcL], SrcR
 
 *Description:* SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum with SrcR; it does not publish the old value.
 

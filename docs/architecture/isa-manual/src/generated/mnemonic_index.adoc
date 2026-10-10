@@ -168,6 +168,8 @@ This table lists unique mnemonics in the v0.58.6 catalog. Each mnemonic may have
 |`DIVUW` |ALU |32 |1
 |`DIVW` |ALU |32 |1
 |`DMA` |AMO |32 |1
+|`DMA.FREE.L` |AMO |32 |1
+|`DMA.FREE.S` |AMO |32 |1
 |`EBREAK` |SYS |32 |1
 |`ERCOV` |Bundle Split |32 |1
 |`ESAVE` |Bundle Split |32 |1
@@ -460,6 +462,8 @@ This table lists unique mnemonics in the v0.58.6 catalog. Each mnemonic may have
 |`MAX` |ALU |32 |1
 |`MAXU` |ALU |32 |1
 |`MCOPY` |Bundle Split |32 |1
+|`MCOPY.DL` |Bundle Split |32 |1
+|`MCOPY.DS` |Bundle Split |32 |1
 |`MIN` |ALU |32 |1
 |`MINU` |ALU |32 |1
 |`MSET` |Bundle Split |32 |1
@@ -479,7 +483,9 @@ This table lists unique mnemonics in the v0.58.6 catalog. Each mnemonic may have
 |`REMW` |ALU |32 |1
 |`REV` |ALU |32 |1
 |`SB` |STA/BASE_REG |32 |1
+|`SB.ADD` |AMO |32 |1
 |`SB.PCR` |STA |32 |1
+|`SB.SUB` |AMO |32 |1
 |`SBI` |STA/BASE_IMM |32 |1
 |`SC.B` |AMO |32 |1
 |`SC.D` |AMO |32 |1
@@ -493,6 +499,7 @@ This table lists unique mnemonics in the v0.58.6 catalog. Each mnemonic may have
 |`SD.PCR` |STA |32 |1
 |`SD.SMAX` |AMO |32 |1
 |`SD.SMIN` |AMO |32 |1
+|`SD.SUB` |AMO |32 |1
 |`SD.U` |STA/BASE_REG |32 |1
 |`SD.UMAX` |AMO |32 |1
 |`SD.UMIN` |AMO |32 |1
@@ -518,7 +525,9 @@ This table lists unique mnemonics in the v0.58.6 catalog. Each mnemonic may have
 |`SETC.TGT` |SYS |32 |1
 |`SETRET` |BRU |32 |1
 |`SH` |STA/BASE_REG |32 |1
+|`SH.ADD` |AMO |32 |1
 |`SH.PCR` |STA |32 |1
+|`SH.SUB` |AMO |32 |1
 |`SH.U` |STA/BASE_REG |32 |1
 |`SHI` |STA/BASE_IMM |32 |1
 |`SHI.U` |STA/BASE_IMM |32 |1
@@ -548,6 +557,7 @@ This table lists unique mnemonics in the v0.58.6 catalog. Each mnemonic may have
 |`SW.PCR` |STA |32 |1
 |`SW.SMAX` |AMO |32 |1
 |`SW.SMIN` |AMO |32 |1
+|`SW.SUB` |AMO |32 |1
 |`SW.U` |STA/BASE_REG |32 |1
 |`SW.UMAX` |AMO |32 |1
 |`SW.UMIN` |AMO |32 |1

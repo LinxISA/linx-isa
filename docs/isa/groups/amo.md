@@ -5,8 +5,8 @@
 <span class="ch-tag ch-tag-14">Ch 14</span>
 &nbsp; <strong>AMO — Atomic Memory Operations</strong> &nbsp;|&nbsp;
 **Group:** AMO &nbsp;|&nbsp;
-**Forms:** 53 &nbsp;|&nbsp;
-**Unique mnemonics:** 53
+**Forms:** 61 &nbsp;|&nbsp;
+**Unique mnemonics:** 61
 
 </div>
 
@@ -21,6 +21,8 @@ Instructions in the **AMO** group of the LinxISA v0.58.6 catalog.
 | [CASH](../instructions/cash.md) | `cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | CASH atomically compares and conditionally replaces one halfword, then publishes the prior value. |
 | [CASW](../instructions/casw.md) | `casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | CASW atomically compares and conditionally replaces one word, then publishes the prior value. |
 | [DMA](../instructions/dma.md) | `dma [SrcL], SrcR` | 32 | — | DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue. |
+| [DMA.FREE.L](../instructions/dma_free_l.md) | `dma.free.l [SrcL]` | 32 | — | v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the address in SrcL under the long-release semantics. Uses reserved DMA sub-class selector 31..25=0000011. |
+| [DMA.FREE.S](../instructions/dma_free_s.md) | `dma.free.s [SrcL]` | 32 | — | v0.58 32-bit DMA free-short variant: releases the DMA resources designated by the address in SrcL under the short-release semantics. Uses reserved DMA sub-class selector 31..25=0000010. |
 | [HL.CASB](../instructions/hl_casb.md) | `hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 48 | — | HL.CASB atomically compares and conditionally replaces one byte, then publishes the prior value. |
 | [HL.CASD](../instructions/hl_casd.md) | `hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 48 | — | HL.CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value. |
 | [HL.CASH](../instructions/hl_cash.md) | `hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 48 | — | HL.CASH atomically compares and conditionally replaces one halfword, then publishes the prior value. |
@@ -45,26 +47,32 @@ Instructions in the **AMO** group of the LinxISA v0.58.6 catalog.
 | [LW.UMAX](../instructions/lw_umax.md) | `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value. |
 | [LW.UMIN](../instructions/lw_umin.md) | `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value. |
 | [LW.XOR](../instructions/lw_xor.md) | `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | LW.XOR atomically stores the width-sized bitwise XOR and publishes the prior memory value. |
+| [SB.ADD](../instructions/sb_add.md) | `sb.add<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag. |
+| [SB.SUB](../instructions/sb_sub.md) | `sb.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract byte: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag. |
 | [SC.B](../instructions/sc_b.md) | `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.B conditionally stores one byte when the local 64-byte-line reservation matches. |
 | [SC.D](../instructions/sc_d.md) | `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches. |
 | [SC.H](../instructions/sc_h.md) | `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.H conditionally stores one halfword when the local 64-byte-line reservation matches. |
 | [SC.W](../instructions/sc_w.md) | `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.W conditionally stores one word when the local 64-byte-line reservation matches. |
-| [SD.ADD](../instructions/sd_add.md) | `sd.add<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.ADD atomically replaces the aligned 64-bit memory value with its modular sum with SrcR; it does not publish the old value. |
-| [SD.AND](../instructions/sd_and.md) | `sd.and<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND with SrcR; it does not publish the old value. |
-| [SD.OR](../instructions/sd_or.md) | `sd.or<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.OR atomically replaces the aligned 64-bit memory value with its bitwise OR with SrcR; it does not publish the old value. |
-| [SD.SMAX](../instructions/sd_smax.md) | `sd.smax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
-| [SD.SMIN](../instructions/sd_smin.md) | `sd.smin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
-| [SD.UMAX](../instructions/sd_umax.md) | `sd.umax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
-| [SD.UMIN](../instructions/sd_umin.md) | `sd.umin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
-| [SD.XOR](../instructions/sd_xor.md) | `sd.xor<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR with SrcR; it does not publish the old value. |
-| [SW.ADD](../instructions/sw_add.md) | `sw.add<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum with SrcR; it does not publish the old value. |
-| [SW.AND](../instructions/sw_and.md) | `sw.and<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value. |
-| [SW.OR](../instructions/sw_or.md) | `sw.or<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR with SrcR; it does not publish the old value. |
-| [SW.SMAX](../instructions/sw_smax.md) | `sw.smax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
-| [SW.SMIN](../instructions/sw_smin.md) | `sw.smin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
-| [SW.UMAX](../instructions/sw_umax.md) | `sw.umax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
-| [SW.UMIN](../instructions/sw_umin.md) | `sw.umin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
-| [SW.XOR](../instructions/sw_xor.md) | `sw.xor<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — | SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value. |
+| [SD.ADD](../instructions/sd_add.md) | `sd.add<.{rl}> [SrcL], SrcR` | 32 | — | SD.ADD atomically replaces the aligned 64-bit memory value with its modular sum with SrcR; it does not publish the old value. |
+| [SD.AND](../instructions/sd_and.md) | `sd.and<.{rl}> [SrcL], SrcR` | 32 | — | SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND with SrcR; it does not publish the old value. |
+| [SD.OR](../instructions/sd_or.md) | `sd.or<.{rl}> [SrcL], SrcR` | 32 | — | SD.OR atomically replaces the aligned 64-bit memory value with its bitwise OR with SrcR; it does not publish the old value. |
+| [SD.SMAX](../instructions/sd_smax.md) | `sd.smax<.{rl}> [SrcL], SrcR` | 32 | — | SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
+| [SD.SMIN](../instructions/sd_smin.md) | `sd.smin<.{rl}> [SrcL], SrcR` | 32 | — | SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
+| [SD.SUB](../instructions/sd_sub.md) | `sd.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag. |
+| [SD.UMAX](../instructions/sd_umax.md) | `sd.umax<.{rl}> [SrcL], SrcR` | 32 | — | SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
+| [SD.UMIN](../instructions/sd_umin.md) | `sd.umin<.{rl}> [SrcL], SrcR` | 32 | — | SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
+| [SD.XOR](../instructions/sd_xor.md) | `sd.xor<.{rl}> [SrcL], SrcR` | 32 | — | SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR with SrcR; it does not publish the old value. |
+| [SH.ADD](../instructions/sh_add.md) | `sh.add<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op add halfword: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag. |
+| [SH.SUB](../instructions/sh_sub.md) | `sh.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract halfword: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag. |
+| [SW.ADD](../instructions/sw_add.md) | `sw.add<.{rl}> [SrcL], SrcR` | 32 | — | SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum with SrcR; it does not publish the old value. |
+| [SW.AND](../instructions/sw_and.md) | `sw.and<.{rl}> [SrcL], SrcR` | 32 | — | SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value. |
+| [SW.OR](../instructions/sw_or.md) | `sw.or<.{rl}> [SrcL], SrcR` | 32 | — | SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR with SrcR; it does not publish the old value. |
+| [SW.SMAX](../instructions/sw_smax.md) | `sw.smax<.{rl}> [SrcL], SrcR` | 32 | — | SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
+| [SW.SMIN](../instructions/sw_smin.md) | `sw.smin<.{rl}> [SrcL], SrcR` | 32 | — | SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
+| [SW.SUB](../instructions/sw_sub.md) | `sw.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract word: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag. |
+| [SW.UMAX](../instructions/sw_umax.md) | `sw.umax<.{rl}> [SrcL], SrcR` | 32 | — | SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
+| [SW.UMIN](../instructions/sw_umin.md) | `sw.umin<.{rl}> [SrcL], SrcR` | 32 | — | SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
+| [SW.XOR](../instructions/sw_xor.md) | `sw.xor<.{rl}> [SrcL], SrcR` | 32 | — | SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value. |
 | [SWAPB](../instructions/swapb.md) | `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | SWAPB atomically replaces one byte and publishes the prior value. |
 | [SWAPD](../instructions/swapd.md) | `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | SWAPD atomically replaces one doubleword and publishes the prior value. |
 | [SWAPH](../instructions/swaph.md) | `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | SWAPH atomically replaces one halfword and publishes the prior value. |
