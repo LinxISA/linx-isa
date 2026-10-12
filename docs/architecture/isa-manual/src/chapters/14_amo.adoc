@@ -63,6 +63,9 @@ include::../generated/instructions/sw_smax.adoc[]
 include::../generated/instructions/sw_smin.adoc[]
 include::../generated/instructions/sw_umax.adoc[]
 include::../generated/instructions/sw_umin.adoc[]
+include::../generated/instructions/sw_sub.adoc[]
+include::../generated/instructions/sb_add.adoc[]
+include::../generated/instructions/sb_sub.adoc[]
 
 include::../generated/instructions/sd_add.adoc[]
 include::../generated/instructions/sd_and.adoc[]
@@ -72,6 +75,9 @@ include::../generated/instructions/sd_smax.adoc[]
 include::../generated/instructions/sd_smin.adoc[]
 include::../generated/instructions/sd_umax.adoc[]
 include::../generated/instructions/sd_umin.adoc[]
+include::../generated/instructions/sd_sub.adoc[]
+include::../generated/instructions/sh_add.adoc[]
+include::../generated/instructions/sh_sub.adoc[]
 
 === Atomic Swap
 
@@ -94,3 +100,5 @@ include::../generated/instructions/hl_casd.adoc[]
 === DMA
 
 include::../generated/instructions/dma.adoc[]
+include::../generated/instructions/dma_free_s.adoc[]
+include::../generated/instructions/dma_free_l.adoc[]
