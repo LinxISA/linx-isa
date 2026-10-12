@@ -2,8 +2,8 @@
 
 ## 说明
 
-直接内存存取·释放·长(*Direct Memory Access, Free, Long*)<br>
-释放由源寄存器 `SrcL` 指示的地址所关联的 长周期 DMA 传输资源（描述符与缓冲）。该指令在提交前完成释放动作。
+直接内存存取·释放·Load 模式(*Direct Memory Access, Free, Load mode*)<br>
+释放由源寄存器 `SrcL` 指示的地址所关联的 L2SPM 片上空间（DMA 副本）。Load 模式下，需等待释放完成（或引用计数减完）才回响应。
 
 ## 汇编语法
 
@@ -33,8 +33,8 @@
 
     bits(64) address = R[l, 64];
 
-    /* 释放与 address 关联的 长周期 DMA 传输资源 */
-    DMAFree(address, Long);
+    /* 释放与 address 关联的 L2SPM 片上空间（Load 模式，等释放完成再回响应） */
+    DMAFree(address, MODE_LOAD);
 ```
 
 ## 备注

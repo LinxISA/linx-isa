@@ -7,7 +7,7 @@
 
 *Syntax:* dma.free.s [SrcL]
 
-*Description:* v0.58 32-bit DMA free-short variant: releases the DMA resources designated by the address in SrcL under the short-release semantics. Uses reserved DMA sub-class selector 31..25=0000010.
+*Description:* v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010.
 
 *Encoding:*
 

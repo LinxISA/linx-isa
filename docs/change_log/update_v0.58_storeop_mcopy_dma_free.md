@@ -73,11 +73,11 @@ SWAP use mask 0x7800707f-family values with far at b31 (for example LW.SMAX
 
 Notes:
 
-- `MCOPY.DS`/`MCOPY.DL` share the `RegSrc0/1/2` layout with `MCOPY` and add
-  a `RegDst` completion-status return; `26..25` distinguishes `00`=MCOPY,
-  `01`=DS, `11`=DL.
-- `DMA.FREE.S`/`DMA.FREE.L` release the short-/long-lived DMA resources
-  designated by the address in `SrcL`.
+- `MCOPY.DS`/`MCOPY.DL` share the `RegSrc0/1/2` layout with `MCOPY` and add a
+  `RegDst` return that carries the L2SPM replica address; `26..25` distinguishes
+  `00`=MCOPY, `01`=DS (Store mode), `11`=DL (Load mode).
+- `DMA.FREE.S`/`DMA.FREE.L` release the L2SPM resources designated by the
+  address in `SrcL`, in Store / Load mode respectively.
 - CAS keeps its own layout (`31..27=SrcD`, no far flag) and is unchanged.
 
 ## Governance amendments

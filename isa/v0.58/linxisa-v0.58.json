@@ -23374,7 +23374,7 @@
       "id": "dma_free_l_32_5af48f644596",
       "length_bits": 32,
       "mnemonic": "DMA.FREE.L",
-      "note": "v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the address in SrcL under the long-release semantics. Uses reserved DMA sub-class selector 31..25=0000011.",
+      "note": "v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.",
       "parts": [
         {
           "segments": [
@@ -23505,7 +23505,7 @@
       "id": "dma_free_s_32_5de9a6bba806",
       "length_bits": 32,
       "mnemonic": "DMA.FREE.S",
-      "note": "v0.58 32-bit DMA free-short variant: releases the DMA resources designated by the address in SrcL under the short-release semantics. Uses reserved DMA sub-class selector 31..25=0000010.",
+      "note": "v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010.",
       "parts": [
         {
           "segments": [
@@ -73687,7 +73687,7 @@
       "id": "mcopy_dl_32_d6af61213c20",
       "length_bits": 32,
       "mnemonic": "MCOPY.DL",
-      "note": "v0.58 32-bit block memory-copy variant with the DL memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=11 and the RegDst field.",
+      "note": "v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.",
       "parts": [
         {
           "segments": [
@@ -73853,7 +73853,7 @@
       "id": "mcopy_ds_32_e7a90ccbe4db",
       "length_bits": 32,
       "mnemonic": "MCOPY.DS",
-      "note": "v0.58 32-bit block memory-copy variant with the DS memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=01 and the RegDst field.",
+      "note": "v0.58 32-bit block memory-copy variant in Store mode (D + S/L=Store): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response may return before the copy completes. Distinguished from MCOPY by 26..25=01 and the RegDst field.",
       "parts": [
         {
           "segments": [

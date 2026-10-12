@@ -1203,7 +1203,6 @@ nav:
     - 模版指令集:
         - 介绍: isa/header/templateblock/intro.md
         - MCOPY: isa/header/templateblock/MCOPY.md
-        - MCOPY.D: isa/header/templateblock/MCOPY.D.md
         - MCOPY.DS: isa/header/templateblock/MCOPY.DS.md
         - MCOPY.DL: isa/header/templateblock/MCOPY.DL.md
         - MSET: isa/header/templateblock/MSET.md

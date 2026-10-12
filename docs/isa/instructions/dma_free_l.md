@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the address in SrcL under the long-release semantics. Uses reserved DMA sub-class selector 31..25=0000011.
+v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the
 
 ## Encoding Notes
 
-- `v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the address in SrcL under the long-release semantics. Uses reserved DMA sub-class selector 31..25=0000011.`
+- `v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.`
 
 ## Full Catalog Forms
 

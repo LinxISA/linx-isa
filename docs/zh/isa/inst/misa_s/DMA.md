@@ -38,4 +38,4 @@
 
 ## 备注
 
-本指令用于[MCOPY.D](../../header/templateblock/MCOPY.D.md)模版块进行64字节数据拷贝。
+本指令由 [MCOPY.DS](../../header/templateblock/MCOPY.DS.md) / [MCOPY.DL](../../header/templateblock/MCOPY.DL.md) 模版块用于生成 64 字节粒度的数据拷贝。

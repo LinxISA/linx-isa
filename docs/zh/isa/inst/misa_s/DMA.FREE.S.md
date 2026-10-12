@@ -2,8 +2,8 @@
 
 ## 说明
 
-直接内存存取·释放·短(*Direct Memory Access, Free, Short*)<br>
-释放由源寄存器 `SrcL` 指示的地址所关联的 短周期 DMA 传输资源（描述符与缓冲）。该指令在提交前完成释放动作。
+直接内存存取·释放·Store 模式(*Direct Memory Access, Free, Store mode*)<br>
+释放由源寄存器 `SrcL` 指示的地址所关联的 L2SPM 片上空间（DMA 副本）。Store 模式下，释放动作确定后即可回响应，不等待释放完成。
 
 ## 汇编语法
 
@@ -33,8 +33,8 @@
 
     bits(64) address = R[l, 64];
 
-    /* 释放与 address 关联的 短周期 DMA 传输资源 */
-    DMAFree(address, Short);
+    /* 释放与 address 关联的 L2SPM 片上空间（Store 模式，可提前回响应） */
+    DMAFree(address, MODE_STORE);
 ```
 
 ## 备注

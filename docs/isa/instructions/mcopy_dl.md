@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit block memory-copy variant with the DL memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=11 and the RegDst field.
+v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit block memory-copy variant with the DL memory-access mode: copies Re
 
 ## Encoding Notes
 
-- `v0.58 32-bit block memory-copy variant with the DL memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=11 and the RegDst field.`
+- `v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.`
 
 ## Full Catalog Forms
 

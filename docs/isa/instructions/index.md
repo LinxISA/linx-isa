@@ -202,8 +202,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [DIVUW](divuw.md) | [ALU](../groups/alu.md) | 32 | 32-bit word unsigned integer division. |
 | [DIVW](divw.md) | [ALU](../groups/alu.md) | 32 | 32-bit word signed integer division. |
 | [DMA](dma.md) | [AMO](../groups/amo.md) | 32 | DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue. |
-| [DMA.FREE.L](dma_free_l.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit DMA free-long variant: releases the DMA resources designated by the address in SrcL under the long-release semantics. Uses reserved DMA sub-class selector 31..25=0000011. |
-| [DMA.FREE.S](dma_free_s.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit DMA free-short variant: releases the DMA resources designated by the address in SrcL under the short-release semantics. Uses reserved DMA sub-class selector 31..25=0000010. |
+| [DMA.FREE.L](dma_free_l.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011. |
+| [DMA.FREE.S](dma_free_s.md) | [AMO](../groups/amo.md) | 32 | v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010. |
 
 ### E
 
@@ -543,8 +543,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [MAX](max.md) | [ALU](../groups/alu.md) | 32 | Integer max (signed). |
 | [MAXU](maxu.md) | [ALU](../groups/alu.md) | 32 | MAXU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the maximum operand. |
 | [MCOPY](mcopy.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Copies a non-overlapping byte range in restartable forward memory steps. |
-| [MCOPY.DL](mcopy_dl.md) | [Bundle Split](../groups/bundle_split.md) | 32 | v0.58 32-bit block memory-copy variant with the DL memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=11 and the RegDst field. |
-| [MCOPY.DS](mcopy_ds.md) | [Bundle Split](../groups/bundle_split.md) | 32 | v0.58 32-bit block memory-copy variant with the DS memory-access mode: copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the completion status to RegDst. Distinguished from MCOPY by 26..25=01 and the RegDst field. |
+| [MCOPY.DL](mcopy_dl.md) | [Bundle Split](../groups/bundle_split.md) | 32 | v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field. |
+| [MCOPY.DS](mcopy_ds.md) | [Bundle Split](../groups/bundle_split.md) | 32 | v0.58 32-bit block memory-copy variant in Store mode (D + S/L=Store): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response may return before the copy completes. Distinguished from MCOPY by 26..25=01 and the RegDst field. |
 | [MIN](min.md) | [ALU](../groups/alu.md) | 32 | Integer min (signed). |
 | [MINU](minu.md) | [ALU](../groups/alu.md) | 32 | MINU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the minimum operand. |
 | [MSET](mset.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight. |
