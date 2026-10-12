@@ -1,6 +1,6 @@
 version: linx-avs-v0.58
 status: canonical
-last_updated: "2026-08-23"
+last_updated: "2026-10-12"
 
 profiles:
   LNX-S32: "Scalar 32-bit, freestanding, little-endian, no MMU"
@@ -304,6 +304,42 @@ tests:
       - docs/architecture/isa-manual/src/chapters/14_amo.adoc
     requirement: "FENCE.D orders MMIO and Normal memory when O is selected."
     pass_fail: "Directed tests with the MMIO model observe ordering consistent with the fence definition."
+
+  - id: AVS-ATOM-012
+    state: active
+    area: ATOM
+    domain: Emulator
+    profiles: [LNX-ATOM]
+    must_pass_in_tier: [nightly]
+    spec_refs:
+      - isa/v0.58/opcodes/lx_32.opc
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "The 44 atomic forms decode at their v0.58 op5 encodings (b31 flag, b30..27 op/size code); the retired far/.f encodings no longer decode."
+    pass_fail: "Re-encoded forms execute with the documented effect; legacy words trap with ILLEGAL_INST."
+
+  - id: AVS-ATOM-013
+    state: active
+    area: ATOM
+    domain: Emulator
+    profiles: [LNX-ATOM]
+    must_pass_in_tier: [nightly]
+    spec_refs:
+      - isa/v0.58/opcodes/lx_32.opc
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "Store-op subtract (SW.SUB/SD.SUB) and byte/halfword size-override forms (SB/SH.ADD/SUB) compute the modular result at the SrcL address without publishing the old value."
+    pass_fail: "Directed tests observe the modular memory result for each size and operation."
+
+  - id: AVS-ATOM-014
+    state: active
+    area: ATOM
+    domain: Emulator
+    profiles: [LNX-ATOM]
+    must_pass_in_tier: [nightly]
+    spec_refs:
+      - isa/v0.58/opcodes/lx_32.opc
+      - docs/architecture/isa-manual/src/chapters/14_amo.adoc
+    requirement: "MCOPY.DS/DL copy a byte range and return the L2SPM replica address to RegDst; DMA.FREE.S/L release the address in SrcL; the S/L bit selects Store/Load completion."
+    pass_fail: "Directed tests observe the copy, the RegDst return value, and a non-faulting release."
 
   - id: AVS-SYS-001
     state: active

@@ -360,6 +360,38 @@ Unless stated otherwise, tests apply to both `LNX-S32` and `LNX-S64`.
   - A directed test uses a fake MMIO device (or a QEMU model) that records
     ordering, and the observed order matches the fence definition.
 
+### AVS-ATOM-012: v0.58 op5 atomic re-encoding decodes; legacy encodings trap
+
+- Profile: `LNX-ATOM`
+- Requirement:
+  - The 44 atomic forms decode at their v0.58 op5 encodings (b31 flag,
+    b30..27 op/size code); the retired far/`.f` encodings no longer decode.
+- Pass criteria:
+  - Re-encoded forms execute with the documented effect; legacy words raise
+    `ILLEGAL_INST`.
+
+### AVS-ATOM-013: Store-op subtract and byte/halfword size-override forms
+
+- Profile: `LNX-ATOM`
+- Requirement:
+  - `SW.SUB`/`SD.SUB` and the byte/halfword size-override forms
+    `SB.ADD`/`SB.SUB`/`SH.ADD`/`SH.SUB` compute the modular result at the
+    `SrcL` address without publishing the old value.
+- Pass criteria:
+  - Directed tests observe the modular memory result for each size and
+    operation.
+
+### AVS-ATOM-014: `MCOPY.DS`/`MCOPY.DL` and `DMA.FREE.S`/`DMA.FREE.L`
+
+- Profile: `LNX-ATOM`
+- Requirement:
+  - `MCOPY.DS`/`MCOPY.DL` copy a byte range and return the L2SPM replica
+    address to `RegDst`; `DMA.FREE.S`/`DMA.FREE.L` release the address in
+    `SrcL`; the S/L bit selects Store/Load completion.
+- Pass criteria:
+  - Directed tests observe the copy, the `RegDst` return value, and a
+    non-faulting release.
+
 ## Toolchain Round-Trip (`TOOL`)
 
 ### AVS-TOOL-010: `llvm-mc` asm/disasm round-trip for canonical syntax
