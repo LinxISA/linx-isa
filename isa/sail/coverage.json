@@ -2,9 +2,9 @@
   "decode_only_forms": 22,
   "grade_counts": {
     "decode-only": 22,
-    "executable-subset": 751
+    "executable-subset": 761
   },
-  "modeled_forms": 751,
+  "modeled_forms": 761,
   "modeled_mnemonics": [
     "ACRC",
     "ACRE",
@@ -144,6 +144,8 @@
     "DIVU",
     "DIVUW",
     "DIVW",
+    "DMA.FREE.L",
+    "DMA.FREE.S",
     "EBREAK",
     "ERCOV",
     "ESAVE",
@@ -436,6 +438,8 @@
     "MAX",
     "MAXU",
     "MCOPY",
+    "MCOPY.DL",
+    "MCOPY.DS",
     "MIN",
     "MINU",
     "MSET",
@@ -455,7 +459,9 @@
     "REMW",
     "REV",
     "SB",
+    "SB.ADD",
     "SB.PCR",
+    "SB.SUB",
     "SBI",
     "SC.B",
     "SC.D",
@@ -469,6 +475,7 @@
     "SD.PCR",
     "SD.SMAX",
     "SD.SMIN",
+    "SD.SUB",
     "SD.U",
     "SD.UMAX",
     "SD.UMIN",
@@ -494,7 +501,9 @@
     "SETC.TGT",
     "SETRET",
     "SH",
+    "SH.ADD",
     "SH.PCR",
+    "SH.SUB",
     "SH.U",
     "SHI",
     "SHI.U",
@@ -524,6 +533,7 @@
     "SW.PCR",
     "SW.SMAX",
     "SW.SMIN",
+    "SW.SUB",
     "SW.U",
     "SW.UMAX",
     "SW.UMIN",
@@ -731,5 +741,5 @@
   ],
   "semantic_status": "isa/sail/semantics_status.json",
   "spec": "isa/v0.58/linxisa-v0.58.json",
-  "total_forms": 773
+  "total_forms": 783
 }

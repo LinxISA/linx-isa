@@ -2560,6 +2560,20 @@ function exec_mcopy(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> 
   }
 }
 
+// v0.58 MCOPY.DS/DL copy a byte range like MCOPY and return the L2SPM replica
+// address to RegDst.  Without an L2SPM allocator the returned address is the
+// destination address (identity model); the Store/Load mode is not modelled.
+
+function exec_mcopy_ds(RegDst : bits(5), RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
+  exec_mcopy(RegSrc0, RegSrc1, RegSrc2);
+  write_regdst(RegDst, read_reg5(RegSrc0))
+}
+
+function exec_mcopy_dl(RegDst : bits(5), RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
+  exec_mcopy(RegSrc0, RegSrc1, RegSrc2);
+  write_regdst(RegDst, read_reg5(RegSrc0))
+}
+
 function exec_mset(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
   let dst0 : bits(64) = read_reg5(RegSrc0);
   let val8 : bits(8)  = read_reg5(RegSrc1)[7..0];
@@ -7091,6 +7105,19 @@ function exec_dma(SrcL : bits(5), SrcR : bits(5)) -> unit = {
   trap_illegal_inst(read_pc_or_tpc())
 }
 
+// v0.58 DMA.FREE.S/L release the L2SPM space designated by SrcL under the
+// Store/Load completion mode.  The Sail model has no L2SPM allocator, so the
+// release has no architectural effect.
+function exec_dma_free_s(SrcL : bits(5)) -> unit = {
+  let _ = SrcL;
+  ()
+}
+
+function exec_dma_free_l(SrcL : bits(5)) -> unit = {
+  let _ = SrcL;
+  ()
+}
+
 
 // -----------------------------------------------------------------------------
 // Atomic RMW ops (LW/LD/SW/SD .ADD/.AND/.OR/.XOR/.SMIN/.SMAX/.UMIN/.UMAX)
@@ -7121,6 +7148,13 @@ function rmw64_smax(a : bits(64), b : bits(64)) -> bits(64) = { if (signed(a) >=
 function rmw64_smin(a : bits(64), b : bits(64)) -> bits(64) = { if (signed(a) <= signed(b)) then a else b }
 function rmw64_umax(a : bits(64), b : bits(64)) -> bits(64) = { if (unsigned(a) >= unsigned(b)) then a else b }
 function rmw64_umin(a : bits(64), b : bits(64)) -> bits(64) = { if (unsigned(a) <= unsigned(b)) then a else b }
+
+function rmw8_add(a : bits(8), b : bits(8)) -> bits(8) = { a + b }
+function rmw8_sub(a : bits(8), b : bits(8)) -> bits(8) = { a - b }
+function rmw16_add(a : bits(16), b : bits(16)) -> bits(16) = { a + b }
+function rmw16_sub(a : bits(16), b : bits(16)) -> bits(16) = { a - b }
+function rmw32_sub(a : bits(32), b : bits(32)) -> bits(32) = { a - b }
+function rmw64_sub(a : bits(64), b : bits(64)) -> bits(64) = { a - b }
 
 function exec_lw_add(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
@@ -7266,8 +7300,8 @@ function exec_ld_umin(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bit
   write_regdst(RegDst, old)
 }
 
-function exec_sw_add(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_add(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7275,8 +7309,8 @@ function exec_sw_add(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)
   ()
 }
 
-function exec_sw_and(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_and(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7284,8 +7318,8 @@ function exec_sw_and(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)
   ()
 }
 
-function exec_sw_or(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_or(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7293,8 +7327,8 @@ function exec_sw_or(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1))
   ()
 }
 
-function exec_sw_xor(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_xor(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7302,8 +7336,8 @@ function exec_sw_xor(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)
   ()
 }
 
-function exec_sw_smax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_smax(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7311,8 +7345,8 @@ function exec_sw_smax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sw_smin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_smin(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7320,8 +7354,8 @@ function exec_sw_smin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sw_umax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_umax(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7329,8 +7363,8 @@ function exec_sw_umax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sw_umin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sw_umin(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(32) = mem_load32_le(ea);
   let b : bits(32) = read_reg5(SrcR)[31..0];
@@ -7338,8 +7372,8 @@ function exec_sw_umin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sd_add(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_add(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7347,8 +7381,8 @@ function exec_sd_add(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)
   ()
 }
 
-function exec_sd_and(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_and(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7356,8 +7390,8 @@ function exec_sd_and(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)
   ()
 }
 
-function exec_sd_or(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_or(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7365,8 +7399,8 @@ function exec_sd_or(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1))
   ()
 }
 
-function exec_sd_xor(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_xor(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7374,8 +7408,8 @@ function exec_sd_xor(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)
   ()
 }
 
-function exec_sd_smax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_smax(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7383,8 +7417,8 @@ function exec_sd_smax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sd_smin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_smin(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7392,8 +7426,8 @@ function exec_sd_smin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sd_umax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_umax(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
@@ -7401,13 +7435,67 @@ function exec_sd_umax(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1
   ()
 }
 
-function exec_sd_umin(SrcL : bits(5), SrcR : bits(5), far : bits(1), rl : bits(1)) -> unit = {
-  let _ = far; let _ = rl;
+function exec_sd_umin(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
   let ea = read_reg5(SrcL);
   let old : bits(64) = mem_load64_le(ea);
   let b : bits(64) = read_reg5(SrcR);
   mem_store64_le(ea, rmw64_umin(old, b));
   ()
+}
+
+// v0.58 store-op subtract (SW.SUB/SD.SUB) and byte/halfword size-override
+// (SB.ADD/SB.SUB/SH.ADD/SH.SUB).  The S/L-store-op forms share the [SrcL], SrcR
+// shape with the SW/SD slot and carry no far/aq bits.
+
+function exec_sw_sub(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(32) = mem_load32_le(ea);
+  let b : bits(32) = read_reg5(SrcR)[31..0];
+  mem_store32_le(ea, rmw32_sub(old, b));
+  ()
+}
+
+function exec_sd_sub(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(64) = mem_load64_le(ea);
+  let b : bits(64) = read_reg5(SrcR);
+  mem_store64_le(ea, rmw64_sub(old, b));
+  ()
+}
+
+function exec_sb_add(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(8) = read_mem8(ea);
+  let b : bits(8) = read_reg5(SrcR)[7..0];
+  write_mem8(ea, rmw8_add(old, b))
+}
+
+function exec_sb_sub(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(8) = read_mem8(ea);
+  let b : bits(8) = read_reg5(SrcR)[7..0];
+  write_mem8(ea, rmw8_sub(old, b))
+}
+
+function exec_sh_add(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(16) = mem_load16_le(ea);
+  let b : bits(16) = read_reg5(SrcR)[15..0];
+  mem_store16_le(ea, rmw16_add(old, b))
+}
+
+function exec_sh_sub(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
+  let _ = rl;
+  let ea = read_reg5(SrcL);
+  let old : bits(16) = mem_load16_le(ea);
+  let b : bits(16) = read_reg5(SrcR)[15..0];
+  mem_store16_le(ea, rmw16_sub(old, b))
 }
 
 // NOTE: mem_load{16,32,64}_le are provided by the staged memory model (state/memory.sail).
