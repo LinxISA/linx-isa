@@ -55,7 +55,7 @@ and gate changes preserve its catalog bytes. Its catalog SHA-256 is
 | PTO-SPEC #390, `b00cad7f2ba10d9719dffd59798bff3719ad52d2` | Full `make pr-check`: 12 checks and 872 Python tests pass; hosted source-contract/tooling/validate pass | Development candidate, not a new publication |
 | LinxISA direct import and parity checks | Exact scalar, command, Tile, reservation and development identity equality | Equality does not prove execution of all forms |
 | LLVM #126, `edb65a7681de90874d0c1fe4e6098f9e55ff8a00` | 59 MC tests and linx32/64 IAS checks pass; all 79 VEC/SFU names, selectors and engines match golden; retired named/raw forms reject | Full CodeGen has 6 failures and 1 unresolved; baseline status is unclassified; hosted builds were skipped |
-| QEMU #82, `4059c3eba0fc08b8a0382d16555dcb493e8172f6` | All 473 scalar decoder signatures agree; 121 Python tests, build, metadata audit and directed reservation/fault/Core4/MMU/Tile/relocation groups pass | Directed execution evidence covers the tested subset, not every decoded form |
+| QEMU #82, `4059c3eba0fc08b8a0382d16555dcb493e8172f6` | All 473 scalar decoder signatures agree; 121 Python tests, build, metadata audit and directed runtime groups pass in the recorded runs | High-count repeated launches still show rare TLOAD/TSTORE guest-fail exits; runtime promotion remains blocked |
 | PTOAS #9, `1c72da5bfd50db3caa327e24ede5ea87af31e56c` | Golden identity/catalog authority and rejection of 15 retired operations | 94 names present, 25 absent; 87 retained catalog entries changed and have no complete semantic/schema parity proof |
 | linx-model #22, `ba8f660749c944406e8e7e5bfcb76af506ff3d4b` | 12 CTest checks and applicable hosted CI pass | Execution is an explicit partial subset of its 794 decoded forms |
 | TileOP API #279, `1d93a62cba5c39ed17ad63df142097b73f7dfbeb` | `make check`, exact golden generation, 60 engine-contract tests and MC/IAS checks pass; independent binding-string audit preserves masks/destinations/L | 118 source-referenced names, TLEA has no wrapper; exact candidate target C++ object validation lacks a local musl sysroot |
@@ -89,6 +89,12 @@ TLOAD/TSTORE cases from unrelated warmup; synchronous fault assertions remain
 active. The final evidence includes 20 consecutive MMU runs and five concurrent
 MMU/reservation/Core4/fused-call rounds, all with zero exit status. Independent
 review and a separate integration-owner rerun passed on the recorded head.
+Subsequent higher-count process-launch stress nevertheless produced rare
+TLOAD/TSTORE guest-fail exits. Their cause is not proven closed. An attempted
+`-icount` runner change also failed to eliminate them and was reverted; it is
+not part of the recorded commit. The passing bounded runs and source review do
+not establish a flake-free MMU/Tile runtime. This unresolved result remains a
+promotion blocker, alongside the separate LLVM and API validation gaps.
 
 Run the common-source checks from the integration checkout, substituting exact
 candidate checkout paths:
