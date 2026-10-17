@@ -84,7 +84,184 @@ function assert_reserved_branch_word(word : bits(32), at_pc : bits(64)) -> unit 
   assert(not_bool(tile_effect_pending))
 }
 
+function reset_scalar_subset_trap_case(at_pc : bits(64)) -> unit = {
+  pc = at_pc;
+  tpc = at_pc;
+  last_e = 0b0;
+  last_argv = 0b0;
+  last_trapnum = sail_zeros(6);
+  last_cause = sail_zeros(24);
+  last_traparg0 = sail_zeros(64)
+}
+
+function assert_pcr_store_source_rejected(selector : bits(5)) -> unit = {
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1000);
+  write_reg5(selector, 0xCAFE_CAFE_CAFE_CAFE);
+  exec_sb_pcr(selector, sail_zeros(17));
+  assert(last_e == 0b1);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(selector) == 0xCAFE_CAFE_CAFE_CAFE)
+}
+
 function main() : unit -> unit = {
+  // PTO golden has 22 scalar PCR memory forms: 11 L32 forms with simm17 and
+  // 11 HL48 forms with simm29.  Address formation aligns the current TPC
+  // to four bytes, sign-extends the immediate, applies the form's offset
+  // scale, and wraps at PTO_XLEN.  These pure checks avoid host-memory
+  // primops while covering the exact address contract used by every form.
+  let pcr17_zero : bits(17) = sail_zeros(17);
+  let pcr17_one : bits(17) = sail_zeros(17) + 1;
+  let pcr17_neg_one : bits(17) = sail_ones(17);
+  let pcr17_max : bits(17) = 0b0 @ sail_ones(16);
+  let pcr17_min : bits(17) = 0b1 @ sail_zeros(16);
+  let pcr29_neg_one : bits(29) = sail_ones(29);
+  let pcr29_max : bits(29) = 0b0 @ sail_ones(28);
+  let pcr29_min : bits(29) = 0b1 @ sail_zeros(28);
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_zero), 2) == 0x0000_0000_0000_1000);
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_one), 2) == 0x0000_0000_0000_1004);
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_neg_one), 2) == 0x0000_0000_0000_0FFC);
+  assert(scalar_pcr_address(0x0000_0000_0004_0002, sext17_to64(pcr17_max), 2) == 0x0000_0000_0007_FFFC);
+  assert(scalar_pcr_address(0x0000_0000_0004_0002, sext17_to64(pcr17_min), 2) == 0x0000_0000_0000_0000);
+  assert(scalar_pcr_address(0x0000_0000_4000_0002, sext29_to64(pcr29_max), 2) == 0x0000_0000_7FFF_FFFC);
+  assert(scalar_pcr_address(0x0000_0000_4000_0002, sext29_to64(pcr29_min), 2) == 0x0000_0000_0000_0000);
+
+  // The helper receives offset_scale from each form; it does not infer it
+  // from the access width or hard-code x4.
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_one), 0) == 0x0000_0000_0000_1001);
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_one), 1) == 0x0000_0000_0000_1002);
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_one), 2) == 0x0000_0000_0000_1004);
+  assert(scalar_pcr_address(0x0000_0000_0000_1002, sext17_to64(pcr17_one), 3) == 0x0000_0000_0000_1008);
+  assert(scalar_pcr_address(0xFFFF_FFFF_FFFF_FFFE, sext17_to64(pcr17_one), 2) == 0x0000_0000_0000_0000);
+  assert(scalar_pcr_address(0x0000_0000_0000_0002, sext29_to64(pcr29_neg_one), 2) == 0xFFFF_FFFF_FFFF_FFFC);
+
+  // Both instruction widths use the same staged current-instruction address.
+  pc = 0x0000_0000_0000_1002;
+  tpc = 0x0000_0000_0000_1002;
+  assert(ea_pcr17(pcr17_one, 2) == 0x0000_0000_0000_1004);
+  assert(hl_ea_pcr(sail_zeros(29) + 1, 2) == 0x0000_0000_0000_1004);
+
+  // ADDTPC materializes a signed page displacement from TPC.  It preserves
+  // the low TPC bits, wraps at XLEN, and never writes TPC itself.
+  let addtpc20_zero : bits(20) = sail_zeros(20);
+  let addtpc20_one : bits(20) = sail_zeros(20) + 1;
+  let addtpc20_neg_one : bits(20) = sail_ones(20);
+  let addtpc20_max : bits(20) = 0b0 @ sail_ones(19);
+  let addtpc20_min : bits(20) = 0b1 @ sail_zeros(19);
+  pc = 0x0000_0000_0000_1002;
+  tpc = 0x0000_0000_0000_1002;
+  exec_addtpc(0b00001, addtpc20_zero);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_1002);
+  exec_addtpc(0b00001, addtpc20_one);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_2002);
+  exec_addtpc(0b00001, addtpc20_neg_one);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_0002);
+  pc = 0x0000_0000_8000_0002;
+  tpc = 0x0000_0000_8000_0002;
+  exec_addtpc(0b00001, addtpc20_max);
+  assert(read_reg5(0b00001) == 0x0000_0000_FFFF_F002);
+  exec_addtpc(0b00001, addtpc20_min);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_0002);
+  pc = 0xFFFF_FFFF_FFFF_F002;
+  tpc = 0xFFFF_FFFF_FFFF_F002;
+  exec_addtpc(0b00001, addtpc20_one);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_0002);
+  assert(tpc == 0xFFFF_FFFF_FFFF_F002);
+
+  // Raw ADDTPC: imm20=1, RegDst=1.  This proves generated decode reaches the
+  // same page-scaled TPC path rather than SETRET or a PC-relative branch path.
+  pc = 0x0000_0000_0000_1002;
+  tpc = 0x0000_0000_0000_1002;
+  decode_execute32(0x0000_1087);
+  assert(read_reg5(0b00001) == 0x0000_0000_0000_2002);
+  assert(tpc == 0x0000_0000_0000_1002);
+
+  let addtpc32_zero : bits(32) = sail_zeros(32);
+  let addtpc32_one : bits(32) = sail_zeros(32) + 1;
+  let addtpc32_neg_one : bits(32) = sail_ones(32);
+  let addtpc32_max : bits(32) = 0b0 @ sail_ones(31);
+  let addtpc32_min : bits(32) = 0b1 @ sail_zeros(31);
+  pc = 0x0000_0000_0000_1002;
+  tpc = 0x0000_0000_0000_1002;
+  exec_hl_addtpc(0b00010, addtpc32_zero);
+  assert(read_reg5(0b00010) == 0x0000_0000_0000_1002);
+  exec_hl_addtpc(0b00010, addtpc32_one);
+  assert(read_reg5(0b00010) == 0x0000_0000_0000_2002);
+  exec_hl_addtpc(0b00010, addtpc32_neg_one);
+  assert(read_reg5(0b00010) == 0x0000_0000_0000_0002);
+  pc = 0x0000_0800_0000_0002;
+  tpc = 0x0000_0800_0000_0002;
+  exec_hl_addtpc(0b00010, addtpc32_max);
+  assert(read_reg5(0b00010) == 0x0000_0FFF_FFFF_F002);
+  exec_hl_addtpc(0b00010, addtpc32_min);
+  assert(read_reg5(0b00010) == 0x0000_0000_0000_0002);
+  pc = 0x0000_0000_0000_0002;
+  tpc = 0x0000_0000_0000_0002;
+  exec_hl_addtpc(0b00010, addtpc32_neg_one);
+  assert(read_reg5(0b00010) == 0xFFFF_FFFF_FFFF_F002);
+  assert(tpc == 0x0000_0000_0000_0002);
+
+  // The current Sail state has no Reg5 queue implementation.  Destination
+  // selectors 24..29 are the architectural discard subset in this staged
+  // path and therefore must not write the backing placeholder GPR slots.
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1000);
+  write_reg5(0b11000, 0xAAAA_AAAA_AAAA_0018);
+  write_reg5(0b11001, 0xAAAA_AAAA_AAAA_0019);
+  write_reg5(0b11010, 0xAAAA_AAAA_AAAA_001A);
+  write_reg5(0b11011, 0xAAAA_AAAA_AAAA_001B);
+  write_reg5(0b11100, 0xAAAA_AAAA_AAAA_001C);
+  write_reg5(0b11101, 0xAAAA_AAAA_AAAA_001D);
+  write_scalar_gpr_or_discard(0b11000, 0xBBBB_BBBB_BBBB_0018);
+  write_scalar_gpr_or_discard(0b11001, 0xBBBB_BBBB_BBBB_0019);
+  write_scalar_gpr_or_discard(0b11010, 0xBBBB_BBBB_BBBB_001A);
+  write_scalar_gpr_or_discard(0b11011, 0xBBBB_BBBB_BBBB_001B);
+  write_scalar_gpr_or_discard(0b11100, 0xBBBB_BBBB_BBBB_001C);
+  write_scalar_gpr_or_discard(0b11101, 0xBBBB_BBBB_BBBB_001D);
+  assert(read_reg5(0b11000) == 0xAAAA_AAAA_AAAA_0018);
+  assert(read_reg5(0b11001) == 0xAAAA_AAAA_AAAA_0019);
+  assert(read_reg5(0b11010) == 0xAAAA_AAAA_AAAA_001A);
+  assert(read_reg5(0b11011) == 0xAAAA_AAAA_AAAA_001B);
+  assert(read_reg5(0b11100) == 0xAAAA_AAAA_AAAA_001C);
+  assert(read_reg5(0b11101) == 0xAAAA_AAAA_AAAA_001D);
+  assert(last_e == 0b0);
+
+  // ADDTPC uses the same discard writer rather than the flat Reg5 mapping.
+  exec_addtpc(0b11000, addtpc20_one);
+  exec_hl_addtpc(0b11101, addtpc32_one);
+  assert(read_reg5(0b11000) == 0xAAAA_AAAA_AAAA_0018);
+  assert(read_reg5(0b11101) == 0xAAAA_AAAA_AAAA_001D);
+  assert(last_e == 0b0);
+
+  // Queue destinations reject before PCR memory hooks or destination effects.
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1000);
+  write_reg5(0b11110, 0xAAAA_AAAA_AAAA_001E);
+  exec_lb_pcr(0b11110, sail_zeros(17));
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b11110) == 0xAAAA_AAAA_AAAA_001E);
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1000);
+  write_reg5(0b11111, 0xAAAA_AAAA_AAAA_001F);
+  exec_hl_ld_pcr(0b11111, sail_zeros(29));
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b11111) == 0xAAAA_AAAA_AAAA_001F);
+
+  // ADDTPC queue destinations are rejected by the same bounded subset.
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1000);
+  exec_addtpc(0b11110, addtpc20_one);
+  assert(last_trapnum == trapnum_illegal_inst());
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1000);
+  exec_hl_addtpc(0b11111, addtpc32_one);
+  assert(last_trapnum == trapnum_illegal_inst());
+
+  // Store sources 24..31 are outside the staged physical-GPR subset.  Every
+  // selector rejects before source read and before the host memory hook.
+  assert_pcr_store_source_rejected(0b11000);
+  assert_pcr_store_source_rejected(0b11001);
+  assert_pcr_store_source_rejected(0b11010);
+  assert_pcr_store_source_rejected(0b11011);
+  assert_pcr_store_source_rejected(0b11100);
+  assert_pcr_store_source_rejected(0b11101);
+  assert_pcr_store_source_rejected(0b11110);
+  assert_pcr_store_source_rejected(0b11111);
+
   // Every new block header starts with value-one dimensions. Presence is not
   // required for legality, while an explicit zero remains a real write.
   bdesc_reset();

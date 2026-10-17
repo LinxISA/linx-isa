@@ -1024,10 +1024,33 @@ function exec_jr(SrcL : bits(5), simm12 : bits(12)) -> unit = {
 // -----------------------------------------------------------------------------
 // PC-relative operations (ADDTPC/SETRET)
 
+// The staged model has no Reg5 queue state.  Keep this increment honest:
+// physical GPR sources are 0..23 and destination codes 24..29 discard. Queue
+// sources 24..31 and destinations 30/31 reject before effects in these paths.
+// These rejections describe model
+// coverage and do not make the golden selector codes architecturally invalid.
+function scalar_gpr_source_supported(selector : bits(5)) -> bool = {
+  unsigned(selector) < 24
+}
+
+function scalar_gpr_or_discard_destination_supported(selector : bits(5)) -> bool = {
+  unsigned(selector) < 30
+}
+
+function write_scalar_gpr_or_discard(selector : bits(5), value : bits(64)) -> unit = {
+  if unsigned(selector) < 24 then write_reg5(selector, value)
+  else if unsigned(selector) < 30 then ()
+  else trap_illegal_inst(read_pc_or_tpc())
+}
+
 function exec_addtpc(RegDst : bits(5), imm20 : bits(20)) -> unit = {
-  let base = read_pc_or_tpc();
-  let off = sail_shiftleft(sext20_to64(imm20), 1);
-  write_regdst(RegDst, base + off)
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then
+    trap_illegal_inst(read_pc_or_tpc())
+  else {
+    let base = read_pc_or_tpc();
+    let off = sail_shiftleft(sext20_to64(imm20), 12);
+    write_scalar_gpr_or_discard(RegDst, base + off)
+  }
 }
 
 function exec_setret(imm20 : bits(20)) -> unit = {
@@ -1037,9 +1060,13 @@ function exec_setret(imm20 : bits(20)) -> unit = {
 }
 
 function exec_hl_addtpc(RegDst : bits(5), imm32 : bits(32)) -> unit = {
-  let base = read_pc_or_tpc();
-  let off = sail_shiftleft(sext32_from32(imm32), 1);
-  write_regdst(RegDst, base + off)
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then
+    trap_illegal_inst(read_pc_or_tpc())
+  else {
+    let base = read_pc_or_tpc();
+    let off = sail_shiftleft(sext32_from32(imm32), 12);
+    write_scalar_gpr_or_discard(RegDst, base + off)
+  }
 }
 
 function exec_hl_setret(imm32 : bits(32)) -> unit = {
@@ -7784,103 +7811,96 @@ function exec_sdi_u(SrcD : bits(5), SrcR : bits(5), simm12 : bits(12)) -> unit =
 
 // PC-relative (PCR) loads/stores.
 
+function ea_pcr17(simm17 : bits(17), scale : int) -> bits(64) = {
+  scalar_pcr_address(read_pc_or_tpc(), sext17_to64(simm17), scale)
+}
+
 function exec_lb_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let b : bits(8) = read_mem8(ea);
-  write_regdst(RegDst, sext8_from8(b))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let b : bits(8) = read_mem8(ea);
+    write_scalar_gpr_or_discard(RegDst, sext8_from8(b))
+  }
 }
 
 function exec_lbu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let b : bits(8) = read_mem8(ea);
-  write_regdst(RegDst, zext8_from8(b))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let b : bits(8) = read_mem8(ea);
+    write_scalar_gpr_or_discard(RegDst, zext8_from8(b))
+  }
 }
 
 function exec_lh_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let h : bits(16) = mem_load16_le(ea);
-  write_regdst(RegDst, sext16_from16(h))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let h : bits(16) = mem_load16_le(ea);
+    write_scalar_gpr_or_discard(RegDst, sext16_from16(h))
+  }
 }
 
 function exec_lhu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let h : bits(16) = mem_load16_le(ea);
-  write_regdst(RegDst, zext16_from16(h))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let h : bits(16) = mem_load16_le(ea);
+    write_scalar_gpr_or_discard(RegDst, zext16_from16(h))
+  }
 }
 
 function exec_lw_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let w : bits(32) = mem_load32_le(ea);
-  write_regdst(RegDst, sext32_from32(w))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let w : bits(32) = mem_load32_le(ea);
+    write_scalar_gpr_or_discard(RegDst, sext32_from32(w))
+  }
 }
 
 function exec_lwu_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let w : bits(32) = mem_load32_le(ea);
-  write_regdst(RegDst, zext32_from32(w))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let w : bits(32) = mem_load32_le(ea);
+    write_scalar_gpr_or_discard(RegDst, zext32_from32(w))
+  }
 }
 
 function exec_ld_pcr(RegDst : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let d : bits(64) = mem_load64_le(ea);
-  write_regdst(RegDst, d)
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let d : bits(64) = mem_load64_le(ea);
+    write_scalar_gpr_or_discard(RegDst, d)
+  }
 }
 
 function exec_sb_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let v : bits(8) = read_reg5(SrcD)[7..0];
-  write_mem8(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let v : bits(8) = read_reg5(SrcD)[7..0];
+    write_mem8(ea, v)
+  }
 }
 
 function exec_sh_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let v : bits(16) = read_reg5(SrcD)[15..0];
-  mem_store16_le(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let v : bits(16) = read_reg5(SrcD)[15..0];
+    mem_store16_le(ea, v)
+  }
 }
 
 function exec_sw_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let v : bits(32) = read_reg5(SrcD)[31..0];
-  mem_store32_le(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let v : bits(32) = read_reg5(SrcD)[31..0];
+    mem_store32_le(ea, v)
+  }
 }
 
 function exec_sd_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
-  let pc0 = read_pc_or_tpc();
-  let pc_aligned = pc0 & 0xFFFF_FFFF_FFFF_FFFC; // align 2 (4-byte)
-  let off = sail_shiftleft(sext17_to64(simm17), 2);
-  let ea = pc_aligned + off;
-  let v : bits(64) = read_reg5(SrcD);
-  mem_store64_le(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = ea_pcr17(simm17, 2);
+    let v : bits(64) = read_reg5(SrcD);
+    mem_store64_le(ea, v)
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -8127,20 +8147,15 @@ function exec_hl_sd_upo(RegDst : bits(5), SrcD : bits(5), SrcL : bits(5), SrcR :
 // HL (48-bit) PC-relative / immediate / pair addressing.
 //
 // Conventions:
-// - .PCR uses EA = align4(PC/TPC) + sail_shiftleft(sext17(simm17, 2))
+// - .PCR uses the form's catalog offset scale after sign extension.
 // - *I uses long immediate simm22 with scaled offset by element size.
 // - *I.U uses unscaled immediate simm22.
 // - *I.PR/*I.PO use simm17 with writeback to Dst1 (per PR/PO contract).
 // - *I.UPR/*I.UPO are unscaled pre/post-index (simm17) with writeback.
 // - *IP/*P are pair forms: Dst0=mem[EA], Dst1=mem[EA+elem_size]. No writeback.
 
-function hl_pc_aligned4() -> bits(64) = {
-  let pc0 = read_pc_or_tpc();
-  pc0 & 0xFFFF_FFFF_FFFF_FFFC
-}
-
-function hl_ea_pcr(simm17 : bits(29)) -> bits(64) = {
-  hl_pc_aligned4() + sail_shiftleft(sext29_to64(simm17), 2)
+function hl_ea_pcr(simm : bits(29), scale : int) -> bits(64) = {
+  scalar_pcr_address(read_pc_or_tpc(), sext29_to64(simm), scale)
 }
 
 function hl_ea_imm_scaled(base : bits(64), simm22 : bits(22), scale : int) -> bits(64) = {
@@ -8163,39 +8178,53 @@ function hl_ea_imm17_unscaled(base : bits(64), simm17 : bits(17)) -> bits(64) = 
 
 // ---- HL loads: PCR ----
 function exec_hl_lb_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let b : bits(8) = read_mem8(ea);
-  write_regdst(RegDst, sext8_from8(b))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let b : bits(8) = read_mem8(ea);
+    write_scalar_gpr_or_discard(RegDst, sext8_from8(b))
+  }
 }
 function exec_hl_lbu_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let b : bits(8) = read_mem8(ea);
-  write_regdst(RegDst, zext8_from8(b))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let b : bits(8) = read_mem8(ea);
+    write_scalar_gpr_or_discard(RegDst, zext8_from8(b))
+  }
 }
 function exec_hl_lh_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let h : bits(16) = mem_load16_le(ea);
-  write_regdst(RegDst, sext16_from16(h))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let h : bits(16) = mem_load16_le(ea);
+    write_scalar_gpr_or_discard(RegDst, sext16_from16(h))
+  }
 }
 function exec_hl_lhu_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let h : bits(16) = mem_load16_le(ea);
-  write_regdst(RegDst, zext16_from16(h))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let h : bits(16) = mem_load16_le(ea);
+    write_scalar_gpr_or_discard(RegDst, zext16_from16(h))
+  }
 }
 function exec_hl_lw_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let w : bits(32) = mem_load32_le(ea);
-  write_regdst(RegDst, sext32_from32(w))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let w : bits(32) = mem_load32_le(ea);
+    write_scalar_gpr_or_discard(RegDst, sext32_from32(w))
+  }
 }
 function exec_hl_lwu_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let w : bits(32) = mem_load32_le(ea);
-  write_regdst(RegDst, zext32_from32(w))
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let w : bits(32) = mem_load32_le(ea);
+    write_scalar_gpr_or_discard(RegDst, zext32_from32(w))
+  }
 }
 function exec_hl_ld_pcr(RegDst : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let d : bits(64) = mem_load64_le(ea);
-  write_regdst(RegDst, d)
+  if not_bool(scalar_gpr_or_discard_destination_supported(RegDst)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let d : bits(64) = mem_load64_le(ea);
+    write_scalar_gpr_or_discard(RegDst, d)
+  }
 }
 
 // ---- HL loads: long immediate (simm22) ----
@@ -8569,24 +8598,32 @@ function exec_hl_ldp(RegDst0 : bits(5), RegDst1 : bits(5), SrcL : bits(5), SrcR 
 
 // ---- HL stores: PCR ----
 function exec_hl_sb_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let v : bits(8) = read_reg5(SrcD)[7..0];
-  write_mem8(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let v : bits(8) = read_reg5(SrcD)[7..0];
+    write_mem8(ea, v)
+  }
 }
 function exec_hl_sh_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let v : bits(16) = read_reg5(SrcD)[15..0];
-  mem_store16_le(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let v : bits(16) = read_reg5(SrcD)[15..0];
+    mem_store16_le(ea, v)
+  }
 }
 function exec_hl_sw_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let v : bits(32) = read_reg5(SrcD)[31..0];
-  mem_store32_le(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let v : bits(32) = read_reg5(SrcD)[31..0];
+    mem_store32_le(ea, v)
+  }
 }
 function exec_hl_sd_pcr(SrcD : bits(5), simm17 : bits(29)) -> unit = {
-  let ea = hl_ea_pcr(simm17);
-  let v : bits(64) = read_reg5(SrcD);
-  mem_store64_le(ea, v)
+  if not_bool(scalar_gpr_source_supported(SrcD)) then trap_illegal_inst(read_pc_or_tpc()) else {
+    let ea = hl_ea_pcr(simm17, 2);
+    let v : bits(64) = read_reg5(SrcD);
+    mem_store64_le(ea, v)
+  }
 }
 
 // ---- HL stores: long immediate (simm22) ----

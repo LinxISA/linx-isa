@@ -31,6 +31,8 @@ jobs:
         run: |
           python3 tools/isa/import_pto_golden.py --source-root workloads/generated/pto-scalar-proposal --check
           python3 tools/isa/check_pto_scalar_proposal.py --pto-root workloads/generated/pto-scalar-proposal
+          python3 tools/isa/check_scalar_pcr_contract.py
+          python3 -m unittest tools.isa.test_scalar_pcr_contract
           python3 -m unittest tools.isa.test_pto_scalar_proposal tools.isa.test_qemu_scalar_golden
           python3 tools/isa/test_v058_storeop_ext.py
           python3 tools/isa/check_qemu_scalar_golden.py
