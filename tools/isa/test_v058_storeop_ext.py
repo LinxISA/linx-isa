@@ -124,5 +124,10 @@ for mnemonic in {**NEW_DMA, **NEW_MCOPY}:
     page = (ROOT / "docs/isa/instructions" / (slug + ".md")).read_text()
     assert "raise IllegalInstruction" in page, mnemonic
     assert f"Execute {mnemonic} as defined" not in page, mnemonic
+    manual = (ROOT / "docs/architecture/isa-manual/src/generated/instruction_details.adoc").read_text()
+    section = manual.split(f"===== {mnemonic}\n", 1)[1].split("\n===== ", 1)[0]
+    assert "Encoding only; NOT IMPLEMENTED. Execution rejects" in section, mnemonic
+    assert "Performs a bulk memory operation" not in section, mnemonic
+    assert "Loads a value from memory" not in section, mnemonic
 
 print("OK")

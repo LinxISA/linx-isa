@@ -1415,7 +1415,9 @@ def _write_instruction_details(
             lines.append(f"[[insndesc-{m_anchor}]]")
             lines.append(f"===== {mnemonic}")
             lines.append("")
-            lines.append(f"{_describe_mnemonic(group, mnemonic, asm_forms)}")
+            lines.append("Encoding only; NOT IMPLEMENTED. Execution rejects before operand reads or effects."
+                         if notes and all("NOT IMPLEMENTED" in note for note in notes)
+                         else _describe_mnemonic(group, mnemonic, asm_forms))
             lines.append("")
             lines.append(f"Catalog forms:: {forms_count} form(s) ({lengths_s} bits).")
             if decodes and any(d != "-" for d in decodes):

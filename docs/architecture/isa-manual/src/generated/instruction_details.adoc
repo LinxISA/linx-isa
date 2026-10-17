@@ -8229,7 +8229,7 @@ MemCopy(dst=RegSrc0, src=RegSrc1, size=RegSrc2)
 [[insndesc-bundle-split-mcopy-dl]]
 ===== MCOPY.DL
 
-Performs a bulk memory operation as specified by the operands (copy or set).
+Encoding only; NOT IMPLEMENTED. Execution rejects before operand reads or effects.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -8257,7 +8257,7 @@ raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects
 [[insndesc-bundle-split-mcopy-ds]]
 ===== MCOPY.DS
 
-Performs a bulk memory operation as specified by the operands (copy or set).
+Encoding only; NOT IMPLEMENTED. Execution rejects before operand reads or effects.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -9560,7 +9560,7 @@ Execute operation as selected by the mnemonic and encoded modifiers.
 [[insndesc-amo-dma-free-l]]
 ===== DMA.FREE.L
 
-Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
+Encoding only; NOT IMPLEMENTED. Execution rejects before operand reads or effects.
 
 Catalog forms:: 1 form(s) (32 bits).
 
@@ -9588,7 +9588,7 @@ raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects
 [[insndesc-amo-dma-free-s]]
 ===== DMA.FREE.S
 
-Loads a value from memory using the addressing form shown in the syntax and writes the result to the selected destination.
+Encoding only; NOT IMPLEMENTED. Execution rejects before operand reads or effects.
 
 Catalog forms:: 1 form(s) (32 bits).
 
