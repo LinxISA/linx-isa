@@ -1036,7 +1036,9 @@ def _render_instruction_page(
     wavedrom_svg = "\n\n".join(figures)
 
     # Pseudocode
-    pseudo = _derive_pseudocode(mnemonic, group, asm)
+    pseudo = ("raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no operand reads or effects"
+              if all("NOT IMPLEMENTED" in form.get("note", "") for form in all_forms)
+              else _derive_pseudocode(mnemonic, group, asm))
     pseudo_block = pseudo if pseudo else "// No pseudocode available for this instruction."
 
     # Encoding notes

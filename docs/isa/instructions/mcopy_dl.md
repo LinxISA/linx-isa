@@ -31,7 +31,7 @@ Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for
 ## Pseudocode (informative)
 
 ```c
-// Execute MCOPY.DL as defined by the Bundle Split semantics.
+raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no operand reads or effects
 ```
 
 ## Encoding Notes

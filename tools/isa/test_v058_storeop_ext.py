@@ -118,4 +118,11 @@ for mnemonic in ("CASB", "CASH", "CASW", "CASD"):
     names = {f["name"] for p in item["encoding"]["parts"] for f in p["fields"]}
     assert "SrcD" in names and "far" not in names, mnemonic
 
+# Encoding-only documentation must not suggest executable AMO/copy behavior.
+for mnemonic in {**NEW_DMA, **NEW_MCOPY}:
+    slug = mnemonic.lower().replace(".", "_")
+    page = (ROOT / "docs/isa/instructions" / (slug + ".md")).read_text()
+    assert "raise IllegalInstruction" in page, mnemonic
+    assert f"Execute {mnemonic} as defined" not in page, mnemonic
+
 print("OK")

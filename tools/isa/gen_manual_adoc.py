@@ -604,6 +604,8 @@ def _infer_operation_pseudocode(group: str, mnemonic: str, asm_forms: List[str],
     Produce a short, informative pseudocode block for a mnemonic. This is intentionally schematic: it is derived from
     mnemonic naming conventions + the catalog's assembly templates and notes.
     """
+    if notes and all("NOT IMPLEMENTED" in note for note in notes):
+        return ["raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects"]
     g = group.strip()
     m = mnemonic.strip()
 

@@ -8251,7 +8251,7 @@ Operation (informative)::
 +
 [source]
 ----
-MemCopy(dst=RegSrc0, src=RegSrc1, size=RegSrc2)
+raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects
 ----
 
 [[insndesc-bundle-split-mcopy-ds]]
@@ -8279,7 +8279,7 @@ Operation (informative)::
 +
 [source]
 ----
-MemCopy(dst=RegSrc0, src=RegSrc1, size=RegSrc2)
+raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects
 ----
 
 [[insndesc-bundle-split-mset]]
@@ -9582,7 +9582,7 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects
 ----
 
 [[insndesc-amo-dma-free-s]]
@@ -9610,7 +9610,7 @@ Operation (informative)::
 +
 [source]
 ----
-Execute operation as selected by the mnemonic and encoded modifiers.
+raise IllegalInstruction; // encoding only, NOT IMPLEMENTED; no effects
 ----
 
 [[insndesc-amo-hl-casb]]
