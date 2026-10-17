@@ -5,7 +5,7 @@
 [[inst_sw_umax]]
 ==== SW.UMAX
 
-*Syntax:* sw.umax<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.umax<.{rl}> [SrcL], SrcR
 
 *Description:* SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.
 

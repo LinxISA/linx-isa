@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.and<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.and<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.and<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.and<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

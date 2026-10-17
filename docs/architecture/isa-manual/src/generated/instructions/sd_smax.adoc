@@ -5,7 +5,7 @@
 [[inst_sd_smax]]
 ==== SD.SMAX
 
-*Syntax:* sd.smax<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sd.smax<.{rl}> [SrcL], SrcR
 
 *Description:* SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value.
 

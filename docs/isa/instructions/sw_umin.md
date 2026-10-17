@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.umin<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.umin<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned mi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.umin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.umin<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

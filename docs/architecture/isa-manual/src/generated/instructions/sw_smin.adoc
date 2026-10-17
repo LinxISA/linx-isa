@@ -5,7 +5,7 @@
 [[inst_sw_smin]]
 ==== SW.SMIN
 
-*Syntax:* sw.smin<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.smin<.{rl}> [SrcL], SrcR
 
 *Description:* SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value.
 

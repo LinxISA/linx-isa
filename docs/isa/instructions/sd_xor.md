@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.xor<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.xor<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.xor<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.xor<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

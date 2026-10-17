@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.smax<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.smax<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maxi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.smax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.smax<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

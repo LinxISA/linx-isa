@@ -5,7 +5,7 @@
 [[inst_sd_umin]]
 ==== SD.UMIN
 
-*Syntax:* sd.umin<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sd.umin<.{rl}> [SrcL], SrcR
 
 *Description:* SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
 

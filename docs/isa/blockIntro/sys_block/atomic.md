@@ -48,6 +48,36 @@ The STORE.OP class instructions have the same basic functions as the LOAD.OP cla
 | SD.UMAX | sd.umax<{.rl}> [SrcL], SrcR | Memory double word comparison ** unsigned maximum ** write back |
 | SD.SMIN | sd.smin<{.rl}> [SrcL], SrcR | Memory double word comparison ** signed minimum ** write back |
 | SD.UMIN | sd.umin<{.rl}> [SrcL], SrcR | Memory double word comparison ** unsigned minimum ** write back |
+| SW.SUB | sw.sub<{.rl}> [SrcL], SrcR | **Subtract** memory word write back (v0.58) |
+| SD.SUB | sd.sub<{.rl}> [SrcL], SrcR | **Subtract** memory double word write back (v0.58) |
+
+### SX size-override extension (v0.58)
+
+Starting with v0.58 the top five bits `31..27` of the atomic main class
+(`6..4=000`) form a unified **op5** field:
+
+- **b30..27 carries the operation/size code** (b27, formerly the far flag, is
+  absorbed as the code's least-significant bit): operations `0000`=ADD,
+  `0001`=AND, `0010`=OR, `0011`=XOR, `0100`=SMAX, `0101`=SMIN, `0110`=UMAX,
+  `0111`=UMIN, and `1000`=SUB (new); the LR/SC/SWAP size codes are
+  `0000`=B, `0001`=H, `0010`=W, `0011`=D;
+- **b31 is the flag bit**: for the store-op forms (SW/SD slots) it is the
+  **size-override** bit (0 keeps the word/doubleword width; 1 shrinks the
+  access one step — the SW slot `14..12=011` becomes a byte SB access and the
+  SD slot `14..12=101` becomes a halfword SH access); for LR/SC/SWAP and the
+  load-op forms (LW.*/LD.*) it is the `far` remote-access flag, relocated
+  from b27 to b31 with unchanged semantics;
+- the `.f` suffix is therefore removed from the store-op forms (b31 is
+  occupied by the override), while the remaining families keep it.
+
+This adds four size-override atomic store instructions:
+
+| Microinstructions | Assembly format | Description |
+|--------------|-------------------------------------------------|----------------|
+| SB.ADD | sb.add<{.rl}> [SrcL], SrcR | **Add** memory byte write back (SW-slot override) |
+| SB.SUB | sb.sub<{.rl}> [SrcL], SrcR | **Subtract** memory byte write back (SW-slot override) |
+| SH.ADD | sh.add<{.rl}> [SrcL], SrcR | **Add** memory halfword write back (SD-slot override) |
+| SH.SUB | sh.sub<{.rl}> [SrcL], SrcR | **Subtract** memory halfword write back (SD-slot override) |
 
 STORE.OP class atomic instructions need to add additional memory access sequence restrictions through the "rl" suffix to ensure the consistency of memory access. Please see "Memory Access Restriction Parameter Table" for detailed definitions.
 
@@ -66,22 +96,31 @@ The atomic swap operation instruction can add additional memory access sequence 
 
 ![AtomicSwap](../../../figs/bitfield/svg/Introduction_32bit/AtomicSwap.svg)
 
-<!-- 
-## 原子比较交换指令
+## Atomic compare-and-swap instructions
 
-原子比较交换指令从寄存器SrcL指定的内存位置读取`8,16,32或64位`的值，然后再用这个读出的值和寄存器SrcR比较，如果它们相同的话，就把寄存器SrcD中`8,16,32或64位`的值存入寄存器SrcL指定的内存中。最后不管前面比较的结果相不相同，都把从内存读取的原始值写入目的寄存器中，并且**保证这些步骤都是原子的**。
+The atomic compare-and-swap instruction reads an `8, 16, 32, or 64-bit` value
+from the memory location designated by register SrcL, compares the read value
+with register SrcR, and stores the `8, 16, 32, or 64-bit` value of register
+SrcD into that memory location when they are equal. Regardless of the
+comparison result, the original value read from memory is written to the
+destination register, and **all of these steps are atomic**.
 
-|     微指令    |         汇编格式                          |     描述       |
-|--------------|-------------------------------------------|----------------|
-|  CASB   | casb<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**字节**   |
-|  CASH   | cash<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**半字**   |
-|  CASW   | casw<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**字**     |
-|  CASD   | casd<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  内存与寄存器比较交换**双字**   |
+The 32-bit CAS forms support `.aq`/`.rl` ordering but **no `.f` remote-access
+suffix**; use the 48-bit [HL.CAS\*](../../../isa/inst/misa_h/HL.CASB.md)
+family for remote-cache access.
+
+| Microinstruction | Assembly format | Description |
+|--------------|-------------------------------------------------|----------------|
+|  CASB   | casb<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  Compare-and-swap **byte**   |
+|  CASH   | cash<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  Compare-and-swap **halfword**   |
+|  CASW   | casw<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  Compare-and-swap **word**     |
+|  CASD   | casd<{.aq,.rl,.aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}   |  Compare-and-swap **doubleword**   |
 
 ![AtomicCompareandSwap](../../../figs/bitfield/svg/Introduction_32bit/AtomicCompareandSwap.svg)
 
-原子比较交换指令可以通过"aq"和"rl"两个后缀来添加额外的内存访问顺序限制，以保证内存访问的一致性。具体定义请见“内存访问限制参数表”。
- -->
+The atomic compare-and-swap instructions can add extra memory-ordering
+restrictions through the "aq" and "rl" suffixes; see the memory access
+restriction parameter table for the exact definitions.
 
 ## Memory access restriction parameter table
 

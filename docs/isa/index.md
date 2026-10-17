@@ -3,7 +3,7 @@
 <!-- Hero Banner -->
 <div class="isa-hero">
 
-**ISA Version:** v0.58.6 &nbsp;·&nbsp; **773 instruction forms** &nbsp;·&nbsp; **55 groups** &nbsp;·&nbsp; **4 encoding formats**
+**ISA Version:** v0.58.6 &nbsp;·&nbsp; **783 instruction forms** &nbsp;·&nbsp; **55 groups** &nbsp;·&nbsp; **4 encoding formats**
 
 ---
 
@@ -64,11 +64,11 @@ The LinxISA manual is organized into 12 chapters covering distinct functional un
 ## Browse by Group
 
 <div class="group-card-grid">
-[ALU (107)](groups/alu.md){.group-card} [AMO (53)](groups/amo.md){.group-card} [Arithmetic Operation (16)](groups/arithmetic_operation.md){.group-card} [Atomic Operation (24)](groups/atomic_operation.md){.group-card}
+[ALU (107)](groups/alu.md){.group-card} [AMO (61)](groups/amo.md){.group-card} [Arithmetic Operation (16)](groups/arithmetic_operation.md){.group-card} [Atomic Operation (24)](groups/atomic_operation.md){.group-card}
 [BRU (58)](groups/bru.md){.group-card} [BSTART (21)](groups/bstart.md){.group-card} [Bit Manipulation (8)](groups/bit_manipulation.md){.group-card} [Block Split (2)](groups/block_split.md){.group-card}
 [Bundle Argument (3)](groups/bundle_argument.md){.group-card} [Bundle Control Attribute (1)](groups/bundle_control_attribute.md){.group-card} [Bundle Data Attribute (1)](groups/bundle_data_attribute.md){.group-card} [Bundle Dimension (1)](groups/bundle_dimension.md){.group-card}
 [Bundle Fixed-Point PostProcess Attribute (1)](groups/bundle_fixed_point_postprocess_attribute.md){.group-card} [Bundle Hint (2)](groups/bundle_hint.md){.group-card} [Bundle Input & Output (7)](groups/bundle_input_output.md){.group-card} [Bundle Offset (1)](groups/bundle_offset.md){.group-card}
-[Bundle Range Modifier (2)](groups/bundle_range_modifier.md){.group-card} [Bundle Split (71)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [Compare Instruction (16)](groups/compare_instruction.md){.group-card}
+[Bundle Range Modifier (2)](groups/bundle_range_modifier.md){.group-card} [Bundle Split (73)](groups/bundle_split.md){.group-card} [C.BSTART (7)](groups/c_bstart.md){.group-card} [Compare Instruction (16)](groups/compare_instruction.md){.group-card}
 [Division (2)](groups/division.md){.group-card} [FSU (30)](groups/fsu.md){.group-card} [Floating Point Arithmetic (5)](groups/floating_point_arithmetic.md){.group-card} [Format Convert (4)](groups/format_convert.md){.group-card}
 [General (3)](groups/general.md){.group-card} [General Manager (2)](groups/general_manager.md){.group-card} [LDA (11)](groups/lda.md){.group-card} [LDA/BASE_IMM (9)](groups/lda_base_imm.md){.group-card}
 [LDA/BASE_REG (8)](groups/lda_base_reg.md){.group-card} [LDA/LONG (12)](groups/lda_long.md){.group-card} [LDA/PAIR (19)](groups/lda_pair.md){.group-card} [LDA/PC_REL (7)](groups/lda_pc_rel.md){.group-card}
@@ -315,4 +315,4 @@ Use **Ctrl+F** / **Cmd+F** to search, or browse the [full alphabetical list](ins
 | [V.SHFL.UP](instructions/v_shfl_up.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 | [V.SHFLI.BFLY](instructions/v_shfli_bfly.md) | shuffle | 64 | [64-bit V.] Instruction from the Shuffle group. |
 
-[View all 773 instruction forms →](instructions/index.md)
+[View all 783 instruction forms →](instructions/index.md)

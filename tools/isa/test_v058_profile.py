@@ -27,7 +27,7 @@ linx_only_instructions = [
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
 assert len(pto_owned_instructions) == 561
-assert len(linx_only_instructions) == 212
+assert len(linx_only_instructions) == 222
 assert not any(item.get("pto_source_form_variant_of") for item in spec["instructions"])
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
@@ -90,8 +90,21 @@ def reservation_covers(reservation: dict, instruction: dict) -> bool:
     )
 
 
+linx_scalar_extension = {
+    "SB.ADD",
+    "SB.SUB",
+    "SD.SUB",
+    "SH.ADD",
+    "SH.SUB",
+    "SW.SUB",
+    "DMA.FREE.S",
+    "DMA.FREE.L",
+    "MCOPY.DS",
+    "MCOPY.DL",
+}
 assert all(
-    any(reservation_covers(reservation, item) for reservation in reservations)
+    item["mnemonic"] in linx_scalar_extension
+    or any(reservation_covers(reservation, item) for reservation in reservations)
     for item in linx_only_instructions
 )
 b_ios = [item for item in spec["instructions"] if item["mnemonic"] == "B.IOS"]

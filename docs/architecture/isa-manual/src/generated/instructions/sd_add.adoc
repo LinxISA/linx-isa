@@ -5,7 +5,7 @@
 [[inst_sd_add]]
 ==== SD.ADD
 
-*Syntax:* sd.add<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sd.add<.{rl}> [SrcL], SrcR
 
 *Description:* SD.ADD atomically replaces the aligned 64-bit memory value with its modular sum with SrcR; it does not publish the old value.
 

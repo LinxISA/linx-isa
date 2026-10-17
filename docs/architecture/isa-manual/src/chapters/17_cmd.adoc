@@ -69,6 +69,8 @@ include::../generated/instructions/fret_stk.adoc[]
 === Memory Block Operations
 
 include::../generated/instructions/mcopy.adoc[]
+include::../generated/instructions/mcopy_ds.adoc[]
+include::../generated/instructions/mcopy_dl.adoc[]
 include::../generated/instructions/mset.adoc[]
 include::../generated/instructions/xb.adoc[]
 

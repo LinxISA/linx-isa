@@ -5,7 +5,7 @@
 [[inst_sd_smin]]
 ==== SD.SMIN
 
-*Syntax:* sd.smin<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sd.smin<.{rl}> [SrcL], SrcR
 
 *Description:* SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value.
 

@@ -49,13 +49,13 @@
         "type": 14
     },
     {
-        "name": "far",
-        "bits": 1,
-        "type": 14
-    },
-    {
         "name": 7,
         "bits": 4,
         "type": 8
+    },
+    {
+        "name": "far",
+        "bits": 1,
+        "type": 14
     }
 ]

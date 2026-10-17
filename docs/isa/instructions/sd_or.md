@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.or<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.or<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.OR atomically replaces the aligned 64-bit memory value with its bitwise OR wi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.or<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.or<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

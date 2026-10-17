@@ -48,13 +48,9 @@
         "type": 14
     },
     {
-        "name": "far",
-        "bits": 1,
-        "type": 14
-    },
-    {
         "name": 5,
-        "bits": 4,
+        "bits": 5,
+        "attr": "Op5",
         "type": 8
     }
 ]

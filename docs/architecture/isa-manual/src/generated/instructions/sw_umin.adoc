@@ -5,7 +5,7 @@
 [[inst_sw_umin]]
 ==== SW.UMIN
 
-*Syntax:* sw.umin<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.umin<.{rl}> [SrcL], SrcR
 
 *Description:* SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
 

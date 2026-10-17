@@ -39,7 +39,6 @@
 | [B.CARC](./B.CACR.md)  | 跨特权级指令，用于补充。   | 非提交指令  |
 | **模版块** |  |  |
 | [MCOPY](./templateblock/MCOPY.md) | 内存搬移指令 | 提交指令 |
-| [MCOPY.D](./templateblock/MCOPY.D.md) | 内存搬移指令 | 提交指令 |
 | [MSET](./templateblock/MSET.md)      | 内存赋值指令 | 提交指令 |
 | [FENTRY](./templateblock/FENTRY.md)  | 函数入口压栈指令 | 提交指令 |
 | [FEXIT](./templateblock/FEXIT.md)    | 函数出口退栈指令 | 提交指令 |

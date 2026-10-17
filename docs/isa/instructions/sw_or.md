@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.or<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.or<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR wi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.or<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.or<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

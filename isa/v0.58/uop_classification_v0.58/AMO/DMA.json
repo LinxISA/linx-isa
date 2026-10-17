@@ -1,6 +1,6 @@
 {
   "big_kind": "AMO",
-  "count": 1,
+  "count": 3,
   "instructions": [
     {
       "class": {
@@ -14,6 +14,32 @@
         32
       ],
       "mnemonic": "DMA"
+    },
+    {
+      "class": {
+        "amo_kind": "DMA",
+        "note": "v0.58 DMA free resource-release variant",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "DMA Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "DMA.FREE.L"
+    },
+    {
+      "class": {
+        "amo_kind": "DMA",
+        "note": "v0.58 DMA free resource-release variant",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "DMA Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "DMA.FREE.S"
     }
   ],
   "sub_kind": "DMA"

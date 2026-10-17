@@ -51,7 +51,8 @@
         <line x1="138" x2="138" y2="41"/>
         <line x1="118" x2="118" y2="5"/>
         <line x1="118" x2="118" y1="41" y2="36"/>
-        <line x1="99" x2="99" y2="41"/>
+        <line x1="99" x2="99" y2="5"/>
+        <line x1="99" x2="99" y1="41" y2="36"/>
         <line x1="79" x2="79" y2="5"/>
         <line x1="79" x2="79" y1="41" y2="36"/>
         <line x1="59" x2="59" y2="5"/>
@@ -64,12 +65,12 @@
       <g>
         <g>
           <rect x="611" width="20" height="41" field="1" style="fill-opacity:0.1"/>
-          <rect x="552" width="59" height="41" field="0" style="fill-opacity:0.1;fill:#ffbf00"/>
-          <rect x="493" width="59" height="41" field="3" style="fill-opacity:0.1"/>
-          <rect x="335" width="59" height="41" field="0" style="fill-opacity:0.1;fill:#00ffd5"/>
-          <rect x="237" width="99" height="41" field="RegSrc0 = DstAddr" style="fill-opacity:0.1"/>
-          <rect x="138" width="99" height="41" field="RegSrc1 = SrcAddr" style="fill-opacity:0.1"/>
-          <rect width="99" height="41" field="RegSrc2=Size" style="fill-opacity:0.1"/>
+          <rect x="552" width="59" height="41" field="5" style="fill-opacity:0.1;fill:#ffbf00"/>
+          <rect x="493" width="59" height="41" field="0" style="fill-opacity:0.1"/>
+          <rect x="335" width="59" height="41" field="7" style="fill-opacity:0.1;fill:#00ffd5"/>
+          <rect x="237" width="99" height="41" field="SrcL" style="fill-opacity:0.1"/>
+          <rect x="138" width="99" height="41" field="0" style="fill-opacity:0.1"/>
+          <rect width="138" height="41" field="3" style="fill-opacity:0.1"/>
         </g>
         <g transform="translate(10,-11)">
           <g transform="translate(611)">
@@ -114,12 +115,6 @@
           <g transform="translate(118)">
             <text y="6">25</text>
           </g>
-          <g transform="translate(99)">
-            <text y="6">26</text>
-          </g>
-          <g transform="translate(79)">
-            <text y="6">27</text>
-          </g>
           <g transform="translate(0)">
             <text y="6">31</text>
           </g>
@@ -132,21 +127,21 @@
           </g>
           <g>
             <g transform="translate(592)">
-              <text y="6">0</text>
+              <text y="6">1</text>
             </g>
             <g transform="translate(572)">
               <text y="6">0</text>
             </g>
             <g transform="translate(552)">
-              <text y="6">0</text>
+              <text y="6">1</text>
             </g>
           </g>
           <g>
             <g transform="translate(532)">
-              <text y="6">1</text>
+              <text y="6">0</text>
             </g>
             <g transform="translate(513)">
-              <text y="6">1</text>
+              <text y="6">0</text>
             </g>
             <g transform="translate(493)">
               <text y="6">0</text>
@@ -171,43 +166,65 @@
           </g>
           <g>
             <g transform="translate(375)">
-              <text y="6">0</text>
+              <text y="6">1</text>
             </g>
             <g transform="translate(355)">
-              <text y="6">0</text>
+              <text y="6">1</text>
             </g>
             <g transform="translate(335)">
-              <text y="6">0</text>
+              <text y="6">1</text>
             </g>
           </g>
           <g transform="translate(276)">
             <text y="6">
-              <tspan>RegSrc0 = DstAddr</tspan>
+              <tspan>SrcL</tspan>
             </text>
           </g>
-          <g transform="translate(177)">
-            <text y="6">
-              <tspan>RegSrc1 = SrcAddr</tspan>
-            </text>
+          <g>
+            <g transform="translate(217)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(197)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(177)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(158)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(138)">
+              <text y="6">0</text>
+            </g>
           </g>
           <g>
             <g transform="translate(118)">
               <text y="6">1</text>
             </g>
             <g transform="translate(99)">
+              <text y="6">1</text>
+            </g>
+            <g transform="translate(79)">
               <text y="6">0</text>
             </g>
-          </g>
-          <g transform="translate(39)">
-            <text y="6">
-              <tspan>RegSrc2=Size</tspan>
-            </text>
+            <g transform="translate(59)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(39)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(20)">
+              <text y="6">0</text>
+            </g>
+            <g transform="translate(0)">
+              <text y="6">0</text>
+            </g>
           </g>
         </g>
         <g transform="translate(10,49)">
           <g transform="translate(611)">
             <text y="6">
-              <tspan>W</tspan>
+              <tspan>L</tspan>
             </text>
           </g>
           <g transform="translate(572)">
@@ -225,9 +242,15 @@
               <tspan>Func</tspan>
             </text>
           </g>
+          <g transform="translate(59)">
+            <text y="6">
+              <tspan>Op7</tspan>
+            </text>
+          </g>
         </g>
       </g>
     </g>
   </g>
 </svg>
 
+\n

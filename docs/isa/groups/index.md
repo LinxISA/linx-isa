@@ -16,14 +16,14 @@ See the [chapter index](index.md) for the manual organization.
 | [Bundle Hint](bundle_hint.md) | 2 | **Ch 17** — [source](index.md) | `B.HINT` |
 | [Bundle Input & Output](bundle_input_output.md) | 7 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOS`, `B.IOT` |
 | [Bundle Offset](bundle_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
-| [Bundle Split](bundle_split.md) | 71 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.ADD`, `BSTART.MGATHER.AND`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.DEC` +53 |
+| [Bundle Split](bundle_split.md) | 73 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.ADD`, `BSTART.MGATHER.AND`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.DEC` +55 |
 | [BSTART](bstart.md) | 21 | **Ch 4** — [source](index.md) | `BSTART.CALL`, `BSTART.ICALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD` +1 |
 | [Block Split](block_split.md) | 2 | **Ch 4** — [source](index.md) | `BSTART.VPAR`, `BSTART.VSEQ` |
 | [Bundle Dimension](bundle_dimension.md) | 1 | **Ch 4** — [source](index.md) | `C.B.DIMI` |
 | [C.BSTART](c_bstart.md) | 7 | **Ch 15** — [source](index.md) | `C.BSTART.FP`, `C.BSTART.MPAR`, `C.BSTART.MSEQ`, `C.BSTART.STD`, `C.BSTART.SYS`, `C.BSTART.VPAR`, `C.BSTART.VSEQ` |
 | [LDA/BASE_IMM](lda_base_imm.md) | 9 | **Ch 11** — [source](index.md) | `C.LDI`, `C.LWI`, `LBI`, `LBUI`, `LDI`, `LHI`, `LHUI`, `LWI` +1 |
 | [STA/BASE_IMM](sta_base_imm.md) | 9 | **Ch 11** — [source](index.md) | `C.SDI`, `C.SWI`, `SBI`, `SDI`, `SDI.U`, `SHI`, `SHI.U`, `SWI` +1 |
-| [AMO](amo.md) | 53 | **Ch 14** — [source](index.md) | `CASB`, `CASD`, `CASH`, `CASW`, `DMA`, `HL.CASB`, `HL.CASD`, `HL.CASH` +45 |
+| [AMO](amo.md) | 61 | **Ch 14** — [source](index.md) | `CASB`, `CASD`, `CASH`, `CASW`, `DMA`, `DMA.FREE.L`, `DMA.FREE.S`, `HL.CASB` +53 |
 | [FSU](fsu.md) | 30 | **Ch 13** — [source](index.md) | `FABS`, `FADD`, `FCVT`, `FCVTA`, `FCVTM`, `FCVTN`, `FCVTP`, `FCVTZ` +22 |
 | [LDA/PC_REL](lda_pc_rel.md) | 7 | **Ch 11** — [source](index.md) | `HL.LB.PCR`, `HL.LBU.PCR`, `HL.LD.PCR`, `HL.LH.PCR`, `HL.LHU.PCR`, `HL.LW.PCR`, `HL.LWU.PCR` |
 | [LDA/POST_INDEX](lda_post_index.md) | 19 | **Ch 11** — [source](index.md) | `HL.LB.PO`, `HL.LBI.PO`, `HL.LBU.PO`, `HL.LBUI.PO`, `HL.LD.PO`, `HL.LDI.PO`, `HL.LDI.UPO`, `HL.LH.PO` +11 |

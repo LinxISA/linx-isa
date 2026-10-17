@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.smin<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.smin<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.SMIN atomically replaces the aligned 32-bit memory value with its signed mini
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.smin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.smin<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 
