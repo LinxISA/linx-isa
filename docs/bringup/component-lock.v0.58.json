@@ -66,8 +66,8 @@
       "path": "lib/musl",
       "url": "https://github.com/LinxISA/musl.git",
       "branch": "master",
-      "commit": "d99ce8f4a333ce2bbb009062ee16b858c824298d",
-      "tree": "db5dbb1de7881ea48142d6c641aa831459a2d447",
+      "commit": "7db729944eeb6fa530526466d746c5d79bf32481",
+      "tree": "28a5fd29e033d6d65624fc9d38305b12c8a31877",
       "release": "0.58.3",
       "role": "musl C library and phase-C runtime"
     },
