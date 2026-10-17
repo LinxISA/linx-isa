@@ -1,34 +1,40 @@
 {
   "schema_version": 1,
   "profile": "v0.58",
-  "description": "Exact reviewed component pins for the staged LinxISA and PTO ISA v0.58.3/v0.58.6 superproject integration surface.",
+  "description": "Exact merged component pins for the LinxISA/PTO 0.58.7 development integration; intentionally partial consumers and older unchanged components remain explicit.",
   "components": [
     {
       "path": "compiler/llvm",
       "url": "https://github.com/LinxISA/llvm-project.git",
       "branch": "main",
-      "commit": "3d79447f635b00feb68f5a6acaa2dae31dc43b7a",
-      "tree": "d56f073fa94cd6fc6569a017d6dfec0d74baf3b2",
-      "release": "0.58.3",
-      "role": "v0.58 compiler, assembler, and linker with PTO 0.58.6 projection identity"
+      "commit": "cfd4db8136c70c0921ecf40a042afaaf3f561943",
+      "tree": "ebc6bfc25403546f7f2efc9cc896de8f4be94a9d",
+      "release": "0.58.7",
+      "role": "v0.58.7 development compiler, assembler and linker; remaining CodeGen gaps tracked in llvm-project#127",
+      "integration_status": "merged_development",
+      "review_url": "https://github.com/LinxISA/llvm-project/pull/126"
     },
     {
       "path": "compiler/ptoas",
       "url": "https://github.com/LinxISA/ptoas.git",
       "branch": "main",
-      "commit": "cbfaefe6d3a42b6cb3de1482ef01663630d4b39e",
-      "tree": "843f4ebb664699cb1671d521598aea209fb48fd6",
-      "release": "0.58.3",
-      "role": "v0.58.3 PTO assembler and bytecode toolchain"
+      "commit": "d0bb7ccf26a3c0267398ae4cba29ea4d35f15f78",
+      "tree": "02d6fca87851966d673fbd26170a60c419579d93",
+      "release": "0.58.7",
+      "role": "v0.58.7 development golden authority with explicit partial PTOAS coverage; PTOAS#10",
+      "integration_status": "merged_development",
+      "review_url": "https://github.com/LinxISA/PTOAS/pull/9"
     },
     {
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "bfd46ef40864cd3c0536c54722359e667babd8a1",
-      "tree": "3e939897aeeabbd9ade9b1e559b8fa3396d55656",
-      "release": "0.58.6",
-      "role": "v0.58.6 emulator and PTO Tile execution subset"
+      "commit": "ce9caec4f6e809220da9d11f96065f4601e1b045",
+      "tree": "40b2600cb2dafecc068663981ab67c08b740efa5",
+      "release": "0.58.7",
+      "role": "v0.58.7 development emulator subset; repeated Tile fault gap tracked in qemu#83",
+      "integration_status": "merged_development",
+      "review_url": "https://github.com/LinxISA/qemu/pull/82"
     },
     {
       "path": "kernel/linux",
@@ -86,10 +92,12 @@
       "path": "tools/Linx-TileOP-API",
       "url": "https://github.com/LinxISA/Linx-TileOP-API.git",
       "branch": "linx",
-      "commit": "bd1ecca97ca47da0edc462c1ce19749c6940780e",
-      "tree": "854c463c21f9b758186b718105f4b035019cdd30",
-      "release": "0.58.3",
-      "role": "v0.58.3 Linx tile-operation API"
+      "commit": "b270ac286b43e5f4e3a2f3a907ef2aeaf82e91b2",
+      "tree": "8570b32f0516047a39c0045da36bea213b865eea",
+      "release": "0.58.7",
+      "role": "v0.58.7 development TileOP API with exact golden contracts; remaining wrapper/C++ validation tracked in Linx-TileOP-API#237",
+      "integration_status": "merged_development",
+      "review_url": "https://github.com/LinxISA/Linx-TileOP-API/pull/279"
     },
     {
       "path": "tools/LinxCoreModel",
@@ -105,10 +113,12 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "2913db72cf6130a5c604f80d81f958638bdb6d13",
-      "tree": "f003173f7b2aed5c38f80f9c857707f53194d148",
-      "release": "0.58.6",
-      "role": "v0.58.6 queue-wired model codec"
+      "commit": "b08c05f304b189a9333416ae8a36837ff6e9a385",
+      "tree": "28ac9928579531db94c68975fbe3e747e2e2f171",
+      "release": "0.58.7",
+      "role": "v0.58.7 development model codec and explicit executable subset; linx-model#23",
+      "integration_status": "merged_development",
+      "review_url": "https://github.com/LinxISA/linx-model/pull/22"
     },
     {
       "path": "tools/pyCircuit",
