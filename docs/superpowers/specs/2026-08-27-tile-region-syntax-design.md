@@ -1,9 +1,11 @@
 # Linx Tile region syntax and compiler contract
 
-Status: **Proposed; not active in the LinxISA 0.58.3 release**
+Status: **Proposed compiler contract over the accepted PTO 0.58.7 development
+golden; source/IR/CodeGen implementation remains incomplete**
 
-Target candidate selection: PTO architecture 0.58.4 with publication revision
-0.58.4.1 at one exact PTO-SPEC head
+Target architecture source: PTO-SPEC commit
+`f0a876e449a95d26841c5ee7affb4c905ebc5f5b`, tree
+`fe9e8e050375fbce3f526d08acca13c37cd15830`
 
 Audience: PTO/Linx architecture, Linx LLVM, Linx-TileOP-API, and workload
 implementers
@@ -40,59 +42,48 @@ contiguous binder-plus-modifier sequence.
 
 The authority order for this proposal is:
 
-1. PTO-SPEC candidate normative ASL and accepted decisions at commit
-   `9bacc7bed9c1057bf696d42e2bddb20c3fded509`.
-2. The LinxISA release lock and generated v0.58 catalog.
+1. PTO-SPEC normative ASL at the exact 0.58.7 development golden commit
+   `f0a876e449a95d26841c5ee7affb4c905ebc5f5b`.
+2. The LinxISA development-golden lock and generated v0.58 catalog.
 3. Linx LLVM semantic IR and machine-lowering contracts.
 4. Linx-TileOP-API source wrappers.
 5. Workload usage.
 
 The controlling PTO records are:
 
-- [ADR-0098: range-modifier association](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/docs/status/decisions/0098-b-range-modifiers.md)
-- [ADR-0106: per-PE Shared source offsets](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/docs/status/decisions/0106-shared-source-subview-per-pe.md)
-- [`B.SUBVIEW` normative ASL](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/asl/block/operands/B.SUBVIEW.asl)
-- [`B.ASSEMBLE` normative ASL](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/asl/block/operands/B.ASSEMBLE.asl)
-- [Subview descriptor and operation applicability](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/asl/block/model/operands/subview-descriptor.asl)
-- [ADR-0097: Local/Shared capacity](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/docs/status/decisions/0097-local-shared-capacity-and-cooperative-m-sharding.md)
-- [ADR-0105: Shared whole-parent readiness](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/docs/status/decisions/0105-shared-whole-parent-readiness.md)
-- [Local assembly generations](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/asl/block/model/operands/local-generation.asl)
-- [Shared assembly generations](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/asl/block/model/operands/shared-generation.asl)
-- [Portable carrier readiness, replay, and effect eligibility](https://github.com/PTO-ISA/pto-spec/blob/9bacc7bed9c1057bf696d42e2bddb20c3fded509/asl/block/model/operands/portable-carriers.asl)
+- [`B.SUBVIEW` normative ASL](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/operands/B.SUBVIEW.asl)
+- [`B.ASSEMBLE` normative ASL](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/operands/B.ASSEMBLE.asl)
+- [`B.IOT` Local binding and source-lifetime rules](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/operands/B.IOT.asl)
+- [`B.IOS` Shared binding and source-lifetime rules](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/operands/B.IOS.asl)
+- [Subview descriptor and operation applicability](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/model/operands/subview-descriptor.asl)
+- [Range-modifier association and continuation identity](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/model/operands/range-modifiers.asl)
+- [Local assembly generations](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/model/operands/local-generation.asl)
+- [Shared assembly generations](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/model/operands/shared-generation.asl)
+- [Portable carrier readiness, replay, and effect eligibility](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/model/operands/portable-carriers.asl)
+- generated LinxISA binder references: [B.IOT](../../isa/header/B.IOT.md),
+  [B.IOS](../../isa/header/B.IOS.md),
+  [B.IOT 中文](../../zh/isa/header/B.IOT.md), and
+  [B.IOS 中文](../../zh/isa/header/B.IOS.md).
 
-The current superproject release is PTO/LinxISA 0.58.3. It does not contain
-`B.SUBVIEW` or `B.ASSEMBLE`, and its pinned LLVM accepts Tile SizeCode 1 through
-10. This proposal MUST remain feature-gated and MUST NOT be presented as a
-0.58.3-compatible API.
+This design targets the separately identified 0.58.7 development golden. It
+MUST NOT be presented as part of the immutable published 0.58.7.0 artifact,
+whose source tree and encoding projection remain unchanged.
 
-PTO candidate head `9bacc7be` is a candidate selection, not a Linx-published
-release boundary. Exact-head readiness and the LinxISA lock remain open. Stage
-A MUST first close PTO exact-head release evidence and import one immutable
-lock before Linx assigns a feature/object identity.
+PTO issue #166 is resolved by the golden and is no longer an implementation
+blocker. The exact domains are:
 
-The candidate currently contains a SizeCode contradiction that this proposal
-MUST NOT resolve locally:
+- raw `B.SUBVIEW` decodes SizeCode 1 through 12, while a Local-associated group
+  accepts 1 through 10 and a Shared-associated group accepts 1 through 12;
+- a participating `B.ASSEMBLE` uses nonzero `WriterSizeCode` for the current
+  writer in every INIT, MIDDLE, LAST, or INIT_LAST phase;
+- Local writer and parent capacities accept 1 through 10, or 128 B through
+  64 KiB;
+- Shared writer and parent capacities accept 1 through 12, or 128 B through
+  256 KiB.
 
-- raw `B.SUBVIEW` accepts range SizeCode 1 through 12;
-- raw `B.ASSEMBLE` accepts ParentSizeCode 0 through 12 subject to INIT rules;
-- generated `B.IOT` destination forms and the Local single-object capacity rule
-  accept 1 through 10, or 128 B through 64 KiB;
-- `B.IOS` Shared destinations accept 1 through 12, or 128 B through 256 KiB;
-- a checked-in Local `B.IOT` SizeCode-12 AVS still expects 256 KiB Local
-  destination success.
-
-PTO MUST reconcile the Local binder contract, capacity decision, generated
-catalog, ASL helpers, and AVS before compiler implementation. Until then the
-compiler rules distinguish modifier raw domain, Local binder domain, Shared
-binder domain, and generation parent domain instead of using one universal
-SizeCode range.
-
-The proposed compiler feature is named `+pto0584-range` until LLVM review
-assigns the final spelling. Clang builtins, LLVM intrinsics, and MC forms MUST
-reject when this feature is absent. Enabling it requires the future exact PTO
-0.58.4/0.58.4.1 locked identity; it MUST NOT be combined with a
-`.note.pto.isa` descriptor for 0.58.3. No minimum compiler commit exists until
-the MC and semantic-IR implementation PRs land.
+Compiler feature and C macro spellings remain implementation decisions. They
+MUST bind to the exact 0.58.7 development identity and fail closed for the
+published 0.58.7.0 identity, missing identity, or any mismatched identity.
 
 ## 3. Implementation evidence studied
 
@@ -119,15 +110,15 @@ Representative evidence:
 
 This lineage proves that source-level Tile input/output intent can be lowered
 through SSA and compiler-generated architectural headers. It does not define
-the PTO 0.58.4 range protocol and MUST NOT be copied as an encoding authority.
+the PTO 0.58.7 range protocol and MUST NOT be copied as an encoding authority.
 
 If a separate private or deleted `level-one` ref is intended, its exact SHA
 must be added to the implementation issue before compiler work begins.
 
-### 3.2 Current Linx LLVM
+### 3.2 Linx LLVM 0.58.7 candidate
 
-Current Linx LLVM `main` at commit
-`baef2b3a47a2162ef4e0542eb715562bfdbe7a6a` has a more suitable adaptation
+The reviewed Linx LLVM 0.58.7 candidate at commit
+`e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727` has the suitable adaptation
 boundary:
 
 - first-class `target("linx.tile")` values;
@@ -141,15 +132,18 @@ boundary:
 
 Representative evidence:
 
-- [Clang Tile builtins](https://github.com/LinxISA/llvm-project/blob/baef2b3a47a2162ef4e0542eb715562bfdbe7a6a/clang/include/clang/Basic/BuiltinsLinxISA.td)
-- [Clang builtin-to-intrinsic lowering](https://github.com/LinxISA/llvm-project/blob/baef2b3a47a2162ef4e0542eb715562bfdbe7a6a/clang/lib/CodeGen/TargetBuiltins/LinxISA.cpp)
-- [LLVM Tile intrinsics](https://github.com/LinxISA/llvm-project/blob/baef2b3a47a2162ef4e0542eb715562bfdbe7a6a/llvm/include/llvm/IR/IntrinsicsLinx.td)
-- [Tile SSA balance](https://github.com/LinxISA/llvm-project/blob/baef2b3a47a2162ef4e0542eb715562bfdbe7a6a/llvm/lib/Target/LinxISA/LinxISATileSSABalance.cpp)
-- [Tile block construction](https://github.com/LinxISA/llvm-project/blob/baef2b3a47a2162ef4e0542eb715562bfdbe7a6a/llvm/lib/Target/LinxISA/LinxISABlockify.cpp)
+- [Clang Tile builtins](https://github.com/LinxISA/llvm-project/blob/e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727/clang/include/clang/Basic/BuiltinsLinxISA.td)
+- [Clang builtin-to-intrinsic lowering](https://github.com/LinxISA/llvm-project/blob/e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727/clang/lib/CodeGen/TargetBuiltins/LinxISA.cpp)
+- [LLVM Tile intrinsics](https://github.com/LinxISA/llvm-project/blob/e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727/llvm/include/llvm/IR/IntrinsicsLinx.td)
+- [Tile SSA balance](https://github.com/LinxISA/llvm-project/blob/e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727/llvm/lib/Target/LinxISA/LinxISATileSSABalance.cpp)
+- [Tile block construction](https://github.com/LinxISA/llvm-project/blob/e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727/llvm/lib/Target/LinxISA/LinxISABlockify.cpp)
+- [`B.SUBVIEW`/`B.ASSEMBLE` MC coverage](https://github.com/LinxISA/llvm-project/blob/e89f2bf7c6d05aff11e3dd3cdf64bc73c01eb727/llvm/test/MC/LinxISA/v0585-bundle-range-modifiers.s)
 
-Current `main` has no `B.SUBVIEW`/`B.ASSEMBLE` intrinsic, MC form, machine
-pseudo, or lowering pass. Its Tile intrinsics lower directly to machine
-pseudos, so phase inference is not implemented today.
+The candidate has exact `B.SUBVIEW`/`B.ASSEMBLE` parser, encoder,
+disassembler, and development-identity coverage. It does not yet have the
+region/session intrinsics, semantic machine pseudos, phase analysis, or
+source-language lowering defined here. Existing Tile intrinsics lower directly
+to machine pseudos, so region normalization and phase inference remain open.
 
 ### 3.3 SuperNPUBench one-level implementation
 
@@ -321,7 +315,7 @@ For `Tsrc[region]` used as a Tile source:
 - operation-specific dtype, layout, shape, and definedness legality remains
   authoritative.
 
-PTO 0.58.4 does not mean every parent descriptor is legal. Current normative
+PTO 0.58.7 does not mean every parent descriptor is legal. Current normative
 ASL derives Local subviews from Local Matrix/CUBE parents and applies the
 result to any accepted Tile-operation handler. Shared source subviews use a
 published non-CUBE parent and evaluate the offset independently in each
@@ -336,11 +330,19 @@ For `Tdst[region]` used as a destination:
 - the compiler associates that fragment with a destination contribution;
 - the backend fuses the contribution into the producing binder and emits
   `B.ASSEMBLE` immediately after that binder;
-- the `B.ASSEMBLE` instruction does not encode `Tdst`; the preceding
-  `B.IOT`/`B.IOS` destination binding owns that identity.
+- the `B.ASSEMBLE` instruction does not encode `Tdst`; the preceding binder
+  owns the destination or continuation identity;
+- an INIT contribution uses a destination-form `B.IOT`/`B.IOS`; its binder
+  SizeCode selects parent capacity;
+- a Local continuation uses the final source-form `B.IOT` slot as exactly one
+  `AssembleParentRef`, encoded with `.reuse`;
+- a Shared continuation reclassifies the final source-form `B.IOS` as the
+  reused destination selecting the exact OPEN Sx generation.
 
-The writer SizeCode is the destination binder SizeCode. `ParentSizeCode` is
-encoded only for the contribution whose derived phase has `INIT=1`.
+`WriterSizeCode` in `B.ASSEMBLE` is the current writer extent in every phase.
+It is nonzero for every participating INIT, MIDDLE, LAST, and INIT_LAST
+contribution and MUST fit the selected parent capacity. It is not a parent
+capacity field.
 
 ### 6.3 Applicability to Tile operations
 
@@ -376,7 +378,8 @@ Final lowering MUST preserve the PTO binder-group protocol:
 - the backend derives the binder continuation/group-closure control needed to
   keep the modifier group open;
 - for `B.IOT`, `L=1` closes the effective-binding sequence but still leaves its
-  immediately associated modifier group available as required by ADR-0098;
+  immediately associated modifier group available under the golden
+  range-modifier association rule;
 - each binder is emitted together with its own modifiers before the next binder;
   a Shared `B.IOS` source always uses binder-local `SrcSelect=0`, even when the
   Shared value is operation operand ordinal one or later;
@@ -384,6 +387,17 @@ Final lowering MUST preserve the PTO binder-group protocol:
 - reserved raw fields are rejected before GPR reads or carrier updates;
 - a raw-legal modifier under binder `PEMode=000` retains PTO's discarded-group
   behavior and MUST NOT acquire compiler-invented side effects.
+
+Source lifetime is independent of binding-sequence closure. Every ordinary
+Local or Shared source independently encodes lifetime: explicit `.reuse`
+retains payload, while omission marks last-use and consumes payload only after
+successful non-squashed completion.
+`B.IOT.L` never implies last-use. A source-region borrow therefore lowers to
+`.reuse` unless the semantic IR carries a separately proved consume operation.
+The initial compiler implementation MUST conservatively emit `.reuse` for
+generated sources. Local `AssembleParentRef` and Shared continuation
+destinations MUST also encode reuse; last-use in either continuation role is
+illegal before effects.
 
 ### 6.5 Offset lowering
 
@@ -465,14 +479,16 @@ generation leaves the prior published generation visible.
 
 ## 8. Phase inference
 
-The compiler derives raw phase bits for each contribution:
+The compiler derives raw phase bits and parent-selection form for each
+contribution. `WriterSizeCode` is nonzero and denotes that contribution's
+extent in every row:
 
-| Semantic position | `INIT` | `LAST` | `ParentSizeCode` |
+| Semantic position | `INIT` | `LAST` | Parent selection |
 | --- | ---: | ---: | --- |
-| only contribution | 1 | 1 | parent size |
-| first of multiple | 1 | 0 | parent size |
-| middle | 0 | 0 | 0 |
-| last of multiple | 0 | 1 | 0 |
+| only contribution | 1 | 1 | destination binder allocates parent |
+| first of multiple | 1 | 0 | destination binder allocates parent |
+| middle | 0 | 0 | reused Local ParentRef or reused OPEN Shared Sx |
+| last of multiple | 0 | 1 | reused Local ParentRef or reused OPEN Shared Sx |
 
 The source API MUST NOT expose `first`, `middle`, `last`, or `single` as
 required arguments. A raw expert-only API may expose exact bits for MC tests
@@ -494,8 +510,9 @@ an ambiguous commit boundary.
 
 PTO range offsets are in 128 B CELL units. The range-modifier raw domain uses
 SizeCode 1 through 12 for power-of-two capacities from 128 B through 256 KiB.
-The writer binder and parent-generation domains remain subject to the Local/
-Shared split and the upstream contradiction recorded in Section 2.
+Effective legality is role-dependent: Local subviews, writers, and parent
+capacities accept 1 through 10, while Shared subviews, writers, and parent
+capacities accept 1 through 12. There is no universal effective SizeCode range.
 
 Direct lowering requires:
 
@@ -673,7 +690,7 @@ before instruction selection, then extend the existing machine pipeline:
 5. extend `LinxISABlockify` to emit each binder followed immediately by that
    binder's contiguous `B.SUBVIEW` modifiers in binder-local source-role order
    and its destination `B.ASSEMBLE` modifier;
-6. lower exact PTO 0.58.4 MC encodings.
+6. lower the exact PTO 0.58.7 development-golden MC encodings.
 
 The selected machine pseudos SHALL carry, as explicit operands rather than
 discardable debug metadata:
@@ -746,7 +763,7 @@ The expected semantic IR is:
 The implementation tests MUST replace ellipses with complete declarations and
 pass Clang CodeGen, `llvm-as`, `opt -passes=verify`, `llc`, integrated assembly,
 and object disassembly. This design document does not claim that the unlanded
-types compile in the 0.58.3 toolchain.
+types compile in the current toolchain.
 
 ## 11. C and C++ programming-model contract
 
@@ -944,7 +961,8 @@ B.SUBVIEW SrcSelect=0, RegSrc=<allocated>, uimm11=<folded>, SubviewSizeCode=2
 ```
 
 This example demonstrates source lowering only. The exact binder spelling and
-fields come from the future locked PTO release.
+fields come from the locked 0.58.7 development golden; the source binder must
+encode `.reuse` for this borrow.
 
 ### 12.2 Sub-CELL destination rejection
 
@@ -1005,7 +1023,7 @@ The compiler SHALL provide stable diagnostics for at least:
 - ambiguous phase inference across control flow;
 - unsupported dynamic or cross-function session;
 - Shared scope or participant mismatch;
-- target release without PTO 0.58.4 range support.
+- target identity without PTO 0.58.7 development-range support.
 
 Diagnostics MUST identify the operation, operand role, normalized region,
 required alignment/extent, and selected target release.
@@ -1032,15 +1050,17 @@ stable diagnostic.
 ### 13.1 Version and object compatibility
 
 The first implementation SHALL use intrinsic schema revision
-`linx.tile.region.v1` and expose C/C++ feature macro
-`__LINX_PTO_0584_RANGE__` only when the exact target feature is enabled.
+`linx.tile.region.v1` and expose a versioned C/C++ feature macro only when the
+exact target feature is enabled. LLVM review owns the production macro
+spelling; it MUST NOT retain the stale `__LINX_PTO_0584_RANGE__` proposal name.
 
-Objects containing region lowering MUST carry the future exact
-`.note.pto.isa` identity selected by the locked PTO release. LTO and LLD MUST
-fail closed on missing, 0.58.3, mixed, or mismatched identities. Region
-intrinsics compiled for a 0.58.3 target receive a stable unsupported-feature
-diagnostic. The compiler MUST NOT silently fall back to opaque inline assembly,
-the raw expert wrapper, or a different SizeCode domain.
+Objects containing region lowering MUST carry the exact `.note.pto.isa`
+development identity selected by `spec/development-manifest.json` in the
+locked PTO golden. LTO and LLD MUST fail closed on missing, published-only,
+mixed, or mismatched identities. Region intrinsics compiled without that
+development identity receive a stable unsupported-feature diagnostic. The
+compiler MUST NOT silently fall back to opaque inline assembly, the raw expert
+wrapper, or a different SizeCode domain.
 
 ## 14. Validation and conformance gates
 
@@ -1050,8 +1070,9 @@ SHA manifest:
 ### PTO and MC
 
 - exact `B.SUBVIEW` and `B.ASSEMBLE` encode/decode/objdump tests;
-- reserved RegSrc, SizeCode, `INIT`/ParentSizeCode, association, ordering, and
-  zero-PE-mode negative tests;
+- reserved RegSrc, role-specific SizeCode, `INIT`/`LAST`/`WriterSizeCode`,
+  continuation identity, association, source lifetime, and zero-PE-mode
+  negative tests;
 - standalone `llvm-mc` and Clang integrated-assembler coverage.
 
 ### LLVM IR and CodeGen
@@ -1094,11 +1115,14 @@ SHA manifest:
 
 ### Stage A: architecture and MC
 
-- resolve the Local SizeCode contract/catalog/ASL/AVS contradiction upstream;
-- close PTO candidate exact-head release readiness;
-- lock the resulting immutable PTO 0.58.4/0.58.4.1 source SHA in LinxISA;
-- import exact command forms and feature identity;
-- implement MC/parser/disassembler support and negative tests.
+- [x] resolve the Local/Shared SizeCode domains in PTO;
+- [x] lock exact PTO commit `f0a876e449a95d26841c5ee7affb4c905ebc5f5b`
+  and its development identity in LinxISA;
+- [x] import exact command forms and binder contracts;
+- [x] implement LLVM candidate MC/parser/disassembler support and focused
+  encode/decode tests;
+- [ ] land and repin the reviewed LLVM candidate, then record its merged commit
+  and tree in the superproject component lock.
 
 ### Stage B: LLVM semantic IR
 
@@ -1124,8 +1148,8 @@ matching compiler and object-level proof.
 
 ## 16. Open items
 
-- Confirm whether the requested LLVM `level-one` branch is the public
-  `bisheng-linx` snapshot or supply the exact alternative SHA.
+- Land and repin the reviewed 0.58.7 LLVM candidate; semantic region/session
+  lowering is not provided by its MC support.
 - Decide the production spelling and verifier representation of the linear
   assembly-session target extension type.
 - Define which Local and Shared descriptor/layout combinations Linx exposes
@@ -1133,3 +1157,8 @@ matching compiler and object-level proof.
 - Freeze the first supported dynamic-loop transformation subset.
 - Decide whether direct `assembly.write` without a producing Tile operation is
   represented by TMOV or rejected in the first release.
+- Implement QEMU/model generation semantics and end-to-end workload proof;
+  mnemonic decode or explicit unsupported traps are not semantic conformance.
+
+Implementation progress and remaining acceptance evidence are tracked by
+[issue #188](https://github.com/LinxISA/linx-isa/issues/188).
