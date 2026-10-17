@@ -1,7 +1,7 @@
 {
   "isa": "PTO Instruction Set Architecture",
   "release": "0.58.7",
-  "reservation_count": 46,
+  "reservation_count": 50,
   "reservations": [
     {
       "encoding": [
@@ -1542,8 +1542,192 @@
       "mnemonic": "BSTART.TEPL selector 0x074",
       "owner": "PTO reserved deleted TEPL selector space",
       "status": "reserved-in-pto"
+    },
+    {
+      "mnemonic": "DMA.FREE.L",
+      "length_bits": 32,
+      "encoding": [
+        {
+          "index": 0,
+          "width_bits": 32,
+          "mask": "0xfff07fff",
+          "match": "0x0600700b"
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        }
+      ],
+      "owner": "PTO encoding-only DMA resource reservation; not implemented",
+      "status": "reserved-in-pto"
+    },
+    {
+      "mnemonic": "DMA.FREE.S",
+      "length_bits": 32,
+      "encoding": [
+        {
+          "index": 0,
+          "width_bits": 32,
+          "mask": "0xfff07fff",
+          "match": "0x0400700b"
+        }
+      ],
+      "fields": [
+        {
+          "name": "SrcL",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        }
+      ],
+      "owner": "PTO encoding-only DMA resource reservation; not implemented",
+      "status": "reserved-in-pto"
+    },
+    {
+      "mnemonic": "MCOPY.DL",
+      "length_bits": 32,
+      "encoding": [
+        {
+          "index": 0,
+          "width_bits": 32,
+          "mask": "0x0600707f",
+          "match": "0x06001031"
+        }
+      ],
+      "fields": [
+        {
+          "name": "RegDst",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        },
+        {
+          "name": "RegSrc0",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        },
+        {
+          "name": "RegSrc1",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        },
+        {
+          "name": "RegSrc2",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        }
+      ],
+      "owner": "PTO encoding-only DMA resource reservation; not implemented",
+      "status": "reserved-in-pto"
+    },
+    {
+      "mnemonic": "MCOPY.DS",
+      "length_bits": 32,
+      "encoding": [
+        {
+          "index": 0,
+          "width_bits": 32,
+          "mask": "0x0600707f",
+          "match": "0x02001031"
+        }
+      ],
+      "fields": [
+        {
+          "name": "RegDst",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        },
+        {
+          "name": "RegSrc0",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        },
+        {
+          "name": "RegSrc1",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        },
+        {
+          "name": "RegSrc2",
+          "width": 5,
+          "pieces": [
+            {
+              "instruction_lsb": 27,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined"
+        }
+      ],
+      "owner": "PTO encoding-only DMA resource reservation; not implemented",
+      "status": "reserved-in-pto"
     }
   ],
   "schema_version": 1,
-  "source_lock": "isa/v0.58/pto-spec.lock.json"
+  "source_lock": "isa/v0.58/pto-scalar-proposal.lock.json"
 }

@@ -346,8 +346,8 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
     ops = tepl.get("ops", []) if isinstance(tepl, dict) else []
     if tepl.get("kind") != "mode_function" or tepl.get("selector_formula") != "(mode << 5) | function":
         errors.append("state.engine_ops.tepl must use the PTO 0.58 Mode/Function contract")
-    if tepl.get("accepted_selector_count") != 78 or len(ops) != 78:
-        errors.append("state.engine_ops.tepl must contain exactly 78 PTO 0.58 operations")
+    if tepl.get("accepted_selector_count") != 79 or len(ops) != 79:
+        errors.append("state.engine_ops.tepl must contain exactly 79 PTO 0.58 operations")
     selectors = set()
     engine_counts: Counter[str] = Counter()
     classification_counts: Counter[str] = Counter()
@@ -375,9 +375,9 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         for operation in state.get("legal_aliases", []):
             engine_counts[str(operation.get("engine"))] += 1
             classification_counts[str(operation.get("classification"))] += 1
-    expected_engine_counts = {"CUBE": 12, "SFU": 47, "TLSU": 28, "VEC": 31}
+    expected_engine_counts = {"CUBE": 12, "SFU": 47, "TLSU": 28, "VEC": 32}
     if dict(sorted(engine_counts.items())) != expected_engine_counts:
-        errors.append("state.engine_ops semantic engines must be exactly 31 VEC / 47 SFU / 28 TLSU / 12 CUBE")
+        errors.append("state.engine_ops semantic engines must be exactly 32 VEC / 47 SFU / 28 TLSU / 12 CUBE")
     if engine_ops.get("semantic_engine_counts") != expected_engine_counts:
         errors.append("state.engine_ops.semantic_engine_counts differs from the PTO 0.58 projection")
     expected_classification_counts = {
@@ -387,7 +387,7 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         "matrix-and-matrix-vector": 12,
         "memory-and-data-movement": 27,
         "reduce-and-expand": 28,
-        "tile-scalar-and-immediate": 15,
+        "tile-scalar-and-immediate": 16,
     }
     if dict(sorted(classification_counts.items())) != expected_classification_counts:
         errors.append("state.engine_ops semantic classifications differ from the PTO 0.58 projection")

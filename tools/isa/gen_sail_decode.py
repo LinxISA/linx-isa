@@ -803,6 +803,12 @@ def prelude_lines(inst: dict, raw_fields: dict[str, tuple[str, int]], width: int
 
 
 def branch_body(inst: dict, exec_params: dict[str, list[str]]) -> list[str]:
+    policy_path = Path(__file__).resolve().parents[2] / "isa/sail/semantics_policy.json"
+    overrides = json.loads(policy_path.read_text())["form_overrides"]
+    grade = overrides.get(inst.get("id"), overrides.get(inst.get("pto_source_form_id")))
+    if grade == "decode-only":
+        return [f"// {inst['mnemonic']} | {inst['asm']} | unsupported executable subset",
+                "trap_illegal_inst(read_pc_or_tpc())"]
     width = inst["length_bits"]
     raw_field_meta = field_map(inst)
     expr_by_name = {
@@ -835,6 +841,14 @@ def branch_body(inst: dict, exec_params: dict[str, list[str]]) -> list[str]:
             raise ValueError(f"unmapped parameter {param} for {inst['mnemonic']}")
         args.append(expr)
     lines.append(f"{exec_name}({', '.join(args)})" if args else f"{exec_name}()")
+    condition = None
+    if inst["mnemonic"] == "B.IOR":
+        condition = "inst[26] == 0b1"
+    elif inst["mnemonic"] == "B.DATR":
+        condition = "inst[14..13] != 0b00"
+    if condition:
+        return [f"if {condition} then trap_illegal_inst(read_pc_or_tpc()) else {{",
+                *["  " + line for line in lines], "}"]
     return lines
 
 

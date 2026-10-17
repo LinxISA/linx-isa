@@ -5,9 +5,9 @@
 [[inst_b_ior]]
 ==== B.IOR
 
-*Syntax:* B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]
+*Syntax:* B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>][, ExecMaskPresent]
 
-*Description:* Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.
+*Description:* Bind up to three absolute GPR inputs and one absolute GPR output; ExecMaskPresent marks final-record GPR ExecutionMask words.
 
 *Encoding:*
 

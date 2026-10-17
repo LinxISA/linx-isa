@@ -271,12 +271,12 @@ def main() -> int:
     reservations = load(
         args.source_root / "spec/catalog/extension-encoding-reservations.json"
     )
-    if command_catalog.get("form_count") != 96:
-        raise ValueError("PTO 0.58.7 must publish exactly 96 command forms")
+    if command_catalog.get("form_count") != 105:
+        raise ValueError("PTO 0.58.7 must publish exactly 105 command forms")
     if scalar_catalog.get("form_count") != 473:
         raise ValueError("PTO 0.58.7 must publish proposal must contain exactly 473 scalar forms")
-    if reservations.get("reservation_count") != 46:
-        raise ValueError("PTO 0.58.7 must publish exactly 46 extension reservations")
+    if reservations.get("reservation_count") != 50:
+        raise ValueError("PTO 0.58.7 must publish exactly 50 extension reservations")
 
     removals, preserved = current_owned_lines(
         scalar_catalog, command_catalog, reservations

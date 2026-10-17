@@ -14,7 +14,7 @@ See the [chapter index](index.md) for the manual organization.
 | [Bundle Argument](bundle_argument.md) | 3 | **Ch 4** — [source](index.md) | `B.DIM` |
 | [Bundle Fixed-Point PostProcess Attribute](bundle_fixed_point_postprocess_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.FPATR` |
 | [Bundle Hint](bundle_hint.md) | 2 | **Ch 17** — [source](index.md) | `B.HINT` |
-| [Bundle Input & Output](bundle_input_output.md) | 7 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOS`, `B.IOT` |
+| [Bundle Input & Output](bundle_input_output.md) | 16 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOS`, `B.IOT` |
 | [Bundle Offset](bundle_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
 | [Bundle Split](bundle_split.md) | 75 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.ADD`, `BSTART.MGATHER.AND`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.DEC` +55 |
 | [BSTART](bstart.md) | 20 | **Ch 4** — [source](index.md) | `BSTART.ICALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD`, `L.BSTART.SYS` |

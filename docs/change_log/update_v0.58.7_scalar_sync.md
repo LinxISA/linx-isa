@@ -1,43 +1,49 @@
-# LinxISA 0.58.7 scalar synchronization candidate
+# PTO golden synchronization
 
-The immutable publication baseline is PTO 0.58.7.0, commit
-`de57af400cf607f03730aa522a4e9bfb160596de`. It contains 466 scalar forms,
-96 command forms, and 118 Tile operations.
+PTO-SPEC is the sole authority. The active design consumes development golden
+`f0a876e449a95d26841c5ee7affb4c905ebc5f5b`, not a mixture of the old published
+commands and a downstream scalar amendment. The golden includes 473 scalar
+forms, 105 command forms, 119 Tile operations, and 50 encoding reservations.
 
-This candidate integrates fengzhazha's LinxISA PR #208 with the companion [PTO scalar PR #390](https://github.com/PTO-ISA/pto-spec/pull/390)
-proposal pinned by `isa/v0.58/pto-scalar-proposal.lock.json`. All 473
-active scalar forms, including the previously accepted PTO `SYNC.CORE`, match
-the proposal exactly. DMA.FREE.S/L and MCOPY.DS/DL retain matching encodings
-and operands only; they are not implemented and reject execution before effects.
+`tools/isa/import_pto_golden.py` verifies exact commit/tree and upstream file
+bytes, then projects all common catalogs. `check_pto_scalar_proposal.py` checks
+full scalar/command/Tile/reservation equality and the active encoding identity.
+The historical filenames remain entry points; no independent scalar amendment
+source remains. `gen_pto_binder_pages.py` generates English/Chinese B.IOT and
+B.IOS references from the pinned PTO owning ASL contract, including independent
+.reuse/last-use semantics.
 
-The 44 atomic replacements and six new store forms are kept separate from the
-published baseline. The proposal lock pins the exact PTO commit, tree, catalog
-bytes, and effective scalar projection. Neither lock nor this candidate claims
-that changed atomic binaries have the published release's encoding identity.
+The current development ELF identity has release `0.58.7`, ABI
+`pto-isa-0.58.7-mode-function-v1`, and encoding projection
+`a5f78ecd707bde4a014542158ea257c783796b95fa4fbcce37742e41fee6a881`.
+It is not the published 0.58.7.0 identity; old objects must reject. The immutable
+publication lock and its frozen 466/96/118 inventory remain historical evidence.
 
-## Validation
+## Downstream work
 
-- Golden/catalog/manifest/navigation/codec checks, opcode-extension regression,
-  baseline-import verification, and scalar proposal parity pass.
-- Sail 0.20.2 parser, C generation, and executable directed tests pass. The
-  four resource reservations and SYNC.CORE are explicitly decode-only in this
-  single-context model; coverage does not claim architectural completeness.
-- English and Chinese MkDocs strict builds and documentation integrity pass.
-- Independent scalar tests cover every changed atomic family, six new forms,
-  subtraction underflow, narrow-store guard bytes, and rejected resource forms.
+- [PTO-SPEC #390](https://github.com/PTO-ISA/pto-spec/pull/390) owns scalar
+  definitions, development identity, and source traceability.
+- [QEMU #82](https://github.com/LinxISA/qemu/pull/82) synchronizes scalar
+  masks, rejects removed fused32 CALL, checks frame legality before effects,
+  and rejects unsupported resource/header/synchronization forms.
+- [PTOAS #9](https://github.com/LinxISA/PTOAS/pull/9) pins the same golden and
+  rejects retired names through shared verification. Name presence is not
+  semantic conformance: 94 names are present, 25 golden operations are absent,
+  and 87 retained operation catalogs changed since its previous source.
+- LLVM and the model catalog consumer are updated in their owning PRs; exact
+  checked revisions and validation evidence accompany those PRs.
 
-## Merge blockers
+## Implementation boundaries
 
-The pinned QEMU leaf still has the old atomic op5 layout. The restored exact
-LR.W/LR.D check fails against it; CI now runs that check so mnemonic presence
-cannot mask a raw-encoding mismatch. The [companion QEMU PR #82](https://github.com/LinxISA/qemu/pull/82) must be
-reviewed and landed, with the four resource instructions remaining unsupported,
-before updating the gitlink and component lock.
+DMA.FREE.S/L and MCOPY.DS/DL are encoding-only, NOT IMPLEMENTED, in both golden
+and consumers. No successful no-op, identity address, or resource behavior is
+invented. New binder lifetime modes, nonzero ExecutionMask controls, and
+SYNC.CORE are decoded but explicitly unsupported in the staged Sail/QEMU
+subsets. This does not narrow the PTO architecture or claim full conformance.
 
-The PTO counterpart is a proposal, not a published release. Its ordinary
-repository check is also blocked by stale release-owner projections: unchanged
-PTO main has 79 TEPL operations while the frozen 0.58.7 release generator expects
-78. No publication metadata or validation rule is weakened to bypass that gap.
+Leaf revisions are promoted to superproject gitlinks only after their own
+review and gates; old default pins remain a visible integration dependency.
 
 Skill closeout: `skill-evolve: no-update` for linx-isa, linx-superproject,
-and linx-qemu; this work follows their existing source and validation rules.
+linx-compiler, and linx-qemu; the current-source authority and exact-pin rules
+already govern this synchronization.

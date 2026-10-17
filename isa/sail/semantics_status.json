@@ -56,7 +56,7 @@
       "mnemonic": "B.CATR",
       "status": "executable-subset"
     },
-    "b_datr_32_85918343b9b5": {
+    "b_datr_32_6a3049795970": {
       "mnemonic": "B.DATR",
       "status": "executable-subset"
     },
@@ -84,7 +84,7 @@
       "mnemonic": "B.HINT",
       "status": "executable-subset"
     },
-    "b_ior_32_df50a269be7c": {
+    "b_ior_32_cfb1247fe758": {
       "mnemonic": "B.IOR",
       "status": "executable-subset"
     },
@@ -92,13 +92,45 @@
       "mnemonic": "B.IOS",
       "status": "executable-subset"
     },
+    "b_ios_32_e7e9796a7025": {
+      "mnemonic": "B.IOS",
+      "status": "decode-only"
+    },
+    "b_iot_32_0175e009f69e": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
+    },
+    "b_iot_32_15bc51973d26": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
+    },
+    "b_iot_32_2d213eb811c7": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
+    },
+    "b_iot_32_2f60297debcb": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
+    },
     "b_iot_32_3bc48b48fea2": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
+    "b_iot_32_610b3e49f01c": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
+    },
+    "b_iot_32_6d3f0819f3ed": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
+    },
     "b_iot_32_7d0899202df1": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
+    },
+    "b_iot_32_ba693fbfdca5": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
     },
     "b_iot_32_bf660153d171": {
       "mnemonic": "B.IOT",
@@ -111,6 +143,10 @@
     "b_iot_32_e0f1463d6a7e": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
+    },
+    "b_iot_32_ed562ab5801f": {
+      "mnemonic": "B.IOT",
+      "status": "decode-only"
     },
     "b_subview_32_48f114b5d12b": {
       "mnemonic": "B.SUBVIEW",

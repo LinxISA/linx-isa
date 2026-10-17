@@ -5,9 +5,9 @@
 [[inst_b_datr]]
 ==== B.DATR
 
-*Syntax:* B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}
+*Syntax:* B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}
 
-*Description:* Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
+*Description:* Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero.
 
 *Encoding:*
 

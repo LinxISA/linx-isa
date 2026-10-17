@@ -103,10 +103,10 @@ assert enc32(sole("SD.SUB"))[1] != enc32(sole("SD.SMAX"))[1]
 assert enc32(sole("SB.ADD"))[1] != enc32(sole("SW.ADD"))[1]
 assert enc32(sole("SH.SUB"))[1] != enc32(sole("SD.UMAX"))[1]
 
-# 5) The effective proposal has 473 scalar + 96 command identities.
+# 5) The effective proposal has 473 scalar + 105 command identities.
 #    The six atomic forms are shared; four resource forms are encoding-only.
 attached = [i for i in spec["instructions"] if "pto_source_form_id" in i]
-assert len(attached) == 569, len(attached)
+assert len(attached) == 578, len(attached)
 for mnemonic in NEW_ATOMIC:
     assert "pto_source_form_id" in sole(mnemonic), mnemonic
 for mnemonic in {**NEW_DMA, **NEW_MCOPY}:

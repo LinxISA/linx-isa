@@ -11,15 +11,21 @@
 
 ## Assembly Syntax
 
-- `B.IOS S<SharedTileID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+- `B.IOS S<SharedTileID>.reuse, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+- `B.IOS S<SharedTileID>, mask=<PE_MASK>`
 
 ## Encoding
 
 <div class="enc-diagram">
 
-<figure>
-<img src="../wavedrom/enc_b_ios.svg" alt="B.IOS encoding" width="100%" />
-<figcaption>Bitfield encoding diagram. MSB is on the left, LSB on the right.</figcaption>
+<figure id="encoding-b_ios_32_2f2d1ab83761">
+<img src="../wavedrom/enc_b_ios_32_2f2d1ab83761.svg" alt="B.IOS encoding form b_ios_32_2f2d1ab83761" width="100%" />
+<figcaption><code>b_ios_32_2f2d1ab83761</code> — <code>B.IOS S<SharedTileID>.reuse, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode></code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-b_ios_32_e7e9796a7025">
+<img src="../wavedrom/enc_b_ios_32_e7e9796a7025.svg" alt="B.IOS encoding form b_ios_32_e7e9796a7025" width="100%" />
+<figcaption><code>b_ios_32_e7e9796a7025</code> — <code>B.IOS S<SharedTileID>, mask=<PE_MASK></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -37,12 +43,14 @@ Binds one ordered absolute Core-private Shared register S0..S63 as a source or d
 ## Encoding Notes
 
 - `Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.`
+- `Binds one absolute Core-wide Shared source as its last payload use while retaining its Sx identity and descriptor.`
 
 ## Full Catalog Forms
 
-| Assembly | Length | Decode |
-|----------|--------|--------|
-| `B.IOS S<SharedTileID>, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` | 32 | — |
+| Form ID | Assembly | Length | Decode | Encoding |
+|---------|----------|--------|--------|----------|
+| `b_ios_32_2f2d1ab83761` | `B.IOS S<SharedTileID>.reuse, mask=<PE_MASK> | B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` | 32 | — | [SVG](../wavedrom/enc_b_ios_32_2f2d1ab83761.svg) |
+| `b_ios_32_e7e9796a7025` | `B.IOS S<SharedTileID>, mask=<PE_MASK>` | 32 | — | [SVG](../wavedrom/enc_b_ios_32_e7e9796a7025.svg) |
 
 <div class="insn-nav">
 

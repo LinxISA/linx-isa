@@ -375,7 +375,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "selector_formula": "(mode << 5) | function",
         "mode_field_bits": [0, 1],
         "function_field_bits": [0, 4],
-        "accepted_selector_count": 78,
+        "accepted_selector_count": len(tepl_ops),
         "reserved_selector_ranges": tiles["reserved"]["tepl_selector_ranges"],
         "migration_aliases": {},
         "ops": tepl_ops,

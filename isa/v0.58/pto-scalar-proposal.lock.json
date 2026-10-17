@@ -1,29 +1,53 @@
 {
-  "status": "proposal-not-published",
-  "baseline_publication": "v0.58.7.0",
+  "status": "development-not-published",
   "source": {
     "repository": "https://github.com/PTO-ISA/pto-spec.git",
-    "commit": "d19109edac823134f5e8bf63442008183967dc17",
-    "tree": "d6e1a1bb707d20f52bb8f902eb3b31a2584d50e1",
+    "commit": "f0a876e449a95d26841c5ee7affb4c905ebc5f5b",
+    "tree": "fe9e8e050375fbce3f526d08acca13c37cd15830",
     "pull_request": "https://github.com/PTO-ISA/pto-spec/pull/390"
   },
+  "development_manifest": {
+    "path": "spec/development-manifest.json",
+    "sha256": "0c6d0b2a1ec0b49e32e13971e751a5ea19946351a3880bfdfcef0f50351944f7"
+  },
+  "identity": {
+    "encoding_abi": "pto-isa-0.58.7-mode-function-v1",
+    "encoding_projection_sha256": "a5f78ecd707bde4a014542158ea257c783796b95fa4fbcce37742e41fee6a881",
+    "release": "0.58.7"
+  },
   "catalogs": {
+    "command_forms": {
+      "path": "spec/catalog/command-forms.json",
+      "sha256": "d2817054e96456d058d88c27cef1eb034a2b164b486d5c11fe3c796f08e02f3e",
+      "count": 105
+    },
+    "extension_encoding_reservations": {
+      "path": "spec/catalog/extension-encoding-reservations.json",
+      "sha256": "d34f6b560f19a531a962c6d8abf812a911e83ea57f721ef53102ed6f62c9c41c",
+      "count": 50
+    },
     "scalar_forms": {
       "path": "spec/catalog/scalar-forms.json",
-      "sha256": "840ae680f9193ae7a9422a0e7c0e264cd61fa83429149b7b0fff77d41282627d"
+      "sha256": "840ae680f9193ae7a9422a0e7c0e264cd61fa83429149b7b0fff77d41282627d",
+      "count": 473
     },
-    "reservations": {
-      "path": "spec/catalog/extension-encoding-reservations.json",
-      "sha256": "d34f6b560f19a531a962c6d8abf812a911e83ea57f721ef53102ed6f62c9c41c"
+    "system_registers": {
+      "path": "spec/catalog/system-registers.json",
+      "sha256": "2a5d6669b95c28f80651f5917558781de25b8465655399063790e50549e1e2a9",
+      "count": null
+    },
+    "tile_operations": {
+      "path": "spec/catalog/tile-operations.json",
+      "sha256": "533db9b8f31f118af5978de813cfaa3fa738de820ee24655faa2ee71f343a706",
+      "count": 119
     }
   },
+  "catalog_counts": {
+    "command_forms": 105,
+    "reservations": 50,
+    "scalar_forms": 473,
+    "tile_operations": 119
+  },
   "effective_forms_sha256": "ad93237bcf1ec7562ad5223c4e6547d27eafc1277b7fcc8c9ecf262f0af67570",
-  "effective_scalar_count": 473,
-  "encoding_only_reservations": [
-    "DMA.FREE.S",
-    "DMA.FREE.L",
-    "MCOPY.DS",
-    "MCOPY.DL"
-  ],
   "published_identity_compatible": false
 }

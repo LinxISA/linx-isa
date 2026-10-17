@@ -2,13 +2,13 @@
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/engine_ops.v0.json",
   "profile": "v0.58",
   "version": "0.58.7",
-  "source_lock": "isa/v0.58/pto-spec.lock.json",
+  "source_lock": "isa/v0.58/pto-scalar-proposal.lock.json",
   "note": "PTO ISA 0.58 encoding families and semantic execution-engine annotations; TEPL remains an encoding carrier and is not a semantic engine.",
   "semantic_engine_counts": {
     "CUBE": 12,
     "SFU": 47,
     "TLSU": 28,
-    "VEC": 31
+    "VEC": 32
   },
   "tlsu": {
     "kind": "function_u5",
@@ -668,7 +668,7 @@
       0,
       4
     ],
-    "accepted_selector_count": 78,
+    "accepted_selector_count": 79,
     "reserved_selector_ranges": [
       [
         "0x005",
@@ -691,7 +691,7 @@
         "0x025"
       ],
       [
-        "0x02E",
+        "0x02F",
         "0x039"
       ],
       [
@@ -2114,7 +2114,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2122,7 +2122,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2144,7 +2144,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2152,7 +2152,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2174,7 +2174,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2182,7 +2182,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2204,7 +2204,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2212,7 +2212,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2238,7 +2238,7 @@
           },
           {
             "field": "source0",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2272,7 +2272,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2307,7 +2307,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2342,7 +2342,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2377,7 +2377,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2412,7 +2412,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2447,7 +2447,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2482,7 +2482,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local row-broadcast source"
+            "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
           }
         ],
         "state_effects": [
@@ -2569,7 +2569,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2577,7 +2577,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2599,7 +2599,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2607,7 +2607,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2629,7 +2629,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2637,7 +2637,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -2659,7 +2659,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local same-type numeric destination"
+            "role": "new Local operation-type numeric destination"
           },
           {
             "field": "source0",
@@ -2667,7 +2667,7 @@
           }
         ],
         "state_effects": [
-          "operand:destination0:new-local-same-type-destination",
+          "operand:destination0:new-local-operation-type-destination",
           "operand:source0:persistent-local-numeric-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
@@ -3024,7 +3024,7 @@
         "operands": [
           {
             "field": "destination0",
-            "role": "new Local S32, S16, U32, or U16 destination"
+            "role": "new Local S64, S32, S16, U64, U32, or U16 destination"
           },
           {
             "field": "scalar0",
@@ -3379,6 +3379,41 @@
         ],
         "profile": "v0.58",
         "logical_selector": 29,
+        "semantic_status": "reviewed-complete"
+      },
+      {
+        "name": "TLEA",
+        "classification": "tile-scalar-and-immediate",
+        "engine": "VEC",
+        "mode": 1,
+        "function": 14,
+        "semantic_handler": "TLEA",
+        "legality_handler": "TileOperandsLegal_TLEA",
+        "effect_contract": "TLEA",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "new Local S64/U64 byte-offset destination"
+          },
+          {
+            "field": "source0",
+            "role": "persistent Local S32/U32/S64/U64 element indices"
+          },
+          {
+            "field": "scalar0",
+            "role": "per-PE element width in bits"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:new-local-byte-offset-destination",
+          "operand:source0:persistent-local-element-indices",
+          "operand:scalar0:element-width-bits",
+          "runtime:CurrentBundlePadValue:numeric-padding"
+        ],
+        "profile": "v0.58",
+        "logical_selector": 46,
         "semantic_status": "reviewed-complete"
       }
     ]

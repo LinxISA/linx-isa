@@ -2,18 +2,18 @@
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_ops.v1.json",
   "profile": "v0.58",
   "version": "0.58.7",
-  "source_lock": "isa/v0.58/pto-spec.lock.json",
-  "operation_count": 118,
+  "source_lock": "isa/v0.58/pto-scalar-proposal.lock.json",
+  "operation_count": 119,
   "family_counts": {
     "CUBE": 12,
-    "TEPL": 78,
+    "TEPL": 79,
     "TLSU": 28
   },
   "engine_counts": {
     "CUBE": 12,
     "SFU": 47,
     "TLSU": 28,
-    "VEC": 31
+    "VEC": 32
   },
   "classification_counts": {
     "elementwise-tile-tile": 26,
@@ -22,7 +22,7 @@
     "matrix-and-matrix-vector": 12,
     "memory-and-data-movement": 27,
     "reduce-and-expand": 28,
-    "tile-scalar-and-immediate": 15
+    "tile-scalar-and-immediate": 16
   },
   "deleted_names": [
     "ACCCVT",
@@ -102,7 +102,7 @@
         "0x025"
       ],
       [
-        "0x02E",
+        "0x02F",
         "0x039"
       ],
       [
@@ -2440,7 +2440,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -2451,7 +2451,7 @@
       "selector": "0x040",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -2493,7 +2493,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -2504,7 +2504,7 @@
       "selector": "0x041",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -2546,7 +2546,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -2557,7 +2557,7 @@
       "selector": "0x042",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -2599,7 +2599,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -2610,7 +2610,7 @@
       "selector": "0x043",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -2640,9 +2640,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2659,7 +2672,7 @@
         },
         {
           "field": "source0",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -2696,9 +2709,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2719,7 +2745,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -2757,9 +2783,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2780,7 +2819,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -2818,9 +2857,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2841,7 +2893,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -2879,9 +2931,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2902,7 +2967,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -2940,9 +3005,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -2963,7 +3041,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -3001,9 +3079,22 @@
       "datr_contract": {
         "allowed_nonzero_fields": [
           "Layout",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3024,7 +3115,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -3063,9 +3154,22 @@
         "allowed_nonzero_fields": [
           "Layout",
           "DataType",
-          "PadValueOrByteId"
+          "PadValueOrByteId",
+          "RMode"
         ],
-        "pad_union": "pad-value"
+        "pad_union": "pad-value",
+        "conditional_nonzero_fields": {
+          "RMode": {
+            "semantic_name": "BroadcastByteOffset",
+            "encoded_bits": "B.DATR[17:15]",
+            "applies_when": [
+              "CUBE_M16",
+              "CUBE_M32"
+            ],
+            "otherwise": "RowMajor requires zero",
+            "default": 0
+          }
+        }
       },
       "disposition": "accepted-direct-operation",
       "effect_contract": "ExecuteTileExpand",
@@ -3086,7 +3190,7 @@
         },
         {
           "field": "source1",
-          "role": "persistent Local row-broadcast source"
+          "role": "persistent Local row-broadcast source; CUBE_M16/M32 select an operation-typed slot within the first bound CELL"
         }
       ],
       "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
@@ -3242,7 +3346,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -3253,7 +3357,7 @@
       "selector": "0x050",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -3295,7 +3399,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -3306,7 +3410,7 @@
       "selector": "0x051",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -3348,7 +3452,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -3359,7 +3463,7 @@
       "selector": "0x052",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -3401,7 +3505,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local same-type numeric destination"
+          "role": "new Local operation-type numeric destination"
         },
         {
           "field": "source0",
@@ -3412,7 +3516,7 @@
       "selector": "0x053",
       "semantic_handler": "ExecuteTileReduction",
       "state_effects": [
-        "operand:destination0:new-local-same-type-destination",
+        "operand:destination0:new-local-operation-type-destination",
         "operand:source0:persistent-local-numeric-source",
         "runtime:CurrentBundlePadValue:numeric-padding"
       ],
@@ -4041,7 +4145,7 @@
       "operands": [
         {
           "field": "destination0",
-          "role": "new Local S32, S16, U32, or U16 destination"
+          "role": "new Local S64, S32, S16, U64, U32, or U16 destination"
         },
         {
           "field": "scalar0",
@@ -7144,6 +7248,61 @@
       ],
       "classification": "elementwise-tile-tile",
       "engine": "SFU"
+    },
+    {
+      "arguments": [
+        {
+          "operand": "destination0"
+        },
+        {
+          "operand": "source0"
+        },
+        {
+          "operand": "scalar0"
+        }
+      ],
+      "command_mnemonic": "BSTART.TEPL",
+      "contract_status": "reviewed-complete",
+      "datr_contract": {
+        "allowed_nonzero_fields": [
+          "PadValueOrByteId",
+          "Layout"
+        ],
+        "pad_union": "pad-value"
+      },
+      "disposition": "accepted-direct-operation",
+      "effect_contract": "TLEA",
+      "family": "TEPL",
+      "fault_contract": "ExecuteTileInstruction",
+      "function": 14,
+      "legality_handler": "TileOperandsLegal_TLEA",
+      "mode": 1,
+      "name": "TLEA",
+      "operands": [
+        {
+          "field": "destination0",
+          "role": "new Local S64/U64 byte-offset destination"
+        },
+        {
+          "field": "source0",
+          "role": "persistent Local S32/U32/S64/U64 element indices"
+        },
+        {
+          "field": "scalar0",
+          "role": "per-PE element width in bits"
+        }
+      ],
+      "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+      "selector": "0x02E",
+      "semantic_handler": "TLEA",
+      "state_effects": [
+        "operand:destination0:new-local-byte-offset-destination",
+        "operand:source0:persistent-local-element-indices",
+        "operand:scalar0:element-width-bits",
+        "runtime:CurrentBundlePadValue:numeric-padding"
+      ],
+      "classification": "tile-scalar-and-immediate",
+      "engine": "VEC"
     }
   ]
 }

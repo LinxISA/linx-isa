@@ -1,103 +1,52 @@
 # B.IOT
 
-## 功能
+唯一规范来源: [PTO-SPEC golden](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/operands/B.IOT.asl).
 
-`B.IOT` 按编码顺序绑定 Local Tile 源和目的寄存器。它只使用
-`T#1..T#16`、`U#1..U#16`、`M#1..M#16` 与 `N#1..N#16` 的相对
-Local 队列空间，不绑定 Shared `S0..S63`。
-
-机器可读目录 `isa/v0.58/linxisa-v0.58.json` 是编码唯一权威来源。
-
-## 五种规范形式
+## 汇编形式
 
 ```asm
-B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>
-B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>
-B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>
-B.IOT SrcTile0, mask=PE_MASK, <last>
+B.IOT SrcTile0.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>
+B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0.reuse, mask=PE_MASK, <last>
 B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>
+B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>
+B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>
+B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>
+B.IOT SrcTile0, mask=PE_MASK, <last>
+B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>
 ```
 
-不存在 `.reuse` 后缀。`L`/`last` 只终止当前有效 B.IOT 绑定序列，绝不
-释放源寄存器。
+## 编码
 
-## 编码字段
+| PTO form | mask | match | fields |
+| --- | --- | --- | --- |
+| `b_iot_32_10db6db84f5d` | `0xfc00707f` | `0x00005013` | SrcTile0=25:20; L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
+| `b_iot_32_2c07e7177fad` | `0x0007f1ff` | `0x00004013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; PEMode=11:9 |
+| `b_iot_32_8b8bce6bffe8` | `0x0000707f` | `0x00004013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
+| `b_iot_32_c11eb189dd83` | `0xfc07f1ff` | `0x00005013` | SrcTile0=25:20; L=19:19; PEMode=11:9 |
+| `b_iot_32_efa0fe3fe49a` | `0xfff0707f` | `0x00006013` | L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
+| `b_iot_32_ll_src` | `0x0007f1ff` | `0x00002013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; PEMode=11:9 |
+| `b_iot_32_rl_src` | `0x0007f1ff` | `0x00003013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; PEMode=11:9 |
+| `b_iot_32_lr_src` | `0x0007f1ff` | `0x00007013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; PEMode=11:9 |
+| `b_iot_32_ll_dst` | `0x0000707f` | `0x00002013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
+| `b_iot_32_rl_dst` | `0x0000707f` | `0x00003013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
+| `b_iot_32_lr_dst` | `0x0000707f` | `0x00007013` | SrcTile1=31:26; SrcTile0=25:20; L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
+| `b_iot_32_last_src` | `0xfc07f1ff` | `0x04005013` | SrcTile0=25:20; L=19:19; PEMode=11:9 |
+| `b_iot_32_last_dst` | `0xfc00707f` | `0x04005013` | SrcTile0=25:20; L=19:19; SizeCode=18:15; PEMode=11:9; DstTile=8:7 |
 
-| 位 | 字段 | 含义 |
-| --- | --- | --- |
-| 31:26 | `SrcTile1` 或固定零 | 第二个 Local 源 |
-| 25:20 | `SrcTile0` 或固定零 | 第一个 Local 源 |
-| 19 | `L` | 当前有效绑定之后终止序列 |
-| 18:15 | `SizeCode` | 0 为纯源；目的形式使用 1..10 |
-| 14:12 | `Func` | `100` 两源、`101` 一源、`110` 无源 |
-| 11:9 | `PEMode` | 三位参与模式 |
-| 8:7 | `DstTile` | 0 T、1 U、2 M、3 N |
-| 6:0 | 固定 `0010011` | 次编码 |
+## 语义边界
 
-`PEMode` 使用 PTO ISA 0.58.6 的公共固定译码表：
+显式 `.reuse` 保留所选源的数据；省略 `.reuse` 表示最后一次使用，在成功且未被取消的块完成时消耗对应的数据容量。旧编码的规范打印形式包含 `.reuse`。
+Local 源按参与 PE 消耗数据容量；Shared 源消耗完整 Core 范围的数据容量。寄存器代次身份和描述符保留。
+`PEMode=000` 在位置、重复、分配、描述符及内存检查前为严格无副作用路径。其他 PEMode 的四 PE mask 由 golden 公共译码器定义。
+B.IOT 的终止位 L 与源最后使用标记是不同维度。每个源的 `.reuse` 独立编码。B.IOS 使用绝对 Shared 名称 S0..S63。
+纯源 `SizeCode=0` 不分配目的。Local 目的使用 1..10，每 PE 为 128 B..64 KiB；Shared 目的使用 1..12，完整 Core 对象为 128 B..256 KiB。其余大小码保留。
+完整合法性、异常和状态转换以以上 PTO owning ASL 为准；本页编码表直接生成自同一 golden。
 
-| `PEMode` | 语义 mask |
-| --- | --- |
-| 0 | `0000`（无 PE） |
-| 1 | `1000`（PE0） |
-| 2 | `0100`（PE1） |
-| 3 | `0010`（PE2） |
-| 4 | `0001`（PE3） |
-| 5 | `1100`（PE0+PE1） |
-| 6 | `1110`（PE0+PE1+PE2） |
-| 7 | `1111`（四个 PE） |
+## 模型支持
 
-`PEMode=000` 在 placement、duplicate、schema、allocation、descriptor、
-memory 和 downstream fault 检查之前形成严格无副作用路径。
-
-## SizeCode
-
-纯源形式固定 `SizeCode=0`，不分配目的。目的形式仅允许 1..10：
-
-| `SizeCode` | 每个参与 PE 的目的容量 |
-| --- | --- |
-| 1 | 128 B |
-| 2 | 256 B |
-| 3 | 512 B |
-| 4 | 1 KiB |
-| 5 | 2 KiB |
-| 6 | 4 KiB |
-| 7 | 8 KiB |
-| 8 | 16 KiB |
-| 9 | 32 KiB |
-| 10 | 64 KiB |
-| 11..15 | 保留，非法指令 |
-
-目的容量按参与 PE 计算，core 总分配量为
-`popcount(decoded_mask) * per-PE capacity`，且不得超过 256 KiB。
-
-## 顺序与异常
-
-- 有效 B.IOT 只能出现在 BSTART 之后、第一条块体指令之前。
-- 一个块最多接受四个有效 Local 绑定，并按编码顺序匹配操作 schema。
-- 所有有效绑定必须具有相同的译码后 PE mask。
-- `L=1` 关闭序列；关闭后出现另一条有效 B.IOT，在产生状态变化之前报
-  Illegal Block Exception。
-- 保留位、保留 SizeCode 或畸形组合在产生架构副作用之前报非法指令。
-- 描述符不兼容、mask 扩展或 schema 角色不匹配在 Tile 状态变化之前
-  报 Fault_TileLegality。
-
-## 示例
-
-两个 Local 源、一个 16 KiB/PE 的 T-hand 目的，四个 PE 参与：
-
-```asm
-B.IOT T#1, U#1, mask=1111, last, ->T<8>
-```
-
-纯源绑定，PE0 与 PE1 参与：
-
-```asm
-B.IOT M#1, mask=1100, last
-```
-
-零参与严格无副作用：
-
-```asm
-B.IOT T#1, mask=0000, last
-```
+新增 LAST/LL/LR/RL 形式尚未在 Linx Sail 子集中实现；模型在产生效果前拒绝。编码存在不等于执行支持。

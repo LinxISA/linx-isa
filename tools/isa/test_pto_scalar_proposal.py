@@ -18,7 +18,7 @@ class ScalarProposalTests(unittest.TestCase):
         self.profile = ROOT / "isa/v0.58"
         self.baseline = json.loads((self.profile / "state/pto_scalar_forms.json").read_text())
 
-    def test_baseline_is_preserved_and_effective_inventory_is_complete(self):
+    def test_golden_is_preserved_and_inventory_is_complete(self):
         original = copy.deepcopy(self.baseline)
         result = apply_proposal(self.profile, self.baseline)
         self.assertEqual(self.baseline, original)
@@ -28,28 +28,21 @@ class ScalarProposalTests(unittest.TestCase):
 
     def test_modified_published_baseline_is_rejected(self):
         self.baseline["forms"][0]["semantic_summary"] = "modified"
-        with self.assertRaisesRegex(ValueError, "baseline was modified"):
+        with self.assertRaisesRegex(ValueError, "differs from PTO golden"):
             apply_proposal(self.profile, self.baseline)
 
-    def test_duplicate_or_out_of_scope_proposals_are_rejected(self):
-        proposal = json.loads((self.profile / "state/pto_scalar_proposal.json").read_text())
-        for mutation in ("duplicate", "scope", "additional"):
-            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as directory:
-                edited = copy.deepcopy(proposal)
-                if mutation == "duplicate":
-                    edited["forms"][0] = edited["forms"][1]
-                elif mutation == "scope":
-                    edited["forms"][0]["mnemonic"] = "ADD"
-                else:
-                    edited["additional_forms"].pop()
-                profile = Path(directory)
-                (profile / "state").mkdir()
-                (profile / "state/pto_scalar_proposal.json").write_text(json.dumps(edited))
-                (profile / "pto-scalar-proposal.lock.json").write_bytes(
-                    (self.profile / "pto-scalar-proposal.lock.json").read_bytes()
-                )
-                with self.assertRaises(ValueError):
-                    apply_proposal(profile, self.baseline)
+    def test_duplicate_form_and_published_identity_are_rejected(self):
+        malformed = copy.deepcopy(self.baseline)
+        malformed["forms"][0] = malformed["forms"][1]
+        with self.assertRaisesRegex(ValueError, "differs from PTO golden"):
+            apply_proposal(self.profile, malformed)
+        with tempfile.TemporaryDirectory() as directory:
+            profile = Path(directory)
+            lock = json.loads((self.profile / "pto-scalar-proposal.lock.json").read_text())
+            lock["published_identity_compatible"] = True
+            (profile / "pto-scalar-proposal.lock.json").write_text(json.dumps(lock))
+            with self.assertRaisesRegex(ValueError, "published compatible identity"):
+                apply_proposal(profile, self.baseline)
 
 
 if __name__ == "__main__":

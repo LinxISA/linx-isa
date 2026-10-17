@@ -16,7 +16,7 @@ Instructions in the **Bundle Data Attribute** group of the LinxISA v0.58.7 catal
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.DATR](../instructions/b_datr.md) | `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` | 32 | — | Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes. |
+| [B.DATR](../instructions/b_datr.md) | `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}` | 32 | — | Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero. |
 
 ## See Also
 

@@ -1,71 +1,31 @@
 # B.IOS
 
-## 功能
+唯一规范来源: [PTO-SPEC golden](https://github.com/PTO-ISA/pto-spec/blob/f0a876e449a95d26841c5ee7affb4c905ebc5f5b/asl/block/operands/B.IOS.asl).
 
-`B.IOS` 为块操作绑定一个 core 私有的 Shared Tile 寄存器。每个 core
-拥有 `S0` 到 `S63`，该 core 的四个 PE 共享这组寄存器；另一个 core 中
-同名的寄存器属于另一组 bank。
-
-生成页 [`B.IOS`](/isa/instructions/b_ios/) 与机器可读目录是编码和
-合法性的权威来源。本页只解释 Shared 寄存器模型，不建立第二套指令合约。
-
-## 汇编
+## 汇编形式
 
 ```asm
-B.IOS S<SharedTileID>, mask=<PE_MASK>
+B.IOS S<SharedTileID>.reuse, mask=<PE_MASK>
 B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>
+B.IOS S<SharedTileID>, mask=<PE_MASK>
 ```
 
-`SharedTileID` 是 6 bit 绝对索引，规范名称为 `S0` 到 `S63`；不接受
-`S#1` 这样的相对编号。
+## 编码
 
-## 编码身份
+| PTO form | mask | match | fields |
+| --- | --- | --- | --- |
+| `b_ios_32_4ba5ef98fdaa` | `0xfc0871ff` | `0x00001013` | SharedTileID=25:20; SizeCode=18:15; PEMode=11:9 |
+| `b_ios_32_last_src` | `0xfc0ff1ff` | `0x04001013` | SharedTileID=25:20; PEMode=11:9 |
 
-![B.IOS 编码](../wavedrom/enc_b_ios.svg)
+## 语义边界
 
-| 位 | 字段 | 含义 |
-| --- | --- | --- |
-| 31:26 | 固定零 | 保留位 |
-| 25:20 | `SharedTileID` | `S0` 到 `S63` 的绝对索引 |
-| 19 | 固定零 | 保留位 |
-| 18:15 | `SizeCode` | 源角色或完整 Shared 对象容量 |
-| 14:12 | 固定 `001` | 功能选择码 |
-| 11:9 | `PEMode` | 固定四 PE 参与模式 |
-| 8:0 | 固定 `000010011` | 次编码 |
+显式 `.reuse` 保留所选源的数据；省略 `.reuse` 表示最后一次使用，在成功且未被取消的块完成时消耗对应的数据容量。旧编码的规范打印形式包含 `.reuse`。
+Local 源按参与 PE 消耗数据容量；Shared 源消耗完整 Core 范围的数据容量。寄存器代次身份和描述符保留。
+`PEMode=000` 在位置、重复、分配、描述符及内存检查前为严格无副作用路径。其他 PEMode 的四 PE mask 由 golden 公共译码器定义。
+B.IOT 的终止位 L 与源最后使用标记是不同维度。每个源的 `.reuse` 独立编码。B.IOS 使用绝对 Shared 名称 S0..S63。
+纯源 `SizeCode=0` 不分配目的。Local 目的使用 1..10，每 PE 为 128 B..64 KiB；Shared 目的使用 1..12，完整 Core 对象为 128 B..256 KiB。其余大小码保留。
+完整合法性、异常和状态转换以以上 PTO owning ASL 为准；本页编码表直接生成自同一 golden。
 
-解码 mask 为 `0xfc0871ff`，match 为 `0x00001013`。PTO 来源 form 是
-`b_ios_32_4ba5ef98fdaa`，编译后的 Linx form 是
-`b_ios_32_2f2d1ab83761`。
+## 模型支持
 
-`PEMode` 的 0 到 7 依次映射为 `0000`、`1000`、`0100`、`0010`、
-`0001`、`1100`、`1110`、`1111`。`PEMode=000` 在 placement、重复、
-schema、allocation、描述符（descriptor）、memory 与 fault 检查之前就是严格无副作用
-路径。
-
-`SizeCode=0` 表示源。目的代码 `SizeCode=1` 到 `SizeCode=12` 分别表示完整 core-wide Shared
-对象的 128 B、256 B、512 B、1 KiB、2 KiB、4 KiB、8 KiB、16 KiB、
-32 KiB、64 KiB、128 KiB 与 256 KiB；`13..15` 非法。该容量不会乘以
-参与 PE 数量。
-
-## 状态行为
-
-源绑定只读，不改变 Shared descriptor、allocation mask、initialized mask
-或 payload；读取未初始化寄存器得到 undefined-register value。
-
-单 PE 目的原子发布完整 Shared parent。多 PE 目的通过 `B.ASSEMBLE`
-给出互不重叠的显式范围，并只在 `LAST` 时发布。schema、容量、范围、
-readiness 和 allocation 检查必须先于任何可见 descriptor 或 payload
-效果完成。
-
-除原子发布规则外，架构不规定冲突 PE 访问之间的顺序；软件必须避免冲突
-或建立独立同步。
-
-## 示例
-
-```asm
-B.IOS S7, mask=1100
-B.IOS mask=1111, ->S23<0001>
-B.IOS S7, mask=0000
-```
-
-`B.IOT` 仍绑定 Local Tile，不命名 Shared `S0` 到 `S63` bank。
+新增 LAST/LL/LR/RL 形式尚未在 Linx Sail 子集中实现；模型在产生效果前拒绝。编码存在不等于执行支持。

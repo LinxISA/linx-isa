@@ -826,6 +826,27 @@
         14,
         15
       ]
+    },
+    "ExecMaskPresent": {
+      "widths": [
+        1
+      ],
+      "namespace": "selector",
+      "reserved_values": []
+    },
+    "PredInv": {
+      "widths": [
+        1
+      ],
+      "namespace": "selector",
+      "reserved_values": []
+    },
+    "Zero": {
+      "widths": [
+        1
+      ],
+      "namespace": "selector",
+      "reserved_values": []
     }
   },
   "notes": [

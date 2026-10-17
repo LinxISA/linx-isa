@@ -295,6 +295,7 @@ def main() -> int:
 
     if not args.skip_generated:
         generated_checks = (
+            ([sys.executable, "tools/isa/gen_pto_binder_pages.py", "--check"], "PTO binder references"),
             (
                 [
                     sys.executable,

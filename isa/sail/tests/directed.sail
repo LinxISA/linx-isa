@@ -288,6 +288,18 @@ function main() : unit -> unit = {
   assert(last_trapnum == trapnum_illegal_inst());
   assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
 
+  // Unimplemented golden ExecutionMask controls reject before header state.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xABCD_ABCD_ABCD_ABCD);
+  bdatr_raw = 0x0000_0000_1234_5678;
+  decode_execute32(0x0000_5023);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(bdatr_raw == 0x0000_0000_1234_5678);
+  assert(not_bool(bdesc_seen_datr));
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xABCD_ABCD_ABCD_ABCD);
+  decode_execute32(0x0400_0013);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(not_bool(bdesc_seen_ior));
+
   // Standalone SETRET forms retain their own current-instruction PC base.
   pc = 0x0000_0000_0000_1000;
   exec_setret(0x00003);

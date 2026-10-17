@@ -15,7 +15,7 @@ assert pto_lock["release"] == "0.58.7"
 assert pto_lock["publication"]["tag"] == "v0.58.7.0"
 assert pto_lock["publication"]["version"] == "0.58.7.0"
 assert pto_lock["specification_status"] == "draft"
-assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 569
+assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 578
 pto_owned_instructions = [
     item
     for item in spec["instructions"]
@@ -26,7 +26,7 @@ linx_only_instructions = [
     for item in spec["instructions"]
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
-assert len(pto_owned_instructions) == 569
+assert len(pto_owned_instructions) == 578
 assert len(linx_only_instructions) == 216
 assert not any(item.get("pto_source_form_variant_of") for item in spec["instructions"])
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
@@ -55,7 +55,7 @@ reservations = json.loads(
         encoding="utf-8"
     )
 )["reservations"]
-assert len(reservations) == 46
+assert len(reservations) == 50
 
 
 def encoding_parts(item: dict) -> tuple[tuple[int, int, int], ...]:
@@ -95,7 +95,7 @@ assert all(
     for item in linx_only_instructions
 )
 b_ios = [item for item in spec["instructions"] if item["mnemonic"] == "B.IOS"]
-assert len(b_ios) == 1
+assert len(b_ios) == 2
 b_ios_part = b_ios[0]["encoding"]["parts"][0]
 assert (int(b_ios_part["mask"], 0), int(b_ios_part["match"], 0)) == (
     0xFC0871FF,
@@ -109,8 +109,8 @@ assert (int(timg2col_part["mask"], 0), int(timg2col_part["match"], 0)) == (
 )
 assert spec["retired_encodings"]["entries"] == []
 pto_ops = json.loads((ROOT / "isa/v0.58/state/pto_ops.json").read_text(encoding="utf-8"))
-expected_family_counts = {"CUBE": 12, "TEPL": 78, "TLSU": 28}
-expected_engine_counts = {"CUBE": 12, "SFU": 47, "TLSU": 28, "VEC": 31}
+expected_family_counts = {"CUBE": 12, "TEPL": 79, "TLSU": 28}
+expected_engine_counts = {"CUBE": 12, "SFU": 47, "TLSU": 28, "VEC": 32}
 expected_classification_counts = {
     "elementwise-tile-tile": 26,
     "irregular-and-complex": 4,
@@ -118,7 +118,7 @@ expected_classification_counts = {
     "matrix-and-matrix-vector": 12,
     "memory-and-data-movement": 27,
     "reduce-and-expand": 28,
-    "tile-scalar-and-immediate": 15,
+    "tile-scalar-and-immediate": 16,
 }
 assert pto_ops["family_counts"] == expected_family_counts
 assert pto_ops["engine_counts"] == expected_engine_counts
@@ -215,7 +215,7 @@ b_ios_page = (ROOT / "docs/isa/instructions/b_ios.md").read_text(encoding="utf-8
 b_ior_page = (ROOT / "docs/isa/instructions/b_ior.md").read_text(encoding="utf-8")
 assert "## Description\n\nBinds one ordered absolute Core-private Shared register" in b_ios_page
 assert "## Description\n\nBind up to three absolute GPR inputs" in b_ior_page
-assert "indexed TLSU uses BaseGPR only" in b_ior_page
+assert "ExecMaskPresent marks final-record GPR ExecutionMask words" in b_ior_page
 dma = next(item for item in spec["instructions"] if item["mnemonic"] == "DMA")
 assert "64-byte" in dma["note"]
 assert "overlap has memmove semantics" in dma["note"]
@@ -254,17 +254,9 @@ assert "ParentSizeCode" not in b_assemble["asm"]
 scalar_baseline = json.loads(
     (ROOT / "isa/v0.58/state/pto_scalar_forms.json").read_text(encoding="utf-8")
 )
-scalar_proposal = json.loads(
-    (ROOT / "isa/v0.58/state/pto_scalar_proposal.json").read_text(encoding="utf-8")
-)
-assert scalar_baseline["form_count"] == 466
-assert scalar_proposal["status"] == "proposal"
-assert scalar_proposal["baseline_release"] == "0.58.7"
-assert len(scalar_proposal["forms"]) == 44
-assert len({item["form_id"] for item in scalar_proposal["forms"]}) == 44
-assert {item["form_id"] for item in scalar_proposal["forms"]} <= {
-    item["form_id"] for item in scalar_baseline["forms"]
-}
+assert scalar_baseline["form_count"] == 473
+assert scalar_baseline["source_lock"] == "isa/v0.58/pto-scalar-proposal.lock.json"
+assert not (ROOT / "isa/v0.58/state/pto_scalar_proposal.json").exists()
 sail_execute = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
 sail_state = (ROOT / "isa/sail/model/state/state.sail").read_text(encoding="utf-8")
 semantics_conventions = json.loads(

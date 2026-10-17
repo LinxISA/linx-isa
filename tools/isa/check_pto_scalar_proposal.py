@@ -42,6 +42,17 @@ def compare(root: Path, pto_root: Path) -> list[str]:
     for identity in left.keys() & right.keys():
         if left[identity] != right[identity]:
             errors.append(f"scalar source differs from PTO proposal: {identity}")
+    for local_path, remote_path in (
+        ("state/pto_command_forms.json", "spec/catalog/command-forms.json"),
+        ("state/extension_encoding_reservations.json", "spec/catalog/extension-encoding-reservations.json"),
+    ):
+        local = {key: value for key, value in read(profile / local_path).items() if key != "source_lock"}
+        if local != read(pto_root / remote_path):
+            errors.append(f"common design differs from PTO golden: {local_path}")
+    if read(profile / "state/pto_ops.json")["operations"] != read(pto_root / "spec/catalog/tile-operations.json")["operations"]:
+        errors.append("Tile design differs from PTO golden")
+    if read(profile / "release_manifest.json").get("identity") != read(pto_root / "spec/development-manifest.json")["identity"]:
+        errors.append("active encoding identity differs from PTO golden")
     spec = read(profile / "linxisa-v0.58.json")
     reservations = read(pto_root / "spec/catalog/extension-encoding-reservations.json")
     reserved = {form["mnemonic"]: form for form in reservations["reservations"]}
@@ -78,7 +89,7 @@ def main() -> int:
     if errors:
         print("\n".join(errors))
         return 1
-    print("OK: all 473 scalar forms and four encoding-only reservations match PTO")
+    print("OK: PTO golden parity: 473 scalars, 105 commands, 119 Tile operations, 50 reservations, development identity")
     return 0
 
 

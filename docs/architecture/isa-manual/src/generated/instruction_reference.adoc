@@ -250,7 +250,7 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` |Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
+|`B.DATR` |32 |- |`B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}` |Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero.
 |===
 
 [[insnref-bundle-argument]]
@@ -289,12 +289,21 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.
-|`B.IOS` |32 |- |`B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
-|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>][, ExecMaskPresent]` |Bind up to three absolute GPR inputs and one absolute GPR output; ExecMaskPresent marks final-record GPR ExecutionMask words.
+|`B.IOS` |32 |- |`B.IOS S<SharedTileID>.reuse, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+|`B.IOS` |32 |- |`B.IOS S<SharedTileID>, mask=<PE_MASK>` |Binds one absolute Core-wide Shared source as its last payload use while retaining its Sx identity and descriptor.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0.reuse, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |===
 

@@ -25,10 +25,11 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: PTO-ISA/pto-spec
-          ref: d19109edac823134f5e8bf63442008183967dc17
+          ref: f0a876e449a95d26841c5ee7affb4c905ebc5f5b
           path: workloads/generated/pto-scalar-proposal
       - name: Verify the exact PTO scalar proposal and real QEMU decoder
         run: |
+          python3 tools/isa/import_pto_golden.py --source-root workloads/generated/pto-scalar-proposal --check
           python3 tools/isa/check_pto_scalar_proposal.py --pto-root workloads/generated/pto-scalar-proposal
           python3 -m unittest tools.isa.test_pto_scalar_proposal
           python3 tools/isa/test_v058_storeop_ext.py

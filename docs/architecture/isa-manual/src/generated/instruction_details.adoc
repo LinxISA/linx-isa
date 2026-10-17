@@ -6207,17 +6207,17 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}`
+* `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}`
 
 Encoding::
 +
-.`b_datr_32_85918343b9b5` — `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}`
-image::encodings/enc_b_datr.svg[B.DATR encoding form b_datr_32_85918343b9b5,align="center"]
+.`b_datr_32_6a3049795970` — `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}`
+image::encodings/enc_b_datr.svg[B.DATR encoding form b_datr_32_6a3049795970,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
+* Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero.
 
 Operation (informative)::
 +
@@ -6340,17 +6340,17 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]`
+* `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>][, ExecMaskPresent]`
 
 Encoding::
 +
-.`b_ior_32_df50a269be7c` — `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]`
-image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_df50a269be7c,align="center"]
+.`b_ior_32_cfb1247fe758` — `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>][, ExecMaskPresent]`
+image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_cfb1247fe758,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.
+* Bind up to three absolute GPR inputs and one absolute GPR output; ExecMaskPresent marks final-record GPR ExecutionMask words.
 
 Operation (informative)::
 +
@@ -6364,21 +6364,25 @@ Execute operation as selected by the mnemonic and encoded modifiers.
 
 Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
-Catalog forms:: 1 form(s) (32 bits).
+Catalog forms:: 2 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+* `B.IOS S<SharedTileID>.reuse, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+* `B.IOS S<SharedTileID>, mask=<PE_MASK>`
 
 Encoding::
 +
-.`b_ios_32_2f2d1ab83761` — `B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
-image::encodings/enc_b_ios.svg[B.IOS encoding form b_ios_32_2f2d1ab83761,align="center"]
+.`b_ios_32_2f2d1ab83761` — `B.IOS S<SharedTileID>.reuse, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>`
+image::encodings/enc_b_ios_32_2f2d1ab83761.svg[B.IOS encoding form b_ios_32_2f2d1ab83761,align="center"]
+.`b_ios_32_e7e9796a7025` — `B.IOS S<SharedTileID>, mask=<PE_MASK>`
+image::encodings/enc_b_ios_32_e7e9796a7025.svg[B.IOS encoding form b_ios_32_e7e9796a7025,align="center"]
 
 
 Encoding notes (informative)::
 +
 * Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
+* Binds one absolute Core-wide Shared source as its last payload use while retaining its Sx identity and descriptor.
 
 Operation (informative)::
 +
@@ -6392,28 +6396,52 @@ Execute operation as selected by the mnemonic and encoded modifiers.
 
 Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
 
-Catalog forms:: 5 form(s) (32 bits).
+Catalog forms:: 13 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
-* `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>`
+* `B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>`
 * `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+* `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 * `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>`
+* `B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0.reuse, mask=PE_MASK, <last>`
 * `B.IOT SrcTile0, mask=PE_MASK, <last>`
 
 Encoding::
 +
-.`b_iot_32_3bc48b48fea2` — `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+.`b_iot_32_0175e009f69e` — `B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_0175e009f69e.svg[B.IOT encoding form b_iot_32_0175e009f69e,align="center"]
+.`b_iot_32_15bc51973d26` — `B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_15bc51973d26.svg[B.IOT encoding form b_iot_32_15bc51973d26,align="center"]
+.`b_iot_32_2d213eb811c7` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_2d213eb811c7.svg[B.IOT encoding form b_iot_32_2d213eb811c7,align="center"]
+.`b_iot_32_2f60297debcb` — `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_2f60297debcb.svg[B.IOT encoding form b_iot_32_2f60297debcb,align="center"]
+.`b_iot_32_3bc48b48fea2` — `B.IOT SrcTile0.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 image::encodings/enc_b_iot_32_3bc48b48fea2.svg[B.IOT encoding form b_iot_32_3bc48b48fea2,align="center"]
+.`b_iot_32_610b3e49f01c` — `B.IOT SrcTile0, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_610b3e49f01c.svg[B.IOT encoding form b_iot_32_610b3e49f01c,align="center"]
+.`b_iot_32_6d3f0819f3ed` — `B.IOT SrcTile0.reuse, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_6d3f0819f3ed.svg[B.IOT encoding form b_iot_32_6d3f0819f3ed,align="center"]
 .`b_iot_32_7d0899202df1` — `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 image::encodings/enc_b_iot_32_7d0899202df1.svg[B.IOT encoding form b_iot_32_7d0899202df1,align="center"]
-.`b_iot_32_bf660153d171` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+.`b_iot_32_ba693fbfdca5` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+image::encodings/enc_b_iot_32_ba693fbfdca5.svg[B.IOT encoding form b_iot_32_ba693fbfdca5,align="center"]
+.`b_iot_32_bf660153d171` — `B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>`
 image::encodings/enc_b_iot_32_bf660153d171.svg[B.IOT encoding form b_iot_32_bf660153d171,align="center"]
-.`b_iot_32_cd6ec8181a49` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+.`b_iot_32_cd6ec8181a49` — `B.IOT SrcTile0.reuse, SrcTile1.reuse, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 image::encodings/enc_b_iot_32_cd6ec8181a49.svg[B.IOT encoding form b_iot_32_cd6ec8181a49,align="center"]
-.`b_iot_32_e0f1463d6a7e` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
+.`b_iot_32_e0f1463d6a7e` — `B.IOT SrcTile0.reuse, mask=PE_MASK, <last>`
 image::encodings/enc_b_iot_32_e0f1463d6a7e.svg[B.IOT encoding form b_iot_32_e0f1463d6a7e,align="center"]
+.`b_iot_32_ed562ab5801f` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_ed562ab5801f.svg[B.IOT encoding form b_iot_32_ed562ab5801f,align="center"]
 
 
 Encoding notes (informative)::

@@ -19,7 +19,7 @@ def require_tokens(path: Path, tokens: tuple[str, ...]) -> None:
 def main() -> int:
     catalog = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
     records = [entry for entry in catalog["instructions"] if entry["mnemonic"] == "B.IOS"]
-    assert len(records) == 1, "the v0.58 catalog must contain exactly one B.IOS record"
+    assert len(records) == 2, "PTO golden defines reuse and last-use B.IOS forms"
     record = records[0]
     assert len(record["encoding"]["parts"]) == 1
     encoding = record["encoding"]["parts"][0]
@@ -39,30 +39,12 @@ def main() -> int:
         {"insn_lsb": 9, "insn_msb": 11, "token": "PEMode", "width": 3}
     ]
 
-    syntax = tuple(record["asm"].split(" | "))
-    common = syntax + (
-        "S0",
-        "S63",
-        "PEMode=000",
-        "PE_MASK",
-        "SizeCode=0",
-        "SizeCode=12",
-        "13..15",
-        "1000",
-        "1111",
-        "b_ios_32_2f2d1ab83761",
-        "0xfc0871ff",
-        "0x00001013",
-    )
-    require_tokens(
-        ROOT / "docs/isa/header/B.IOS.md",
-        common + ("strict no-effect", "atomic", "descriptor", "undefined"),
-    )
-    require_tokens(
-        ROOT / "docs/zh/isa/header/B.IOS.md",
-        common + ("严格无副作用", "原子", "描述符", "未初始化"),
-    )
-    assert (ROOT / "docs/zh/isa/wavedrom/enc_b_ios.svg").is_file()
+    for rel in ("docs/isa/header/B.IOS.md", "docs/zh/isa/header/B.IOS.md"):
+        page = ROOT / rel
+        for form in records:
+            require_tokens(page, (*tuple(form["asm"].split(" | ")), form["pto_source_form_id"],
+                                  form["encoding"]["parts"][0]["mask"], form["encoding"]["parts"][0]["match"]))
+        require_tokens(page, (".reuse", "PTO-SPEC golden", "PEMode=000"))
 
     for nav in (ROOT / "mkdocs.yml", ROOT / "mkdocs.zh.yml"):
         require_tokens(nav, ("isa/header/B.IOS.md",))
