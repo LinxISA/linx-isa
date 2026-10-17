@@ -113,12 +113,12 @@
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "b08c05f304b189a9333416ae8a36837ff6e9a385",
-      "tree": "28ac9928579531db94c68975fbe3e747e2e2f171",
+      "commit": "a6e18c25e8be78a8c0cc8ef02dee1af2c6c92093",
+      "tree": "99ab7340b1c6daf2a1b17d4497285b1f0db3f72d",
       "release": "0.58.7",
       "role": "v0.58.7 development model codec and explicit executable subset; linx-model#23",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/linx-model/pull/22"
+      "review_url": "https://github.com/LinxISA/linx-model/pull/24"
     },
     {
       "path": "tools/pyCircuit",

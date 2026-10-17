@@ -45,10 +45,17 @@ publication lock and its frozen 466/96/118 inventory remain historical evidence.
 
 The semantic source is the immutable PTO commit above. PTO PR #390 subsequently
 repairs generated traceability and check metadata; those repairs do not change
-the golden ASL, catalogs, or development manifest. The Linx design projection
-used by leaf locks is `f77a8960f61f97c264a90b7aee757f99891b0943`; later documentation
-and gate changes preserve its catalog bytes. Its catalog SHA-256 is
-`51ca9be275518d29ec48bed570b7a9bd441a65b9c5e6d4f79072f650ee732925`.
+the golden ASL, catalogs, or development manifest. The initial Linx design
+projection was `f77a8960f61f97c264a90b7aee757f99891b0943` (catalog SHA-256
+`51ca9be275518d29ec48bed570b7a9bd441a65b9c5e6d4f79072f650ee732925`). Historical-PR
+review subsequently corrected dimension defaults and family-specific source
+modifier semantics. That source is frozen at
+`1deac9de1d2303baa04448e8a5c3520fc9b56ec0` (tree
+`4c4be0b8641b00acdd15b26b7ee4280fc610c8fb`, catalog SHA-256
+`5c01ea73c09305284ee00dbc4bd869925662af80d564c706761b59b9bc592c67`). The generated
+instruction encoding projection and PTO development identity remain unchanged.
+The following table preserves evidence for the initial synchronization PRs;
+subsequent integration work is recorded below.
 
 | Consumer / evidence | Proven scope | Remaining boundary |
 | --- | --- | --- |
@@ -129,12 +136,57 @@ contain 1,638 source-bearing binder emissions, all with explicit reuse. Removing
 only the added `.reuse` text produces exactly the original binding-string
 multisets, so destination bindings, masks and L markers are preserved.
 
-API hosted run `39025860551` was still building at the final local audit. That
+API hosted run `39025860551` subsequently passed its required gate. That
 workflow resolves LLVM branch `dev-llvm15_56`, while companion LLVM #126 targets
-`main`; even a successful hosted run would not establish target C++ object
+`main`; that successful hosted run does not establish target C++ object
 compatibility with the exact `edb65a7` candidate. The local MC/IAS evidence uses
 that exact candidate. The sysroot-backed C++ lane remains an explicit promotion
 dependency.
+
+## Reviewed integration and outstanding issues
+
+The user requested merging the reviewed work while tracking remaining
+conformance and validation gaps as issues. PTO #390, LLVM #126, QEMU #82,
+PTOAS #9, linx-model #22 and TileOP #279 have merged. Their squash trees were
+checked against the reviewed trees; superproject pins use merged commits,
+not topic heads. `docs/bringup/component-lock.v0.58.json` records the exact
+component provenance.
+
+Historical root PRs were reviewed against the same golden before integration:
+
+- #201: retain the scalar fallthrough/body-entry clarification.
+- #203: apply omitted LB defaults of one, preserve explicit zero and keep
+  presence out of legality; discard its obsolete model pin.
+- #193: replace the old blanket modifier remapping with separate binary,
+  comparison, address and CSEL rules from PTO. Binary raw 00/01/10/11 means
+  sw/uw/neg-or-not/none; comparison means none/sw/uw/neg-or-not, with raw 11
+  unmodified for restricted comparisons; address means none/sw/uw/reserved;
+  CSEL negates only raw 11. Sail parser, directed execution and C backend pass.
+- #186: retain only the merged musl hosted-group-runtime update; do not roll
+  LLVM or skills back to older commits.
+- #187: rewrite the Tile-region proposal for current WriterSizeCode,
+  INIT/continuation identity and independent source reuse/L semantics.
+- #191/#196: their old catalogs and model pins are superseded. The unique
+  ASLRef/private functional-model infrastructure must be rebuilt against the
+  current golden and merged prerequisites; it is not silently declared done.
+
+Remaining work stays open in the owning issues:
+
+- [Integration tracker #210](https://github.com/LinxISA/linx-isa/issues/210).
+- [QEMU #83](https://github.com/LinxISA/qemu/issues/83): intermittent precise
+  TLOAD/TSTORE failure under repeated launches.
+- [LLVM #127](https://github.com/LinxISA/llvm-project/issues/127): classify and
+  repair the full CodeGen failures and unresolved case.
+- [PTOAS #10](https://github.com/LinxISA/PTOAS/issues/10): 25 missing operations
+  and retained schema/semantic parity gaps.
+- [linx-model #23](https://github.com/LinxISA/linx-model/issues/23): executable
+  subset inventory and independent semantic coverage.
+- [TileOP #237](https://github.com/LinxISA/Linx-TileOP-API/issues/237): TLEA,
+  per-operation coverage and exact-candidate target C++ validation.
+- [LinxISA #188](https://github.com/LinxISA/linx-isa/issues/188): remaining
+  Tile-region semantic IR/frontend, model and workload implementation.
+- [LinxISA #190](https://github.com/LinxISA/linx-isa/issues/190): rebuild the
+  functional-model dependency chain and private-checkout validation.
 
 ## Implementation boundaries
 
@@ -144,8 +196,8 @@ invented. New binder lifetime modes, nonzero ExecutionMask controls, and
 SYNC.CORE are decoded but explicitly unsupported in the staged Sail/QEMU
 subsets. This does not narrow the PTO architecture or claim full conformance.
 
-Leaf revisions are promoted to superproject gitlinks only after their own
-review and gates; old default pins remain a visible integration dependency.
+Integration does not close these issues, publish a new frozen release, or
+upgrade partial execution evidence to full architectural conformance.
 
 Skill closeout: `skill-evolve: no-update` for installed skills in this task.
 This development candidate does not publish a new stable skill authority.
