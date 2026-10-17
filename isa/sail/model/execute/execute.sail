@@ -638,64 +638,59 @@ function exec_rev(RegDst : bits(5), SrcL : bits(5), Nminus1 : bits(6), M : bits(
 
 // (bool_to_u64 defined near top of file)
 
-function sanitize_srcrtype_swuw(t : bits(2)) -> bits(2) = {
-  // For forms whose assembly only allows {.sw,.uw}, strict v0.57 treats 11 as 00.
-  if t == 0b11 then 0b00 else t
-}
-
 function exec_cmp_eq(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64(a == b))
 }
 
 function exec_cmp_ne(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64(a != b))
 }
 
 function exec_cmp_lt(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64(signed(a) < signed(b)))
 }
 
 function exec_cmp_ge(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64(signed(a) >= signed(b)))
 }
 
 function exec_cmp_ltu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64(unsigned(a) < unsigned(b)))
 }
 
 function exec_cmp_geu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64(unsigned(a) >= unsigned(b)))
 }
 
 function exec_cmp_and(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_logic64(SrcRType, b0);
+  let b = apply_compare_srcrtype_logic64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64((a & b) != 0x0000_0000_0000_0000))
 }
 
 function exec_cmp_or(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_logic64(SrcRType, b0);
+  let b = apply_compare_srcrtype_logic64(SrcRType, b0);
   write_regdst(RegDst, bool_to_u64((a | b) != 0x0000_0000_0000_0000))
 }
 
@@ -804,56 +799,56 @@ function exec_hl_cmp_ori(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) ->
 function exec_setc_eq(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   set_commit_argument(bool_to_u64(a == b))
 }
 
 function exec_setc_ne(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   set_commit_argument(bool_to_u64(a != b))
 }
 
 function exec_setc_lt(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   set_commit_argument(bool_to_u64(signed(a) < signed(b)))
 }
 
 function exec_setc_ge(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   set_commit_argument(bool_to_u64(signed(a) >= signed(b)))
 }
 
 function exec_setc_ltu(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   set_commit_argument(bool_to_u64(unsigned(a) < unsigned(b)))
 }
 
 function exec_setc_geu(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_arith64(sanitize_srcrtype_swuw(SrcRType), b0);
+  let b = apply_restricted_compare_srcrtype64(SrcRType, b0);
   set_commit_argument(bool_to_u64(unsigned(a) >= unsigned(b)))
 }
 
 function exec_setc_and(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_logic64(SrcRType, b0);
+  let b = apply_compare_srcrtype_logic64(SrcRType, b0);
   set_commit_argument(bool_to_u64((a & b) != 0x0000_0000_0000_0000))
 }
 
 function exec_setc_or(SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = apply_srcrtype_logic64(SrcRType, b0);
+  let b = apply_compare_srcrtype_logic64(SrcRType, b0);
   set_commit_argument(bool_to_u64((a | b) != 0x0000_0000_0000_0000))
 }
 
@@ -1065,11 +1060,11 @@ function exec_c_setret(uimm5 : bits(5)) -> unit = {
 
 function exec_csel(RegDst : bits(5), SrcP : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   // Select SrcL for a nonzero predicate, otherwise select SrcR. CSEL uses
-  // SrcRType=10 for its optional .neg spelling; every other value is plain.
+  // SrcRType=11 for its optional .neg spelling; every other value is plain.
   let p = read_reg5(SrcP);
   let a = read_reg5(SrcL);
   let b0 = read_reg5(SrcR);
-  let b = if SrcRType == 0b10 then sub_bits(0x0000_0000_0000_0000, b0) else b0;
+  let b = if SrcRType == 0b11 then sub_bits(0x0000_0000_0000_0000, b0) else b0;
   let r = if p != 0x0000_0000_0000_0000 then a else b;
   write_regdst(RegDst, r)
 }
@@ -1484,7 +1479,7 @@ function exec_hl_xoriw(RegDst : bits(5), SrcL : bits(5), simm24 : bits(24)) -> u
 
 function ea_base_reg(srcl : bits(5), srcr : bits(5), srcrtype : bits(2), shamt5 : bits(5)) -> bits(64) = {
   let base = read_reg5(srcl);
-  let idx = apply_srcrtype_arith64(srcrtype, read_reg5(srcr));
+  let idx = apply_address_srcrtype64(srcrtype, read_reg5(srcr));
   let sh : int = unsigned(shamt5);
   base + (sail_shiftleft(idx, sh))
 }
@@ -7497,7 +7492,7 @@ function exec_sh_sub(SrcL : bits(5), SrcR : bits(5), rl : bits(1)) -> unit = {
 function exec_lb(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let b : bits(8) = read_mem8(ea);
@@ -7507,7 +7502,7 @@ function exec_lb(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bi
 function exec_lbu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let b : bits(8) = read_mem8(ea);
@@ -7517,7 +7512,7 @@ function exec_lbu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : b
 function exec_lh(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let h : bits(16) = mem_load16_le(ea);
@@ -7527,7 +7522,7 @@ function exec_lh(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bi
 function exec_lhu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let h : bits(16) = mem_load16_le(ea);
@@ -7537,7 +7532,7 @@ function exec_lhu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : b
 function exec_lw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let w : bits(32) = mem_load32_le(ea);
@@ -7547,7 +7542,7 @@ function exec_lw(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bi
 function exec_lwu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let w : bits(32) = mem_load32_le(ea);
@@ -7557,7 +7552,7 @@ function exec_lwu(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : b
 function exec_ld(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let sh : int = unsigned(shamt);
   let ea = base + (sail_shiftleft(off1, sh));
   let d : bits(64) = mem_load64_le(ea);
@@ -7571,7 +7566,7 @@ function exec_ld(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bi
 function exec_sb(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + off1;
   let v : bits(8) = read_reg5(SrcD)[7..0];
   write_mem8(ea, v)
@@ -7580,7 +7575,7 @@ function exec_sb(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits
 function exec_sh(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + (sail_shiftleft(off1, 1));
   let v : bits(16) = read_reg5(SrcD)[15..0];
   mem_store16_le(ea, v)
@@ -7589,7 +7584,7 @@ function exec_sh(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits
 function exec_sw(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + (sail_shiftleft(off1, 2));
   let v : bits(32) = read_reg5(SrcD)[31..0];
   mem_store32_le(ea, v)
@@ -7598,7 +7593,7 @@ function exec_sw(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits
 function exec_sd(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + (sail_shiftleft(off1, 3));
   let v : bits(64) = read_reg5(SrcD);
   mem_store64_le(ea, v)
@@ -7609,7 +7604,7 @@ function exec_sd(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits
 function exec_sh_u(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + off1;
   let v : bits(16) = read_reg5(SrcD)[15..0];
   mem_store16_le(ea, v)
@@ -7618,7 +7613,7 @@ function exec_sh_u(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bi
 function exec_sw_u(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + off1;
   let v : bits(32) = read_reg5(SrcD)[31..0];
   mem_store32_le(ea, v)
@@ -7627,7 +7622,7 @@ function exec_sw_u(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bi
 function exec_sd_u(SrcD : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
   let base = read_reg5(SrcL);
   let off0 = read_reg5(SrcR);
-  let off1 = apply_srcrtype_arith64(SrcRType, off0);
+  let off1 = apply_address_srcrtype64(SrcRType, off0);
   let ea = base + off1;
   let v : bits(64) = read_reg5(SrcD);
   mem_store64_le(ea, v)
@@ -7893,17 +7888,17 @@ function exec_sd_pcr(SrcD : bits(5), simm17 : bits(17)) -> unit = {
 // Contract (per decision):
 //   - PR: new_base = base + off; access at new_base; Dst1/Rd = new_base
 //   - PO: access at base; new_base = base + off; Dst1/Rd = new_base
-// off = sail_shiftleft(apply_srcrtype_arith64(SrcRType, SrcR, shamt_or_scale))
+// off = sail_shiftleft(apply_address_srcrtype64(SrcRType, SrcR), shamt_or_scale)
 
 function hl_off_shamt(SrcR : bits(5), SrcRType : bits(2), shamt : bits(5)) -> bits(64) = {
   let idx0 = read_reg5(SrcR);
-  let idx1 = apply_srcrtype_arith64(SrcRType, idx0);
+  let idx1 = apply_address_srcrtype64(SrcRType, idx0);
   (sail_shiftleft(idx1, unsigned(shamt)))
 }
 
 function hl_off_scale(SrcR : bits(5), SrcRType : bits(2), scale : int) -> bits(64) = {
   let idx0 = read_reg5(SrcR);
-  let idx1 = apply_srcrtype_arith64(SrcRType, idx0);
+  let idx1 = apply_address_srcrtype64(SrcRType, idx0);
   (sail_shiftleft(idx1, scale))
 }
 
@@ -8798,7 +8793,7 @@ function exec_hl_shp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bi
   mem_store16_le(ea + (sail_zeros(64) + 2), v1)
 }
 function exec_hl_shp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
-  let ea = read_reg5(SrcL) + apply_srcrtype_arith64(SrcRType, read_reg5(SrcR));
+  let ea = read_reg5(SrcL) + apply_address_srcrtype64(SrcRType, read_reg5(SrcR));
   let v0 : bits(16) = read_reg5(SrcD0)[15..0];
   let v1 : bits(16) = read_reg5(SrcD1)[15..0];
   mem_store16_le(ea, v0);
@@ -8812,7 +8807,7 @@ function exec_hl_swp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bi
   mem_store32_le(ea + (sail_zeros(64) + 4), v1)
 }
 function exec_hl_swp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
-  let ea = read_reg5(SrcL) + apply_srcrtype_arith64(SrcRType, read_reg5(SrcR));
+  let ea = read_reg5(SrcL) + apply_address_srcrtype64(SrcRType, read_reg5(SrcR));
   let v0 : bits(32) = read_reg5(SrcD0)[31..0];
   let v1 : bits(32) = read_reg5(SrcD1)[31..0];
   mem_store32_le(ea, v0);
@@ -8826,7 +8821,7 @@ function exec_hl_sdp(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bi
   mem_store64_le(ea + (sail_zeros(64) + 8), v1)
 }
 function exec_hl_sdp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : bits(5), SrcRType : bits(2)) -> unit = {
-  let ea = read_reg5(SrcL) + apply_srcrtype_arith64(SrcRType, read_reg5(SrcR));
+  let ea = read_reg5(SrcL) + apply_address_srcrtype64(SrcRType, read_reg5(SrcR));
   let v0 : bits(64) = read_reg5(SrcD0);
   let v1 : bits(64) = read_reg5(SrcD1);
   mem_store64_le(ea, v0);

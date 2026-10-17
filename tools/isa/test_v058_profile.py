@@ -281,9 +281,19 @@ assert semantics_conventions["immediate_materialization"]["hl_lui"] == {
 }
 assert "sail_shiftleft(zext32_from32(imm32), 32)" in sail_execute
 assert "write_regdst(RegDst, sext32_from32(imm32))" not in sail_execute
-assert semantics_conventions["srcrtype"]["csel"]["policy"] == "10_as_neg_else_00"
-assert "if SrcRType == 0b10 then sub_bits" in sail_execute
-assert "if SrcRType == 0b11 then sub_bits" not in sail_execute
+assert semantics_conventions["srcrtype"]["binary_mapping"] == {
+    "00": "sw (sext32)",
+    "01": "uw (zext32)",
+    "10": "neg (arithmetic families) / not (logical families)",
+    "11": "none",
+}
+assert semantics_conventions["srcrtype"]["address_mapping"]["11"] == "reserved"
+assert semantics_conventions["srcrtype"]["csel"]["policy"] == "11_as_neg_else_none"
+assert "if SrcRType == 0b11 then sub_bits" in sail_execute
+assert "if SrcRType == 0b10 then sub_bits" not in sail_execute
+assert "apply_restricted_compare_srcrtype64(SrcRType, b0)" in sail_execute
+assert "apply_compare_srcrtype_logic64(SrcRType, b0)" in sail_execute
+assert "apply_address_srcrtype64(SrcRType, off0)" in sail_execute
 assert "tile_tlsu_required_sources" in sail_execute
 assert "tile_tlsu_produces_output" in sail_execute
 assert "if value == 0x0000_0000_0000_0000 then" not in sail_execute

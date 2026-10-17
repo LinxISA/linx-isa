@@ -175,38 +175,47 @@ function main() : unit -> unit = {
   tile_effect_reset_arch();
   bdesc_reset();
 
-  // SrcRType arithmetic codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
+  // Binary ALU SrcRType codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
   assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
   assert(apply_srcrtype_arith64(0b01, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
   assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
   assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
 
-  // CSEL has a form-specific SrcRType assignment: 11 is the canonical plain
-  // spelling and 10 is .neg. Predicate true always selects SrcL.
+  // Comparison codes are 00=none, 01=.sw, 10=.uw, 11=.neg/.not;
+  // restricted comparison forms treat raw 11 as the unmodified alias.
+  assert(apply_restricted_compare_srcrtype64(0b00, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+  assert(apply_restricted_compare_srcrtype64(0b01, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
+  assert(apply_restricted_compare_srcrtype64(0b10, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
+  assert(apply_restricted_compare_srcrtype64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+  assert(apply_compare_srcrtype_logic64(0b11, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFE);
+
+  // CSEL has a form-specific SrcRType assignment: raw 11 is .neg and the
+  // other three raw values are unmodified aliases. Predicate true always
+  // selects SrcL.
   write_reg5(0b00001, 0x0000_0000_0000_0000); // predicate
   write_reg5(0b00010, 0x1111_2222_3333_4444); // SrcL
   write_reg5(0b00011, 0x0000_0000_0000_0007); // SrcR
-  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
-  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
   exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
   assert(read_reg5(0b00100) == 0xFFFF_FFFF_FFFF_FFF9);
   write_reg5(0b00001, 0x0000_0000_0000_0001);
-  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
   assert(read_reg5(0b00100) == 0x1111_2222_3333_4444);
 
   // LBU host memory is outside this REPL proof boundary: read_mem8/write_mem8
   // require host primops here.  Mirror exec_lbu's executable composition:
-  // apply SrcRType first, shift that modifier, add base, then zext8_from8.
+  // apply the address-family SrcRType first, shift that modifier, add base,
+  // then zext8_from8. Raw 11 is rejected by generated decode.
   let lbu_base : bits(64) = 0x0000_0010_0000_1000;
   let lbu_src : bits(64) = 0x0000_0001_8000_0004;
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_000E_8000_0FFC);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_000D_0000_0FF8);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
+  assert(not_bool(decode_execute32_opcode_0b0001001_funct3_0b000_match_0(0x0600_0009)));
   assert(zext8_from8(0x81) == 0x0000_0000_0000_0081);
   assert(zext8_from8(0x42) == 0x0000_0000_0000_0042);
   assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);
