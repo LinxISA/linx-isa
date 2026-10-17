@@ -152,6 +152,21 @@ checked against the reviewed trees; superproject pins use merged commits,
 not topic heads. `docs/bringup/component-lock.v0.58.json` records the exact
 component provenance.
 
+Follow-up LLVM #128 and QEMU #84 align parser/printer/CodeGen and execution
+with the four distinct SrcRType families. LLVM's 61 MC tests, linx32/64 IAS and
+indexed C load/store/select object checks pass; its complete CodeGen result is
+105 pass, six failures and one unresolved case (the same tracked failure set).
+Three LLVM-to-QEMU execution guests cover the family results and raw-11 address
+rejection in both 32-bit and 48-bit forms without destination effects. QEMU's
+124 Python tests, runner negative controls, numeric C tests and build pass.
+Independent source and runtime-oracle review found no remaining defect in that
+bounded change. linx-model #24 refreshes the exact catalog authority while
+keeping generated codec bytes unchanged; 12 CTest checks pass. TileOP #280
+repairs the Linux-host negative dtype fixture: unsigned long can alias the
+supported uint64_t type, so the negative case now uses unsupported double and
+retains a positive uint64_t check. Its required hosted gate passed. QEMU #85
+adds test license/style hygiene without changing execution behavior.
+
 Historical root PRs were reviewed against the same golden before integration:
 
 - #201: retain the scalar fallthrough/body-entry clarification.

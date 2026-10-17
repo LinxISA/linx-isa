@@ -7,12 +7,12 @@
       "path": "compiler/llvm",
       "url": "https://github.com/LinxISA/llvm-project.git",
       "branch": "main",
-      "commit": "cfd4db8136c70c0921ecf40a042afaaf3f561943",
-      "tree": "ebc6bfc25403546f7f2efc9cc896de8f4be94a9d",
+      "commit": "9dd03841e5758c8be7cc3d20be122413553becf1",
+      "tree": "9dac43d8a396ff517e2f856709f8306f2de63088",
       "release": "0.58.7",
       "role": "v0.58.7 development compiler, assembler and linker; remaining CodeGen gaps tracked in llvm-project#127",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/llvm-project/pull/126"
+      "review_url": "https://github.com/LinxISA/llvm-project/pull/128"
     },
     {
       "path": "compiler/ptoas",
@@ -29,12 +29,12 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "ce9caec4f6e809220da9d11f96065f4601e1b045",
-      "tree": "40b2600cb2dafecc068663981ab67c08b740efa5",
+      "commit": "d451933b46ec7212a3e95514ee36d876d9c81f7b",
+      "tree": "920c18e813d4c00f97b694836efd767dfbc3cb12",
       "release": "0.58.7",
       "role": "v0.58.7 development emulator subset; repeated Tile fault gap tracked in qemu#83",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/qemu/pull/82"
+      "review_url": "https://github.com/LinxISA/qemu/pull/85"
     },
     {
       "path": "kernel/linux",
@@ -92,12 +92,12 @@
       "path": "tools/Linx-TileOP-API",
       "url": "https://github.com/LinxISA/Linx-TileOP-API.git",
       "branch": "linx",
-      "commit": "b270ac286b43e5f4e3a2f3a907ef2aeaf82e91b2",
-      "tree": "8570b32f0516047a39c0045da36bea213b865eea",
+      "commit": "d6787687ce0aa8d5a91b2ab0b51aa4f267f148d2",
+      "tree": "79ccbe2b215c34141eeab59528261f9676fba5b5",
       "release": "0.58.7",
       "role": "v0.58.7 development TileOP API with exact golden contracts; remaining wrapper/C++ validation tracked in Linx-TileOP-API#237",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/Linx-TileOP-API/pull/279"
+      "review_url": "https://github.com/LinxISA/Linx-TileOP-API/pull/280"
     },
     {
       "path": "tools/LinxCoreModel",
