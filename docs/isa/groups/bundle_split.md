@@ -5,12 +5,12 @@
 <span class="ch-tag ch-tag-04">Ch 04</span>
 &nbsp; <strong>Block ISA — Block-structured Control Flow</strong> &nbsp;|&nbsp;
 **Group:** Bundle Split &nbsp;|&nbsp;
-**Forms:** 73 &nbsp;|&nbsp;
+**Forms:** 75 &nbsp;|&nbsp;
 **Unique mnemonics:** 63
 
 </div>
 
-Instructions in the **Bundle Split** group of the LinxISA v0.58.6 catalog.
+Instructions in the **Bundle Split** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 
@@ -75,8 +75,8 @@ Instructions in the **Bundle Split** group of the LinxISA v0.58.6 catalog.
 | [FRET.STK](../instructions/fret_stk.md) | `FRET.STK [ra ~ RegDstn], sp!, uimm` | 32 | — | Restores a restartable stack frame whose first stack slot supplies the validated return target. |
 | [L.BSTOP](../instructions/l_bstop.md) | `L.BSTOP` | 64 | — | Commits the current bundle and transfers to its selected continuation. |
 | [MCOPY](../instructions/mcopy.md) | `MCOPY [RegSrc0, RegSrc1, RegSrc2]` | 32 | — | Copies a non-overlapping byte range in restartable forward memory steps. |
-| [MCOPY.DL](../instructions/mcopy_dl.md) | `MCOPY.DL [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` | 32 | — | v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field. |
-| [MCOPY.DS](../instructions/mcopy_ds.md) | `MCOPY.DS [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` | 32 | — | v0.58 32-bit block memory-copy variant in Store mode (D + S/L=Store): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response may return before the copy completes. Distinguished from MCOPY by 26..25=01 and the RegDst field. |
+| [MCOPY.DL](../instructions/mcopy_dl.md) | `MCOPY.DL [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` | 32 | — | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
+| [MCOPY.DS](../instructions/mcopy_ds.md) | `MCOPY.DS [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` | 32 | — | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DS. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
 | [MSET](../instructions/mset.md) | `MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` | 32 | — | Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight. |
 | [XB](../instructions/xb.md) | `XB ACR-ID, C-ID` | 32 | — | Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects. |
 

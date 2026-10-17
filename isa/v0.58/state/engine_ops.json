@@ -1,12 +1,12 @@
 {
   "$schema": "https://docs.openclaw.ai/schemas/linxisa/engine_ops.v0.json",
   "profile": "v0.58",
-  "version": "0.58.6",
+  "version": "0.58.7",
   "source_lock": "isa/v0.58/pto-spec.lock.json",
   "note": "PTO ISA 0.58 encoding families and semantic execution-engine annotations; TEPL remains an encoding carrier and is not a semantic engine.",
   "semantic_engine_counts": {
     "CUBE": 12,
-    "SFU": 46,
+    "SFU": 47,
     "TLSU": 28,
     "VEC": 31
   },
@@ -85,8 +85,7 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:address:base-address",
-          "operand:scalar0:gm-row-stride-elements",
-          "operand:source0:logical-linear-element-indices",
+          "operand:source0:byte-displacement-indices",
           "runtime:CurrentBundlePadValue:physical-padding"
         ]
       },
@@ -100,9 +99,8 @@
         "semantic_handler": "MSCATTER",
         "state_effects": [
           "operand:address:base-address",
-          "operand:scalar0:gm-row-stride-elements",
           "operand:source0:source",
-          "operand:source1:logical-linear-element-indices"
+          "operand:source1:byte-displacement-indices"
         ]
       },
       {
@@ -116,8 +114,7 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:address:base-address",
-          "operand:scalar0:gm-row-stride-elements",
-          "operand:source0:logical-linear-element-indices",
+          "operand:source0:byte-displacement-indices",
           "operand:source1:exact-predicate-mask",
           "runtime:CurrentBundlePadValue:inactive-and-physical-padding"
         ]
@@ -132,9 +129,8 @@
         "semantic_handler": "MSCATTER_MASK",
         "state_effects": [
           "operand:address:base-address",
-          "operand:scalar0:gm-row-stride-elements",
           "operand:source0:source",
-          "operand:source1:logical-linear-element-indices",
+          "operand:source1:byte-displacement-indices",
           "operand:source2:exact-predicate-mask"
         ]
       },
@@ -149,7 +145,6 @@
         "state_effects": [
           "operand:destination0:destination",
           "operand:address:base-address",
-          "operand:scalar0:GM row stride in elements",
           "operand:source0:indices",
           "operand:source1:expected",
           "operand:source2:replacement"
@@ -673,7 +668,7 @@
       0,
       4
     ],
-    "accepted_selector_count": 77,
+    "accepted_selector_count": 78,
     "reserved_selector_ranges": [
       [
         "0x005",
@@ -688,7 +683,7 @@
         "0x019"
       ],
       [
-        "0x01D",
+        "0x01E",
         "0x01F"
       ],
       [
@@ -2243,12 +2238,12 @@
           },
           {
             "field": "source0",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
-          "operand:source0:persistent-local-one-column-broadcast-source",
+          "operand:source0:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2277,13 +2272,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-column-broadcast-source",
+          "operand:source1:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2312,13 +2307,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-column-broadcast-source",
+          "operand:source1:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2347,13 +2342,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-column-broadcast-source",
+          "operand:source1:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2382,13 +2377,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-column-broadcast-source",
+          "operand:source1:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2417,13 +2412,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-column-broadcast-source",
+          "operand:source1:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2452,13 +2447,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-column-broadcast-source",
+          "operand:source1:persistent-local-row-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2487,7 +2482,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-column broadcast source"
+            "role": "persistent Local row-broadcast source"
           }
         ],
         "state_effects": [
@@ -2698,12 +2693,12 @@
           },
           {
             "field": "source0",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
-          "operand:source0:persistent-local-one-row-broadcast-source",
+          "operand:source0:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2732,13 +2727,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-row-broadcast-source",
+          "operand:source1:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2767,13 +2762,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-row-broadcast-source",
+          "operand:source1:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2802,13 +2797,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-row-broadcast-source",
+          "operand:source1:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2837,13 +2832,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-row-broadcast-source",
+          "operand:source1:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2872,13 +2867,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-row-broadcast-source",
+          "operand:source1:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2907,13 +2902,13 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-same-type-destination",
           "operand:source0:persistent-local-full-shape-source",
-          "operand:source1:persistent-local-one-row-broadcast-source",
+          "operand:source1:persistent-local-column-broadcast-source",
           "runtime:CurrentBundlePadValue:numeric-padding"
         ],
         "profile": "v0.58",
@@ -2942,7 +2937,7 @@
           },
           {
             "field": "source1",
-            "role": "persistent Local one-row broadcast source"
+            "role": "persistent Local column-broadcast source"
           }
         ],
         "state_effects": [
@@ -3033,17 +3028,17 @@
           },
           {
             "field": "scalar0",
-            "role": "typed sequence start"
+            "role": "typed sequence start from RegSrc0"
           },
           {
             "field": "flag0",
-            "role": "ascending or descending direction"
+            "role": "RowMajor direction from RegSrc1 or CUBE packed Step2D from RegSrc1"
           }
         ],
         "state_effects": [
           "operand:destination0:new-local-integer-destination",
           "operand:scalar0:typed-sequence-start",
-          "operand:flag0:ascending-or-descending",
+          "operand:flag0:RowMajor-direction-or-CUBE-Step2D",
           "runtime:TilePad_Null:physical-padding"
         ],
         "profile": "v0.58",
@@ -3348,6 +3343,42 @@
         ],
         "profile": "v0.58",
         "logical_selector": 126,
+        "semantic_status": "reviewed-complete"
+      },
+      {
+        "name": "TEXPDIF",
+        "classification": "elementwise-tile-tile",
+        "engine": "SFU",
+        "mode": 0,
+        "function": 29,
+        "semantic_handler": "ExecuteTileExpdif",
+        "legality_handler": "TileOperandsLegal_ExecuteTileExpdif",
+        "effect_contract": "ExecuteTileExpdif",
+        "fault_contract": "ExecuteTileInstruction",
+        "restart_contract": "CompleteBundleAtWithAcceptedApplicabilityRules",
+        "operands": [
+          {
+            "field": "destination0",
+            "role": "new Local DstDataType numeric destination"
+          },
+          {
+            "field": "source0",
+            "role": "persistent Local SrcOperationType minuend"
+          },
+          {
+            "field": "source1",
+            "role": "persistent Local SrcOperationType subtrahend"
+          }
+        ],
+        "state_effects": [
+          "operand:destination0:new-local-DstDataType-destination",
+          "operand:source0:persistent-local-SrcOperationType-minuend",
+          "operand:source1:persistent-local-SrcOperationType-subtrahend",
+          "runtime:CurrentBundlePadValue:numeric-padding",
+          "runtime:NumericStatusFlags:profile-status"
+        ],
+        "profile": "v0.58",
+        "logical_selector": 29,
         "semantic_status": "reviewed-complete"
       }
     ]

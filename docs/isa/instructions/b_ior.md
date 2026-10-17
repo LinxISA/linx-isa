@@ -26,7 +26,7 @@
 
 ## Description
 
-Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
+Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU u
 
 ## Encoding Notes
 
-- `Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.`
+- `Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.`
 
 ## Full Catalog Forms
 

@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MGATHER DataType
 
-*Description:* Begins a strided indexed TLSU gather block.
+*Description:* gather using explicit byte displacements.
 
 *Encoding:*
 

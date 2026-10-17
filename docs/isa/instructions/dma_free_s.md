@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010.
+Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM reso
 
 ## Encoding Notes
 
-- `v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010.`
+- `Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.`
 
 ## Full Catalog Forms
 

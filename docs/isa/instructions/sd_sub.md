@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag.
+SD.SUB atomically applies width-sized modular sub and does not publish the old value.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR.
 
 ## Encoding Notes
 
-- `v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag.`
+- `SD.SUB atomically applies width-sized modular sub and does not publish the old value.`
 
 ## Full Catalog Forms
 

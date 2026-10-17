@@ -619,6 +619,10 @@ def block_target_expr(inst: dict, raw_fields: dict[str, tuple[str, int]]) -> str
 
 
 def param_expr(inst: dict, param: str, raw_fields: dict[str, tuple[str, int]]) -> str | None:
+    if (param == "uimm15" and inst["mnemonic"] in {"FENTRY", "FEXIT", "FRET.RA", "FRET.STK"}
+            and "uimm" in raw_fields and raw_fields["uimm"][1] == 12):
+        # PTO encodes frame size in eight-byte units; execute consumes bytes.
+        return f"{raw_fields['uimm'][0]} @ 0b000"
     if param == "RegDst" and inst["mnemonic"].startswith("V.RD") and "RegDst" in raw_fields:
         return f"{raw_fields['RegDst'][0]}[4..0]"
     if (

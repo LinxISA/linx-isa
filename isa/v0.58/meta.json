@@ -10,20 +10,24 @@
     "extension_encoding_reservations": 46
   },
   "notes": [
-    "This directory is the review candidate for the Linx ISA 0.58 profile aligned to PTO ISA 0.58.6 publication 0.58.6.0.",
-    "PTO-ISA/pto-spec is the sole normative source for 466 scalar forms, 95 command forms, and 117 tile operations; pto-spec.lock.json freezes its exact commit and tree.",
+    "This directory is the review candidate for the Linx ISA 0.58 profile aligned to PTO ISA 0.58.7 publication 0.58.7.0.",
+    "PTO-ISA/pto-spec 0.58.7.0 is the immutable publication baseline for 466 scalar forms, 96 command forms, and 118 tile operations; pto-spec.lock.json freezes its exact commit and tree.",
+    "The effective Linx scalar source applies the explicit 44-form proposal in state/pto_scalar_proposal.json through tools/isa/pto_scalar_proposal.py while preserving the published baseline in state/pto_scalar_forms.json.",
+    "Ten additional Linx scalar forms remain a proposal pending PTO adoption; catalog presence does not claim downstream implementation completion.",
     "Linx retains its additive two-level extensions; PTO publishes 46 extension reservations covering their complete encoding space and the nonzero Fixup displacement spaces.",
     "TEPL uses separate Mode and Function fields as the unchanged encoding carrier for VEC and SFU; the legacy TileOpcode and all legacy decode aliases are forbidden.",
     "BSTART.TEPL is the unique compiled carrier identity; BSTART.VEC and BSTART.SFU are accepted assembly aliases with engine-specific canonical output.",
-    "The exact tile inventory is 31 VEC, 46 SFU, 28 TLSU, and 12 CUBE operations. Unlisted selectors and unassigned functions trap as illegal instructions.",
-    "The exact semantic classes are 25 elementwise-tile-tile, 15 tile-scalar-and-immediate, 28 reduce-and-expand, 27 memory-and-data-movement, 12 matrix-and-matrix-vector, 6 layout-and-rearrangement, and 4 irregular-and-complex operations.",
+    "The exact tile inventory is 31 VEC, 47 SFU, 28 TLSU, and 12 CUBE operations. Unlisted selectors and unassigned functions trap as illegal instructions.",
+    "The exact semantic classes are 26 elementwise-tile-tile, 15 tile-scalar-and-immediate, 28 reduce-and-expand, 27 memory-and-data-movement, 12 matrix-and-matrix-vector, 6 layout-and-rearrangement, and 4 irregular-and-complex operations.",
     "BSTART.TIMG2COL is the feature-map IMG2COL command; the former direct TIMG2COL operation remains retired.",
     "TCONCAT, TEXTRACT, TINSERT, THISTOGRAM, TQUANT, TDEQUANT, TSORT, and TMRGSORT are retired without compatibility aliases.",
     "S0 through S63 are absolute-index shared tile registers in a core-private bank shared by the core's four PEs.",
+    "Indexed TLSU gather/scatter uses B.IOR.RegSrc0 as the GM base and index-Tile entries as unscaled byte displacements; it has no scalar row-stride operand.",
+    "B.ASSEMBLE encodes WriterSizeCode as the current writer extent; participating writers require nonzero Local codes 1 through 10 or Shared codes 1 through 12.",
     "B.IOS names shared-register sources and destinations and carries the PE mask; B.IOT is Local-only, and mask zero is a NOP.",
     "Deleted scalar and block spellings are assembler errors and do not retain v0.58 encoding reservations.",
     "TLSU is the tile load/store encoding family; generic BSTART.TLSU is not a legal textual instruction, and each assigned function has an exact named form."
   ],
   "status": "review-only",
-  "version": "0.58.6"
+  "version": "0.58.7"
 }

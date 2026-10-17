@@ -5,9 +5,9 @@
 [[inst_b_assemble]]
 ==== B.ASSEMBLE
 
-*Syntax:* B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode
+*Syntax:* B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode
 
-*Description:* Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+*Description:* Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
 
 *Encoding:*
 

@@ -51,6 +51,17 @@ image::encodings/enc_bstart_fp_32_dea7bdf4c480.svg[BSTART.FP encoding form bstar
 
 *Compression:* L32 (len=32)
 
+[[inst_bstart_fp_32_eb33ff25b92a]]
+===== Form `bstart_fp_32_eb33ff25b92a`
+
+*Syntax:* BSTART.FP CALL, <label>
+
+*Encoding:*
+
+image::encodings/enc_bstart_fp_32_eb33ff25b92a.svg[BSTART.FP encoding form bstart_fp_32_eb33ff25b92a,width=800]
+
+*Compression:* L32 (len=32)
+
 [[inst_bstart_fp_32_ed54a0ac3b7a]]
 ===== Form `bstart_fp_32_ed54a0ac3b7a`
 

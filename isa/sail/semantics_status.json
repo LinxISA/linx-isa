@@ -48,7 +48,7 @@
       "mnemonic": "ASSERT",
       "status": "executable-subset"
     },
-    "b_assemble_32_058abbee219d": {
+    "b_assemble_32_20b4f7671811": {
       "mnemonic": "B.ASSEMBLE",
       "status": "decode-only"
     },
@@ -92,15 +92,7 @@
       "mnemonic": "B.IOS",
       "status": "executable-subset"
     },
-    "b_iot_32_21bee57b65c0": {
-      "mnemonic": "B.IOT",
-      "status": "executable-subset"
-    },
     "b_iot_32_3bc48b48fea2": {
-      "mnemonic": "B.IOT",
-      "status": "executable-subset"
-    },
-    "b_iot_32_53c1ffc02364": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
@@ -108,7 +100,15 @@
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
+    "b_iot_32_bf660153d171": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
     "b_iot_32_cd6ec8181a49": {
+      "mnemonic": "B.IOT",
+      "status": "executable-subset"
+    },
+    "b_iot_32_e0f1463d6a7e": {
       "mnemonic": "B.IOT",
       "status": "executable-subset"
     },
@@ -152,10 +152,6 @@
       "mnemonic": "BSTART",
       "status": "executable-subset"
     },
-    "bstart_call_32_b9e7c481c0c7": {
-      "mnemonic": "BSTART.CALL",
-      "status": "executable-subset"
-    },
     "bstart_fp_32_2d6ee1b89bae": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
@@ -169,6 +165,10 @@
       "status": "executable-subset"
     },
     "bstart_fp_32_dea7bdf4c480": {
+      "mnemonic": "BSTART.FP",
+      "status": "executable-subset"
+    },
+    "bstart_fp_32_eb33ff25b92a": {
       "mnemonic": "BSTART.FP",
       "status": "executable-subset"
     },
@@ -297,6 +297,10 @@
       "status": "executable-subset"
     },
     "bstart_std_32_7876537dce06": {
+      "mnemonic": "BSTART.STD",
+      "status": "executable-subset"
+    },
+    "bstart_std_32_97d38b7be05e": {
       "mnemonic": "BSTART.STD",
       "status": "executable-subset"
     },
@@ -710,11 +714,11 @@
     },
     "dma_free_l_32_5af48f644596": {
       "mnemonic": "DMA.FREE.L",
-      "status": "executable-subset"
+      "status": "decode-only"
     },
     "dma_free_s_32_5de9a6bba806": {
       "mnemonic": "DMA.FREE.S",
-      "status": "executable-subset"
+      "status": "decode-only"
     },
     "ebreak_32_d02053c744f8": {
       "mnemonic": "EBREAK",
@@ -772,7 +776,7 @@
       "mnemonic": "FENCE.I",
       "status": "executable-subset"
     },
-    "fentry_32_74a07f46d846": {
+    "fentry_32_c6bb0b89eedd": {
       "mnemonic": "FENTRY",
       "status": "executable-subset"
     },
@@ -784,7 +788,7 @@
       "mnemonic": "FEQS",
       "status": "executable-subset"
     },
-    "fexit_32_6492f41b2239": {
+    "fexit_32_c5f44df2e2b6": {
       "mnemonic": "FEXIT",
       "status": "executable-subset"
     },
@@ -848,11 +852,11 @@
       "mnemonic": "FRECIP",
       "status": "executable-subset"
     },
-    "fret_ra_32_b6f13adb3ea1": {
+    "fret_ra_32_362702ebd7d8": {
       "mnemonic": "FRET.RA",
       "status": "executable-subset"
     },
-    "fret_stk_32_4084c4c88e89": {
+    "fret_stk_32_1c6ea1521169": {
       "mnemonic": "FRET.STK",
       "status": "executable-subset"
     },
@@ -1748,15 +1752,15 @@
       "mnemonic": "LD",
       "status": "executable-subset"
     },
-    "ld_add_32_e7ce0a975ef4": {
+    "ld_add_32_7060c7401189": {
       "mnemonic": "LD.ADD",
       "status": "executable-subset"
     },
-    "ld_and_32_23d9ba0e68e3": {
+    "ld_and_32_b4663f71a495": {
       "mnemonic": "LD.AND",
       "status": "executable-subset"
     },
-    "ld_or_32_1ce70fd8b968": {
+    "ld_or_32_0125e9e1e3c3": {
       "mnemonic": "LD.OR",
       "status": "executable-subset"
     },
@@ -1764,23 +1768,23 @@
       "mnemonic": "LD.PCR",
       "status": "executable-subset"
     },
-    "ld_smax_32_91ec96637db4": {
+    "ld_smax_32_03dd776071eb": {
       "mnemonic": "LD.SMAX",
       "status": "executable-subset"
     },
-    "ld_smin_32_19e1c3b58971": {
+    "ld_smin_32_3efd7104b708": {
       "mnemonic": "LD.SMIN",
       "status": "executable-subset"
     },
-    "ld_umax_32_2759903efc31": {
+    "ld_umax_32_d5bdca0186e7": {
       "mnemonic": "LD.UMAX",
       "status": "executable-subset"
     },
-    "ld_umin_32_29f58b3f2c0d": {
+    "ld_umin_32_68974d19d8bb": {
       "mnemonic": "LD.UMIN",
       "status": "executable-subset"
     },
-    "ld_xor_32_7122255a1fbc": {
+    "ld_xor_32_53194f2f2e3f": {
       "mnemonic": "LD.XOR",
       "status": "executable-subset"
     },
@@ -1824,19 +1828,19 @@
       "mnemonic": "LHUI.U",
       "status": "executable-subset"
     },
-    "lr_b_32_597cbeb5cd8d": {
+    "lr_b_32_e8a05215d75c": {
       "mnemonic": "LR.B",
       "status": "executable-subset"
     },
-    "lr_d_32_56d64a9108fa": {
+    "lr_d_32_fcf6ece7fff8": {
       "mnemonic": "LR.D",
       "status": "executable-subset"
     },
-    "lr_h_32_d49768c44960": {
+    "lr_h_32_68b7edefe7a9": {
       "mnemonic": "LR.H",
       "status": "executable-subset"
     },
-    "lr_w_32_f2024773e273": {
+    "lr_w_32_067262ff6597": {
       "mnemonic": "LR.W",
       "status": "executable-subset"
     },
@@ -1852,15 +1856,15 @@
       "mnemonic": "LW",
       "status": "executable-subset"
     },
-    "lw_add_32_76a43005a410": {
+    "lw_add_32_0347df33c571": {
       "mnemonic": "LW.ADD",
       "status": "executable-subset"
     },
-    "lw_and_32_cb5ac95bf66f": {
+    "lw_and_32_8a3d7a493503": {
       "mnemonic": "LW.AND",
       "status": "executable-subset"
     },
-    "lw_or_32_289ea7aedc90": {
+    "lw_or_32_8915db674f50": {
       "mnemonic": "LW.OR",
       "status": "executable-subset"
     },
@@ -1868,23 +1872,23 @@
       "mnemonic": "LW.PCR",
       "status": "executable-subset"
     },
-    "lw_smax_32_747664ab4bcc": {
+    "lw_smax_32_4b268f4a7a9c": {
       "mnemonic": "LW.SMAX",
       "status": "executable-subset"
     },
-    "lw_smin_32_eb0651e5e82f": {
+    "lw_smin_32_14b2934ae01b": {
       "mnemonic": "LW.SMIN",
       "status": "executable-subset"
     },
-    "lw_umax_32_8e64a5d4249f": {
+    "lw_umax_32_1cc361c3afcb": {
       "mnemonic": "LW.UMAX",
       "status": "executable-subset"
     },
-    "lw_umin_32_2f0eb8568565": {
+    "lw_umin_32_8ca4a19cdfc3": {
       "mnemonic": "LW.UMIN",
       "status": "executable-subset"
     },
-    "lw_xor_32_4594cd6f792d": {
+    "lw_xor_32_fb88a8fc889b": {
       "mnemonic": "LW.XOR",
       "status": "executable-subset"
     },
@@ -1934,11 +1938,11 @@
     },
     "mcopy_dl_32_d6af61213c20": {
       "mnemonic": "MCOPY.DL",
-      "status": "executable-subset"
+      "status": "decode-only"
     },
     "mcopy_ds_32_e7a90ccbe4db": {
       "mnemonic": "MCOPY.DS",
-      "status": "executable-subset"
+      "status": "decode-only"
     },
     "min_32_617f56f2afaa": {
       "mnemonic": "MIN",
@@ -2016,7 +2020,7 @@
       "mnemonic": "SB",
       "status": "executable-subset"
     },
-    "sb_add_32_e6c19ed751f8": {
+    "sb_add_32_ad18d71fad23": {
       "mnemonic": "SB.ADD",
       "status": "executable-subset"
     },
@@ -2024,7 +2028,7 @@
       "mnemonic": "SB.PCR",
       "status": "executable-subset"
     },
-    "sb_sub_32_ae8ceb3c5cac": {
+    "sb_sub_32_229d7d0e2803": {
       "mnemonic": "SB.SUB",
       "status": "executable-subset"
     },
@@ -2032,19 +2036,19 @@
       "mnemonic": "SBI",
       "status": "executable-subset"
     },
-    "sc_b_32_76d834058ae3": {
+    "sc_b_32_01f3010e67fb": {
       "mnemonic": "SC.B",
       "status": "executable-subset"
     },
-    "sc_d_32_9825cce786c7": {
+    "sc_d_32_b9b2bcac2806": {
       "mnemonic": "SC.D",
       "status": "executable-subset"
     },
-    "sc_h_32_a1853adc9378": {
+    "sc_h_32_fef39ec3b1fe": {
       "mnemonic": "SC.H",
       "status": "executable-subset"
     },
-    "sc_w_32_50223c3d7e2e": {
+    "sc_w_32_a2971bfdc613": {
       "mnemonic": "SC.W",
       "status": "executable-subset"
     },
@@ -2056,15 +2060,15 @@
       "mnemonic": "SD",
       "status": "executable-subset"
     },
-    "sd_add_32_5d925051bd65": {
+    "sd_add_32_9c69391bdde2": {
       "mnemonic": "SD.ADD",
       "status": "executable-subset"
     },
-    "sd_and_32_d1fe21a898c4": {
+    "sd_and_32_0681a53a92f6": {
       "mnemonic": "SD.AND",
       "status": "executable-subset"
     },
-    "sd_or_32_e4ae7a1514d2": {
+    "sd_or_32_ae79384dc9d8": {
       "mnemonic": "SD.OR",
       "status": "executable-subset"
     },
@@ -2072,15 +2076,15 @@
       "mnemonic": "SD.PCR",
       "status": "executable-subset"
     },
-    "sd_smax_32_2008b8f90c3f": {
+    "sd_smax_32_bc4cfd84b8e9": {
       "mnemonic": "SD.SMAX",
       "status": "executable-subset"
     },
-    "sd_smin_32_f506a9482e9d": {
+    "sd_smin_32_200aaa183a5b": {
       "mnemonic": "SD.SMIN",
       "status": "executable-subset"
     },
-    "sd_sub_32_ff53d1d019b2": {
+    "sd_sub_32_2b9cdb568661": {
       "mnemonic": "SD.SUB",
       "status": "executable-subset"
     },
@@ -2088,15 +2092,15 @@
       "mnemonic": "SD.U",
       "status": "executable-subset"
     },
-    "sd_umax_32_6914076e0357": {
+    "sd_umax_32_3faec9357ac6": {
       "mnemonic": "SD.UMAX",
       "status": "executable-subset"
     },
-    "sd_umin_32_7865e621e108": {
+    "sd_umin_32_fa6f48850235": {
       "mnemonic": "SD.UMIN",
       "status": "executable-subset"
     },
-    "sd_xor_32_10b856cc10f8": {
+    "sd_xor_32_4de0b76b9da5": {
       "mnemonic": "SD.XOR",
       "status": "executable-subset"
     },
@@ -2184,7 +2188,7 @@
       "mnemonic": "SH",
       "status": "executable-subset"
     },
-    "sh_add_32_593d07f3c383": {
+    "sh_add_32_95d11aed3630": {
       "mnemonic": "SH.ADD",
       "status": "executable-subset"
     },
@@ -2192,7 +2196,7 @@
       "mnemonic": "SH.PCR",
       "status": "executable-subset"
     },
-    "sh_sub_32_b1beb9de5ae5": {
+    "sh_sub_32_a50037f3c97d": {
       "mnemonic": "SH.SUB",
       "status": "executable-subset"
     },
@@ -2288,15 +2292,15 @@
       "mnemonic": "SW",
       "status": "executable-subset"
     },
-    "sw_add_32_e2ac5c6f4f98": {
+    "sw_add_32_30c64e83c4ea": {
       "mnemonic": "SW.ADD",
       "status": "executable-subset"
     },
-    "sw_and_32_c7cbc4f7babc": {
+    "sw_and_32_e62af5cd7088": {
       "mnemonic": "SW.AND",
       "status": "executable-subset"
     },
-    "sw_or_32_30b584cf9775": {
+    "sw_or_32_ad4f6bc2bcae": {
       "mnemonic": "SW.OR",
       "status": "executable-subset"
     },
@@ -2304,15 +2308,15 @@
       "mnemonic": "SW.PCR",
       "status": "executable-subset"
     },
-    "sw_smax_32_29381d506694": {
+    "sw_smax_32_ca3f6d8435a4": {
       "mnemonic": "SW.SMAX",
       "status": "executable-subset"
     },
-    "sw_smin_32_eab20d5ad227": {
+    "sw_smin_32_70d200818164": {
       "mnemonic": "SW.SMIN",
       "status": "executable-subset"
     },
-    "sw_sub_32_40e1534922b1": {
+    "sw_sub_32_33654a8ba8c8": {
       "mnemonic": "SW.SUB",
       "status": "executable-subset"
     },
@@ -2320,31 +2324,31 @@
       "mnemonic": "SW.U",
       "status": "executable-subset"
     },
-    "sw_umax_32_d31e89719244": {
+    "sw_umax_32_cb073aeb5223": {
       "mnemonic": "SW.UMAX",
       "status": "executable-subset"
     },
-    "sw_umin_32_46731668df2d": {
+    "sw_umin_32_45ea82587f34": {
       "mnemonic": "SW.UMIN",
       "status": "executable-subset"
     },
-    "sw_xor_32_5817a3ac65c1": {
+    "sw_xor_32_1219ecbd7202": {
       "mnemonic": "SW.XOR",
       "status": "executable-subset"
     },
-    "swapb_32_e82d9dd02551": {
+    "swapb_32_69a885fb4c94": {
       "mnemonic": "SWAPB",
       "status": "executable-subset"
     },
-    "swapd_32_3425ed30704b": {
+    "swapd_32_fe19142790b5": {
       "mnemonic": "SWAPD",
       "status": "executable-subset"
     },
-    "swaph_32_8708bb8eaa32": {
+    "swaph_32_2aa91f8a7389": {
       "mnemonic": "SWAPH",
       "status": "executable-subset"
     },
-    "swapw_32_7ad407b3e4bc": {
+    "swapw_32_717d17ca629c": {
       "mnemonic": "SWAPW",
       "status": "executable-subset"
     },
@@ -2355,6 +2359,10 @@
     "swi_u_32_05ddb4525450": {
       "mnemonic": "SWI.U",
       "status": "executable-subset"
+    },
+    "sync_core_32_d6367bd93586": {
+      "mnemonic": "SYNC.CORE",
+      "status": "decode-only"
     },
     "tlb_ia_32_c51104bbc469": {
       "mnemonic": "TLB.IA",
@@ -3133,6 +3141,6 @@
       "status": "executable-subset"
     }
   },
-  "schema_version": "linx-sail-status-v0.58.6",
-  "spec_version": "0.58.6"
+  "schema_version": "linx-sail-status-v0.58.7",
+  "spec_version": "0.58.7"
 }

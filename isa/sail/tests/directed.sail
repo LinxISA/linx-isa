@@ -222,27 +222,24 @@ function main() : unit -> unit = {
   assert(barg_xfer_kind_cur == block_xfer_call());
   assert(barg_bpc_tgt == 0x0000_0000_0000_2000);
 
-  // 32-bit exact aggregate, raw decode: simm12=2, uimm5=3.
+  // Published PTO 0.58.7 uses ordinary 17-bit STD/FP CALL forms.
+  // Neither form contains an embedded return immediate or writes ra.
   reset_fused_call_case(0x0000_0000_0000_1000, 0xAAAA_AAAA_AAAA_AAAA);
-  decode_execute32(0x50D6_0022);
-  assert(read_reg5(0b01010) == 0x0000_0000_0000_1008);
-  assert(pc == 0x0000_0000_0000_1000);
-  assert(barg_valid);
+  decode_execute32(0x0001_4001);
+  assert(read_reg5(0b01010) == 0xAAAA_AAAA_AAAA_AAAA);
   assert(barg_xfer_kind_cur == block_xfer_call());
-  assert(barg_bpc_cur == 0x0000_0000_0000_1000);
   assert(barg_bpc_tgt == 0x0000_0000_0000_1004);
-
-  // Same simm12, uimm5=29: call target is invariant, only ra changes.
   reset_fused_call_case(0x0000_0000_0000_1000, 0xBBBB_BBBB_BBBB_BBBB);
-  decode_execute32(0x5756_0022);
-  assert(barg_bpc_tgt == 0x0000_0000_0000_1004);
-  assert(read_reg5(0b01010) == 0x0000_0000_0000_103C);
-
-  // Same uimm5=3, simm12=-1: ra is invariant, only call target changes.
-  reset_fused_call_case(0x0000_0000_0000_1000, 0xCCCC_CCCC_CCCC_CCCC);
-  decode_execute32(0x50D6_FFF2);
+  decode_execute32(0xFFFF_C101);
+  assert(read_reg5(0b01010) == 0xBBBB_BBBB_BBBB_BBBB);
+  assert(barg_xfer_kind_cur == block_xfer_call());
   assert(barg_bpc_tgt == 0x0000_0000_0000_0FFE);
-  assert(read_reg5(0b01010) == 0x0000_0000_0000_1008);
+
+  // The removed fused32 encoding cannot retain a hidden legacy decode.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCCCC_CCCC_CCCC_CCCC);
+  decode_execute32(0x50D6_0022);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCCCC_CCCC_CCCC_CCCC);
 
   // 48-bit exact aggregate, raw decode: simm25=2, uimm5=5.  The return
   // calculation must use the embedded C.SETRET position P+4, not P+2.
@@ -266,6 +263,30 @@ function main() : unit -> unit = {
   decode_execute48(0x5156_FFFF_FF91);
   assert(barg_bpc_tgt == 0x0000_0000_0000_0FFE);
   assert(read_reg5(0b01010) == 0x0000_0000_0000_100E);
+
+  // DMA.FREE.S: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x0401_700B);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // DMA.FREE.L: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x0601_700B);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // MCOPY.DS: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x1231_1231);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // MCOPY.DL: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x1631_1231);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
 
   // Standalone SETRET forms retain their own current-instruction PC base.
   pc = 0x0000_0000_0000_1000;

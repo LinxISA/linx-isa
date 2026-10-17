@@ -15,6 +15,7 @@
 - `BSTART.FP RET`
 - `BSTART.FP DIRECT, <label>`
 - `BSTART.FP IND`
+- `BSTART.FP CALL, <label>`
 - `BSTART.FP COND, <label>`
 
 ## Encoding
@@ -39,6 +40,11 @@
 <figure id="encoding-bstart_fp_32_dea7bdf4c480">
 <img src="../wavedrom/enc_bstart_fp_32_dea7bdf4c480.svg" alt="BSTART.FP encoding form bstart_fp_32_dea7bdf4c480" width="100%" />
 <figcaption><code>bstart_fp_32_dea7bdf4c480</code> — <code>BSTART.FP IND</code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-bstart_fp_32_eb33ff25b92a">
+<img src="../wavedrom/enc_bstart_fp_32_eb33ff25b92a.svg" alt="BSTART.FP encoding form bstart_fp_32_eb33ff25b92a" width="100%" />
+<figcaption><code>bstart_fp_32_eb33ff25b92a</code> — <code>BSTART.FP CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 <figure id="encoding-bstart_fp_32_ed54a0ac3b7a">
@@ -70,6 +76,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 | `bstart_fp_32_82106bc72d98` | `BSTART.FP RET` | 32 | — | [SVG](../wavedrom/enc_bstart_fp_32_82106bc72d98.svg) |
 | `bstart_fp_32_c6cf502b7ebd` | `BSTART.FP DIRECT, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_fp_32_c6cf502b7ebd.svg) |
 | `bstart_fp_32_dea7bdf4c480` | `BSTART.FP IND` | 32 | — | [SVG](../wavedrom/enc_bstart_fp_32_dea7bdf4c480.svg) |
+| `bstart_fp_32_eb33ff25b92a` | `BSTART.FP CALL, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_fp_32_eb33ff25b92a.svg) |
 | `bstart_fp_32_ed54a0ac3b7a` | `BSTART.FP COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_fp_32_ed54a0ac3b7a.svg) |
 
 <div class="insn-nav">

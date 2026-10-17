@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.
+Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSr
 
 ## Encoding Notes
 
-- `v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.`
+- `Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.`
 
 ## Full Catalog Forms
 

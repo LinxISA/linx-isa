@@ -2560,18 +2560,14 @@ function exec_mcopy(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> 
   }
 }
 
-// v0.58 MCOPY.DS/DL copy a byte range like MCOPY and return the L2SPM replica
-// address to RegDst.  Without an L2SPM allocator the returned address is the
-// destination address (identity model); the Store/Load mode is not modelled.
-
+// Decode-only: the executable subset has no L2SPM allocator or completion
+// model. Reject before operand reads or effects instead of inventing a replica.
 function exec_mcopy_ds(RegDst : bits(5), RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
-  exec_mcopy(RegSrc0, RegSrc1, RegSrc2);
-  write_regdst(RegDst, read_reg5(RegSrc0))
+  trap_illegal_inst(read_pc_or_tpc())
 }
 
 function exec_mcopy_dl(RegDst : bits(5), RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
-  exec_mcopy(RegSrc0, RegSrc1, RegSrc2);
-  write_regdst(RegDst, read_reg5(RegSrc0))
+  trap_illegal_inst(read_pc_or_tpc())
 }
 
 function exec_mset(RegSrc0 : bits(5), RegSrc1 : bits(5), RegSrc2 : bits(5)) -> unit = {
@@ -3273,7 +3269,7 @@ function exec_b_subview(SrcSelect : bits(1), uimm11 : bits(11), RegSrc : bits(5)
   trap_illegal_inst(read_pc_or_tpc())
 }
 
-function exec_b_assemble(INIT : bits(1), uimm11 : bits(11), RegSrc : bits(5), LAST : bits(1), ParentSizeCode : bits(4)) -> unit = {
+function exec_b_assemble(INIT : bits(1), uimm11 : bits(11), RegSrc : bits(5), LAST : bits(1), WriterSizeCode : bits(4)) -> unit = {
   trap_illegal_inst(read_pc_or_tpc())
 }
 
@@ -7105,17 +7101,13 @@ function exec_dma(SrcL : bits(5), SrcR : bits(5)) -> unit = {
   trap_illegal_inst(read_pc_or_tpc())
 }
 
-// v0.58 DMA.FREE.S/L release the L2SPM space designated by SrcL under the
-// Store/Load completion mode.  The Sail model has no L2SPM allocator, so the
-// release has no architectural effect.
+// Decode-only until L2SPM allocation/release and completion are modeled.
 function exec_dma_free_s(SrcL : bits(5)) -> unit = {
-  let _ = SrcL;
-  ()
+  trap_illegal_inst(read_pc_or_tpc())
 }
 
 function exec_dma_free_l(SrcL : bits(5)) -> unit = {
-  let _ = SrcL;
-  ()
+  trap_illegal_inst(read_pc_or_tpc())
 }
 
 
@@ -7150,11 +7142,11 @@ function rmw64_umax(a : bits(64), b : bits(64)) -> bits(64) = { if (unsigned(a) 
 function rmw64_umin(a : bits(64), b : bits(64)) -> bits(64) = { if (unsigned(a) <= unsigned(b)) then a else b }
 
 function rmw8_add(a : bits(8), b : bits(8)) -> bits(8) = { a + b }
-function rmw8_sub(a : bits(8), b : bits(8)) -> bits(8) = { a - b }
+function rmw8_sub(a : bits(8), b : bits(8)) -> bits(8) = { sub_bits(a, b) }
 function rmw16_add(a : bits(16), b : bits(16)) -> bits(16) = { a + b }
-function rmw16_sub(a : bits(16), b : bits(16)) -> bits(16) = { a - b }
-function rmw32_sub(a : bits(32), b : bits(32)) -> bits(32) = { a - b }
-function rmw64_sub(a : bits(64), b : bits(64)) -> bits(64) = { a - b }
+function rmw16_sub(a : bits(16), b : bits(16)) -> bits(16) = { sub_bits(a, b) }
+function rmw32_sub(a : bits(32), b : bits(32)) -> bits(32) = { sub_bits(a, b) }
+function rmw64_sub(a : bits(64), b : bits(64)) -> bits(64) = { sub_bits(a, b) }
 
 function exec_lw_add(RegDst : bits(5), SrcL : bits(5), SrcR : bits(5), aq : bits(1), far : bits(1), rl : bits(1)) -> unit = {
   let _ = aq; let _ = far; let _ = rl;
@@ -8838,3 +8830,6 @@ function exec_hl_sdp_u(SrcD0 : bits(5), SrcD1 : bits(5), SrcL : bits(5), SrcR : 
   mem_store64_le(ea, v0);
   mem_store64_le(ea + (sail_zeros(64) + 8), v1)
 }
+
+// SYNC.CORE is decoded; the single-context Sail subset has no four-PE rendezvous.
+function exec_sync_core() -> unit = { trap_illegal_inst(read_pc_or_tpc()) }

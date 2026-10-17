@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **AMO** group of the LinxISA v0.58.6 catalog.
+Instructions in the **AMO** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 
@@ -21,8 +21,8 @@ Instructions in the **AMO** group of the LinxISA v0.58.6 catalog.
 | [CASH](../instructions/cash.md) | `cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | CASH atomically compares and conditionally replaces one halfword, then publishes the prior value. |
 | [CASW](../instructions/casw.md) | `casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 32 | — | CASW atomically compares and conditionally replaces one word, then publishes the prior value. |
 | [DMA](../instructions/dma.md) | `dma [SrcL], SrcR` | 32 | — | DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue. |
-| [DMA.FREE.L](../instructions/dma_free_l.md) | `dma.free.l [SrcL]` | 32 | — | v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011. |
-| [DMA.FREE.S](../instructions/dma_free_s.md) | `dma.free.s [SrcL]` | 32 | — | v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010. |
+| [DMA.FREE.L](../instructions/dma_free_l.md) | `dma.free.l [SrcL]` | 32 | — | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
+| [DMA.FREE.S](../instructions/dma_free_s.md) | `dma.free.s [SrcL]` | 32 | — | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
 | [HL.CASB](../instructions/hl_casb.md) | `hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 48 | — | HL.CASB atomically compares and conditionally replaces one byte, then publishes the prior value. |
 | [HL.CASD](../instructions/hl_casd.md) | `hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 48 | — | HL.CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value. |
 | [HL.CASH](../instructions/hl_cash.md) | `hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` | 48 | — | HL.CASH atomically compares and conditionally replaces one halfword, then publishes the prior value. |
@@ -47,8 +47,8 @@ Instructions in the **AMO** group of the LinxISA v0.58.6 catalog.
 | [LW.UMAX](../instructions/lw_umax.md) | `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value. |
 | [LW.UMIN](../instructions/lw_umin.md) | `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value. |
 | [LW.XOR](../instructions/lw_xor.md) | `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}` | 32 | — | LW.XOR atomically stores the width-sized bitwise XOR and publishes the prior memory value. |
-| [SB.ADD](../instructions/sb_add.md) | `sb.add<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag. |
-| [SB.SUB](../instructions/sb_sub.md) | `sb.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract byte: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag. |
+| [SB.ADD](../instructions/sb_add.md) | `sb.add<.{rl}> [SrcL], SrcR` | 32 | — | SB.ADD atomically applies width-sized modular add and does not publish the old value. |
+| [SB.SUB](../instructions/sb_sub.md) | `sb.sub<.{rl}> [SrcL], SrcR` | 32 | — | SB.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SC.B](../instructions/sc_b.md) | `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.B conditionally stores one byte when the local 64-byte-line reservation matches. |
 | [SC.D](../instructions/sc_d.md) | `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches. |
 | [SC.H](../instructions/sc_h.md) | `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}` | 32 | — | SC.H conditionally stores one halfword when the local 64-byte-line reservation matches. |
@@ -58,18 +58,18 @@ Instructions in the **AMO** group of the LinxISA v0.58.6 catalog.
 | [SD.OR](../instructions/sd_or.md) | `sd.or<.{rl}> [SrcL], SrcR` | 32 | — | SD.OR atomically replaces the aligned 64-bit memory value with its bitwise OR with SrcR; it does not publish the old value. |
 | [SD.SMAX](../instructions/sd_smax.md) | `sd.smax<.{rl}> [SrcL], SrcR` | 32 | — | SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
 | [SD.SMIN](../instructions/sd_smin.md) | `sd.smin<.{rl}> [SrcL], SrcR` | 32 | — | SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
-| [SD.SUB](../instructions/sd_sub.md) | `sd.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag. |
+| [SD.SUB](../instructions/sd_sub.md) | `sd.sub<.{rl}> [SrcL], SrcR` | 32 | — | SD.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SD.UMAX](../instructions/sd_umax.md) | `sd.umax<.{rl}> [SrcL], SrcR` | 32 | — | SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
 | [SD.UMIN](../instructions/sd_umin.md) | `sd.umin<.{rl}> [SrcL], SrcR` | 32 | — | SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
 | [SD.XOR](../instructions/sd_xor.md) | `sd.xor<.{rl}> [SrcL], SrcR` | 32 | — | SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR with SrcR; it does not publish the old value. |
-| [SH.ADD](../instructions/sh_add.md) | `sh.add<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op add halfword: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag. |
-| [SH.SUB](../instructions/sh_sub.md) | `sh.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract halfword: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag. |
+| [SH.ADD](../instructions/sh_add.md) | `sh.add<.{rl}> [SrcL], SrcR` | 32 | — | SH.ADD atomically applies width-sized modular add and does not publish the old value. |
+| [SH.SUB](../instructions/sh_sub.md) | `sh.sub<.{rl}> [SrcL], SrcR` | 32 | — | SH.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SW.ADD](../instructions/sw_add.md) | `sw.add<.{rl}> [SrcL], SrcR` | 32 | — | SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum with SrcR; it does not publish the old value. |
 | [SW.AND](../instructions/sw_and.md) | `sw.and<.{rl}> [SrcL], SrcR` | 32 | — | SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value. |
 | [SW.OR](../instructions/sw_or.md) | `sw.or<.{rl}> [SrcL], SrcR` | 32 | — | SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR with SrcR; it does not publish the old value. |
 | [SW.SMAX](../instructions/sw_smax.md) | `sw.smax<.{rl}> [SrcL], SrcR` | 32 | — | SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
 | [SW.SMIN](../instructions/sw_smin.md) | `sw.smin<.{rl}> [SrcL], SrcR` | 32 | — | SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
-| [SW.SUB](../instructions/sw_sub.md) | `sw.sub<.{rl}> [SrcL], SrcR` | 32 | — | v0.58 32-bit atomic store-op subtract word: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag. |
+| [SW.SUB](../instructions/sw_sub.md) | `sw.sub<.{rl}> [SrcL], SrcR` | 32 | — | SW.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SW.UMAX](../instructions/sw_umax.md) | `sw.umax<.{rl}> [SrcL], SrcR` | 32 | — | SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
 | [SW.UMIN](../instructions/sw_umin.md) | `sw.umin<.{rl}> [SrcL], SrcR` | 32 | — | SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
 | [SW.XOR](../instructions/sw_xor.md) | `sw.xor<.{rl}> [SrcL], SrcR` | 32 | — | SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value. |

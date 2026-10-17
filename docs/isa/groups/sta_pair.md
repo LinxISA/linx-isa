@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **STA/PAIR** group of the LinxISA v0.58.6 catalog.
+Instructions in the **STA/PAIR** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 

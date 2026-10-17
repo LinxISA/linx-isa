@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **LDA/POST_INDEX** group of the LinxISA v0.58.6 catalog.
+Instructions in the **LDA/POST_INDEX** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 

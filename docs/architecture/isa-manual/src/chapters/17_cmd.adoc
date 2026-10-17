@@ -24,7 +24,6 @@ accepted; unassigned selectors are illegal instructions.
 === Block Control
 
 include::../generated/instructions/bstart.adoc[]
-include::../generated/instructions/bstart_call.adoc[]
 include::../generated/instructions/bstart_fp.adoc[]
 include::../generated/instructions/bstart_std.adoc[]
 include::../generated/instructions/bstart_sys.adoc[]

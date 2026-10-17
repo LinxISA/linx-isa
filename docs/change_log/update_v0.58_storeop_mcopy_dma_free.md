@@ -1,5 +1,7 @@
 # v0.58 Atomic op5 Re-encoding + Store-op / MCOPY / DMA.FREE Extension
 
+> Current scope: DMA.FREE.S/L and MCOPY.DS/DL retain their encodings only and are NOT IMPLEMENTED. The resource semantics described below are historical proposal text, not the active contract.
+
 This change re-encodes the atomic main class onto a unified five-bit op5
 field, adds ten Linx-only non-vector scalar forms to the v0.58 profile, and
 completes the 32-bit CAS documentation surface.

@@ -1,20 +1,7 @@
 {
   "big_kind": "BBD",
-  "count": 16,
+  "count": 15,
   "instructions": [
-    {
-      "class": {
-        "bbd_kind": "BSTART",
-        "note": "PTO fused direct-call block boundary",
-        "source": "group_rule",
-        "uop_kind": "BBD"
-      },
-      "group": "BSTART",
-      "length_bits": [
-        32
-      ],
-      "mnemonic": "BSTART.CALL"
-    },
     {
       "class": {
         "bbd_kind": "BSTART",

@@ -3,51 +3,51 @@
   "catalogs": {
     "command_forms": {
       "path": "spec/catalog/command-forms.json",
-      "sha256": "013e5161bc095f59a4784f37ebbe04e332748782bdd9f540b18cd8fdc95fc7b6",
-      "count": 95
+      "sha256": "30d42b6246fc982f2bb092174a462a017769c5e31f73af2c94390f8e205a91a1",
+      "count": 96
     },
     "scalar_forms": {
       "path": "spec/catalog/scalar-forms.json",
-      "sha256": "659feca66ad67db81726c8e0139e614b3ced2694e645f9e5dda534832920d2dd",
+      "sha256": "2767dc6302e8d777b517c198d3ead8a5acb62602c26f517eb9ee581bc4afd4da",
       "count": 466
     },
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
-      "sha256": "d23530aa58afa5dbe5bee1e56366be3c5711583b69908f6af9799742c6c005e4",
-      "count": 117
+      "sha256": "7af90e08da6db0b1f1b58a061e5b3ea7d1b5fe0a2fc69f5d3593b70c58a32cb5",
+      "count": 118
     },
     "extension_encoding_reservations": {
       "path": "spec/catalog/extension-encoding-reservations.json",
-      "sha256": "3daf7bf384dc0ff64bd8374634a8b6a057eea6ca76b67b67ab0d9496471110ae",
+      "sha256": "2fc2cfb9791abcd965d3fc6dc610b4528e338b1862adf0847ebde5ac83935c96",
       "count": 46
     }
   },
-  "content_sha256": "6a92c5e98d504987aab33743cfd2180d87050af59bb950881350ba734436b7ca",
-  "encoding_abi": "pto-isa-0.58.6-mode-function-v1",
-  "encoding_projection_sha256": "a757f2e50ec8050d2131b6b9ad38657511df80cf3f9424d5f009ea6e0cc35839",
+  "content_sha256": "86ba5a0adf5e1388a653b1488e4f9513f2ca9e00436164ea6002598893dbe66c",
+  "encoding_abi": "pto-isa-0.58.7-mode-function-v1",
+  "encoding_projection_sha256": "9c49cdfa79a4eda6b27c1548bfd06ef681b6189f7d02d466ddfd43f59993b93d",
   "hardware_conformance_profile": {
     "path": "spec/hardware-conformance-profile.json",
-    "profile_id": "pto-hardware-numeric-0.58.6-ieee-v1",
-    "sha256": "b01cf719897fc4bc94937121520324c090fe5a2481485ed58b88d7b077b1eed0"
+    "profile_id": "pto-hardware-numeric-0.58.7-ieee-v1",
+    "sha256": "fc4060954c19cab7e70751d5e8735a349fcaafe331508195650fd276423d72c2"
   },
   "numeric_conformance_vectors": {
-    "path": "spec/evidence/pto-isa-0586-hardware-numeric-vectors.json",
-    "sha256": "955881745fba90d7b98f804f115167c127975c2cc6c10d7b4bc4fbaf32400b3e"
+    "path": "spec/evidence/pto-isa-0587-hardware-numeric-vectors.json",
+    "sha256": "8d43bbd846d738fa63338c0be61b9fc0a8eb7f6f73570bcafa454abd33649012"
   },
   "publication": {
-    "tag": "v0.58.6.0",
-    "version": "0.58.6.0",
-    "release_url": "https://github.com/PTO-ISA/pto-spec/releases/tag/v0.58.6.0"
+    "tag": "v0.58.7.0",
+    "version": "0.58.7.0",
+    "release_url": "https://github.com/PTO-ISA/pto-spec/releases/tag/v0.58.7.0"
   },
-  "release": "0.58.6",
+  "release": "0.58.7",
   "specification_status": "draft",
   "release_manifest": {
     "path": "spec/release-manifest.json",
-    "sha256": "09f878199c3b336df771aecb00fd8ba07a9163abd897030ca6b24178dd1e4853"
+    "sha256": "4ded6030ef0fd98085ea80499d9e979840b352703e997097a62f0193216c6456"
   },
   "source": {
-    "commit": "dea0b75e803cffa873982c90f9aa0cd17c6d243b",
-    "tree": "64571b898e5acb437b93fdedb415e193bb63f60f",
+    "commit": "de57af400cf607f03730aa522a4e9bfb160596de",
+    "tree": "61d9ad430cae0d09a9fd2686541f472f3dc23b35",
     "repository": "https://github.com/PTO-ISA/pto-spec.git"
   }
 }

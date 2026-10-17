@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
+- `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Decodes one destination-range assemble modifier and retains its XLEN-wrapped der
 
 ## Encoding Notes
 
-- `Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.`
+- `Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode` | 32 | — |
+| `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode` | 32 | — |
 
 <div class="insn-nav">
 

@@ -12,19 +12,6 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 FORMS = {
-    "BSTART.CALL:32": {
-        "mnemonic": "BSTART.CALL",
-        "pto_source_form_id": "bstart_call_32_9404418d1ae5",
-        "asm": "BSTART.CALL <br_label>, <rt_label>, ->ra",
-        "call_field": "simm12",
-        "call_lsb": 4,
-        "call_width": 12,
-        "return_lsb": 22,
-        "embedded_base": 2,
-        "call_relocation": "CBSTART12_PCREL",
-        "directed_cases": [(2, 3), (2, 29), ((1 << 12) - 1, 3)],
-        "length": 32,
-    },
     "HL.BSTART CALL:48": {
         "mnemonic": "HL.BSTART CALL",
         "pto_source_form_id": None,
@@ -86,9 +73,6 @@ def main() -> int:
         ROOT / "docs/architecture/isa-manual/src/generated/instruction_details.adoc"
     ).read_text(encoding="utf-8")
     mkdocs_pages = {
-        "BSTART.CALL:32": (
-            ROOT / "docs/isa/instructions/bstart_call.md"
-        ).read_text(encoding="utf-8"),
         "HL.BSTART CALL:48": (
             ROOT / "docs/isa/instructions/hl_bstart_call.md"
         ).read_text(encoding="utf-8"),
@@ -174,7 +158,15 @@ def main() -> int:
         assert "AtomicCallTransfer(call_target, ra)" in page
         assert "This exact aggregate is distinct from the generic bare-call form" in page
 
-    assert "exec_bstart_call(uimm5)" in sail
+    assert not by_semantic_key.get("BSTART.CALL:32")
+    for mnemonic, match in (("BSTART.STD", 0x4001), ("BSTART.FP", 0x4101)):
+        calls = [item for item in spec["instructions"] if item["asm"] == mnemonic + " CALL, <label>"]
+        assert len(calls) == 1
+        part = calls[0]["encoding"]["parts"][0]
+        assert (int(part["mask"], 0), int(part["match"], 0)) == (0x7fff, match)
+        assert [field["name"] for field in part["fields"]] == ["simm17"]
+    assert "decode_execute32(0x50D6_0022);\n  assert(last_trapnum == trapnum_illegal_inst());" in directed
+    assert "exec_bstart_call(uimm5)" not in sail
     assert "exec_hl_bstart_call(uimm5)" in sail
     assert "exec_bstart_call()" not in sail
     assert directed.count("reset_fused_call_case(") >= 7

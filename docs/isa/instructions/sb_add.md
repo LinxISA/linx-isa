@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag.
+SB.ADD atomically applies width-sized modular add and does not publish the old value.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in
 
 ## Encoding Notes
 
-- `v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag.`
+- `SB.ADD atomically applies width-sized modular add and does not publish the old value.`
 
 ## Full Catalog Forms
 

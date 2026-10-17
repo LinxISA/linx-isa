@@ -1,3 +1,3 @@
 # MCOPY.DL
 
-This page is part of the standalone LinxISA reference hierarchy. Use the appendix reference pages when you need exact mnemonic-by-mnemonic detail.
+**Encoding only — NOT IMPLEMENTED.** Execution must reject before operand reads or architectural effects. Copying, L2SPM allocation, release, result addresses, and completion behavior are not implemented.

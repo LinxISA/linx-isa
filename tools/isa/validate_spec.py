@@ -346,8 +346,8 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
     ops = tepl.get("ops", []) if isinstance(tepl, dict) else []
     if tepl.get("kind") != "mode_function" or tepl.get("selector_formula") != "(mode << 5) | function":
         errors.append("state.engine_ops.tepl must use the PTO 0.58 Mode/Function contract")
-    if tepl.get("accepted_selector_count") != 77 or len(ops) != 77:
-        errors.append("state.engine_ops.tepl must contain exactly 77 PTO 0.58 operations")
+    if tepl.get("accepted_selector_count") != 78 or len(ops) != 78:
+        errors.append("state.engine_ops.tepl must contain exactly 78 PTO 0.58 operations")
     selectors = set()
     engine_counts: Counter[str] = Counter()
     classification_counts: Counter[str] = Counter()
@@ -375,13 +375,13 @@ def _validate_engine_ops_v058(spec: Dict[str, Any], engine_ops: Dict[str, Any], 
         for operation in state.get("legal_aliases", []):
             engine_counts[str(operation.get("engine"))] += 1
             classification_counts[str(operation.get("classification"))] += 1
-    expected_engine_counts = {"CUBE": 12, "SFU": 46, "TLSU": 28, "VEC": 31}
+    expected_engine_counts = {"CUBE": 12, "SFU": 47, "TLSU": 28, "VEC": 31}
     if dict(sorted(engine_counts.items())) != expected_engine_counts:
-        errors.append("state.engine_ops semantic engines must be exactly 31 VEC / 46 SFU / 28 TLSU / 12 CUBE")
+        errors.append("state.engine_ops semantic engines must be exactly 31 VEC / 47 SFU / 28 TLSU / 12 CUBE")
     if engine_ops.get("semantic_engine_counts") != expected_engine_counts:
         errors.append("state.engine_ops.semantic_engine_counts differs from the PTO 0.58 projection")
     expected_classification_counts = {
-        "elementwise-tile-tile": 25,
+        "elementwise-tile-tile": 26,
         "irregular-and-complex": 4,
         "layout-and-rearrangement": 6,
         "matrix-and-matrix-vector": 12,
@@ -423,7 +423,7 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     if str(spec.get("version") or "") == "0.57.1":
         _validate_engine_ops_v0571(spec, engine_ops, errors)
         return
-    if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3", "0.58.5", "0.58.6"}:
+    if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}:
         _validate_engine_ops_v058(spec, engine_ops, errors)
         return
 
@@ -1137,7 +1137,7 @@ def _validate_frame_template_contract(spec: Dict[str, Any], errors: List[str]) -
 def _validate_first_use_register_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3", "0.58.5", "0.58.6"}:
+    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}:
         return
 
     system_registers = ((spec.get("state") or {}).get("system_registers") or {})
@@ -1183,7 +1183,7 @@ def _validate_first_use_register_contract(
 def _validate_first_use_semantics_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3", "0.58.5", "0.58.6"}:
+    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}:
         return
 
     conventions = spec.get("semantics_conventions") or {}
@@ -1303,7 +1303,7 @@ def validate(path: str) -> List[str]:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
         expected_retired = (
             set()
-            if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3", "0.58.5", "0.58.6"}
+            if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}
             else {"B.IOD", "BSTART.PAR"}
         )
         if retired_names != expected_retired:

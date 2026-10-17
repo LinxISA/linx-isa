@@ -590,10 +590,10 @@ def _assign_stable_ids(instructions: List[Dict[str, Any]]) -> None:
 def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]) -> None:
     """Attach sole-source PTO identities without replacing Linx stable IDs."""
     source_specs = (
-        (in_dir / "state" / "pto_scalar_forms.json", 466),
+        (in_dir / "state" / "pto_scalar_forms.json", 473),
         (
             in_dir / "state" / "pto_command_forms.json",
-            95,
+            96,
         ),
     )
 
@@ -618,6 +618,9 @@ def _attach_pto_source_form_ids(in_dir: Path, instructions: List[Dict[str, Any]]
         if not source_path.is_file():
             continue
         source = _read_json(source_path)
+        if source_path.name == "pto_scalar_forms.json":
+            from pto_scalar_proposal import apply_proposal
+            source = apply_proposal(in_dir, source)
         if source.get("form_count") != expected_count:
             raise ValueError(
                 f"{source_path}: expected exactly {expected_count} PTO forms"

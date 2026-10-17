@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import the canonical PTO ISA 0.58.6 release into the Linx v0.58 profile."""
+"""Import the canonical PTO ISA 0.58.7 release into the Linx v0.58 profile."""
 
 from __future__ import annotations
 
@@ -16,16 +16,16 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = ROOT / "isa" / "v0.58"
 LOCK_PATH = PROFILE / "pto-spec.lock.json"
-RELEASE = "0.58.6"
-PUBLICATION_VERSION = "0.58.6.0"
-PUBLICATION_TAG = "v0.58.6.0"
-SOURCE_COMMIT = "dea0b75e803cffa873982c90f9aa0cd17c6d243b"
-SOURCE_TREE = "64571b898e5acb437b93fdedb415e193bb63f60f"
-EXPECTED_ABI = "pto-isa-0.58.6-mode-function-v1"
-VECTOR_BASENAME = "pto-isa-0586-hardware-numeric-vectors.json"
+RELEASE = "0.58.7"
+PUBLICATION_VERSION = "0.58.7.0"
+PUBLICATION_TAG = "v0.58.7.0"
+SOURCE_COMMIT = "de57af400cf607f03730aa522a4e9bfb160596de"
+SOURCE_TREE = "61d9ad430cae0d09a9fd2686541f472f3dc23b35"
+EXPECTED_ABI = "pto-isa-0.58.7-mode-function-v1"
+VECTOR_BASENAME = "pto-isa-0587-hardware-numeric-vectors.json"
 SCALAR_FORM_COUNT = 466
-COMMAND_FORM_COUNT = 95
-TILE_OPERATION_COUNT = 117
+COMMAND_FORM_COUNT = 96
+TILE_OPERATION_COUNT = 118
 EXTENSION_RESERVATION_COUNT = 46
 
 
@@ -117,7 +117,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
         or manifest.get("publication_version") != PUBLICATION_VERSION
         or manifest.get("encoding_abi") != EXPECTED_ABI
     ):
-        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.6 contract")
+        raise ValueError("upstream PTO release/encoding ABI is not the canonical 0.58.7 contract")
     counts = manifest.get("catalog_counts") or {}
     expected = {
         "tile_operations_total": TILE_OPERATION_COUNT,
@@ -128,16 +128,16 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     if any(counts.get(key) != value for key, value in expected.items()):
         raise ValueError(f"unexpected PTO 0.58 catalog counts: {counts}")
     if Counter(item["family"] for item in docs["tiles"]["operations"]) != Counter(
-        {"TEPL": 77, "TLSU": 28, "CUBE": 12}
+        {"TEPL": 78, "TLSU": 28, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 tile family counts")
     if Counter(item["engine"] for item in docs["tiles"]["operations"]) != Counter(
-        {"VEC": 31, "SFU": 46, "TLSU": 28, "CUBE": 12}
+        {"VEC": 31, "SFU": 47, "TLSU": 28, "CUBE": 12}
     ):
         raise ValueError("unexpected PTO 0.58 semantic engine counts")
     if Counter(item["classification"] for item in docs["tiles"]["operations"]) != Counter(
         {
-            "elementwise-tile-tile": 25,
+            "elementwise-tile-tile": 26,
             "tile-scalar-and-immediate": 15,
             "reduce-and-expand": 28,
             "memory-and-data-movement": 27,
@@ -148,7 +148,7 @@ def validate_source(source_root: Path) -> dict[str, dict[str, Any]]:
     ):
         raise ValueError("unexpected PTO 0.58 tile classification counts")
     if Counter(item["semantic_family"] for item in docs["commands"]["forms"]) != Counter(
-        {"CMD": 90, "BBD": 5}
+        {"CMD": 92, "BBD": 4}
     ):
         raise ValueError("unexpected PTO 0.58 command family counts")
     if (
@@ -375,7 +375,7 @@ def project_engine_ops(tiles: dict[str, Any]) -> dict[str, Any]:
         "selector_formula": "(mode << 5) | function",
         "mode_field_bits": [0, 1],
         "function_field_bits": [0, 4],
-        "accepted_selector_count": 77,
+        "accepted_selector_count": 78,
         "reserved_selector_ranges": tiles["reserved"]["tepl_selector_ranges"],
         "migration_aliases": {},
         "ops": tepl_ops,

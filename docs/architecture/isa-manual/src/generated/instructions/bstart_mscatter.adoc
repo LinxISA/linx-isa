@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSCATTER DataType
 
-*Description:* Begins a strided indexed TLSU scatter block.
+*Description:* scatter using explicit byte displacements.
 
 *Encoding:*
 

@@ -11,29 +11,19 @@
 
 ## Assembly Syntax
 
-- `B.IOT SrcTile0, mask=PE_MASK, <last>`
 - `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
-- `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
 - `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+- `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
 - `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+- `B.IOT SrcTile0, mask=PE_MASK, <last>`
 
 ## Encoding
 
 <div class="enc-diagram">
 
-<figure id="encoding-b_iot_32_21bee57b65c0">
-<img src="../wavedrom/enc_b_iot_32_21bee57b65c0.svg" alt="B.IOT encoding form b_iot_32_21bee57b65c0" width="100%" />
-<figcaption><code>b_iot_32_21bee57b65c0</code> — <code>B.IOT SrcTile0, mask=PE_MASK, <last></code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
 <figure id="encoding-b_iot_32_3bc48b48fea2">
 <img src="../wavedrom/enc_b_iot_32_3bc48b48fea2.svg" alt="B.IOT encoding form b_iot_32_3bc48b48fea2" width="100%" />
 <figcaption><code>b_iot_32_3bc48b48fea2</code> — <code>B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode></code>. MSB is on the left, LSB is on the right.</figcaption>
-</figure>
-
-<figure id="encoding-b_iot_32_53c1ffc02364">
-<img src="../wavedrom/enc_b_iot_32_53c1ffc02364.svg" alt="B.IOT encoding form b_iot_32_53c1ffc02364" width="100%" />
-<figcaption><code>b_iot_32_53c1ffc02364</code> — <code>B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 <figure id="encoding-b_iot_32_7d0899202df1">
@@ -41,9 +31,19 @@
 <figcaption><code>b_iot_32_7d0899202df1</code> — <code>B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
+<figure id="encoding-b_iot_32_bf660153d171">
+<img src="../wavedrom/enc_b_iot_32_bf660153d171.svg" alt="B.IOT encoding form b_iot_32_bf660153d171" width="100%" />
+<figcaption><code>b_iot_32_bf660153d171</code> — <code>B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last></code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
 <figure id="encoding-b_iot_32_cd6ec8181a49">
 <img src="../wavedrom/enc_b_iot_32_cd6ec8181a49.svg" alt="B.IOT encoding form b_iot_32_cd6ec8181a49" width="100%" />
 <figcaption><code>b_iot_32_cd6ec8181a49</code> — <code>B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode></code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-b_iot_32_e0f1463d6a7e">
+<img src="../wavedrom/enc_b_iot_32_e0f1463d6a7e.svg" alt="B.IOT encoding form b_iot_32_e0f1463d6a7e" width="100%" />
+<figcaption><code>b_iot_32_e0f1463d6a7e</code> — <code>B.IOT SrcTile0, mask=PE_MASK, <last></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 </div>
@@ -66,11 +66,11 @@ Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N 
 
 | Form ID | Assembly | Length | Decode | Encoding |
 |---------|----------|--------|--------|----------|
-| `b_iot_32_21bee57b65c0` | `B.IOT SrcTile0, mask=PE_MASK, <last>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_21bee57b65c0.svg) |
 | `b_iot_32_3bc48b48fea2` | `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_3bc48b48fea2.svg) |
-| `b_iot_32_53c1ffc02364` | `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_53c1ffc02364.svg) |
 | `b_iot_32_7d0899202df1` | `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_7d0899202df1.svg) |
+| `b_iot_32_bf660153d171` | `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_bf660153d171.svg) |
 | `b_iot_32_cd6ec8181a49` | `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_cd6ec8181a49.svg) |
+| `b_iot_32_e0f1463d6a7e` | `B.IOT SrcTile0, mask=PE_MASK, <last>` | 32 | — | [SVG](../wavedrom/enc_b_iot_32_e0f1463d6a7e.svg) |
 
 <div class="insn-nav">
 

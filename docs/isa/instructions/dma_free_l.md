@@ -26,7 +26,7 @@
 
 ## Description
 
-v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.
+Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 ## Pseudocode (informative)
 
@@ -36,7 +36,7 @@ v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resour
 
 ## Encoding Notes
 
-- `v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.`
+- `Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.`
 
 ## Full Catalog Forms
 

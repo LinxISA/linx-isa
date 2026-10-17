@@ -37,6 +37,7 @@
 |`SSRGET` |32 |- |`ssrget SSR_ID, ->{t, u, Rd}` |SSRGET reads the complete encoded system-register address.
 |`SSRSET` |32 |- |`ssrset SrcL, SSR_ID` |SSRSET writes the complete encoded system-register address.
 |`SSRSWAP` |32 |- |`ssrswap SrcL, SSR_ID, ->{t, u, Rd}` |SSRSWAP atomically swaps the complete encoded system-register address.
+|`SYNC.CORE` |32 |- |`sync.core` |Waits for all four PEs at the same Core-local phase boundary and completes their earlier GM obligations.
 |`TLB.IA` |32 |- |`tlb.ia SrcL` |TLB.IA completes the 16-bit ASID token in bits 15:0 maintenance operation synchronously.
 |`TLB.IALL` |32 |- |`tlb.iall` |TLB.IALL completes the all translation entries maintenance operation synchronously.
 |`TLB.IAV` |32 |- |`tlb.iav SrcL` |TLB.IAV completes the canonical 48-bit virtual address with ASID scope maintenance operation synchronously.
@@ -230,7 +231,7 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.ASSEMBLE` |32 |- |`B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode` |Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+|`B.ASSEMBLE` |32 |- |`B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode` |Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
 |`B.SUBVIEW` |32 |- |`B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode` |Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
 |===
 
@@ -288,13 +289,13 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
+|`B.IOR` |32 |- |`B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` |Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.
 |`B.IOS` |32 |- |`B.IOS S<SharedTileID>, mask=<PE_MASK> \| B.IOS mask=<PE_MASK>, ->S<SharedTileID><SizeCode>` |Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
-|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |`B.IOT` |32 |- |`B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |`B.IOT` |32 |- |`B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
+|`B.IOT` |32 |- |`B.IOT SrcTile0, mask=PE_MASK, <last>` |Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand.
 |===
 
 [[insnref-bundle-offset]]
@@ -318,27 +319,28 @@
 |`BSTART.FP` |32 |- |`BSTART.FP RET` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.FP` |32 |- |`BSTART.FP CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.FP` |32 |- |`BSTART.FP COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.GMOV` |32 |- |`BSTART.GMOV DataType` |Starts a Core4 peer-Local fragment transfer block.
-|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |Begins a strided indexed TLSU gather block.
+|`BSTART.MGATHER` |32 |- |`BSTART.MGATHER DataType` |gather using explicit byte displacements.
 |`BSTART.MGATHER.ADD` |32 |- |`BSTART.MGATHER.ADD DataType` |Starts GM indexed mgather.add operation.
 |`BSTART.MGATHER.AND` |32 |- |`BSTART.MGATHER.AND DataType` |Starts GM indexed mgather.and operation.
-|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |Begins an atomic compare-and-swap strided indexed TLSU gather block.
+|`BSTART.MGATHER.CAS` |32 |- |`BSTART.MGATHER.CAS DataType` |atomic compare-and-swap gather using explicit byte displacements.
 |`BSTART.MGATHER.DEC` |32 |- |`BSTART.MGATHER.DEC DataType` |Starts GM indexed mgather.dec operation.
 |`BSTART.MGATHER.EXCH` |32 |- |`BSTART.MGATHER.EXCH DataType` |Starts GM indexed mgather.exch operation.
 |`BSTART.MGATHER.INC` |32 |- |`BSTART.MGATHER.INC DataType` |Starts GM indexed mgather.inc operation.
-|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Begins a predicate-masked strided indexed TLSU gather block.
+|`BSTART.MGATHER.MASK` |32 |- |`BSTART.MGATHER.MASK DataType` |Masked gather using explicit byte displacements.
 |`BSTART.MGATHER.MAX` |32 |- |`BSTART.MGATHER.MAX DataType` |Starts GM indexed mgather.max operation.
 |`BSTART.MGATHER.MIN` |32 |- |`BSTART.MGATHER.MIN DataType` |Starts GM indexed mgather.min operation.
 |`BSTART.MGATHER.OR` |32 |- |`BSTART.MGATHER.OR DataType` |Starts GM indexed mgather.or operation.
 |`BSTART.MGATHER.XOR` |32 |- |`BSTART.MGATHER.XOR DataType` |Starts GM indexed mgather.xor operation.
 |`BSTART.MPAR` |32 |- |`BSTART.MPAR <VS8, VS16>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
-|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |Begins a strided indexed TLSU scatter block.
+|`BSTART.MSCATTER` |32 |- |`BSTART.MSCATTER DataType` |scatter using explicit byte displacements.
 |`BSTART.MSCATTER.ADD` |32 |- |`BSTART.MSCATTER.ADD DataType` |Starts GM indexed mscatter.add operation.
 |`BSTART.MSCATTER.AND` |32 |- |`BSTART.MSCATTER.AND DataType` |Starts GM indexed mscatter.and operation.
 |`BSTART.MSCATTER.DEC` |32 |- |`BSTART.MSCATTER.DEC DataType` |Starts GM indexed mscatter.dec operation.
 |`BSTART.MSCATTER.INC` |32 |- |`BSTART.MSCATTER.INC DataType` |Starts GM indexed mscatter.inc operation.
-|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Begins a predicate-masked strided indexed TLSU scatter block.
+|`BSTART.MSCATTER.MASK` |32 |- |`BSTART.MSCATTER.MASK DataType` |Masked scatter using explicit byte displacements.
 |`BSTART.MSCATTER.MAX` |32 |- |`BSTART.MSCATTER.MAX DataType` |Starts GM indexed mscatter.max operation.
 |`BSTART.MSCATTER.MIN` |32 |- |`BSTART.MSCATTER.MIN DataType` |Starts GM indexed mscatter.min operation.
 |`BSTART.MSCATTER.OR` |32 |- |`BSTART.MSCATTER.OR DataType` |Starts GM indexed mscatter.or operation.
@@ -349,6 +351,7 @@
 |`BSTART.STD` |32 |- |`BSTART.STD IND` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD COND, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD RET` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
+|`BSTART.STD` |32 |- |`BSTART.STD CALL, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.STD` |32 |- |`BSTART.STD DIRECT, <label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.SYS` |32 |- |`BSTART.SYS FALL` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
 |`BSTART.TEPL` |32 |- |`BSTART.TEPL Mode, Function, DataType` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -381,8 +384,8 @@
 |`FRET.STK` |32 |- |`FRET.STK [ra ~ RegDstn], sp!, uimm` |Restores a restartable stack frame whose first stack slot supplies the validated return target.
 |`L.BSTOP` |64 |- |`L.BSTOP` |Commits the current bundle and transfers to its selected continuation.
 |`MCOPY` |32 |- |`MCOPY [RegSrc0, RegSrc1, RegSrc2]` |Copies a non-overlapping byte range in restartable forward memory steps.
-|`MCOPY.DL` |32 |- |`MCOPY.DL [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` |v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.
-|`MCOPY.DS` |32 |- |`MCOPY.DS [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` |v0.58 32-bit block memory-copy variant in Store mode (D + S/L=Store): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response may return before the copy completes. Distinguished from MCOPY by 26..25=01 and the RegDst field.
+|`MCOPY.DL` |32 |- |`MCOPY.DL [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` |Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
+|`MCOPY.DS` |32 |- |`MCOPY.DS [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}` |Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DS. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 |`MSET` |32 |- |`MSET [RegSrc0=Destination, RegSrc1=FillByte, RegSrc2=LengthBytes]` |Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight.
 |`XB` |32 |- |`XB ACR-ID, C-ID` |Inventories an extension-owned cross-block transfer encoding that PTO rejects before field interpretation or architectural effects.
 |===
@@ -393,7 +396,6 @@
 [cols="3,1,2,5,5",options="header"]
 |===
 |Mnemonic |Len |Decode |Assembly |Notes
-|`BSTART.CALL` |32 |- |`BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomically retires the old block, installs a direct-call BARG, and writes the independent return target to ra.
 |`BSTART.ICALL` |32 |- |`BSTART.ICALL <rt_label>, ->ra` |Atomically retires the old block, snapshots its BARG.BPCN into a new indirect-call BARG, and writes the independent return target to ra.
 |`HL.BSTART CALL` |48 |- |`HL.BSTART.CALL <br_label>, <rt_label>, ->ra` |Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.
 |`HL.BSTART.FP` |48 |- |`HL.BSTART.FP FALL<, fixup_label>` |Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.
@@ -495,8 +497,8 @@
 |`CASH` |32 |- |`cash<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASH atomically compares and conditionally replaces one halfword, then publishes the prior value.
 |`CASW` |32 |- |`casw<.{aq, rl, aqrl}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |CASW atomically compares and conditionally replaces one word, then publishes the prior value.
 |`DMA` |32 |- |`dma [SrcL], SrcR` |DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue.
-|`DMA.FREE.L` |32 |- |`dma.free.l [SrcL]` |v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.
-|`DMA.FREE.S` |32 |- |`dma.free.s [SrcL]` |v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010.
+|`DMA.FREE.L` |32 |- |`dma.free.l [SrcL]` |Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
+|`DMA.FREE.S` |32 |- |`dma.free.s [SrcL]` |Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 |`HL.CASB` |48 |- |`hl.casb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASB atomically compares and conditionally replaces one byte, then publishes the prior value.
 |`HL.CASD` |48 |- |`hl.casd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASD atomically compares and conditionally replaces one doubleword, then publishes the prior value.
 |`HL.CASH` |48 |- |`hl.cash<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}` |HL.CASH atomically compares and conditionally replaces one halfword, then publishes the prior value.
@@ -521,8 +523,8 @@
 |`LW.UMAX` |32 |- |`lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.
 |`LW.UMIN` |32 |- |`lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.
 |`LW.XOR` |32 |- |`lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}` |LW.XOR atomically stores the width-sized bitwise XOR and publishes the prior memory value.
-|`SB.ADD` |32 |- |`sb.add<.{rl}> [SrcL], SrcR` |v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag.
-|`SB.SUB` |32 |- |`sb.sub<.{rl}> [SrcL], SrcR` |v0.58 32-bit atomic store-op subtract byte: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag.
+|`SB.ADD` |32 |- |`sb.add<.{rl}> [SrcL], SrcR` |SB.ADD atomically applies width-sized modular add and does not publish the old value.
+|`SB.SUB` |32 |- |`sb.sub<.{rl}> [SrcL], SrcR` |SB.SUB atomically applies width-sized modular sub and does not publish the old value.
 |`SC.B` |32 |- |`sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.B conditionally stores one byte when the local 64-byte-line reservation matches.
 |`SC.D` |32 |- |`sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches.
 |`SC.H` |32 |- |`sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}` |SC.H conditionally stores one halfword when the local 64-byte-line reservation matches.
@@ -532,18 +534,18 @@
 |`SD.OR` |32 |- |`sd.or<.{rl}> [SrcL], SrcR` |SD.OR atomically replaces the aligned 64-bit memory value with its bitwise OR with SrcR; it does not publish the old value.
 |`SD.SMAX` |32 |- |`sd.smax<.{rl}> [SrcL], SrcR` |SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value.
 |`SD.SMIN` |32 |- |`sd.smin<.{rl}> [SrcL], SrcR` |SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value.
-|`SD.SUB` |32 |- |`sd.sub<.{rl}> [SrcL], SrcR` |v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag.
+|`SD.SUB` |32 |- |`sd.sub<.{rl}> [SrcL], SrcR` |SD.SUB atomically applies width-sized modular sub and does not publish the old value.
 |`SD.UMAX` |32 |- |`sd.umax<.{rl}> [SrcL], SrcR` |SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.
 |`SD.UMIN` |32 |- |`sd.umin<.{rl}> [SrcL], SrcR` |SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
 |`SD.XOR` |32 |- |`sd.xor<.{rl}> [SrcL], SrcR` |SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.
-|`SH.ADD` |32 |- |`sh.add<.{rl}> [SrcL], SrcR` |v0.58 32-bit atomic store-op add halfword: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag.
-|`SH.SUB` |32 |- |`sh.sub<.{rl}> [SrcL], SrcR` |v0.58 32-bit atomic store-op subtract halfword: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag.
+|`SH.ADD` |32 |- |`sh.add<.{rl}> [SrcL], SrcR` |SH.ADD atomically applies width-sized modular add and does not publish the old value.
+|`SH.SUB` |32 |- |`sh.sub<.{rl}> [SrcL], SrcR` |SH.SUB atomically applies width-sized modular sub and does not publish the old value.
 |`SW.ADD` |32 |- |`sw.add<.{rl}> [SrcL], SrcR` |SW.ADD atomically replaces the aligned 32-bit memory value with its modular sum with SrcR; it does not publish the old value.
 |`SW.AND` |32 |- |`sw.and<.{rl}> [SrcL], SrcR` |SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value.
 |`SW.OR` |32 |- |`sw.or<.{rl}> [SrcL], SrcR` |SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR with SrcR; it does not publish the old value.
 |`SW.SMAX` |32 |- |`sw.smax<.{rl}> [SrcL], SrcR` |SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value.
 |`SW.SMIN` |32 |- |`sw.smin<.{rl}> [SrcL], SrcR` |SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value.
-|`SW.SUB` |32 |- |`sw.sub<.{rl}> [SrcL], SrcR` |v0.58 32-bit atomic store-op subtract word: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag.
+|`SW.SUB` |32 |- |`sw.sub<.{rl}> [SrcL], SrcR` |SW.SUB atomically applies width-sized modular sub and does not publish the old value.
 |`SW.UMAX` |32 |- |`sw.umax<.{rl}> [SrcL], SrcR` |SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.
 |`SW.UMIN` |32 |- |`sw.umin<.{rl}> [SrcL], SrcR` |SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.
 |`SW.XOR` |32 |- |`sw.xor<.{rl}> [SrcL], SrcR` |SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.

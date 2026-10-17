@@ -50,7 +50,7 @@
       "translation_sha256": "01f410e30bb831b3d5ed1c2fd7f6dead644c4978612e91487fc12e6a6e11a208"
     },
     "architecture/v0.58-architecture-contract.md": {
-      "source_sha256": "1e42001557f2c683cd5eda0b492682e4903a682530c472d23e099596ea22af43",
+      "source_sha256": "326319ea790a0a7a1e1c0c0979e3a6261884924d3e01e9e855fa6b24129da829",
       "translation_sha256": "df054dba4865c1d0c09f1325d797d87aa94cc2a244d83a57cfc9f521f67bbbec"
     },
     "archive/design-updates/README.md": {
@@ -1058,7 +1058,7 @@
       "translation_sha256": "6ae7118305c6749127ef323ed47ffcbe5ed0a55554ee7d2bfbbccc4c10acc160"
     },
     "isa/encoding.md": {
-      "source_sha256": "ede8c44d815cdd08a7e87a3af8b9f7e14b433181c6e541b631c69d74fe6c35d5",
+      "source_sha256": "07140c0113fbf24088fe86df0495f078f527882f426c59818c1387e56d68cbcb",
       "translation_sha256": "fb32797dd737afd2f860ee28bd3d74c8d604c86f82c1114a0529b70a0cc0412a"
     },
     "isa/encoding/overview.md": {
@@ -1102,7 +1102,7 @@
       "translation_sha256": "255fb16e91a91401bb68c4b50956959ba02901ba2b732769454b2397e58f954e"
     },
     "isa/groups/bstart.md": {
-      "source_sha256": "51e62c35b16f450523ee3d8e6474ba475b78c069fd2ba2ef27c0766dcc64b12c",
+      "source_sha256": "5290a92b4a6de81d0b8f02730561c176f536c73dc238985e8a1c1ce819636a70",
       "translation_sha256": "50fee8454fbd5ed65824b3afbd94a351b2322fd9d69cbc8319fa69c08cad5c27"
     },
     "isa/groups/c_bstart.md": {
@@ -1118,7 +1118,7 @@
       "translation_sha256": "ba9a1bf3f3af6d4f15441118ac7b4d1939a2ecfc99dbb8ec2b4c9fdf3d96a335"
     },
     "isa/groups/floating_point_arithmetic.md": {
-      "source_sha256": "fb500a5db16ca7c2175e1a99a4e852b49a20364894f61e6a4d25b7af2e90bde9",
+      "source_sha256": "8ac2b10612eeaaea1ea60bfb3e5073220a3b719b6b2a399abaa031a76ec95cb4",
       "translation_sha256": "1c49c614425aaae029cebde20b1a467ac451268b13e84994edd2c583ca3b857d"
     },
     "isa/groups/format_convert.md": {
@@ -1134,7 +1134,7 @@
       "translation_sha256": "18932954c7feb2eedb650d274ff5f0d307411116eb5955d3aed5a11e19050556"
     },
     "isa/groups/index.md": {
-      "source_sha256": "113475a3b419c84b61b77d6e9added83e0916baf442dc8a27d97782ccf64abfc",
+      "source_sha256": "fc51f74bfee42bf8541e4c6f6b710130c2917b3237b56445b13e3d7c8153c1ec",
       "translation_sha256": "58baec8167f6d5cabc3f9823de78311e4cbd859eb8b29b666dff62a6cc137f76"
     },
     "isa/groups/load_immediate_offset.md": {
@@ -1290,12 +1290,12 @@
       "translation_sha256": "ca61f885f0eef30ed561f7161ef0449be2704ecd7c60fbaafe53f99aca70e05d"
     },
     "isa/header/templateblock/MCOPY.DL.md": {
-      "source_sha256": "34a0de60b4b0762779303dc71253414268f86030b2a4a5878096052400123b44",
-      "translation_sha256": "43bf7080a131572b863c6bf23cf4e62c68ad9210a7652882dc6a3741855d3136"
+      "source_sha256": "2cd4d2487fc76e0a0fb71354246221f06df983d93a9a7fe180b75a614c7389eb",
+      "translation_sha256": "7e4b9842e31822865af957af5a320b3a524fc550b0d4c00a5da8ef0d79b6ca59"
     },
     "isa/header/templateblock/MCOPY.DS.md": {
-      "source_sha256": "5d6f6ae3c860d1ab48c02697fd7fa8be19eab8fb5e3f96b2c8220b1f81013be5",
-      "translation_sha256": "c41159a244b61d9c938af8e6ed54b7c48c814ecbe3b9901a236b5d3895a094a2"
+      "source_sha256": "d66b63301e4a5a306c1dc0594cc85c2cbfd28f8517acd140e790637791d03487",
+      "translation_sha256": "75da3b504cad6338f2513deb6437871d9dadaba2c1ed95a1c0f6d0e31a393198"
     },
     "isa/header/templateblock/MCOPY.md": {
       "source_sha256": "cd48dafd856f4bddfbd84fb43d610fa4fea4f33a60d619efc7b3f69a989f8538",
@@ -1662,7 +1662,7 @@
       "translation_sha256": "7c877e53699dff034a4fd424e08c06207e9051a0e1bfc0829f1cd6ad605edde3"
     },
     "isa/index.md": {
-      "source_sha256": "e0aecf6984096884867fa65381dc3f0286ebc04d6ef840aa60ce960df846ef7d",
+      "source_sha256": "05c67de794036321bdd917877ce52aff5f0dfd70544d44f90118b805c1323f04",
       "translation_sha256": "504872c9b0a20331515739515f895677f299de26ec99936fbb57fa674c4d00ca"
     },
     "isa/inst/LibPseudoCode.md": {
@@ -3922,12 +3922,12 @@
       "translation_sha256": "ba1c892550b3fd03f66daa7835a65b45ac22e5d75035a4260152d38e6fcece99"
     },
     "isa/inst/misa_s/DMA.FREE.L.md": {
-      "source_sha256": "e44535a8fd0f62f664fbc2bb5f44a18dabb1398a7a015064457bfd9539c39109",
-      "translation_sha256": "9a931abac4ffa3bdebe8d503f08bc90bb9ec840c64e871495243e5530b9d2b98"
+      "source_sha256": "33f482a4e99f401ed5f21304e29a60c7d49161c54c6569130360cf8966942f1d",
+      "translation_sha256": "5ebab74291877b2605b7e0f8998fdd371421c0069f5cee832a5c7b7208e0070d"
     },
     "isa/inst/misa_s/DMA.FREE.S.md": {
-      "source_sha256": "f87bf6762dac3d3d0d8957a6036af6127b3688064458f1d87c0f88bcb926266b",
-      "translation_sha256": "9fa85d50a327e0f92771d51425ba1704f9aed096fcbcade52cfdced8e5be7088"
+      "source_sha256": "a6841eec43b4ca021ee614e99ac8c0cc22f0c9d49da4cacc16bf083f57d95ad2",
+      "translation_sha256": "d6d28900e4f42b1a4ece6b0393448f76930ebe99c1c580596f615a4212b9936d"
     },
     "isa/inst/misa_s/DMA.md": {
       "source_sha256": "4a123432c6e354a6a90fb98a92be128ce0002cda16563efe65ad12aa65b286af",
@@ -4974,11 +4974,11 @@
       "translation_sha256": "dfbbb3e4f6162b391f9d9163fbc3a79d0f0a9e538b9b3e2b813110b259b0c728"
     },
     "isa/instructions/b_ior.md": {
-      "source_sha256": "f40881ff10e6b2d69f49d9a20d17da99ef8923a6e155c2a940dbb727619aeb9c",
+      "source_sha256": "4cdcf081d07e058d5ac5b5b6bda070dfd21352697a898c7b6defa61aff126ab5",
       "translation_sha256": "42cc954bac30d17e6e42a0537d20f53c326e3ebe89e2256b6686306c3fc0983d"
     },
     "isa/instructions/b_iot.md": {
-      "source_sha256": "8f79a76d4f4cd1ae94b97b18b37fc943b52617e6b4b8ad8e18697d8f18b07e68",
+      "source_sha256": "4792ac0afff38ec8f8e97067bbe1305b1c0e5198aca404f1aa1b6ac51686f2bc",
       "translation_sha256": "e317e87b90352342d2abe5f1bce4915c7eaabadbbbc58bcf071dc4b6170efea5"
     },
     "isa/instructions/b_text.md": {
@@ -5013,12 +5013,8 @@
       "source_sha256": "e953424355f78efff37ae3896bb5beaeac1453494a84f0dac87722f5a813a46f",
       "translation_sha256": "50fee8454fbd5ed65824b3afbd94a351b2322fd9d69cbc8319fa69c08cad5c27"
     },
-    "isa/instructions/bstart_call.md": {
-      "source_sha256": "2fd2f4f62f3b27b9ea284e22e0796a5b4c8815d31a466e711d557d727fa7a186",
-      "translation_sha256": "89157ed6b56eaa31a770bfd927f905db9dff74f765228c46987b2753f7bb6947"
-    },
     "isa/instructions/bstart_fp.md": {
-      "source_sha256": "8409cc5c1b0bd33992750be281055661b0ba0737947f5e3f6ca5d197a5d1a302",
+      "source_sha256": "7548e6ec333f5212b05591b9a67b357674191d2d5751239a63f898676b87c660",
       "translation_sha256": "393ede2f366048e2602eb1130d61245682718759b4bb1cc0634c835486eaf298"
     },
     "isa/instructions/bstart_mpar.md": {
@@ -5030,7 +5026,7 @@
       "translation_sha256": "3e84c52917033fec3a44e98bcb05de652a53a1506d750c9876391250ea3eeae4"
     },
     "isa/instructions/bstart_std.md": {
-      "source_sha256": "2bd9c295d63a7d5ee7d9dd07978445d606ed8e5e91345cb6be11cbf71d0d1b4f",
+      "source_sha256": "7d00a18ff364e6ddd5bdcbf3811a5ccc65ab8f87d562f498c6138e1e834d86cb",
       "translation_sha256": "d47d3ee09b66579c098286ac8cf1cc5de266e12bbe55a5d185520f57a935b70a"
     },
     "isa/instructions/bstart_sys.md": {
@@ -6298,7 +6294,7 @@
       "translation_sha256": "77a2c05e2e1a76c24bf10a9e9973947d6f087fad502c009c39deceef1d8265d2"
     },
     "isa/instructions/index.md": {
-      "source_sha256": "0de08c76baa2523cf8b810ac9d8a850cb579c5c733522b9f3c0582305667dcd6",
+      "source_sha256": "bf4b38194b8f72cf414b3132c6137de9118f8c1266b5d83251282c522c54a0a0",
       "translation_sha256": "e431843538eea1226c59c05a0d6fd7582635b1f1e8355ceff6539611a7485ab4"
     },
     "isa/instructions/j.md": {
@@ -8070,7 +8066,7 @@
       "translation_sha256": "ff5e0352740effd0c8d5efc5531abcdd333fdd5e2cc029c0cb55ee70399a3d5c"
     },
     "reference/encoding_space_report.md": {
-      "source_sha256": "3895ce387b027b444b00afff32fcc6a61cf335815c38e01b2963724c8ceeb7f4",
+      "source_sha256": "0887bdeef7c87d18310fd35d2b5f3972a0356ff0e21441b5ff289c24f985653f",
       "translation_sha256": "8fcf42ce5aeab60c1118bbfcd8b08d3492bd88b6a8de0827a2b728ce2b09582e"
     },
     "reference/examples/README.md": {
@@ -8233,6 +8229,7 @@
     "isa/header/tileblock/ERCOV.md",
     "isa/header/tileblock/ESAVE.md",
     "isa/instructions/b_arg.md",
+    "isa/instructions/bstart_call.md",
     "isa/instructions/bstart_cube.md",
     "isa/instructions/bstart_fixp.md",
     "isa/instructions/c_b_dim.md"

@@ -3,7 +3,7 @@
 [[insnref-details]]
 === Instruction descriptions (by mnemonic)
 
-This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.6 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
+This section provides per-mnemonic descriptions. The tables above remain the authoritative listing of encodable forms and decode layouts in the v0.58.7 catalog. Descriptions and pseudocode here are derived from mnemonic naming conventions plus catalog assembly templates/notes and are intended to be *informative*.
 
 [[insndesc-sys]]
 ==== SYS
@@ -880,6 +880,34 @@ Operation (informative)::
 old = ReadSystemRegister(ID)
 WriteSystemRegister(ID, Read(SrcL))
 Write(Dst, old)
+----
+
+[[insndesc-sys-sync-core]]
+===== SYNC.CORE
+
+Performs the operation indicated by the mnemonic on the operands specified by the selected form. Operand-size, signedness, and addressing modifiers are encoded via suffixes and qualifiers in the assembly syntax.
+
+Catalog forms:: 1 form(s) (32 bits).
+
+Assembly forms::
++
+* `sync.core`
+
+Encoding::
++
+.`sync_core_32_d6367bd93586` — `sync.core`
+image::encodings/enc_sync_core.svg[SYNC.CORE encoding form sync_core_32_d6367bd93586,align="center"]
+
+
+Encoding notes (informative)::
++
+* Waits for all four PEs at the same Core-local phase boundary and completes their earlier GM obligations.
+
+Operation (informative)::
++
+[source]
+----
+Execute operation as selected by the mnemonic and encoded modifiers.
 ----
 
 [[insndesc-sys-tlb-ia]]
@@ -6089,17 +6117,17 @@ Catalog forms:: 1 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
+* `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode`
 
 Encoding::
 +
-.`b_assemble_32_058abbee219d` — `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode`
-image::encodings/enc_b_assemble.svg[B.ASSEMBLE encoding form b_assemble_32_058abbee219d,align="center"]
+.`b_assemble_32_20b4f7671811` — `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode`
+image::encodings/enc_b_assemble.svg[B.ASSEMBLE encoding form b_assemble_32_20b4f7671811,align="center"]
 
 
 Encoding notes (informative)::
 +
-* Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
+* Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group.
 
 Operation (informative)::
 +
@@ -6322,7 +6350,7 @@ image::encodings/enc_b_ior.svg[B.IOR encoding form b_ior_32_df50a269be7c,align="
 
 Encoding notes (informative)::
 +
-* Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
+* Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one for an operation-defined row stride, while indexed TLSU uses BaseGPR only.
 
 Operation (informative)::
 +
@@ -6368,24 +6396,24 @@ Catalog forms:: 5 form(s) (32 bits).
 
 Assembly forms::
 +
-* `B.IOT SrcTile0, mask=PE_MASK, <last>`
 * `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
-* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
 * `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
 * `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
+* `B.IOT SrcTile0, mask=PE_MASK, <last>`
 
 Encoding::
 +
-.`b_iot_32_21bee57b65c0` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
-image::encodings/enc_b_iot_32_21bee57b65c0.svg[B.IOT encoding form b_iot_32_21bee57b65c0,align="center"]
 .`b_iot_32_3bc48b48fea2` — `B.IOT SrcTile0, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 image::encodings/enc_b_iot_32_3bc48b48fea2.svg[B.IOT encoding form b_iot_32_3bc48b48fea2,align="center"]
-.`b_iot_32_53c1ffc02364` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
-image::encodings/enc_b_iot_32_53c1ffc02364.svg[B.IOT encoding form b_iot_32_53c1ffc02364,align="center"]
 .`b_iot_32_7d0899202df1` — `B.IOT mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 image::encodings/enc_b_iot_32_7d0899202df1.svg[B.IOT encoding form b_iot_32_7d0899202df1,align="center"]
+.`b_iot_32_bf660153d171` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_bf660153d171.svg[B.IOT encoding form b_iot_32_bf660153d171,align="center"]
 .`b_iot_32_cd6ec8181a49` — `B.IOT SrcTile0, SrcTile1, mask=PE_MASK, <last>, ->DstTile<SizeCode>`
 image::encodings/enc_b_iot_32_cd6ec8181a49.svg[B.IOT encoding form b_iot_32_cd6ec8181a49,align="center"]
+.`b_iot_32_e0f1463d6a7e` — `B.IOT SrcTile0, mask=PE_MASK, <last>`
+image::encodings/enc_b_iot_32_e0f1463d6a7e.svg[B.IOT encoding form b_iot_32_e0f1463d6a7e,align="center"]
 
 
 Encoding notes (informative)::
@@ -6470,7 +6498,7 @@ BeginNextBlock(/* type/kind/target as encoded */)
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 5 form(s) (32 bits).
+Catalog forms:: 6 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -6478,6 +6506,7 @@ Assembly forms::
 * `BSTART.FP RET`
 * `BSTART.FP DIRECT, <label>`
 * `BSTART.FP IND`
+* `BSTART.FP CALL, <label>`
 * `BSTART.FP COND, <label>`
 
 Encoding::
@@ -6490,6 +6519,8 @@ image::encodings/enc_bstart_fp_32_82106bc72d98.svg[BSTART.FP encoding form bstar
 image::encodings/enc_bstart_fp_32_c6cf502b7ebd.svg[BSTART.FP encoding form bstart_fp_32_c6cf502b7ebd,align="center"]
 .`bstart_fp_32_dea7bdf4c480` — `BSTART.FP IND`
 image::encodings/enc_bstart_fp_32_dea7bdf4c480.svg[BSTART.FP encoding form bstart_fp_32_dea7bdf4c480,align="center"]
+.`bstart_fp_32_eb33ff25b92a` — `BSTART.FP CALL, <label>`
+image::encodings/enc_bstart_fp_32_eb33ff25b92a.svg[BSTART.FP encoding form bstart_fp_32_eb33ff25b92a,align="center"]
 .`bstart_fp_32_ed54a0ac3b7a` — `BSTART.FP COND, <label>`
 image::encodings/enc_bstart_fp_32_ed54a0ac3b7a.svg[BSTART.FP encoding form bstart_fp_32_ed54a0ac3b7a,align="center"]
 
@@ -6554,7 +6585,7 @@ image::encodings/enc_bstart_mgather.svg[BSTART.MGATHER encoding form bstart_mgat
 
 Encoding notes (informative)::
 +
-* Begins a strided indexed TLSU gather block.
+* gather using explicit byte displacements.
 
 Operation (informative)::
 +
@@ -6641,7 +6672,7 @@ image::encodings/enc_bstart_mgather_cas.svg[BSTART.MGATHER.CAS encoding form bst
 
 Encoding notes (informative)::
 +
-* Begins an atomic compare-and-swap strided indexed TLSU gather block.
+* atomic compare-and-swap gather using explicit byte displacements.
 
 Operation (informative)::
 +
@@ -6757,7 +6788,7 @@ image::encodings/enc_bstart_mgather_mask.svg[BSTART.MGATHER.MASK encoding form b
 
 Encoding notes (informative)::
 +
-* Begins a predicate-masked strided indexed TLSU gather block.
+* Masked gather using explicit byte displacements.
 
 Operation (informative)::
 +
@@ -6931,7 +6962,7 @@ image::encodings/enc_bstart_mscatter.svg[BSTART.MSCATTER encoding form bstart_ms
 
 Encoding notes (informative)::
 +
-* Begins a strided indexed TLSU scatter block.
+* scatter using explicit byte displacements.
 
 Operation (informative)::
 +
@@ -7076,7 +7107,7 @@ image::encodings/enc_bstart_mscatter_mask.svg[BSTART.MSCATTER.MASK encoding form
 
 Encoding notes (informative)::
 +
-* Begins a predicate-masked strided indexed TLSU scatter block.
+* Masked scatter using explicit byte displacements.
 
 Operation (informative)::
 +
@@ -7265,7 +7296,7 @@ BeginNextBlock(/* type/kind/target as encoded */)
 
 Terminates the current block and begins the next block, encoding both block type and transition kind.
 
-Catalog forms:: 5 form(s) (32 bits).
+Catalog forms:: 6 form(s) (32 bits).
 
 Assembly forms::
 +
@@ -7273,6 +7304,7 @@ Assembly forms::
 * `BSTART.STD IND`
 * `BSTART.STD COND, <label>`
 * `BSTART.STD RET`
+* `BSTART.STD CALL, <label>`
 * `BSTART.STD DIRECT, <label>`
 
 Encoding::
@@ -7285,6 +7317,8 @@ image::encodings/enc_bstart_std_32_49f2c6a8906f.svg[BSTART.STD encoding form bst
 image::encodings/enc_bstart_std_32_696f98ac4bf1.svg[BSTART.STD encoding form bstart_std_32_696f98ac4bf1,align="center"]
 .`bstart_std_32_7876537dce06` — `BSTART.STD RET`
 image::encodings/enc_bstart_std_32_7876537dce06.svg[BSTART.STD encoding form bstart_std_32_7876537dce06,align="center"]
+.`bstart_std_32_97d38b7be05e` — `BSTART.STD CALL, <label>`
+image::encodings/enc_bstart_std_32_97d38b7be05e.svg[BSTART.STD encoding form bstart_std_32_97d38b7be05e,align="center"]
 .`bstart_std_32_d3733f87964d` — `BSTART.STD DIRECT, <label>`
 image::encodings/enc_bstart_std_32_d3733f87964d.svg[BSTART.STD encoding form bstart_std_32_d3733f87964d,align="center"]
 
@@ -8009,8 +8043,8 @@ Assembly forms::
 
 Encoding::
 +
-.`fentry_32_74a07f46d846` — `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
-image::encodings/enc_fentry.svg[FENTRY encoding form fentry_32_74a07f46d846,align="center"]
+.`fentry_32_c6bb0b89eedd` — `FENTRY [RegSrc0 ~ RegSrcn], sp!, uimm`
+image::encodings/enc_fentry.svg[FENTRY encoding form fentry_32_c6bb0b89eedd,align="center"]
 
 
 Encoding notes (informative)::
@@ -8037,8 +8071,8 @@ Assembly forms::
 
 Encoding::
 +
-.`fexit_32_6492f41b2239` — `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
-image::encodings/enc_fexit.svg[FEXIT encoding form fexit_32_6492f41b2239,align="center"]
+.`fexit_32_c5f44df2e2b6` — `FEXIT [RegDst0 ~ RegDstn], sp!, uimm`
+image::encodings/enc_fexit.svg[FEXIT encoding form fexit_32_c5f44df2e2b6,align="center"]
 
 
 Encoding notes (informative)::
@@ -8065,8 +8099,8 @@ Assembly forms::
 
 Encoding::
 +
-.`fret_ra_32_b6f13adb3ea1` — `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm`
-image::encodings/enc_fret_ra.svg[FRET.RA encoding form fret_ra_32_b6f13adb3ea1,align="center"]
+.`fret_ra_32_362702ebd7d8` — `FRET.RA [RegDst0 ~ RegDstn], sp!, uimm`
+image::encodings/enc_fret_ra.svg[FRET.RA encoding form fret_ra_32_362702ebd7d8,align="center"]
 
 
 Encoding notes (informative)::
@@ -8093,8 +8127,8 @@ Assembly forms::
 
 Encoding::
 +
-.`fret_stk_32_4084c4c88e89` — `FRET.STK [ra ~ RegDstn], sp!, uimm`
-image::encodings/enc_fret_stk.svg[FRET.STK encoding form fret_stk_32_4084c4c88e89,align="center"]
+.`fret_stk_32_1c6ea1521169` — `FRET.STK [ra ~ RegDstn], sp!, uimm`
+image::encodings/enc_fret_stk.svg[FRET.STK encoding form fret_stk_32_1c6ea1521169,align="center"]
 
 
 Encoding notes (informative)::
@@ -8183,7 +8217,7 @@ image::encodings/enc_mcopy_dl.svg[MCOPY.DL encoding form mcopy_dl_32_d6af61213c2
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit block memory-copy variant in Load mode (D + S/L=Load): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response is withheld until the copy completes. Distinguished from MCOPY by 26..25=11 and the RegDst field.
+* Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 Operation (informative)::
 +
@@ -8211,7 +8245,7 @@ image::encodings/enc_mcopy_ds.svg[MCOPY.DS encoding form mcopy_ds_32_e7a90ccbe4d
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit block memory-copy variant in Store mode (D + S/L=Store): copies RegSrc2 bytes from the source address in RegSrc1 to the destination address in RegSrc0 and writes the resulting L2SPM replica address to RegDst; the response may return before the copy completes. Distinguished from MCOPY by 26..25=01 and the RegDst field.
+* Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DS. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 Operation (informative)::
 +
@@ -8278,39 +8312,6 @@ Execute operation as selected by the mnemonic and encoded modifiers.
 
 [[insndesc-bstart]]
 ==== BSTART
-
-[[insndesc-bstart-bstart-call]]
-===== BSTART.CALL
-
-Terminates the current block and begins the next block, encoding both block type and transition kind.
-
-Catalog forms:: 1 form(s) (32 bits).
-
-Assembly forms::
-+
-* `BSTART.CALL <br_label>, <rt_label>, ->ra`
-
-Exact operand contract (catalog-derived)::
-+
-* `bstart_call_32_b9e7c481c0c7`: relocations `simm12` → `CBSTART12_PCREL`, `uimm5` → `CSETRET5_PCREL`; roles `<br_label>` → call_target (P), `<rt_label>` → return_target (P+2), `->ra` → link_destination (n/a).
-
-Encoding::
-+
-.`bstart_call_32_b9e7c481c0c7` — `BSTART.CALL <br_label>, <rt_label>, ->ra`
-image::encodings/enc_bstart_call.svg[BSTART.CALL encoding form bstart_call_32_b9e7c481c0c7,align="center"]
-
-
-Encoding notes (informative)::
-+
-* Atomically retires the old block, installs a direct-call BARG, and writes the independent return target to ra.
-
-Operation (informative)::
-+
-[source]
-----
-EndBlock()
-BeginNextBlock(/* type/kind/target as encoded */)
-----
 
 [[insndesc-bstart-bstart-icall]]
 ===== BSTART.ICALL
@@ -9547,7 +9548,7 @@ image::encodings/enc_dma_free_l.svg[DMA.FREE.L encoding form dma_free_l_32_5af48
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit DMA free variant in Load mode (S/L=Load): releases the L2SPM resources designated by the address in SrcL; the response is withheld until the release completes. Uses reserved DMA sub-class selector 31..25=0000011.
+* Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 Operation (informative)::
 +
@@ -9575,7 +9576,7 @@ image::encodings/enc_dma_free_s.svg[DMA.FREE.S encoding form dma_free_s_32_5de9a
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit DMA free variant in Store mode (S/L=Store): releases the L2SPM resources designated by the address in SrcL; the response may return before the release completes. Uses reserved DMA sub-class selector 31..25=0000010.
+* Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
 
 Operation (informative)::
 +
@@ -9709,8 +9710,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_add_32_e7ce0a975ef4` — `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_add.svg[LD.ADD encoding form ld_add_32_e7ce0a975ef4,align="center"]
+.`ld_add_32_7060c7401189` — `ld.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_add.svg[LD.ADD encoding form ld_add_32_7060c7401189,align="center"]
 
 
 Encoding notes (informative)::
@@ -9741,8 +9742,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_and_32_23d9ba0e68e3` — `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_and.svg[LD.AND encoding form ld_and_32_23d9ba0e68e3,align="center"]
+.`ld_and_32_b4663f71a495` — `ld.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_and.svg[LD.AND encoding form ld_and_32_b4663f71a495,align="center"]
 
 
 Encoding notes (informative)::
@@ -9773,8 +9774,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_or_32_1ce70fd8b968` — `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_or.svg[LD.OR encoding form ld_or_32_1ce70fd8b968,align="center"]
+.`ld_or_32_0125e9e1e3c3` — `ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_or.svg[LD.OR encoding form ld_or_32_0125e9e1e3c3,align="center"]
 
 
 Encoding notes (informative)::
@@ -9805,8 +9806,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_smax_32_91ec96637db4` — `ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_smax.svg[LD.SMAX encoding form ld_smax_32_91ec96637db4,align="center"]
+.`ld_smax_32_03dd776071eb` — `ld.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_smax.svg[LD.SMAX encoding form ld_smax_32_03dd776071eb,align="center"]
 
 
 Encoding notes (informative)::
@@ -9837,8 +9838,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_smin_32_19e1c3b58971` — `ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_smin.svg[LD.SMIN encoding form ld_smin_32_19e1c3b58971,align="center"]
+.`ld_smin_32_3efd7104b708` — `ld.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_smin.svg[LD.SMIN encoding form ld_smin_32_3efd7104b708,align="center"]
 
 
 Encoding notes (informative)::
@@ -9869,8 +9870,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_umax_32_2759903efc31` — `ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_umax.svg[LD.UMAX encoding form ld_umax_32_2759903efc31,align="center"]
+.`ld_umax_32_d5bdca0186e7` — `ld.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_umax.svg[LD.UMAX encoding form ld_umax_32_d5bdca0186e7,align="center"]
 
 
 Encoding notes (informative)::
@@ -9901,8 +9902,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_umin_32_29f58b3f2c0d` — `ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_umin.svg[LD.UMIN encoding form ld_umin_32_29f58b3f2c0d,align="center"]
+.`ld_umin_32_68974d19d8bb` — `ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_umin.svg[LD.UMIN encoding form ld_umin_32_68974d19d8bb,align="center"]
 
 
 Encoding notes (informative)::
@@ -9933,8 +9934,8 @@ Assembly forms::
 
 Encoding::
 +
-.`ld_xor_32_7122255a1fbc` — `ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_ld_xor.svg[LD.XOR encoding form ld_xor_32_7122255a1fbc,align="center"]
+.`ld_xor_32_53194f2f2e3f` — `ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_ld_xor.svg[LD.XOR encoding form ld_xor_32_53194f2f2e3f,align="center"]
 
 
 Encoding notes (informative)::
@@ -9965,8 +9966,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lr_b_32_597cbeb5cd8d` — `lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_b.svg[LR.B encoding form lr_b_32_597cbeb5cd8d,align="center"]
+.`lr_b_32_e8a05215d75c` — `lr.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_b.svg[LR.B encoding form lr_b_32_e8a05215d75c,align="center"]
 
 
 Encoding notes (informative)::
@@ -9995,8 +9996,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lr_d_32_56d64a9108fa` — `lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_d.svg[LR.D encoding form lr_d_32_56d64a9108fa,align="center"]
+.`lr_d_32_fcf6ece7fff8` — `lr.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_d.svg[LR.D encoding form lr_d_32_fcf6ece7fff8,align="center"]
 
 
 Encoding notes (informative)::
@@ -10025,8 +10026,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lr_h_32_d49768c44960` — `lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_h.svg[LR.H encoding form lr_h_32_d49768c44960,align="center"]
+.`lr_h_32_68b7edefe7a9` — `lr.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_h.svg[LR.H encoding form lr_h_32_68b7edefe7a9,align="center"]
 
 
 Encoding notes (informative)::
@@ -10055,8 +10056,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lr_w_32_f2024773e273` — `lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
-image::encodings/enc_lr_w.svg[LR.W encoding form lr_w_32_f2024773e273,align="center"]
+.`lr_w_32_067262ff6597` — `lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], { ->t, ->u, ->Rd}`
+image::encodings/enc_lr_w.svg[LR.W encoding form lr_w_32_067262ff6597,align="center"]
 
 
 Encoding notes (informative)::
@@ -10085,8 +10086,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_add_32_76a43005a410` — `lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_add.svg[LW.ADD encoding form lw_add_32_76a43005a410,align="center"]
+.`lw_add_32_0347df33c571` — `lw.add<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_add.svg[LW.ADD encoding form lw_add_32_0347df33c571,align="center"]
 
 
 Encoding notes (informative)::
@@ -10117,8 +10118,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_and_32_cb5ac95bf66f` — `lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_and.svg[LW.AND encoding form lw_and_32_cb5ac95bf66f,align="center"]
+.`lw_and_32_8a3d7a493503` — `lw.and<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_and.svg[LW.AND encoding form lw_and_32_8a3d7a493503,align="center"]
 
 
 Encoding notes (informative)::
@@ -10149,8 +10150,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_or_32_289ea7aedc90` — `lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_or.svg[LW.OR encoding form lw_or_32_289ea7aedc90,align="center"]
+.`lw_or_32_8915db674f50` — `lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_or.svg[LW.OR encoding form lw_or_32_8915db674f50,align="center"]
 
 
 Encoding notes (informative)::
@@ -10181,8 +10182,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_smax_32_747664ab4bcc` — `lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_smax.svg[LW.SMAX encoding form lw_smax_32_747664ab4bcc,align="center"]
+.`lw_smax_32_4b268f4a7a9c` — `lw.smax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_smax.svg[LW.SMAX encoding form lw_smax_32_4b268f4a7a9c,align="center"]
 
 
 Encoding notes (informative)::
@@ -10213,8 +10214,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_smin_32_eb0651e5e82f` — `lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_smin.svg[LW.SMIN encoding form lw_smin_32_eb0651e5e82f,align="center"]
+.`lw_smin_32_14b2934ae01b` — `lw.smin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_smin.svg[LW.SMIN encoding form lw_smin_32_14b2934ae01b,align="center"]
 
 
 Encoding notes (informative)::
@@ -10245,8 +10246,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_umax_32_8e64a5d4249f` — `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_umax.svg[LW.UMAX encoding form lw_umax_32_8e64a5d4249f,align="center"]
+.`lw_umax_32_1cc361c3afcb` — `lw.umax<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_umax.svg[LW.UMAX encoding form lw_umax_32_1cc361c3afcb,align="center"]
 
 
 Encoding notes (informative)::
@@ -10277,8 +10278,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_umin_32_2f0eb8568565` — `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_umin.svg[LW.UMIN encoding form lw_umin_32_2f0eb8568565,align="center"]
+.`lw_umin_32_8ca4a19cdfc3` — `lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_umin.svg[LW.UMIN encoding form lw_umin_32_8ca4a19cdfc3,align="center"]
 
 
 Encoding notes (informative)::
@@ -10309,8 +10310,8 @@ Assembly forms::
 
 Encoding::
 +
-.`lw_xor_32_4594cd6f792d` — `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_lw_xor.svg[LW.XOR encoding form lw_xor_32_4594cd6f792d,align="center"]
+.`lw_xor_32_fb88a8fc889b` — `lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_lw_xor.svg[LW.XOR encoding form lw_xor_32_fb88a8fc889b,align="center"]
 
 
 Encoding notes (informative)::
@@ -10341,13 +10342,13 @@ Assembly forms::
 
 Encoding::
 +
-.`sb_add_32_e6c19ed751f8` — `sb.add<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sb_add.svg[SB.ADD encoding form sb_add_32_e6c19ed751f8,align="center"]
+.`sb_add_32_ad18d71fad23` — `sb.add<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sb_add.svg[SB.ADD encoding form sb_add_32_ad18d71fad23,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit atomic store-op add byte: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag.
+* SB.ADD atomically applies width-sized modular add and does not publish the old value.
 
 Operation (informative)::
 +
@@ -10369,13 +10370,13 @@ Assembly forms::
 
 Encoding::
 +
-.`sb_sub_32_ae8ceb3c5cac` — `sb.sub<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sb_sub.svg[SB.SUB encoding form sb_sub_32_ae8ceb3c5cac,align="center"]
+.`sb_sub_32_229d7d0e2803` — `sb.sub<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sb_sub.svg[SB.SUB encoding form sb_sub_32_229d7d0e2803,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit atomic store-op subtract byte: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SW slot (14..12=011) with the op5 size-override bit b31 set, shrinking the access from word to byte. Supports rl ordering only and has no far flag.
+* SB.SUB atomically applies width-sized modular sub and does not publish the old value.
 
 Operation (informative)::
 +
@@ -10397,8 +10398,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sc_b_32_76d834058ae3` — `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_b.svg[SC.B encoding form sc_b_32_76d834058ae3,align="center"]
+.`sc_b_32_01f3010e67fb` — `sc.b<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_b.svg[SC.B encoding form sc_b_32_01f3010e67fb,align="center"]
 
 
 Encoding notes (informative)::
@@ -10427,8 +10428,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sc_d_32_9825cce786c7` — `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_d.svg[SC.D encoding form sc_d_32_9825cce786c7,align="center"]
+.`sc_d_32_b9b2bcac2806` — `sc.d<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_d.svg[SC.D encoding form sc_d_32_b9b2bcac2806,align="center"]
 
 
 Encoding notes (informative)::
@@ -10457,8 +10458,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sc_h_32_a1853adc9378` — `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_h.svg[SC.H encoding form sc_h_32_a1853adc9378,align="center"]
+.`sc_h_32_fef39ec3b1fe` — `sc.h<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_h.svg[SC.H encoding form sc_h_32_fef39ec3b1fe,align="center"]
 
 
 Encoding notes (informative)::
@@ -10487,8 +10488,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sc_w_32_50223c3d7e2e` — `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
-image::encodings/enc_sc_w.svg[SC.W encoding form sc_w_32_50223c3d7e2e,align="center"]
+.`sc_w_32_a2971bfdc613` — `sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], { ->t, ->u, ->Rd}`
+image::encodings/enc_sc_w.svg[SC.W encoding form sc_w_32_a2971bfdc613,align="center"]
 
 
 Encoding notes (informative)::
@@ -10517,8 +10518,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_add_32_5d925051bd65` — `sd.add<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_add.svg[SD.ADD encoding form sd_add_32_5d925051bd65,align="center"]
+.`sd_add_32_9c69391bdde2` — `sd.add<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_add.svg[SD.ADD encoding form sd_add_32_9c69391bdde2,align="center"]
 
 
 Encoding notes (informative)::
@@ -10548,8 +10549,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_and_32_d1fe21a898c4` — `sd.and<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_and.svg[SD.AND encoding form sd_and_32_d1fe21a898c4,align="center"]
+.`sd_and_32_0681a53a92f6` — `sd.and<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_and.svg[SD.AND encoding form sd_and_32_0681a53a92f6,align="center"]
 
 
 Encoding notes (informative)::
@@ -10579,8 +10580,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_or_32_e4ae7a1514d2` — `sd.or<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_or.svg[SD.OR encoding form sd_or_32_e4ae7a1514d2,align="center"]
+.`sd_or_32_ae79384dc9d8` — `sd.or<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_or.svg[SD.OR encoding form sd_or_32_ae79384dc9d8,align="center"]
 
 
 Encoding notes (informative)::
@@ -10610,8 +10611,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_smax_32_2008b8f90c3f` — `sd.smax<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_smax.svg[SD.SMAX encoding form sd_smax_32_2008b8f90c3f,align="center"]
+.`sd_smax_32_bc4cfd84b8e9` — `sd.smax<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_smax.svg[SD.SMAX encoding form sd_smax_32_bc4cfd84b8e9,align="center"]
 
 
 Encoding notes (informative)::
@@ -10641,8 +10642,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_smin_32_f506a9482e9d` — `sd.smin<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_smin.svg[SD.SMIN encoding form sd_smin_32_f506a9482e9d,align="center"]
+.`sd_smin_32_200aaa183a5b` — `sd.smin<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_smin.svg[SD.SMIN encoding form sd_smin_32_200aaa183a5b,align="center"]
 
 
 Encoding notes (informative)::
@@ -10672,13 +10673,13 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_sub_32_ff53d1d019b2` — `sd.sub<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_sub.svg[SD.SUB encoding form sd_sub_32_ff53d1d019b2,align="center"]
+.`sd_sub_32_2b9cdb568661` — `sd.sub<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_sub.svg[SD.SUB encoding form sd_sub_32_2b9cdb568661,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit atomic store-op subtract doubleword: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag.
+* SD.SUB atomically applies width-sized modular sub and does not publish the old value.
 
 Operation (informative)::
 +
@@ -10700,8 +10701,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_umax_32_6914076e0357` — `sd.umax<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_umax.svg[SD.UMAX encoding form sd_umax_32_6914076e0357,align="center"]
+.`sd_umax_32_3faec9357ac6` — `sd.umax<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_umax.svg[SD.UMAX encoding form sd_umax_32_3faec9357ac6,align="center"]
 
 
 Encoding notes (informative)::
@@ -10731,8 +10732,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_umin_32_7865e621e108` — `sd.umin<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_umin.svg[SD.UMIN encoding form sd_umin_32_7865e621e108,align="center"]
+.`sd_umin_32_fa6f48850235` — `sd.umin<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_umin.svg[SD.UMIN encoding form sd_umin_32_fa6f48850235,align="center"]
 
 
 Encoding notes (informative)::
@@ -10762,8 +10763,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sd_xor_32_10b856cc10f8` — `sd.xor<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sd_xor.svg[SD.XOR encoding form sd_xor_32_10b856cc10f8,align="center"]
+.`sd_xor_32_4de0b76b9da5` — `sd.xor<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sd_xor.svg[SD.XOR encoding form sd_xor_32_4de0b76b9da5,align="center"]
 
 
 Encoding notes (informative)::
@@ -10793,13 +10794,13 @@ Assembly forms::
 
 Encoding::
 +
-.`sh_add_32_593d07f3c383` — `sh.add<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sh_add.svg[SH.ADD encoding form sh_add_32_593d07f3c383,align="center"]
+.`sh_add_32_95d11aed3630` — `sh.add<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sh_add.svg[SH.ADD encoding form sh_add_32_95d11aed3630,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit atomic store-op add halfword: data=[SrcL]; [SrcL]=data+SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag.
+* SH.ADD atomically applies width-sized modular add and does not publish the old value.
 
 Operation (informative)::
 +
@@ -10821,13 +10822,13 @@ Assembly forms::
 
 Encoding::
 +
-.`sh_sub_32_b1beb9de5ae5` — `sh.sub<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sh_sub.svg[SH.SUB encoding form sh_sub_32_b1beb9de5ae5,align="center"]
+.`sh_sub_32_a50037f3c97d` — `sh.sub<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sh_sub.svg[SH.SUB encoding form sh_sub_32_a50037f3c97d,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit atomic store-op subtract halfword: data=[SrcL]; [SrcL]=data-SrcR. Encoded in the SD slot (14..12=101) with the op5 size-override bit b31 set, shrinking the access from doubleword to halfword. Supports rl ordering only and has no far flag.
+* SH.SUB atomically applies width-sized modular sub and does not publish the old value.
 
 Operation (informative)::
 +
@@ -10849,8 +10850,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_add_32_e2ac5c6f4f98` — `sw.add<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_add.svg[SW.ADD encoding form sw_add_32_e2ac5c6f4f98,align="center"]
+.`sw_add_32_30c64e83c4ea` — `sw.add<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_add.svg[SW.ADD encoding form sw_add_32_30c64e83c4ea,align="center"]
 
 
 Encoding notes (informative)::
@@ -10880,8 +10881,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_and_32_c7cbc4f7babc` — `sw.and<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_and.svg[SW.AND encoding form sw_and_32_c7cbc4f7babc,align="center"]
+.`sw_and_32_e62af5cd7088` — `sw.and<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_and.svg[SW.AND encoding form sw_and_32_e62af5cd7088,align="center"]
 
 
 Encoding notes (informative)::
@@ -10911,8 +10912,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_or_32_30b584cf9775` — `sw.or<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_or.svg[SW.OR encoding form sw_or_32_30b584cf9775,align="center"]
+.`sw_or_32_ad4f6bc2bcae` — `sw.or<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_or.svg[SW.OR encoding form sw_or_32_ad4f6bc2bcae,align="center"]
 
 
 Encoding notes (informative)::
@@ -10942,8 +10943,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_smax_32_29381d506694` — `sw.smax<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_smax.svg[SW.SMAX encoding form sw_smax_32_29381d506694,align="center"]
+.`sw_smax_32_ca3f6d8435a4` — `sw.smax<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_smax.svg[SW.SMAX encoding form sw_smax_32_ca3f6d8435a4,align="center"]
 
 
 Encoding notes (informative)::
@@ -10973,8 +10974,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_smin_32_eab20d5ad227` — `sw.smin<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_smin.svg[SW.SMIN encoding form sw_smin_32_eab20d5ad227,align="center"]
+.`sw_smin_32_70d200818164` — `sw.smin<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_smin.svg[SW.SMIN encoding form sw_smin_32_70d200818164,align="center"]
 
 
 Encoding notes (informative)::
@@ -11004,13 +11005,13 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_sub_32_40e1534922b1` — `sw.sub<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_sub.svg[SW.SUB encoding form sw_sub_32_40e1534922b1,align="center"]
+.`sw_sub_32_33654a8ba8c8` — `sw.sub<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_sub.svg[SW.SUB encoding form sw_sub_32_33654a8ba8c8,align="center"]
 
 
 Encoding notes (informative)::
 +
-* v0.58 32-bit atomic store-op subtract word: data=[SrcL]; [SrcL]=data-SrcR. Uses op5 0_1000: b31=0 keeps the word/doubleword width and b30..27=1000 selects SUB. Supports rl ordering only and has no far flag.
+* SW.SUB atomically applies width-sized modular sub and does not publish the old value.
 
 Operation (informative)::
 +
@@ -11032,8 +11033,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_umax_32_d31e89719244` — `sw.umax<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_umax.svg[SW.UMAX encoding form sw_umax_32_d31e89719244,align="center"]
+.`sw_umax_32_cb073aeb5223` — `sw.umax<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_umax.svg[SW.UMAX encoding form sw_umax_32_cb073aeb5223,align="center"]
 
 
 Encoding notes (informative)::
@@ -11063,8 +11064,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_umin_32_46731668df2d` — `sw.umin<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_umin.svg[SW.UMIN encoding form sw_umin_32_46731668df2d,align="center"]
+.`sw_umin_32_45ea82587f34` — `sw.umin<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_umin.svg[SW.UMIN encoding form sw_umin_32_45ea82587f34,align="center"]
 
 
 Encoding notes (informative)::
@@ -11094,8 +11095,8 @@ Assembly forms::
 
 Encoding::
 +
-.`sw_xor_32_5817a3ac65c1` — `sw.xor<.{rl}> [SrcL], SrcR`
-image::encodings/enc_sw_xor.svg[SW.XOR encoding form sw_xor_32_5817a3ac65c1,align="center"]
+.`sw_xor_32_1219ecbd7202` — `sw.xor<.{rl}> [SrcL], SrcR`
+image::encodings/enc_sw_xor.svg[SW.XOR encoding form sw_xor_32_1219ecbd7202,align="center"]
 
 
 Encoding notes (informative)::
@@ -11125,8 +11126,8 @@ Assembly forms::
 
 Encoding::
 +
-.`swapb_32_e82d9dd02551` — `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swapb.svg[SWAPB encoding form swapb_32_e82d9dd02551,align="center"]
+.`swapb_32_69a885fb4c94` — `swapb<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swapb.svg[SWAPB encoding form swapb_32_69a885fb4c94,align="center"]
 
 
 Encoding notes (informative)::
@@ -11155,8 +11156,8 @@ Assembly forms::
 
 Encoding::
 +
-.`swapd_32_3425ed30704b` — `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swapd.svg[SWAPD encoding form swapd_32_3425ed30704b,align="center"]
+.`swapd_32_fe19142790b5` — `swapd<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swapd.svg[SWAPD encoding form swapd_32_fe19142790b5,align="center"]
 
 
 Encoding notes (informative)::
@@ -11185,8 +11186,8 @@ Assembly forms::
 
 Encoding::
 +
-.`swaph_32_8708bb8eaa32` — `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swaph.svg[SWAPH encoding form swaph_32_8708bb8eaa32,align="center"]
+.`swaph_32_2aa91f8a7389` — `swaph<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swaph.svg[SWAPH encoding form swaph_32_2aa91f8a7389,align="center"]
 
 
 Encoding notes (informative)::
@@ -11215,8 +11216,8 @@ Assembly forms::
 
 Encoding::
 +
-.`swapw_32_7ad407b3e4bc` — `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
-image::encodings/enc_swapw.svg[SWAPW encoding form swapw_32_7ad407b3e4bc,align="center"]
+.`swapw_32_717d17ca629c` — `swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, { ->t, ->u, ->Rd}`
+image::encodings/enc_swapw.svg[SWAPW encoding form swapw_32_717d17ca629c,align="center"]
 
 
 Encoding notes (informative)::

@@ -735,13 +735,14 @@ invalid/reserved encoding and as the block-stop marker in current conventions.
 
 In the current toolchain bring-up:
 
-* The common 32-bit returning call is exactly `BSTART.CALL <br_label>, <rt_label>, ->ra`.
-  The deleted `BSTART.STD CALL` and `BSTART.FP CALL` spellings are not aliases.
-* Linx-only generic bare calls use `L.BSTART.{STD,FP} CALL, <target>` or
-  `HL.BSTART.{STD,FP} CALL, <target>` and preserve `ra`.
-* The exact 32-bit `BSTART.CALL <br_label>, <rt_label>, ->ra` and 48-bit
-  `HL.BSTART.CALL <br_label>, <rt_label>, ->ra` forms are fused returning calls. They encode both labels and write
-  `ra`; they are not bare-call aliases.
+* The published 32-bit direct call forms are `BSTART.STD CALL, <label>` and
+  `BSTART.FP CALL, <label>`. Each encodes one signed 17-bit call-target
+  displacement and preserves `ra`.
+* The old 32-bit `BSTART.CALL <br_label>, <rt_label>, ->ra` aggregate is
+  deleted and has no compatibility alias or encoding reservation.
+* The exact 48-bit `HL.BSTART.CALL <br_label>, <rt_label>, ->ra` form is a
+  fused returning call. It encodes both labels and writes `ra`; it is not a
+  bare-call alias.
 * Other returning-call sequences materialize the explicit return label in `ra` using an adjacent `SETRET` or
   `C.SETRET`.
 * `FRET.STK` is treated as a `ret`-class encoding extension by some tooling (e.g. callgraph analysis).
@@ -751,11 +752,7 @@ In the current toolchain bring-up:
 Let `P` be the address of the first byte of the aggregate form. The two encoded immediates are independent
 PC-relative operands even though their bit ranges are adjacent:
 
-* 32-bit exact form (`bstart_call_32_9404418d1ae5`):
-** `call_target = P + (SignExtend(simm12) << 1)`
-** `ra = (P + 2) + (ZeroExtend(uimm5) << 1)`
-** relocations: `CBSTART12_PCREL` and `CSETRET5_PCREL`
-* 48-bit exact form (`hl_bstart_call_48_3c784c583c90`):
+* 48-bit exact form (`hl_bstart_call_48_d71cee46ab50`):
 ** `call_target = P + (SignExtend(simm25) << 1)`
 ** `ra = (P + 4) + (ZeroExtend(uimm5) << 1)`
 ** relocations: `B25_PCREL` and `CSETRET5_PCREL`
@@ -763,17 +760,17 @@ PC-relative operands even though their bit ranges are adjacent:
 Both offsets use halfword units. The return delta is unsigned and therefore spans 0 through 62 bytes from the
 embedded `C.SETRET` base. Assemblers and linkers MUST reject odd deltas, signed branch overflow, negative return
 deltas, and return deltas greater than 62 bytes rather than truncate them. The decoded aggregate performs the CALL
-transfer and `ra` write atomically. Changing `simm12`/`simm25` MUST NOT change `ra`; changing `uimm5` MUST NOT change
+transfer and `ra` write atomically. Changing `simm25` MUST NOT change `ra`; changing `uimm5` MUST NOT change
 `call_target`. Concatenating the adjacent fields into one logical target is non-conforming.
 
 **Constraint (call header pairing):**
 
-When a standalone `SETRET`/`C.SETRET` is used to materialize the return address for a Linx-only generic call
+When a standalone `SETRET`/`C.SETRET` is used to materialize the return address for a generic call
 transition, it must appear **immediately before** the call-type block start marker (for example,
-`L.BSTART.STD CALL, <target>` or `HL.BSTART.FP CALL, <target>`).
+`BSTART.STD CALL, <target>` or `BSTART.FP CALL, <target>`).
 Tooling and hardware may fuse that instruction pair; no other instruction may be placed between them. This source
-pair is distinct from the exact aggregate `BSTART.CALL`/`HL.BSTART.CALL` forms above, whose embedded `C.SETRET` field
-is already part of the same encoded instruction.
+pair is distinct from the exact `HL.BSTART.CALL` aggregate above, whose embedded `C.SETRET` field is already part of
+the same encoded instruction.
 
 [[blockisa-examples]]
 === Example patterns
@@ -797,9 +794,9 @@ is:
 NOTE: With the safety rule above, `label` must refer to a block start marker (e.g. `BSTART.*` or a template block such
 as `FENTRY`/`FRET.*`). Branching into the interior of another block is invalid and raises an exception.
 
-*Exact aggregate call with two explicit targets:*
+*Exact 48-bit aggregate call with two explicit targets:*
 
 [source,asm]
 ----
-BSTART.CALL   callee, return_label, ->ra
+HL.BSTART.CALL   callee, return_label, ->ra
 ----

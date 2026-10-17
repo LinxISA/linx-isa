@@ -103,11 +103,13 @@ assert enc32(sole("SD.SUB"))[1] != enc32(sole("SD.SMAX"))[1]
 assert enc32(sole("SB.ADD"))[1] != enc32(sole("SW.ADD"))[1]
 assert enc32(sole("SH.SUB"))[1] != enc32(sole("SD.UMAX"))[1]
 
-# 5) The PTO identity surface is unchanged: still exactly 561 attached forms
-#    and the ten new forms are Linx-only.
+# 5) The effective proposal has 473 scalar + 96 command identities.
+#    The six atomic forms are shared; four resource forms are encoding-only.
 attached = [i for i in spec["instructions"] if "pto_source_form_id" in i]
-assert len(attached) == 561, len(attached)
-for mnemonic in {**NEW_ATOMIC, **NEW_DMA, **NEW_MCOPY}:
+assert len(attached) == 569, len(attached)
+for mnemonic in NEW_ATOMIC:
+    assert "pto_source_form_id" in sole(mnemonic), mnemonic
+for mnemonic in {**NEW_DMA, **NEW_MCOPY}:
     assert "pto_source_form_id" not in sole(mnemonic), mnemonic
 
 # 6) CAS keeps its own layout: SrcD occupies 31..27 and no far flag exists.
