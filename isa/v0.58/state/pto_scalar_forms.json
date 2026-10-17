@@ -3,7 +3,7 @@
   "family_constraint_count": 0,
   "family_constraints": [],
   "form_constraint_count": 98,
-  "form_count": 466,
+  "form_count": 473,
   "forms": [
     {
       "asm": "acrc rst_type",
@@ -23475,7 +23475,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x0000400b",
           "width_bits": 32
         }
@@ -23534,7 +23534,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -23570,7 +23570,102 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
+          "match": "0x0800400b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "ld_and_32_2a46b3003480",
+      "length_bits": 32,
+      "mnemonic": "LD.AND",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "LD.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
           "match": "0x1000400b",
           "width_bits": 32
         }
@@ -23629,102 +23724,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "ld_and_32_2a46b3003480",
-      "length_bits": 32,
-      "mnemonic": "LD.AND",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "LD.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "ld.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x2000400b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -23816,8 +23816,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x4000400b",
+          "mask": "0x7800707f",
+          "match": "0x2000400b",
           "width_bits": 32
         }
       ],
@@ -23875,7 +23875,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -23911,8 +23911,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x5000400b",
+          "mask": "0x7800707f",
+          "match": "0x2800400b",
           "width_bits": 32
         }
       ],
@@ -23970,7 +23970,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -24006,197 +24006,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x6000400b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "ld_umax_32_a84af75745d9",
-      "length_bits": 32,
-      "mnemonic": "LD.UMAX",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "LD.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x7000400b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "ld_umin_32_4bf2f357eff3",
-      "length_bits": 32,
-      "mnemonic": "LD.UMIN",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "LD.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x3000400b",
           "width_bits": 32
         }
@@ -24255,7 +24065,197 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "ld_umax_32_a84af75745d9",
+      "length_bits": 32,
+      "mnemonic": "LD.UMAX",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "LD.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "ld.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
+          "match": "0x3800400b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "ld_umin_32_4bf2f357eff3",
+      "length_bits": 32,
+      "mnemonic": "LD.UMIN",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "LD.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "ld.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
+          "match": "0x1800400b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -25015,7 +25015,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x0000000b",
           "width_bits": 32
         }
@@ -25074,7 +25074,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -25110,8 +25110,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x3000000b",
+          "mask": "0x7800707f",
+          "match": "0x1800000b",
           "width_bits": 32
         }
       ],
@@ -25169,7 +25169,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -25205,7 +25205,102 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
+          "match": "0x0800000b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcZero",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "lr_h_32_f936df218d63",
+      "length_bits": 32,
+      "mnemonic": "LR.H",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "LoadReserved",
+      "semantic_summary": "LR.H loads one halfword, establishes a 64-byte-line reservation, and publishes the prior value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
           "match": "0x1000000b",
           "width_bits": 32
         }
@@ -25264,102 +25359,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "lr_h_32_f936df218d63",
-      "length_bits": 32,
-      "mnemonic": "LR.H",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "LoadReserved",
-      "semantic_summary": "LR.H loads one halfword, establishes a 64-byte-line reservation, and publishes the prior value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "lr.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x2000000b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcZero",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -25591,7 +25591,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x0000200b",
           "width_bits": 32
         }
@@ -25650,7 +25650,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -25686,7 +25686,102 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
+          "match": "0x0800200b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "lw_and_32_f8dd9866b069",
+      "length_bits": 32,
+      "mnemonic": "LW.AND",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "LW.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
           "match": "0x1000200b",
           "width_bits": 32
         }
@@ -25745,102 +25840,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "lw_and_32_f8dd9866b069",
-      "length_bits": 32,
-      "mnemonic": "LW.AND",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "LW.AND atomically stores the width-sized bitwise AND and publishes the prior memory value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "lw.or<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x2000200b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -25932,8 +25932,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x4000200b",
+          "mask": "0x7800707f",
+          "match": "0x2000200b",
           "width_bits": 32
         }
       ],
@@ -25991,7 +25991,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -26027,8 +26027,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x5000200b",
+          "mask": "0x7800707f",
+          "match": "0x2800200b",
           "width_bits": 32
         }
       ],
@@ -26086,7 +26086,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -26122,197 +26122,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x6000200b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "lw_umax_32_3c6a5a534674",
-      "length_bits": 32,
-      "mnemonic": "LW.UMAX",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x7000200b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "lw_umin_32_fd9b7bb538a3",
-      "length_bits": 32,
-      "mnemonic": "LW.UMIN",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x3000200b",
           "width_bits": 32
         }
@@ -26371,7 +26181,197 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "lw_umax_32_3c6a5a534674",
+      "length_bits": 32,
+      "mnemonic": "LW.UMAX",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "LW.UMAX atomically stores the width-sized unsigned maximum and publishes the prior memory value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "lw.umin<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
+          "match": "0x3800200b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "lw_umin_32_fd9b7bb538a3",
+      "length_bits": 32,
+      "mnemonic": "LW.UMIN",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "LW.UMIN atomically stores the width-sized unsigned minimum and publishes the prior memory value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "lw.xor<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
+          "match": "0x1800200b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -28436,7 +28436,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x0000100b",
           "width_bits": 32
         }
@@ -28495,7 +28495,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -28531,8 +28531,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x3000100b",
+          "mask": "0x7800707f",
+          "match": "0x1800100b",
           "width_bits": 32
         }
       ],
@@ -28590,7 +28590,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -28626,7 +28626,102 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
+          "match": "0x0800100b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sc_h_32_108941eabac6",
+      "length_bits": 32,
+      "mnemonic": "SC.H",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "StoreConditional",
+      "semantic_summary": "SC.H conditionally stores one halfword when the local 64-byte-line reservation matches.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
           "match": "0x1000100b",
           "width_bits": 32
         }
@@ -28685,102 +28780,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sc_h_32_108941eabac6",
-      "length_bits": 32,
-      "mnemonic": "SC.H",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "StoreConditional",
-      "semantic_summary": "SC.H conditionally stores one halfword when the local 64-byte-line reservation matches.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sc.w<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> SrcL, [SrcR], {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x2000100b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -28983,12 +28983,12 @@
       "status": "accepted"
     },
     {
-      "asm": "sd.add<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sd.add<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
+          "mask": "0xfc007fff",
           "match": "0x0000500b",
           "width_bits": 32
         }
@@ -29020,18 +29020,6 @@
           "width": 5
         },
         {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
           "name": "rl",
           "pieces": [
             {
@@ -29054,12 +29042,71 @@
       "status": "accepted"
     },
     {
-      "asm": "sd.and<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sd.and<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
+          "mask": "0xfc007fff",
+          "match": "0x0800500b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sd_and_32_71963e1769c2",
+      "length_bits": 32,
+      "mnemonic": "SD.AND",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND with SrcR; it does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sd.or<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
           "match": "0x1000500b",
           "width_bits": 32
         }
@@ -29089,89 +29136,6 @@
           ],
           "signedness": "encoding-defined",
           "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sd_and_32_71963e1769c2",
-      "length_bits": 32,
-      "mnemonic": "SD.AND",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND with SrcR; it does not publish the old value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sd.or<.{rl, f, rlf}> [SrcL], SrcR",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x2000500b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
         },
         {
           "name": "rl",
@@ -29257,13 +29221,13 @@
       "status": "accepted"
     },
     {
-      "asm": "sd.smax<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sd.smax<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x4000500b",
+          "mask": "0xfc007fff",
+          "match": "0x2000500b",
           "width_bits": 32
         }
       ],
@@ -29292,18 +29256,6 @@
           ],
           "signedness": "encoding-defined",
           "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
         },
         {
           "name": "rl",
@@ -29328,13 +29280,13 @@
       "status": "accepted"
     },
     {
-      "asm": "sd.smin<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sd.smin<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x5000500b",
+          "mask": "0xfc007fff",
+          "match": "0x2800500b",
           "width_bits": 32
         }
       ],
@@ -29363,18 +29315,6 @@
           ],
           "signedness": "encoding-defined",
           "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
         },
         {
           "name": "rl",
@@ -29489,154 +29429,12 @@
       "status": "accepted"
     },
     {
-      "asm": "sd.umax<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sd.umax<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x6000500b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sd_umax_32_89c5ec42be68",
-      "length_bits": 32,
-      "mnemonic": "SD.UMAX",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sd.umin<.{rl, f, rlf}> [SrcL], SrcR",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x7000500b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sd_umin_32_2388cbb378ac",
-      "length_bits": 32,
-      "mnemonic": "SD.UMIN",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sd.xor<.{rl, f, rlf}> [SrcL], SrcR",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf4007fff",
+          "mask": "0xfc007fff",
           "match": "0x3000500b",
           "width_bits": 32
         }
@@ -29668,16 +29466,122 @@
           "width": 5
         },
         {
-          "name": "far",
+          "name": "rl",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 25,
               "value_lsb": 0,
               "width": 1
             }
           ],
           "signedness": "encoding-defined",
           "width": 1
+        }
+      ],
+      "form_id": "sd_umax_32_89c5ec42be68",
+      "length_bits": 32,
+      "mnemonic": "SD.UMAX",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sd.umin<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x3800500b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sd_umin_32_2388cbb378ac",
+      "length_bits": 32,
+      "mnemonic": "SD.UMIN",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sd.xor<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x1800500b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
         },
         {
           "name": "rl",
@@ -32484,12 +32388,12 @@
       "status": "accepted"
     },
     {
-      "asm": "sw.add<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sw.add<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
+          "mask": "0xfc007fff",
           "match": "0x0000300b",
           "width_bits": 32
         }
@@ -32521,18 +32425,6 @@
           "width": 5
         },
         {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
           "name": "rl",
           "pieces": [
             {
@@ -32555,12 +32447,71 @@
       "status": "accepted"
     },
     {
-      "asm": "sw.and<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sw.and<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
+          "mask": "0xfc007fff",
+          "match": "0x0800300b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sw_and_32_7ef0872d5502",
+      "length_bits": 32,
+      "mnemonic": "SW.AND",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sw.or<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
           "match": "0x1000300b",
           "width_bits": 32
         }
@@ -32590,89 +32541,6 @@
           ],
           "signedness": "encoding-defined",
           "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sw_and_32_7ef0872d5502",
-      "length_bits": 32,
-      "mnemonic": "SW.AND",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sw.or<.{rl, f, rlf}> [SrcL], SrcR",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x2000300b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
         },
         {
           "name": "rl",
@@ -32758,13 +32626,13 @@
       "status": "accepted"
     },
     {
-      "asm": "sw.smax<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sw.smax<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x4000300b",
+          "mask": "0xfc007fff",
+          "match": "0x2000300b",
           "width_bits": 32
         }
       ],
@@ -32793,18 +32661,6 @@
           ],
           "signedness": "encoding-defined",
           "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
         },
         {
           "name": "rl",
@@ -32829,13 +32685,13 @@
       "status": "accepted"
     },
     {
-      "asm": "sw.smin<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sw.smin<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x5000300b",
+          "mask": "0xfc007fff",
+          "match": "0x2800300b",
           "width_bits": 32
         }
       ],
@@ -32864,18 +32720,6 @@
           ],
           "signedness": "encoding-defined",
           "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
         },
         {
           "name": "rl",
@@ -32990,154 +32834,12 @@
       "status": "accepted"
     },
     {
-      "asm": "sw.umax<.{rl, f, rlf}> [SrcL], SrcR",
+      "asm": "sw.umax<.{rl}> [SrcL], SrcR",
       "constraints": [],
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x6000300b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sw_umax_32_5530dfa23323",
-      "length_bits": 32,
-      "mnemonic": "SW.UMAX",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sw.umin<.{rl, f, rlf}> [SrcL], SrcR",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf4007fff",
-          "match": "0x7000300b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "sw_umin_32_3ce114819cfc",
-      "length_bits": 32,
-      "mnemonic": "SW.UMIN",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "sw.xor<.{rl, f, rlf}> [SrcL], SrcR",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf4007fff",
+          "mask": "0xfc007fff",
           "match": "0x3000300b",
           "width_bits": 32
         }
@@ -33169,16 +32871,122 @@
           "width": 5
         },
         {
-          "name": "far",
+          "name": "rl",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 25,
               "value_lsb": 0,
               "width": 1
             }
           ],
           "signedness": "encoding-defined",
           "width": 1
+        }
+      ],
+      "form_id": "sw_umax_32_5530dfa23323",
+      "length_bits": 32,
+      "mnemonic": "SW.UMAX",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sw.umin<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x3800300b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sw_umin_32_3ce114819cfc",
+      "length_bits": 32,
+      "mnemonic": "SW.UMIN",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sw.xor<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x1800300b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
         },
         {
           "name": "rl",
@@ -33208,7 +33016,7 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
           "match": "0x0000600b",
           "width_bits": 32
         }
@@ -33267,7 +33075,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -33303,8 +33111,8 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x3000600b",
+          "mask": "0x7800707f",
+          "match": "0x1800600b",
           "width_bits": 32
         }
       ],
@@ -33362,7 +33170,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -33398,7 +33206,102 @@
       "encoding": [
         {
           "index": 0,
-          "mask": "0xf000707f",
+          "mask": "0x7800707f",
+          "match": "0x0800600b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "RegDst",
+          "pieces": [
+            {
+              "instruction_lsb": 7,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "aq",
+          "pieces": [
+            {
+              "instruction_lsb": 26,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "far",
+          "pieces": [
+            {
+              "instruction_lsb": 31,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "swaph_32_8c2d4a28bf25",
+      "length_bits": 32,
+      "mnemonic": "SWAPH",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SWAPH atomically replaces one halfword and publishes the prior value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0x7800707f",
           "match": "0x1000600b",
           "width_bits": 32
         }
@@ -33457,102 +33360,7 @@
           "name": "far",
           "pieces": [
             {
-              "instruction_lsb": 27,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "rl",
-          "pieces": [
-            {
-              "instruction_lsb": 25,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        }
-      ],
-      "form_id": "swaph_32_8c2d4a28bf25",
-      "length_bits": 32,
-      "mnemonic": "SWAPH",
-      "semantic_family": "AMO",
-      "semantic_group": "AMO",
-      "semantic_handler": "AtomicReadModifyWrite",
-      "semantic_summary": "SWAPH atomically replaces one halfword and publishes the prior value.",
-      "status": "accepted"
-    },
-    {
-      "asm": "swapw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, {->t, ->u, ->Rd}",
-      "constraints": [],
-      "encoding": [
-        {
-          "index": 0,
-          "mask": "0xf000707f",
-          "match": "0x2000600b",
-          "width_bits": 32
-        }
-      ],
-      "encoding_kind": "L32",
-      "fields": [
-        {
-          "name": "RegDst",
-          "pieces": [
-            {
-              "instruction_lsb": 7,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcL",
-          "pieces": [
-            {
-              "instruction_lsb": 15,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "SrcR",
-          "pieces": [
-            {
-              "instruction_lsb": 20,
-              "value_lsb": 0,
-              "width": 5
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 5
-        },
-        {
-          "name": "aq",
-          "pieces": [
-            {
-              "instruction_lsb": 26,
-              "value_lsb": 0,
-              "width": 1
-            }
-          ],
-          "signedness": "encoding-defined",
-          "width": 1
-        },
-        {
-          "name": "far",
-          "pieces": [
-            {
-              "instruction_lsb": 27,
+              "instruction_lsb": 31,
               "value_lsb": 0,
               "width": 1
             }
@@ -34220,12 +34028,405 @@
       "semantic_handler": "ScalarBinaryW",
       "semantic_summary": "XORW applies the selected right-source transformation before its encoded logical left shift, performs word bitwise exclusive OR, and publishes the low 32-bit result sign-extended to XLEN.",
       "status": "accepted"
+    },
+    {
+      "asm": "sync.core",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xffffffff",
+          "match": "0x0330a02b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [],
+      "length_bits": 32,
+      "mnemonic": "SYNC.CORE",
+      "semantic_family": "SYS",
+      "semantic_group": "SYS",
+      "semantic_handler": "SyncCore",
+      "semantic_summary": "Waits for all four PEs at the same Core-local phase boundary and completes their earlier GM obligations.",
+      "status": "accepted",
+      "form_id": "sync_core_32_0330a02b7c32"
+    },
+    {
+      "asm": "sw.sub<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x4000300b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sw_sub_32_op5_v0587",
+      "length_bits": 32,
+      "mnemonic": "SW.SUB",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SW.SUB atomically applies width-sized modular sub and does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sd.sub<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x4000500b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sd_sub_32_op5_v0587",
+      "length_bits": 32,
+      "mnemonic": "SD.SUB",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SD.SUB atomically applies width-sized modular sub and does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sb.add<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x8000300b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sb_add_32_op5_v0587",
+      "length_bits": 32,
+      "mnemonic": "SB.ADD",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SB.ADD atomically applies width-sized modular add and does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sb.sub<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0xc000300b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sb_sub_32_op5_v0587",
+      "length_bits": 32,
+      "mnemonic": "SB.SUB",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SB.SUB atomically applies width-sized modular sub and does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sh.add<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0x8000500b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sh_add_32_op5_v0587",
+      "length_bits": 32,
+      "mnemonic": "SH.ADD",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SH.ADD atomically applies width-sized modular add and does not publish the old value.",
+      "status": "accepted"
+    },
+    {
+      "asm": "sh.sub<.{rl}> [SrcL], SrcR",
+      "constraints": [],
+      "encoding": [
+        {
+          "index": 0,
+          "mask": "0xfc007fff",
+          "match": "0xc000500b",
+          "width_bits": 32
+        }
+      ],
+      "encoding_kind": "L32",
+      "fields": [
+        {
+          "name": "SrcL",
+          "pieces": [
+            {
+              "instruction_lsb": 15,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "SrcR",
+          "pieces": [
+            {
+              "instruction_lsb": 20,
+              "value_lsb": 0,
+              "width": 5
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 5
+        },
+        {
+          "name": "rl",
+          "pieces": [
+            {
+              "instruction_lsb": 25,
+              "value_lsb": 0,
+              "width": 1
+            }
+          ],
+          "signedness": "encoding-defined",
+          "width": 1
+        }
+      ],
+      "form_id": "sh_sub_32_op5_v0587",
+      "length_bits": 32,
+      "mnemonic": "SH.SUB",
+      "semantic_family": "AMO",
+      "semantic_group": "AMO",
+      "semantic_handler": "AtomicReadModifyWrite",
+      "semantic_summary": "SH.SUB atomically applies width-sized modular sub and does not publish the old value.",
+      "status": "accepted"
     }
   ],
   "isa": "PTO Instruction Set Architecture",
   "operand_field_count": 45,
-  "operand_piece_count": 1839,
+  "operand_piece_count": 1841,
+  "reviewed_encoding_overlaps": [
+    {
+      "broad_form_id": "addtpc_32_e5aa0f0abca3",
+      "narrow_form_id": "setret_32_72003dcf3b59",
+      "reason": "narrow form occupies RegDst == 10, which the broad form excludes via its not-equal constraint"
+    },
+    {
+      "broad_form_id": "c_movi_16_2c84faf1bc72",
+      "narrow_form_id": "c_setret_16_335651ef6c27",
+      "reason": "narrow form occupies RegDst == 10, which the broad form excludes via its not-equal constraint"
+    },
+    {
+      "broad_form_id": "hl_addtpc_48_2e8e692eea09",
+      "narrow_form_id": "hl_setret_48_302bb793a800",
+      "reason": "narrow form occupies RegDst == 10, which the broad form excludes via its not-equal constraint"
+    }
+  ],
   "schema_version": 2,
-  "semantic_handler_count": 72,
-  "source_lock": "isa/v0.58/pto-spec.lock.json"
+  "semantic_handler_count": 73,
+  "source_lock": "isa/v0.58/pto-scalar-proposal.lock.json"
 }

@@ -5,7 +5,7 @@
 [[inst_sd_xor]]
 ==== SD.XOR
 
-*Syntax:* sd.xor<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sd.xor<.{rl}> [SrcL], SrcR
 
 *Description:* SD.XOR atomically replaces the aligned 64-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.
 

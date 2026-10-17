@@ -1,6 +1,6 @@
 {
   "big_kind": "CMD",
-  "count": 63,
+  "count": 65,
   "instructions": [
     {
       "class": {
@@ -794,6 +794,32 @@
         32
       ],
       "mnemonic": "MCOPY"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "User corrected to A",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "MCOPY.DL"
+    },
+    {
+      "class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "User corrected to A",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "group": "Block Split",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "MCOPY.DS"
     },
     {
       "class": {

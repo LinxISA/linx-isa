@@ -35,10 +35,10 @@ class PtoProfileHookLockTests(unittest.TestCase):
             hook["linx_mapping_sha256"],
             "69cd0e30b7923f6ea31d9e5a54cbac387b45c2026be770e55a9c4325138e7f0d",
         )
-        self.assertEqual(lock["common_pto_release"], "0.58.6")
+        self.assertEqual(lock["common_pto_release"], "0.58.7")
         self.assertEqual(
             lock["common_pto_lock_sha256"],
-            "77e792fb0add49a2cf4a0dcc6853a715d6b1c98490f48649b85f923579ba36be",
+            "e5c5f0d269051e03e83d4bf4b60e7d7b1eb1c5513b079d65d5aefab740a1f7ff",
         )
 
     def test_checker_rejects_mapping_mutation(self) -> None:

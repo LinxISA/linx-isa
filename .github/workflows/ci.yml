@@ -22,6 +22,19 @@ jobs:
         run: git submodule update --init emulator/qemu
       - name: Check v0.58 golden artifacts
         run: python3 tools/isa/build_golden.py --profile v0.58 --check
+      - uses: actions/checkout@v7
+        with:
+          repository: PTO-ISA/pto-spec
+          ref: f0a876e449a95d26841c5ee7affb4c905ebc5f5b
+          path: workloads/generated/pto-scalar-proposal
+      - name: Verify the exact PTO scalar proposal and real QEMU decoder
+        run: |
+          python3 tools/isa/import_pto_golden.py --source-root workloads/generated/pto-scalar-proposal --check
+          python3 tools/isa/check_pto_scalar_proposal.py --pto-root workloads/generated/pto-scalar-proposal
+          python3 -m unittest tools.isa.test_pto_scalar_proposal tools.isa.test_qemu_scalar_golden
+          python3 tools/isa/test_v058_storeop_ext.py
+          python3 tools/isa/check_qemu_scalar_golden.py
+          python3 avs/qemu/tests/test_atomic_lr_srczero_decode.py
       - name: Validate standalone v0.58 ISA spec
         run: |
           python3 tools/isa/validate_spec.py --profile v0.58

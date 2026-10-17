@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_mcopy_dl]]
+==== MCOPY.DL
+
+*Syntax:* MCOPY.DL [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}
+
+*Description:* Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.
+
+*Encoding:*
+
+image::encodings/enc_mcopy_dl.svg[MCOPY.DL encoding,width=800]
+
+*Uop-Class:* CMD
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"cmd_kind": "BLOCK_SPLIT", "note": "User corrected to A", "source": "group_rule", "uop_kind": "CMD"}`

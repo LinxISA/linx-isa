@@ -1,11 +1,11 @@
 # Instruction Groups
 
-Alphabetical list of all 55 instruction groups in the LinxISA v0.58.6 catalog.
+Alphabetical list of all 55 instruction groups in the LinxISA v0.58.7 catalog.
 See the [chapter index](index.md) for the manual organization.
 
 | Group | Forms | Chapter | Sample mnemonics |
 |-------|-------|---------|------------------|
-| [SYS](sys.md) | 35 | **Ch 19** — [source](index.md) | `ACRC`, `ACRE`, `ASSERT`, `BC.IALL`, `BC.IVA`, `BSE`, `BWE`, `BWI` +27 |
+| [SYS](sys.md) | 36 | **Ch 19** — [source](index.md) | `ACRC`, `ACRE`, `ASSERT`, `BC.IALL`, `BC.IVA`, `BSE`, `BWE`, `BWI` +28 |
 | [ALU](alu.md) | 107 | **Ch 12** — [source](index.md) | `ADD`, `ADDI`, `ADDIW`, `ADDW`, `AND`, `ANDI`, `ANDIW`, `ANDW` +99 |
 | [BRU](bru.md) | 58 | **Ch 16** — [source](index.md) | `ADDTPC`, `C.CMP.EQI`, `C.CMP.NEI`, `C.SETC.EQ`, `C.SETC.NE`, `CMP.AND`, `CMP.ANDI`, `CMP.EQ` +50 |
 | [Bundle Range Modifier](bundle_range_modifier.md) | 2 | **Ch 4** — [source](index.md) | `B.ASSEMBLE`, `B.SUBVIEW` |
@@ -14,16 +14,16 @@ See the [chapter index](index.md) for the manual organization.
 | [Bundle Argument](bundle_argument.md) | 3 | **Ch 4** — [source](index.md) | `B.DIM` |
 | [Bundle Fixed-Point PostProcess Attribute](bundle_fixed_point_postprocess_attribute.md) | 1 | **Ch 17** — [source](index.md) | `B.FPATR` |
 | [Bundle Hint](bundle_hint.md) | 2 | **Ch 17** — [source](index.md) | `B.HINT` |
-| [Bundle Input & Output](bundle_input_output.md) | 7 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOS`, `B.IOT` |
+| [Bundle Input & Output](bundle_input_output.md) | 16 | **Ch 4** — [source](index.md) | `B.IOR`, `B.IOS`, `B.IOT` |
 | [Bundle Offset](bundle_offset.md) | 1 | **Ch 4** — [source](index.md) | `B.TEXT` |
-| [Bundle Split](bundle_split.md) | 71 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.ADD`, `BSTART.MGATHER.AND`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.DEC` +53 |
-| [BSTART](bstart.md) | 21 | **Ch 4** — [source](index.md) | `BSTART.CALL`, `BSTART.ICALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD` +1 |
+| [Bundle Split](bundle_split.md) | 75 | **Ch 4** — [source](index.md) | `BSTART`, `BSTART.FP`, `BSTART.GMOV`, `BSTART.MGATHER`, `BSTART.MGATHER.ADD`, `BSTART.MGATHER.AND`, `BSTART.MGATHER.CAS`, `BSTART.MGATHER.DEC` +55 |
+| [BSTART](bstart.md) | 20 | **Ch 4** — [source](index.md) | `BSTART.ICALL`, `HL.BSTART CALL`, `HL.BSTART.FP`, `HL.BSTART.STD`, `HL.BSTART.SYS`, `L.BSTART.FP`, `L.BSTART.STD`, `L.BSTART.SYS` |
 | [Block Split](block_split.md) | 2 | **Ch 4** — [source](index.md) | `BSTART.VPAR`, `BSTART.VSEQ` |
 | [Bundle Dimension](bundle_dimension.md) | 1 | **Ch 4** — [source](index.md) | `C.B.DIMI` |
 | [C.BSTART](c_bstart.md) | 7 | **Ch 15** — [source](index.md) | `C.BSTART.FP`, `C.BSTART.MPAR`, `C.BSTART.MSEQ`, `C.BSTART.STD`, `C.BSTART.SYS`, `C.BSTART.VPAR`, `C.BSTART.VSEQ` |
 | [LDA/BASE_IMM](lda_base_imm.md) | 9 | **Ch 11** — [source](index.md) | `C.LDI`, `C.LWI`, `LBI`, `LBUI`, `LDI`, `LHI`, `LHUI`, `LWI` +1 |
 | [STA/BASE_IMM](sta_base_imm.md) | 9 | **Ch 11** — [source](index.md) | `C.SDI`, `C.SWI`, `SBI`, `SDI`, `SDI.U`, `SHI`, `SHI.U`, `SWI` +1 |
-| [AMO](amo.md) | 53 | **Ch 14** — [source](index.md) | `CASB`, `CASD`, `CASH`, `CASW`, `DMA`, `HL.CASB`, `HL.CASD`, `HL.CASH` +45 |
+| [AMO](amo.md) | 61 | **Ch 14** — [source](index.md) | `CASB`, `CASD`, `CASH`, `CASW`, `DMA`, `DMA.FREE.L`, `DMA.FREE.S`, `HL.CASB` +53 |
 | [FSU](fsu.md) | 30 | **Ch 13** — [source](index.md) | `FABS`, `FADD`, `FCVT`, `FCVTA`, `FCVTM`, `FCVTN`, `FCVTP`, `FCVTZ` +22 |
 | [LDA/PC_REL](lda_pc_rel.md) | 7 | **Ch 11** — [source](index.md) | `HL.LB.PCR`, `HL.LBU.PCR`, `HL.LD.PCR`, `HL.LH.PCR`, `HL.LHU.PCR`, `HL.LW.PCR`, `HL.LWU.PCR` |
 | [LDA/POST_INDEX](lda_post_index.md) | 19 | **Ch 11** — [source](index.md) | `HL.LB.PO`, `HL.LBI.PO`, `HL.LBU.PO`, `HL.LBUI.PO`, `HL.LD.PO`, `HL.LDI.PO`, `HL.LDI.UPO`, `HL.LH.PO` +11 |

@@ -10,13 +10,13 @@
 
 </div>
 
-Instructions in the **Bundle Range Modifier** group of the LinxISA v0.58.6 catalog.
+Instructions in the **Bundle Range Modifier** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 
 | Mnemonic | Assembly | Length | Decode | Description |
 |----------|----------|--------|--------|-------------|
-| [B.ASSEMBLE](../instructions/b_assemble.md) | `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, ParentSizeCode` | 32 | — | Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
+| [B.ASSEMBLE](../instructions/b_assemble.md) | `B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode` | 32 | — | Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
 | [B.SUBVIEW](../instructions/b_subview.md) | `B.SUBVIEW SrcSelect, RegSrc, uimm11, SubviewSizeCode` | 32 | — | Decodes one source-range subview modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
 
 ## See Also

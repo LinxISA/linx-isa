@@ -5,7 +5,7 @@
 [[inst_sd_and]]
 ==== SD.AND
 
-*Syntax:* sd.and<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sd.and<.{rl}> [SrcL], SrcR
 
 *Description:* SD.AND atomically replaces the aligned 64-bit memory value with its bitwise AND with SrcR; it does not publish the old value.
 

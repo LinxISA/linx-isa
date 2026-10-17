@@ -85,6 +85,22 @@ function assert_reserved_branch_word(word : bits(32), at_pc : bits(64)) -> unit 
 }
 
 function main() : unit -> unit = {
+  // Every new block header starts with value-one dimensions. Presence is not
+  // required for legality, while an explicit zero remains a real write.
+  bdesc_reset();
+  assert(ssr_lb0 == 0x0000_0000_0000_0001);
+  assert(ssr_lb1 == 0x0000_0000_0000_0001);
+  assert(ssr_lb2 == 0x0000_0000_0000_0001);
+  assert(not_bool(bdesc_seen_dim));
+  decoded_bdim_index_shadow = 0b00;
+  decoded_bdim_value_shadow = sail_zeros(64);
+  exec_b_dim();
+  assert(ssr_lb0 == sail_zeros(64));
+  assert(bdesc_seen_dim);
+  assert(tile_cube_dim(sail_zeros(64)) == sail_zeros(64));
+  bdesc_reset();
+  assert(ssr_lb0 == 0x0000_0000_0000_0001);
+
   // PTO ISA 0.58.6 retains the reservation of all eight former standalone conditional branch
   // encodings. They must reject before the armed first-use profile can fire.
   assert_reserved_branch_word(0x0000_0027, 0x0000_0000_0000_0700); // B.EQ
@@ -159,38 +175,47 @@ function main() : unit -> unit = {
   tile_effect_reset_arch();
   bdesc_reset();
 
-  // SrcRType arithmetic codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
+  // Binary ALU SrcRType codes are 00=.sw, 01=.uw, 10=.neg, 11=none.
   assert(apply_srcrtype_arith64(0b00, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
   assert(apply_srcrtype_arith64(0b01, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
   assert(apply_srcrtype_arith64(0b10, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFF);
   assert(apply_srcrtype_arith64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
 
-  // CSEL has a form-specific SrcRType assignment: 11 is the canonical plain
-  // spelling and 10 is .neg. Predicate true always selects SrcL.
+  // Comparison codes are 00=none, 01=.sw, 10=.uw, 11=.neg/.not;
+  // restricted comparison forms treat raw 11 as the unmodified alias.
+  assert(apply_restricted_compare_srcrtype64(0b00, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+  assert(apply_restricted_compare_srcrtype64(0b01, 0x1234_5678_8000_0001) == 0xFFFF_FFFF_8000_0001);
+  assert(apply_restricted_compare_srcrtype64(0b10, 0x1234_5678_8000_0001) == 0x0000_0000_8000_0001);
+  assert(apply_restricted_compare_srcrtype64(0b11, 0x1234_5678_8000_0001) == 0x1234_5678_8000_0001);
+  assert(apply_compare_srcrtype_logic64(0b11, 0x1234_5678_8000_0001) == 0xEDCB_A987_7FFF_FFFE);
+
+  // CSEL has a form-specific SrcRType assignment: raw 11 is .neg and the
+  // other three raw values are unmodified aliases. Predicate true always
+  // selects SrcL.
   write_reg5(0b00001, 0x0000_0000_0000_0000); // predicate
   write_reg5(0b00010, 0x1111_2222_3333_4444); // SrcL
   write_reg5(0b00011, 0x0000_0000_0000_0007); // SrcR
-  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
-  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
   exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  assert(read_reg5(0b00100) == 0x0000_0000_0000_0007);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
   assert(read_reg5(0b00100) == 0xFFFF_FFFF_FFFF_FFF9);
   write_reg5(0b00001, 0x0000_0000_0000_0001);
-  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b10);
+  exec_csel(0b00100, 0b00001, 0b00010, 0b00011, 0b11);
   assert(read_reg5(0b00100) == 0x1111_2222_3333_4444);
 
   // LBU host memory is outside this REPL proof boundary: read_mem8/write_mem8
   // require host primops here.  Mirror exec_lbu's executable composition:
-  // apply SrcRType first, shift that modifier, add base, then zext8_from8.
+  // apply the address-family SrcRType first, shift that modifier, add base,
+  // then zext8_from8. Raw 11 is rejected by generated decode.
   let lbu_base : bits(64) = 0x0000_0010_0000_1000;
   let lbu_src : bits(64) = 0x0000_0001_8000_0004;
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_000E_8000_0FFC);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_000D_0000_0FF8);
-  assert(lbu_base + sail_shiftleft(apply_srcrtype_arith64(0b11, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b00, lbu_src), unsigned(0b00000)) == 0x0000_0011_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b01, lbu_src), unsigned(0b00000)) == 0x0000_000F_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b10, lbu_src), unsigned(0b00000)) == 0x0000_0010_8000_1004);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b00, lbu_src), unsigned(0b00001)) == 0x0000_0013_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b01, lbu_src), unsigned(0b00001)) == 0x0000_000F_0000_1008);
+  assert(lbu_base + sail_shiftleft(apply_address_srcrtype64(0b10, lbu_src), unsigned(0b00001)) == 0x0000_0011_0000_1008);
+  assert(not_bool(decode_execute32_opcode_0b0001001_funct3_0b000_match_0(0x0600_0009)));
   assert(zext8_from8(0x81) == 0x0000_0000_0000_0081);
   assert(zext8_from8(0x42) == 0x0000_0000_0000_0042);
   assert(zext8_from8(0xA5) == 0x0000_0000_0000_00A5);
@@ -222,27 +247,24 @@ function main() : unit -> unit = {
   assert(barg_xfer_kind_cur == block_xfer_call());
   assert(barg_bpc_tgt == 0x0000_0000_0000_2000);
 
-  // 32-bit exact aggregate, raw decode: simm12=2, uimm5=3.
+  // Published PTO 0.58.7 uses ordinary 17-bit STD/FP CALL forms.
+  // Neither form contains an embedded return immediate or writes ra.
   reset_fused_call_case(0x0000_0000_0000_1000, 0xAAAA_AAAA_AAAA_AAAA);
-  decode_execute32(0x50D6_0022);
-  assert(read_reg5(0b01010) == 0x0000_0000_0000_1008);
-  assert(pc == 0x0000_0000_0000_1000);
-  assert(barg_valid);
+  decode_execute32(0x0001_4001);
+  assert(read_reg5(0b01010) == 0xAAAA_AAAA_AAAA_AAAA);
   assert(barg_xfer_kind_cur == block_xfer_call());
-  assert(barg_bpc_cur == 0x0000_0000_0000_1000);
   assert(barg_bpc_tgt == 0x0000_0000_0000_1004);
-
-  // Same simm12, uimm5=29: call target is invariant, only ra changes.
   reset_fused_call_case(0x0000_0000_0000_1000, 0xBBBB_BBBB_BBBB_BBBB);
-  decode_execute32(0x5756_0022);
-  assert(barg_bpc_tgt == 0x0000_0000_0000_1004);
-  assert(read_reg5(0b01010) == 0x0000_0000_0000_103C);
-
-  // Same uimm5=3, simm12=-1: ra is invariant, only call target changes.
-  reset_fused_call_case(0x0000_0000_0000_1000, 0xCCCC_CCCC_CCCC_CCCC);
-  decode_execute32(0x50D6_FFF2);
+  decode_execute32(0xFFFF_C101);
+  assert(read_reg5(0b01010) == 0xBBBB_BBBB_BBBB_BBBB);
+  assert(barg_xfer_kind_cur == block_xfer_call());
   assert(barg_bpc_tgt == 0x0000_0000_0000_0FFE);
-  assert(read_reg5(0b01010) == 0x0000_0000_0000_1008);
+
+  // The removed fused32 encoding cannot retain a hidden legacy decode.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCCCC_CCCC_CCCC_CCCC);
+  decode_execute32(0x50D6_0022);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCCCC_CCCC_CCCC_CCCC);
 
   // 48-bit exact aggregate, raw decode: simm25=2, uimm5=5.  The return
   // calculation must use the embedded C.SETRET position P+4, not P+2.
@@ -266,6 +288,42 @@ function main() : unit -> unit = {
   decode_execute48(0x5156_FFFF_FF91);
   assert(barg_bpc_tgt == 0x0000_0000_0000_0FFE);
   assert(read_reg5(0b01010) == 0x0000_0000_0000_100E);
+
+  // DMA.FREE.S: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x0401_700B);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // DMA.FREE.L: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x0601_700B);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // MCOPY.DS: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x1231_1231);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // MCOPY.DL: encoding only, no operand or memory effects.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xCAFE_CAFE_CAFE_CAFE);
+  decode_execute32(0x1631_1231);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(read_reg5(0b01010) == 0xCAFE_CAFE_CAFE_CAFE);
+
+  // Unimplemented golden ExecutionMask controls reject before header state.
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xABCD_ABCD_ABCD_ABCD);
+  bdatr_raw = 0x0000_0000_1234_5678;
+  decode_execute32(0x0000_5023);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(bdatr_raw == 0x0000_0000_1234_5678);
+  assert(not_bool(bdesc_seen_datr));
+  reset_fused_call_case(0x0000_0000_0000_1000, 0xABCD_ABCD_ABCD_ABCD);
+  decode_execute32(0x0400_0013);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(not_bool(bdesc_seen_ior));
 
   // Standalone SETRET forms retain their own current-instruction PC base.
   pc = 0x0000_0000_0000_1000;
@@ -442,7 +500,8 @@ function main() : unit -> unit = {
   // cover ceil(K/32)=3 groups for K=65 and ordinary/MX writes implicit ACC.
   reset_tile_effect_case();
   bdesc_mark_datr();
-  bdesc_mark_dim();
+  // Nondefault dimensions are already installed by reset_tile_effect_case;
+  // no presence marker is required for CUBE legality.
   decoded_tile_datatype_shadow = 0b00001; // FP32 header/ACC for MX
   tile_effect_begin(0b10, 0b10101);
   exec_b_fpatr(0b000000, 0b000, 0x0, 0b0, 0b0, 0b0, 0b0, 0b1, 0b1);

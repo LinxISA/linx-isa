@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check exact PTO 0.58.6 common-subset alignment and Linx extensions."""
+"""Check exact PTO 0.58.7 common-subset alignment and Linx extensions."""
 
 from __future__ import annotations
 
@@ -18,33 +18,19 @@ ROOT = Path(__file__).resolve().parents[2]
 PROFILE = Path("isa/v0.58")
 GIT_OID = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
-EXTENSION_RESERVATION_COUNT = 46
-EXPECTED_PTO_SOURCE = {
-    "commit": "dea0b75e803cffa873982c90f9aa0cd17c6d243b",
-    "tree": "64571b898e5acb437b93fdedb415e193bb63f60f",
-    "repository": "https://github.com/PTO-ISA/pto-spec.git",
-}
-EXPECTED_PTO_DIGESTS = {
-    "content_sha256": "6a92c5e98d504987aab33743cfd2180d87050af59bb950881350ba734436b7ca",
-    "encoding_projection_sha256": "a757f2e50ec8050d2131b6b9ad38657511df80cf3f9424d5f009ea6e0cc35839",
-    "release_manifest": "09f878199c3b336df771aecb00fd8ba07a9163abd897030ca6b24178dd1e4853",
-    "hardware_conformance_profile": "b01cf719897fc4bc94937121520324c090fe5a2481485ed58b88d7b077b1eed0",
-    "numeric_conformance_vectors": "955881745fba90d7b98f804f115167c127975c2cc6c10d7b4bc4fbaf32400b3e",
-    "scalar_forms": "659feca66ad67db81726c8e0139e614b3ced2694e645f9e5dda534832920d2dd",
-    "command_forms": "013e5161bc095f59a4784f37ebbe04e332748782bdd9f540b18cd8fdc95fc7b6",
-    "tile_operations": "d23530aa58afa5dbe5bee1e56366be3c5711583b69908f6af9799742c6c005e4",
-    "extension_encoding_reservations": "3daf7bf384dc0ff64bd8374634a8b6a057eea6ca76b67b67ab0d9496471110ae",
-}
+EXTENSION_RESERVATION_COUNT = 50
+EXPECTED_PTO_SOURCE = {'commit': 'de57af400cf607f03730aa522a4e9bfb160596de', 'tree': '61d9ad430cae0d09a9fd2686541f472f3dc23b35', 'repository': 'https://github.com/PTO-ISA/pto-spec.git'}
+EXPECTED_PTO_DIGESTS = {'content_sha256': '86ba5a0adf5e1388a653b1488e4f9513f2ca9e00436164ea6002598893dbe66c', 'encoding_projection_sha256': '9c49cdfa79a4eda6b27c1548bfd06ef681b6189f7d02d466ddfd43f59993b93d', 'release_manifest': '4ded6030ef0fd98085ea80499d9e979840b352703e997097a62f0193216c6456', 'hardware_conformance_profile': 'fc4060954c19cab7e70751d5e8735a349fcaafe331508195650fd276423d72c2', 'numeric_conformance_vectors': '8d43bbd846d738fa63338c0be61b9fc0a8eb7f6f73570bcafa454abd33649012', 'command_forms': '30d42b6246fc982f2bb092174a462a017769c5e31f73af2c94390f8e205a91a1', 'scalar_forms': '2767dc6302e8d777b517c198d3ead8a5acb62602c26f517eb9ee581bc4afd4da', 'tile_operations': '7af90e08da6db0b1f1b58a061e5b3ea7d1b5fe0a2fc69f5d3593b70c58a32cb5', 'extension_encoding_reservations': '2fc2cfb9791abcd965d3fc6dc610b4528e338b1862adf0847ebde5ac83935c96'}
 
 
 def validate_lock_identity(lock: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if lock.get("source") != EXPECTED_PTO_SOURCE:
-        errors.append("PTO lock source must equal the published 0.58.6.0 commit and tree")
+        errors.append("PTO lock source must equal the published 0.58.7.0 commit and tree")
     if lock.get("content_sha256") != EXPECTED_PTO_DIGESTS["content_sha256"]:
-        errors.append("PTO lock content digest differs from publication 0.58.6.0")
+        errors.append("PTO lock content digest differs from publication 0.58.7.0")
     if lock.get("encoding_projection_sha256") != EXPECTED_PTO_DIGESTS["encoding_projection_sha256"]:
-        errors.append("PTO lock encoding projection differs from publication 0.58.6.0")
+        errors.append("PTO lock encoding projection differs from publication 0.58.7.0")
     expected_catalog_paths = {
         "scalar_forms": "spec/catalog/scalar-forms.json",
         "command_forms": "spec/catalog/command-forms.json",
@@ -55,26 +41,26 @@ def validate_lock_identity(lock: dict[str, Any]) -> list[str]:
     for name, path in expected_catalog_paths.items():
         entry = catalogs.get(name) if isinstance(catalogs.get(name), dict) else {}
         if entry.get("path") != path or entry.get("sha256") != EXPECTED_PTO_DIGESTS[name]:
-            errors.append(f"PTO lock {name} identity differs from publication 0.58.6.0")
+            errors.append(f"PTO lock {name} identity differs from publication 0.58.7.0")
     release_manifest = lock.get("release_manifest") if isinstance(lock.get("release_manifest"), dict) else {}
     if (
         release_manifest.get("path") != "spec/release-manifest.json"
         or release_manifest.get("sha256") != EXPECTED_PTO_DIGESTS["release_manifest"]
     ):
-        errors.append("PTO lock release manifest differs from publication 0.58.6.0")
+        errors.append("PTO lock release manifest differs from publication 0.58.7.0")
     hardware = lock.get("hardware_conformance_profile") if isinstance(lock.get("hardware_conformance_profile"), dict) else {}
     if (
         hardware.get("path") != "spec/hardware-conformance-profile.json"
-        or hardware.get("profile_id") != "pto-hardware-numeric-0.58.6-ieee-v1"
+        or hardware.get("profile_id") != "pto-hardware-numeric-0.58.7-ieee-v1"
         or hardware.get("sha256") != EXPECTED_PTO_DIGESTS["hardware_conformance_profile"]
     ):
-        errors.append("PTO lock hardware profile differs from publication 0.58.6.0")
+        errors.append("PTO lock hardware profile differs from publication 0.58.7.0")
     vectors = lock.get("numeric_conformance_vectors") if isinstance(lock.get("numeric_conformance_vectors"), dict) else {}
     if (
-        vectors.get("path") != "spec/evidence/pto-isa-0586-hardware-numeric-vectors.json"
+        vectors.get("path") != "spec/evidence/pto-isa-0587-hardware-numeric-vectors.json"
         or vectors.get("sha256") != EXPECTED_PTO_DIGESTS["numeric_conformance_vectors"]
     ):
-        errors.append("PTO lock numeric vectors differ from publication 0.58.6.0")
+        errors.append("PTO lock numeric vectors differ from publication 0.58.7.0")
     return errors
 
 
@@ -333,16 +319,16 @@ def validate(root: Path) -> list[str]:
     lock = docs["lock"]
     errors.extend(validate_lock_identity(lock))
     errors.extend(validate_extension_reservation_cardinality(
-        docs["meta"], docs["release"], lock, docs["reservations"]
+        docs["meta"], docs["release"], load(root, "isa/v0.58/pto-scalar-proposal.lock.json"), docs["reservations"]
     ))
-    if lock.get("release") != "0.58.6" or lock.get("encoding_abi") != "pto-isa-0.58.6-mode-function-v1":
-        errors.append("PTO lock has the wrong 0.58.6 release/ABI identity")
+    if lock.get("release") != "0.58.7" or lock.get("encoding_abi") != "pto-isa-0.58.7-mode-function-v1":
+        errors.append("PTO lock has the wrong 0.58.7 release/ABI identity")
     if lock.get("publication") != {
-        "tag": "v0.58.6.0",
-        "version": "0.58.6.0",
-        "release_url": "https://github.com/PTO-ISA/pto-spec/releases/tag/v0.58.6.0",
+        "tag": "v0.58.7.0",
+        "version": "0.58.7.0",
+        "release_url": "https://github.com/PTO-ISA/pto-spec/releases/tag/v0.58.7.0",
     }:
-        errors.append("PTO lock must distinguish publication 0.58.6.0 from architecture 0.58.6")
+        errors.append("PTO lock must distinguish publication 0.58.7.0 from architecture 0.58.7")
     if lock.get("specification_status") != "draft":
         errors.append("PTO lock must preserve the published specification status")
     if not GIT_OID.fullmatch(str(lock.get("source", {}).get("commit", ""))):
@@ -351,9 +337,9 @@ def validate(root: Path) -> list[str]:
         errors.append("PTO lock must pin an exact source tree")
     expected_catalogs = {
         "scalar_forms": 466,
-        "command_forms": 95,
-        "tile_operations": 117,
-        "extension_encoding_reservations": EXTENSION_RESERVATION_COUNT,
+        "command_forms": 96,
+        "tile_operations": 118,
+        "extension_encoding_reservations": 46,
     }
     for name, count in expected_catalogs.items():
         entry = lock.get("catalogs", {}).get(name, {})
@@ -361,11 +347,11 @@ def validate(root: Path) -> list[str]:
             errors.append(f"PTO lock must freeze {count} {name}")
 
     tiles = docs["tiles"].get("operations", [])
-    expected_family_counts = Counter({"TEPL": 77, "TLSU": 28, "CUBE": 12})
-    expected_engine_counts = Counter({"VEC": 31, "SFU": 46, "TLSU": 28, "CUBE": 12})
+    expected_family_counts = Counter({"TEPL": 79, "TLSU": 28, "CUBE": 12})
+    expected_engine_counts = Counter({"VEC": 32, "SFU": 47, "TLSU": 28, "CUBE": 12})
     expected_classification_counts = Counter({
-        "elementwise-tile-tile": 25,
-        "tile-scalar-and-immediate": 15,
+        "elementwise-tile-tile": 26,
+        "tile-scalar-and-immediate": 16,
         "reduce-and-expand": 28,
         "memory-and-data-movement": 27,
         "matrix-and-matrix-vector": 12,
@@ -373,19 +359,21 @@ def validate(root: Path) -> list[str]:
         "irregular-and-complex": 4,
     })
     if Counter(item.get("family") for item in tiles) != expected_family_counts:
-        errors.append("tile inventory must be exactly 77 TEPL / 28 TLSU / 12 CUBE")
+        errors.append("tile inventory must be exactly 79 TEPL / 28 TLSU / 12 CUBE")
     if Counter(item.get("engine") for item in tiles) != expected_engine_counts:
-        errors.append("tile semantic engines must be exactly 31 VEC / 46 SFU / 28 TLSU / 12 CUBE")
+        errors.append("tile semantic engines must be exactly 32 VEC / 47 SFU / 28 TLSU / 12 CUBE")
     if Counter(item.get("classification") for item in tiles) != expected_classification_counts:
         errors.append("tile semantic classifications differ from the canonical PTO 0.58 catalog")
     if docs["tiles"].get("engine_counts") != dict(sorted(expected_engine_counts.items())):
         errors.append("PTO operation projection must publish exact semantic engine counts")
     if docs["tiles"].get("classification_counts") != dict(sorted(expected_classification_counts.items())):
         errors.append("PTO operation projection must publish exact semantic classification counts")
+    from pto_scalar_proposal import apply_proposal
+    docs["scalars"] = apply_proposal(root / PROFILE, docs["scalars"])
     source_forms = docs["scalars"].get("forms", []) + docs["commands"].get("forms", [])
     scalar_ids = {str(form["form_id"]) for form in docs["scalars"].get("forms", [])}
-    if len(source_forms) != 561:
-        errors.append("PTO scalar/block form inventory must contain exactly 561 forms")
+    if len(source_forms) != 578:
+        errors.append("PTO scalar/block form inventory must contain exactly 578 forms")
     source_ids = [str(form["form_id"]) for form in source_forms]
     if len(source_ids) != len(set(source_ids)):
         errors.append("PTO scalar/block form identities must be unique")
@@ -398,8 +386,8 @@ def validate(root: Path) -> list[str]:
     }
     if len(compiled_items) != len(compiled):
         errors.append("compiled Linx profile must not duplicate PTO form identities")
-    if len(compiled) != 561:
-        errors.append("compiled Linx profile must attach exactly 561 PTO form identities")
+    if len(compiled) != 578:
+        errors.append("compiled Linx profile must attach exactly 578 PTO form identities")
     if set(compiled) != set(source_ids):
         errors.append("compiled Linx PTO form identity set must equal the canonical PTO set")
     for form in source_forms:
@@ -455,14 +443,37 @@ def validate(root: Path) -> list[str]:
         if item.get("pto_source_constraints") != form.get("constraints", []):
             errors.append(f"compiled PTO command variant constraints differ from source: {key}")
 
+    # v0.58 Linx additive scalar extension: store-op SUB forms (SW.SUB/SD.SUB),
+    # SB/SH size-override forms, DMA free variants, and MCOPY access-mode
+    # variants. These are Linx-only pending PTO adoption (frozen set) and are
+    # exempt from the PTO extension-reservation coverage check below.
+    linx_scalar_extension = {
+        "DMA.FREE.S",
+        "DMA.FREE.L",
+        "MCOPY.DS",
+        "MCOPY.DL",
+    }
     linx_only = [
         item
         for item in docs["spec"].get("instructions", [])
         if not item.get("pto_source_form_id") and not item.get("pto_source_form_variant")
     ]
     vector_form_count = sum(str(item.get("mnemonic")).startswith("V.") for item in linx_only)
-    if len(linx_only) != 212 or vector_form_count != 184:
-        errors.append("Linx-only delta must contain exactly 184 V.* forms and 28 reserved command forms")
+    if len(linx_only) != 216 or vector_form_count != 184:
+        errors.append(
+            "Linx-only delta must contain exactly 184 V.* forms, 28 reserved "
+            "command forms, and the 4 encoding-only resource reservations"
+        )
+    extension_present = sorted(
+        str(item.get("mnemonic"))
+        for item in linx_only
+        if str(item.get("mnemonic")) in linx_scalar_extension
+    )
+    if extension_present != sorted(linx_scalar_extension):
+        errors.append(
+            "frozen Linx scalar extension set must be present exactly once: "
+            f"missing={sorted(set(linx_scalar_extension) - set(extension_present))}"
+        )
 
     required_command_mnemonics = {
         "BSTART.MGATHER.MASK",
@@ -503,7 +514,8 @@ def validate(root: Path) -> list[str]:
     uncovered = sorted(
         str(item.get("asm") or item.get("mnemonic"))
         for item in linx_only
-        if not any(reservation_covers(reservation, item) for reservation in reservations)
+        if str(item.get("mnemonic")) not in linx_scalar_extension
+        and not any(reservation_covers(reservation, item) for reservation in reservations)
     )
     if uncovered:
         errors.append(f"Linx-only forms escape PTO extension reservations: {uncovered}")
@@ -545,8 +557,8 @@ def validate(root: Path) -> list[str]:
         errors.append("v0.58 deleted scalar/block spellings must not reserve encodings")
 
     b_ios = [item for item in docs["spec"].get("instructions", []) if item.get("mnemonic") == "B.IOS"]
-    if len(b_ios) != 1 or encoding_key(b_ios[0], True) != ((0xFC0871FF, 0x00001013, 32),):
-        errors.append("B.IOS must match the canonical PTO 0.58.6 32-bit slot exactly")
+    if len(b_ios) != 2 or not any(encoding_key(item, True) == ((0xFC0871FF, 0x00001013, 32),) for item in b_ios):
+        errors.append("B.IOS must match the canonical PTO 0.58.7 32-bit slot exactly")
     if {"B.IOD", "BSTART.PAR", "C.B.IOS"} & set(compiled_by_mnemonic):
         errors.append("deleted PTO scalar/block spellings must not decode in Linx v0.58")
 

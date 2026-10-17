@@ -253,14 +253,23 @@ def main() -> int:
         if token not in encoding:
             _error(errors, f"encoding workbook policy is missing: {token}")
 
-    for rel in (
-        "docs/isa/instructions/bstart_call.md",
-        "docs/isa/instructions/hl_bstart_call.md",
+    if (root / "docs/isa/instructions/bstart_call.md").exists():
+        _error(errors, "deleted 32-bit BSTART.CALL instruction page is still present")
+    for rel, call_syntax in (
+        ("docs/isa/instructions/bstart_std.md", "BSTART.STD CALL, <label>"),
+        ("docs/isa/instructions/bstart_fp.md", "BSTART.FP CALL, <label>"),
     ):
         text = (root / rel).read_text(encoding="utf-8")
-        for token in ("preserves `ra`", "adjacent `SETRET` or `C.SETRET`"):
-            if token not in text:
-                _error(errors, f"{rel} is missing the call/return contract token: {token}")
+        if call_syntax not in text:
+            _error(errors, f"{rel} is missing the published CALL form: {call_syntax}")
+        for deleted_operand in ("<rt_label>", "->ra"):
+            if deleted_operand in text:
+                _error(errors, f"{rel} retains deleted fused-call operand: {deleted_operand}")
+    fused_call_rel = "docs/isa/instructions/hl_bstart_call.md"
+    fused_call_text = (root / fused_call_rel).read_text(encoding="utf-8")
+    for token in ("preserves `ra`", "adjacent `SETRET` or `C.SETRET`"):
+        if token not in fused_call_text:
+            _error(errors, f"{fused_call_rel} is missing the call/return contract token: {token}")
 
     with tempfile.TemporaryDirectory(prefix="linxisa-gate-status-") as temp_dir:
         rendered_status = Path(temp_dir) / "GATE_STATUS.md"
@@ -286,6 +295,7 @@ def main() -> int:
 
     if not args.skip_generated:
         generated_checks = (
+            ([sys.executable, "tools/isa/gen_pto_binder_pages.py", "--check"], "PTO binder references"),
             (
                 [
                     sys.executable,

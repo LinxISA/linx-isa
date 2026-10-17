@@ -3,7 +3,7 @@
     "LNX-ATOM": {
       "implemented": 2,
       "pass": 2,
-      "tests": 8
+      "tests": 11
     },
     "LNX-FP": {
       "implemented": 2,
@@ -263,7 +263,7 @@
       "source": "ev-0050"
     }
   },
-  "generated_at_utc": "2026-08-22 22:41:49Z",
+  "generated_at_utc": "2026-10-12 11:10:40Z",
   "matrix_file": "avs/linx_avs_v1_test_matrix.yaml",
   "schema_version": "linx-avs-v0.58-status-v1",
   "statuses": {
@@ -318,6 +318,21 @@
       "validated": "not_run"
     },
     "AVS-ATOM-011": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-ATOM-012": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-ATOM-013": {
+      "evidence": [],
+      "implemented": false,
+      "validated": "not_run"
+    },
+    "AVS-ATOM-014": {
       "evidence": [],
       "implemented": false,
       "validated": "not_run"
@@ -659,7 +674,7 @@
     "nightly": {
       "implemented": 36,
       "pass": 36,
-      "tests": 58
+      "tests": 61
     },
     "pr": {
       "implemented": 35,

@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.xor<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.xor<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.xor<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.xor<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

@@ -22,15 +22,15 @@ REQUIRED_COMPONENTS = {
     "workloads/pto_kernels",
 }
 EXPECTED_RELEASES = {
-    "compiler/llvm": "0.58.3",
-    "compiler/ptoas": "0.58.3",
-    "emulator/qemu": "0.58.6",
+    "compiler/llvm": "0.58.7",
+    "compiler/ptoas": "0.58.7",
+    "emulator/qemu": "0.58.7",
     "kernel/linux": "0.58.3",
     "lib/glibc": "0.58.3",
     "lib/musl": "0.58.3",
     "skills/linx-skills": "0.58.3",
-    "tools/Linx-TileOP-API": "0.58.3",
-    "tools/model": "0.58.6",
+    "tools/Linx-TileOP-API": "0.58.7",
+    "tools/model": "0.58.7",
     "workloads/pto_kernels": "0.58.3",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}

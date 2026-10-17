@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}`
+- `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.
+Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Latches the optional per-block tile layout, data type, padding, comparison, roun
 
 ## Encoding Notes
 
-- `Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes.`
+- `Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize}` | 32 | — |
+| `B.DATR {layout, datatype, padvalue_or_byteid, cmode, rmode, sat, canonicalize, predinv, zero}` | 32 | — |
 
 <div class="insn-nav">
 

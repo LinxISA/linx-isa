@@ -796,6 +796,8 @@ nav:
             - ACRE: isa/inst/misa_s/ACRE.md
         - 直接内存存取:
             - DMA: isa/inst/misa_s/DMA.md
+            - DMA.FREE.S: isa/inst/misa_s/DMA.FREE.S.md
+            - DMA.FREE.L: isa/inst/misa_s/DMA.FREE.L.md
         - 加载保留与条件存储:
             - 简介: isa/blockIntro/sys_block/lr_sc.md
             - LR.B: isa/inst/misa_s/LR.B.md
@@ -840,10 +842,20 @@ nav:
             - SW.SMIN: isa/inst/misa_s/SW.SMIN.md
             - SW.UMAX: isa/inst/misa_s/SW.UMAX.md
             - SW.UMIN: isa/inst/misa_s/SW.UMIN.md
+            - SW.SUB: isa/inst/misa_s/SW.SUB.md
+            - SB.ADD: isa/inst/misa_s/SB.ADD.md
+            - SB.SUB: isa/inst/misa_s/SB.SUB.md
+            - SD.SUB: isa/inst/misa_s/SD.SUB.md
+            - SH.ADD: isa/inst/misa_s/SH.ADD.md
+            - SH.SUB: isa/inst/misa_s/SH.SUB.md
             - SWAPB: isa/inst/misa_s/SWAPB.md
             - SWAPH: isa/inst/misa_s/SWAPH.md
             - SWAPW: isa/inst/misa_s/SWAPW.md
             - SWAPD: isa/inst/misa_s/SWAPD.md
+            - CASB: isa/inst/misa_s/CASB.md
+            - CASH: isa/inst/misa_s/CASH.md
+            - CASW: isa/inst/misa_s/CASW.md
+            - CASD: isa/inst/misa_s/CASD.md
             - HL.CASB: isa/inst/misa_h/HL.CASB.md
             - HL.CASH: isa/inst/misa_h/HL.CASH.md
             - HL.CASW: isa/inst/misa_h/HL.CASW.md
@@ -1191,7 +1203,8 @@ nav:
     - 模版指令集:
         - 介绍: isa/header/templateblock/intro.md
         - MCOPY: isa/header/templateblock/MCOPY.md
-        - MCOPY.D: isa/header/templateblock/MCOPY.D.md
+        - MCOPY.DS: isa/header/templateblock/MCOPY.DS.md
+        - MCOPY.DL: isa/header/templateblock/MCOPY.DL.md
         - MSET: isa/header/templateblock/MSET.md
         - FENTRY: isa/header/templateblock/FENTRY.md
         - FEXIT: isa/header/templateblock/FEXIT.md

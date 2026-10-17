@@ -5,7 +5,7 @@
 [[inst_sw_and]]
 ==== SW.AND
 
-*Syntax:* sw.and<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.and<.{rl}> [SrcL], SrcR
 
 *Description:* SW.AND atomically replaces the aligned 32-bit memory value with its bitwise AND with SrcR; it does not publish the old value.
 

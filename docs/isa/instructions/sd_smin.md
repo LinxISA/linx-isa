@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.smin<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.smin<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.SMIN atomically replaces the aligned 64-bit memory value with its signed mini
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.smin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.smin<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

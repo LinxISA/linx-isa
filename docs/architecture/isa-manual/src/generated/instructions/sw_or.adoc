@@ -5,7 +5,7 @@
 [[inst_sw_or]]
 ==== SW.OR
 
-*Syntax:* sw.or<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.or<.{rl}> [SrcL], SrcR
 
 *Description:* SW.OR atomically replaces the aligned 32-bit memory value with its bitwise OR with SrcR; it does not publish the old value.
 

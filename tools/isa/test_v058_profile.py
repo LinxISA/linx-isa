@@ -10,12 +10,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 spec = json.loads((ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8"))
 pto_lock = json.loads((ROOT / "isa/v0.58/pto-spec.lock.json").read_text(encoding="utf-8"))
-assert spec["version"] == "0.58.6"
-assert pto_lock["release"] == "0.58.6"
-assert pto_lock["publication"]["tag"] == "v0.58.6.0"
-assert pto_lock["publication"]["version"] == "0.58.6.0"
+assert spec["version"] == "0.58.7"
+assert pto_lock["release"] == "0.58.7"
+assert pto_lock["publication"]["tag"] == "v0.58.7.0"
+assert pto_lock["publication"]["version"] == "0.58.7.0"
 assert pto_lock["specification_status"] == "draft"
-assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 561
+bundle_dimensions = spec["state"]["architectural_state"]["state"][
+    "bundle_dimensions"
+]
+assert bundle_dimensions["registers"] == ["LB0", "LB1", "LB2"]
+assert bundle_dimensions["omission_default"] == 1
+assert "explicit zero" in bundle_dimensions["explicit_write"]
+assert "never operation legality" in bundle_dimensions["presence_role"]
+assert bundle_dimensions["semantic_equivalence"] == (
+    "an omitted dimension is equivalent to an explicit value one"
+)
+assert sum("pto_source_form_id" in item for item in spec["instructions"]) == 578
 pto_owned_instructions = [
     item
     for item in spec["instructions"]
@@ -26,15 +36,14 @@ linx_only_instructions = [
     for item in spec["instructions"]
     if not (item.get("pto_source_form_id") or item.get("pto_source_form_variant_of"))
 ]
-assert len(pto_owned_instructions) == 561
-assert len(linx_only_instructions) == 212
+assert len(pto_owned_instructions) == 578
+assert len(linx_only_instructions) == 216
 assert not any(item.get("pto_source_form_variant_of") for item in spec["instructions"])
 assert sum(item["mnemonic"].startswith("V.") for item in linx_only_instructions) == 184
 mnemonics = {item["mnemonic"] for item in spec["instructions"]}
 assert {
     "B.FPATR",
     "B.IOS",
-    "BSTART.CALL",
     "BSTART.GMOV",
     "BSTART.ICALL",
     "BSTART.MGATHER.ADD",
@@ -47,22 +56,16 @@ assert {
     "V.QPOP",
     "V.QPUSH",
 } <= mnemonics
-assert {"B.IOD", "BSTART.PAR", "C.B.IOS"}.isdisjoint(mnemonics)
-obsolete_assembly = {
-    "BSTART.FP CALL, <label>",
-    "BSTART.FP ICALL",
-    "BSTART.STD CALL, <label>",
-    "BSTART.STD ICALL",
-}
-assert obsolete_assembly.isdisjoint(
-    str(item.get("asm") or "") for item in spec["instructions"]
-)
+assert {"B.IOD", "BSTART.CALL", "BSTART.PAR", "C.B.IOS"}.isdisjoint(mnemonics)
+assembly_forms = {str(item.get("asm") or "") for item in spec["instructions"]}
+assert {"BSTART.FP CALL, <label>", "BSTART.STD CALL, <label>"} <= assembly_forms
+assert {"BSTART.FP ICALL", "BSTART.STD ICALL"}.isdisjoint(assembly_forms)
 reservations = json.loads(
     (ROOT / "isa/v0.58/state/extension_encoding_reservations.json").read_text(
         encoding="utf-8"
     )
 )["reservations"]
-assert len(reservations) == 46
+assert len(reservations) == 50
 
 
 def encoding_parts(item: dict) -> tuple[tuple[int, int, int], ...]:
@@ -90,12 +93,19 @@ def reservation_covers(reservation: dict, instruction: dict) -> bool:
     )
 
 
+linx_scalar_extension = {
+    "DMA.FREE.S",
+    "DMA.FREE.L",
+    "MCOPY.DS",
+    "MCOPY.DL",
+}
 assert all(
-    any(reservation_covers(reservation, item) for reservation in reservations)
+    item["mnemonic"] in linx_scalar_extension
+    or any(reservation_covers(reservation, item) for reservation in reservations)
     for item in linx_only_instructions
 )
 b_ios = [item for item in spec["instructions"] if item["mnemonic"] == "B.IOS"]
-assert len(b_ios) == 1
+assert len(b_ios) == 2
 b_ios_part = b_ios[0]["encoding"]["parts"][0]
 assert (int(b_ios_part["mask"], 0), int(b_ios_part["match"], 0)) == (
     0xFC0871FF,
@@ -109,21 +119,21 @@ assert (int(timg2col_part["mask"], 0), int(timg2col_part["match"], 0)) == (
 )
 assert spec["retired_encodings"]["entries"] == []
 pto_ops = json.loads((ROOT / "isa/v0.58/state/pto_ops.json").read_text(encoding="utf-8"))
-expected_family_counts = {"CUBE": 12, "TEPL": 77, "TLSU": 28}
-expected_engine_counts = {"CUBE": 12, "SFU": 46, "TLSU": 28, "VEC": 31}
+expected_family_counts = {"CUBE": 12, "TEPL": 79, "TLSU": 28}
+expected_engine_counts = {"CUBE": 12, "SFU": 47, "TLSU": 28, "VEC": 32}
 expected_classification_counts = {
-    "elementwise-tile-tile": 25,
+    "elementwise-tile-tile": 26,
     "irregular-and-complex": 4,
     "layout-and-rearrangement": 6,
     "matrix-and-matrix-vector": 12,
     "memory-and-data-movement": 27,
     "reduce-and-expand": 28,
-    "tile-scalar-and-immediate": 15,
+    "tile-scalar-and-immediate": 16,
 }
 assert pto_ops["family_counts"] == expected_family_counts
 assert pto_ops["engine_counts"] == expected_engine_counts
 assert pto_ops["classification_counts"] == expected_classification_counts
-retired_0586 = {
+retired_0587 = {
     "TCONCAT",
     "TEXTRACT",
     "TINSERT",
@@ -133,8 +143,8 @@ retired_0586 = {
     "TSORT",
     "TMRGSORT",
 }
-assert retired_0586 <= set(pto_ops["deleted_names"])
-assert retired_0586.isdisjoint(item["name"] for item in pto_ops["operations"])
+assert retired_0587 <= set(pto_ops["deleted_names"])
+assert retired_0587.isdisjoint(item["name"] for item in pto_ops["operations"])
 assert Counter(item["engine"] for item in pto_ops["operations"]) == Counter(expected_engine_counts)
 assert Counter(item["classification"] for item in pto_ops["operations"]) == Counter(
     expected_classification_counts
@@ -215,16 +225,48 @@ b_ios_page = (ROOT / "docs/isa/instructions/b_ios.md").read_text(encoding="utf-8
 b_ior_page = (ROOT / "docs/isa/instructions/b_ior.md").read_text(encoding="utf-8")
 assert "## Description\n\nBinds one ordered absolute Core-private Shared register" in b_ios_page
 assert "## Description\n\nBind up to three absolute GPR inputs" in b_ior_page
+assert "ExecMaskPresent marks final-record GPR ExecutionMask words" in b_ior_page
 dma = next(item for item in spec["instructions"] if item["mnemonic"] == "DMA")
 assert "64-byte" in dma["note"]
 assert "overlap has memmove semantics" in dma["note"]
 assert "64-bit" not in dma["note"]
-call = next(item for item in spec["instructions"] if item["mnemonic"] == "BSTART.CALL")
-assert "independent return target" in call["note"]
-assert "ra" in call["note"]
+call_forms = {
+    item["asm"]: item
+    for item in spec["instructions"]
+    if item["asm"] in {"BSTART.STD CALL, <label>", "BSTART.FP CALL, <label>"}
+}
+assert set(call_forms) == {"BSTART.STD CALL, <label>", "BSTART.FP CALL, <label>"}
+for asm, expected_match in {
+    "BSTART.STD CALL, <label>": 0x00004001,
+    "BSTART.FP CALL, <label>": 0x00004101,
+}.items():
+    part = call_forms[asm]["encoding"]["parts"][0]
+    assert (int(part["mask"], 0), int(part["match"], 0)) == (0x00007FFF, expected_match)
+    assert [
+        (field["name"], field["pieces"][0]["insn_lsb"], field["pieces"][0]["insn_msb"])
+        for field in part["fields"]
+    ] == [("simm17", 15, 31)]
+    assert "ra" not in asm and "rt_label" not in asm
 hl_call = next(item for item in spec["instructions"] if item["mnemonic"] == "HL.BSTART CALL")
 assert "Both labels are explicit and independently relocatable" in hl_call["note"]
 assert "ra" in hl_call["note"]
+b_assemble = next(item for item in spec["instructions"] if item["mnemonic"] == "B.ASSEMBLE")
+assert b_assemble["asm"] == "B.ASSEMBLE INIT, LAST, RegSrc, uimm11, WriterSizeCode"
+writer_size = next(
+    field
+    for field in b_assemble["encoding"]["parts"][0]["fields"]
+    if field["name"] == "WriterSizeCode"
+)
+assert writer_size["pieces"] == [
+    {"insn_lsb": 7, "insn_msb": 10, "token": "WriterSizeCode", "width": 4}
+]
+assert "ParentSizeCode" not in b_assemble["asm"]
+scalar_baseline = json.loads(
+    (ROOT / "isa/v0.58/state/pto_scalar_forms.json").read_text(encoding="utf-8")
+)
+assert scalar_baseline["form_count"] == 473
+assert scalar_baseline["source_lock"] == "isa/v0.58/pto-scalar-proposal.lock.json"
+assert not (ROOT / "isa/v0.58/state/pto_scalar_proposal.json").exists()
 sail_execute = (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8")
 sail_state = (ROOT / "isa/sail/model/state/state.sail").read_text(encoding="utf-8")
 semantics_conventions = json.loads(
@@ -239,11 +281,31 @@ assert semantics_conventions["immediate_materialization"]["hl_lui"] == {
 }
 assert "sail_shiftleft(zext32_from32(imm32), 32)" in sail_execute
 assert "write_regdst(RegDst, sext32_from32(imm32))" not in sail_execute
-assert semantics_conventions["srcrtype"]["csel"]["policy"] == "10_as_neg_else_00"
-assert "if SrcRType == 0b10 then sub_bits" in sail_execute
-assert "if SrcRType == 0b11 then sub_bits" not in sail_execute
+assert semantics_conventions["srcrtype"]["binary_mapping"] == {
+    "00": "sw (sext32)",
+    "01": "uw (zext32)",
+    "10": "neg (arithmetic families) / not (logical families)",
+    "11": "none",
+}
+assert semantics_conventions["srcrtype"]["address_mapping"]["11"] == "reserved"
+assert semantics_conventions["srcrtype"]["csel"]["policy"] == "11_as_neg_else_none"
+assert "if SrcRType == 0b11 then sub_bits" in sail_execute
+assert "if SrcRType == 0b10 then sub_bits" not in sail_execute
+assert "apply_restricted_compare_srcrtype64(SrcRType, b0)" in sail_execute
+assert "apply_compare_srcrtype_logic64(SrcRType, b0)" in sail_execute
+assert "apply_address_srcrtype64(SrcRType, off0)" in sail_execute
 assert "tile_tlsu_required_sources" in sail_execute
 assert "tile_tlsu_produces_output" in sail_execute
+assert "if value == 0x0000_0000_0000_0000 then" not in sail_execute
+assert "bdesc_seen_datr & bdesc_seen_iot & dimensions_ok" in sail_execute
+assert "register ssr_lb0  : bits(64) = 0x0000_0000_0000_0001" in sail_state
+assert "register ssr_lb1  : bits(64) = 0x0000_0000_0000_0001" in sail_state
+assert "register ssr_lb2  : bits(64) = 0x0000_0000_0000_0001" in sail_state
+header_validation = sail_state[
+    sail_state.index("function bdesc_validate_header_end") :
+    sail_state.index("function trap_assert_fail")
+]
+assert "not_bool(bdesc_seen_dim)" not in header_validation
 assert "tile_tma_" not in sail_execute
 assert "PTO ISA 0.57" not in sail_execute
 assert "PTO ISA 0.57" not in sail_state

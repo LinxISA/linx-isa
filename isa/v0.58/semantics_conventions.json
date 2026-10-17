@@ -37,22 +37,34 @@
     }
   },
   "srcrtype": {
-    "description": "2-bit SrcRType mapping and evaluation order.",
-    "mapping": {
+    "description": "2-bit SrcRType mappings are form-family-specific; a raw value must be decoded through the selected instruction family.",
+    "binary_mapping": {
+      "00": "sw (sext32)",
+      "01": "uw (zext32)",
+      "10": "neg (arithmetic families) / not (logical families)",
+      "11": "none"
+    },
+    "comparison_mapping": {
       "00": "none",
       "01": "sw (sext32)",
       "10": "uw (zext32)",
-      "11": "neg (arithmetic families) / not (logical families)"
+      "11": "neg (logical families use not; restricted compare forms treat this as none)"
+    },
+    "address_mapping": {
+      "00": "none",
+      "01": "sw (sext32)",
+      "10": "uw (zext32)",
+      "11": "reserved"
     },
     "order": "Apply SrcRType first, then apply any explicit shift (e.g. <<<shamt or <<shamt in addressing).",
     "word_ops": "For *W (32-bit) operations, apply modifiers at 32-bit width, compute a 32-bit result, then sign-extend to 64-bit.",
     "restricted_forms": {
-      "description": "For forms whose assembly syntax only allows {.sw,.uw} (e.g. CMP.{EQ,NE,LT,GE,LTU,GEU} and SETC.{EQ,NE,LT,GE,LTU,GEU}), SrcRType=11 is treated as 00 (no modifier) in v0.58, retained by v0.58.",
-      "policy": "11_as_00"
+      "description": "For comparison forms whose assembly syntax only allows {.sw,.uw} (e.g. CMP.{EQ,NE,LT,GE,LTU,GEU} and SETC.{EQ,NE,LT,GE,LTU,GEU}), SrcRType=11 is treated as no modifier.",
+      "policy": "11_as_none"
     },
     "csel": {
-      "description": "CSEL encodes its optional .neg as SrcRType=10; the canonical unmodified spelling uses SrcRType=11 and every other value is also treated as unmodified.",
-      "policy": "10_as_neg_else_00"
+      "description": "CSEL encodes its optional .neg as SrcRType=11; raw 00, 01, and 10 are unmodified aliases.",
+      "policy": "11_as_neg_else_none"
     }
   },
   "shifts": {

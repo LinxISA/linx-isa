@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.add<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.add<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.ADD atomically replaces the aligned 64-bit memory value with its modular sum 
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.add<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.add<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

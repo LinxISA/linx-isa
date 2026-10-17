@@ -80,9 +80,8 @@ def test_decode32_dispatch_is_partitioned_by_exact_opcode() -> None:
     assert "and_bool_no_flow" in rendered
 
     dispatcher = rendered[rendered.index("function decode_execute32(inst") :]
-    wildcard_pos = dispatcher.index("// BSTART.CALL |")
-    match_pos = dispatcher.index("match inst[6..0]")
-    assert wildcard_pos < match_pos
+    assert "// BSTART.CALL |" not in dispatcher
+    assert "match inst[6..0]" in dispatcher
     assert "Reserved retired encoding: BSTART.PAR" not in dispatcher
 
 

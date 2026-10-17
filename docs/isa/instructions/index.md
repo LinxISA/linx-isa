@@ -1,6 +1,6 @@
 # All Instructions
 
-Complete alphabetical index of all **773** instruction forms in the LinxISA v0.58.6 catalog.
+Complete alphabetical index of all **794** instruction forms in the LinxISA v0.58.7 catalog.
 
 Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
@@ -27,17 +27,26 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
-| [B.ASSEMBLE](b_assemble.md) | [Bundle Range Modifier](../groups/bundle_range_modifier.md) | 32 | Decodes one destination-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
+| [B.ASSEMBLE](b_assemble.md) | [Bundle Range Modifier](../groups/bundle_range_modifier.md) | 32 | Decodes one writer-range assemble modifier and retains its XLEN-wrapped derived offset in the immediately preceding binder group. |
 | [B.CATR](b_catr.md) | [Bundle Control Attribute](../groups/bundle_control_attribute.md) | 32 | Defines one optional block control record for post-commit trap, transactional visibility, acquire/release ordering, remote execution, and dimension-reduction mode. |
-| [B.DATR](b_datr.md) | [Bundle Data Attribute](../groups/bundle_data_attribute.md) | 32 | Latches the optional per-block tile layout, data type, padding, comparison, rounding, saturation, and canonicalization attributes. |
+| [B.DATR](b_datr.md) | [Bundle Data Attribute](../groups/bundle_data_attribute.md) | 32 | Latch per-block tile attributes and carrier-independent ExecutionMask controls PredInv and Zero. |
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.DIM](b_dim.md) | [Bundle Argument](../groups/bundle_argument.md) | 32 | Writes zero-extend((GPR[RegSrc] + uimm17)[15:0]) to the selected bundle-local LB register exactly once. |
 | [B.FPATR](b_fpatr.md) | [Bundle Fixed-Point PostProcess Attribute](../groups/bundle_fixed_point_postprocess_attribute.md) | 32 | Latches complete-bundle matrix post-processing mode, reduction enables, and fixed-point descriptor controls. |
 | [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
 | [B.HINT](b_hint.md) | [Bundle Hint](../groups/bundle_hint.md) | 32 | Records one optional per-block branch, temperature, prefetch-size, or trace-boundary hint without changing functional results. |
-| [B.IOR](b_ior.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements. |
+| [B.IOR](b_ior.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind up to three absolute GPR inputs and one absolute GPR output; ExecMaskPresent marks final-record GPR ExecutionMask words. |
 | [B.IOS](b_ios.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds one ordered absolute Core-private Shared register S0..S63 as a source or destination with a common four-PE participation mode decoded to a fixed mask. |
+| [B.IOS](b_ios.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Binds one absolute Core-wide Shared source as its last payload use while retaining its Sx identity and descriptor. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
+| [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
 | [B.IOT](b_iot.md) | [Bundle Input & Output](../groups/bundle_input_output.md) | 32 | Bind ordered relative Local Tile sources and renamed destinations; each T/U/M/N #1 source names the newest published generation of that hand. |
@@ -53,7 +62,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BSE](bse.md) | [SYS](../groups/sys.md) | 32 | BSE publishes the SendEvent nonblocking execution-control request. |
 | [BSTART](bstart.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
 | [BSTART](bstart.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Block split marker. Terminates the current basic block and begins the next. Encodes block type and transition kind. |
-| [BSTART.CALL](bstart_call.md) | [BSTART](../groups/bstart.md) | 32 | Atomic fused call with independent call-target and return-target fields; transfers to the call block and writes `ra`. This exact aggregate is distinct from the generic bare-call form, which preserves `ra` and requires an adjacent `SETRET` or `C.SETRET`. |
+| [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.FP](bstart_fp.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
@@ -86,6 +95,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [BSTART.MSCATTER.POPC](bstart_mscatter_popc.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.MSCATTER.XOR](bstart_mscatter_xor.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.MSEQ](bstart_mseq.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
+| [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
 | [BSTART.STD](bstart_std.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Terminates the current block and begins the next. |
@@ -202,6 +212,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [DIVUW](divuw.md) | [ALU](../groups/alu.md) | 32 | 32-bit word unsigned integer division. |
 | [DIVW](divw.md) | [ALU](../groups/alu.md) | 32 | 32-bit word signed integer division. |
 | [DMA](dma.md) | [AMO](../groups/amo.md) | 32 | DMA performs an exact 64-byte copy, validates both ranges before effects, snapshots the source so overlap has memmove semantics, and guarantees that any fault leaves memory unchanged for precise full reissue. |
+| [DMA.FREE.L](dma_free_l.md) | [AMO](../groups/amo.md) | 32 | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
+| [DMA.FREE.S](dma_free_s.md) | [AMO](../groups/amo.md) | 32 | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
 
 ### E
 
@@ -541,6 +553,8 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [MAX](max.md) | [ALU](../groups/alu.md) | 32 | Integer max (signed). |
 | [MAXU](maxu.md) | [ALU](../groups/alu.md) | 32 | MAXU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the maximum operand. |
 | [MCOPY](mcopy.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Copies a non-overlapping byte range in restartable forward memory steps. |
+| [MCOPY.DL](mcopy_dl.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
+| [MCOPY.DS](mcopy_ds.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DS. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented. |
 | [MIN](min.md) | [ALU](../groups/alu.md) | 32 | Integer min (signed). |
 | [MINU](minu.md) | [ALU](../groups/alu.md) | 32 | MINU performs an unsigned full-XLEN comparison and publishes the complete bit pattern of the minimum operand. |
 | [MSET](mset.md) | [Bundle Split](../groups/bundle_split.md) | 32 | Fills a complete unsigned XLEN byte range with the low byte of an absolute GPR after complete access preflight. |
@@ -580,7 +594,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | Mnemonic | Group | Bits | Description |
 |----------|-------|------|-------------|
 | [SB](sb.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SB snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SB.ADD](sb_add.md) | [AMO](../groups/amo.md) | 32 | SB.ADD atomically applies width-sized modular add and does not publish the old value. |
 | [SB.PCR](sb_pcr.md) | [STA](../groups/sta.md) | 32 | SB.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
+| [SB.SUB](sb_sub.md) | [AMO](../groups/amo.md) | 32 | SB.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SBI](sbi.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SBI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 1-byte value. |
 | [SC.B](sc_b.md) | [AMO](../groups/amo.md) | 32 | SC.B conditionally stores one byte when the local 64-byte-line reservation matches. |
 | [SC.D](sc_d.md) | [AMO](../groups/amo.md) | 32 | SC.D conditionally stores one doubleword when the local 64-byte-line reservation matches. |
@@ -594,6 +610,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SD.PCR](sd_pcr.md) | [STA](../groups/sta.md) | 32 | SD.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
 | [SD.SMAX](sd_smax.md) | [AMO](../groups/amo.md) | 32 | SD.SMAX atomically replaces the aligned 64-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
 | [SD.SMIN](sd_smin.md) | [AMO](../groups/amo.md) | 32 | SD.SMIN atomically replaces the aligned 64-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
+| [SD.SUB](sd_sub.md) | [AMO](../groups/amo.md) | 32 | SD.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SD.U](sd_u.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SD.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 8-byte value. |
 | [SD.UMAX](sd_umax.md) | [AMO](../groups/amo.md) | 32 | SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
 | [SD.UMIN](sd_umin.md) | [AMO](../groups/amo.md) | 32 | SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
@@ -619,7 +636,9 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SETC.TGT](setc_tgt.md) | [SYS](../groups/sys.md) | 32 | Sets the block-commit condition. |
 | [SETRET](setret.md) | [BRU](../groups/bru.md) | 32 | Materializes a return address (ra) using a PC-relative offset. Used in call headers. |
 | [SH](sh.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SH snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SH.ADD](sh_add.md) | [AMO](../groups/amo.md) | 32 | SH.ADD atomically applies width-sized modular add and does not publish the old value. |
 | [SH.PCR](sh_pcr.md) | [STA](../groups/sta.md) | 32 | SH.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
+| [SH.SUB](sh_sub.md) | [AMO](../groups/amo.md) | 32 | SH.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SH.U](sh_u.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SH.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
 | [SHI](shi.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SHI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
 | [SHI.U](shi_u.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SHI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 2-byte value. |
@@ -649,6 +668,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SW.PCR](sw_pcr.md) | [STA](../groups/sta.md) | 32 | SW.PCR snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
 | [SW.SMAX](sw_smax.md) | [AMO](../groups/amo.md) | 32 | SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maximum with SrcR; it does not publish the old value. |
 | [SW.SMIN](sw_smin.md) | [AMO](../groups/amo.md) | 32 | SW.SMIN atomically replaces the aligned 32-bit memory value with its signed minimum with SrcR; it does not publish the old value. |
+| [SW.SUB](sw_sub.md) | [AMO](../groups/amo.md) | 32 | SW.SUB atomically applies width-sized modular sub and does not publish the old value. |
 | [SW.U](sw_u.md) | [STA/BASE_REG](../groups/sta_base_reg.md) | 32 | SW.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
 | [SW.UMAX](sw_umax.md) | [AMO](../groups/amo.md) | 32 | SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned maximum with SrcR; it does not publish the old value. |
 | [SW.UMIN](sw_umin.md) | [AMO](../groups/amo.md) | 32 | SW.UMIN atomically replaces the aligned 32-bit memory value with its unsigned minimum with SrcR; it does not publish the old value. |
@@ -659,6 +679,7 @@ Use **Ctrl+F** / **Cmd+F** to search, or click a letter below to jump to it.
 | [SWAPW](swapw.md) | [AMO](../groups/amo.md) | 32 | SWAPW atomically replaces one word and publishes the prior value. |
 | [SWI](swi.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SWI snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
 | [SWI.U](swi_u.md) | [STA/BASE_IMM](../groups/sta_base_imm.md) | 32 | SWI.U snapshots its scalar sources, forms its encoded address, and stores one aligned little-endian 4-byte value. |
+| [SYNC.CORE](sync_core.md) | [SYS](../groups/sys.md) | 32 | Waits for all four PEs at the same Core-local phase boundary and completes their earlier GM obligations. |
 
 ### T
 

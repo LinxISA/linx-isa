@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Begins a strided indexed TLSU scatter block.`
+- `scatter using explicit byte displacements.`
 
 ## Full Catalog Forms
 

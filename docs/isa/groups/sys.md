@@ -5,12 +5,12 @@
 <span class="ch-tag ch-tag-19">Ch 19</span>
 &nbsp; <strong>SYS — System Operations</strong> &nbsp;|&nbsp;
 **Group:** SYS &nbsp;|&nbsp;
-**Forms:** 35 &nbsp;|&nbsp;
-**Unique mnemonics:** 35
+**Forms:** 36 &nbsp;|&nbsp;
+**Unique mnemonics:** 36
 
 </div>
 
-Instructions in the **SYS** group of the LinxISA v0.58.6 catalog.
+Instructions in the **SYS** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 
@@ -47,6 +47,7 @@ Instructions in the **SYS** group of the LinxISA v0.58.6 catalog.
 | [SSRGET](../instructions/ssrget.md) | `ssrget SSR_ID, ->{t, u, Rd}` | 32 | — | SSRGET reads the complete encoded system-register address. |
 | [SSRSET](../instructions/ssrset.md) | `ssrset SrcL, SSR_ID` | 32 | — | SSRSET writes the complete encoded system-register address. |
 | [SSRSWAP](../instructions/ssrswap.md) | `ssrswap SrcL, SSR_ID, ->{t, u, Rd}` | 32 | — | SSRSWAP atomically swaps the complete encoded system-register address. |
+| [SYNC.CORE](../instructions/sync_core.md) | `sync.core` | 32 | — | Waits for all four PEs at the same Core-local phase boundary and completes their earlier GM obligations. |
 | [TLB.IA](../instructions/tlb_ia.md) | `tlb.ia SrcL` | 32 | — | TLB.IA completes the 16-bit ASID token in bits 15:0 maintenance operation synchronously. |
 | [TLB.IALL](../instructions/tlb_iall.md) | `tlb.iall` | 32 | — | TLB.IALL completes the all translation entries maintenance operation synchronously. |
 | [TLB.IAV](../instructions/tlb_iav.md) | `tlb.iav SrcL` | 32 | — | TLB.IAV completes the canonical 48-bit virtual address with ASID scope maintenance operation synchronously. |

@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.smax<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.smax<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.SMAX atomically replaces the aligned 32-bit memory value with its signed maxi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.smax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.smax<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

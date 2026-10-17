@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.umax<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.umax<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.UMAX atomically replaces the aligned 64-bit memory value with its unsigned ma
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.umax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.umax<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

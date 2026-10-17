@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sw.umax<.{rl, f, rlf}> [SrcL], SrcR`
+- `sw.umax<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SW.UMAX atomically replaces the aligned 32-bit memory value with its unsigned ma
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sw.umax<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sw.umax<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

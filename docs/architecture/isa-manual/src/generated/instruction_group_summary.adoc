@@ -6,7 +6,7 @@
 [cols="3,1,1",options="header"]
 |===
 |Group |Forms |Unique mnemonics
-|SYS |35 |35
+|SYS |36 |36
 |ALU |107 |107
 |BRU |58 |58
 |Bundle Range Modifier |2 |2
@@ -15,16 +15,16 @@
 |Bundle Argument |3 |1
 |Bundle Fixed-Point PostProcess Attribute |1 |1
 |Bundle Hint |2 |1
-|Bundle Input & Output |7 |3
+|Bundle Input & Output |16 |3
 |Bundle Offset |1 |1
-|Bundle Split |71 |61
-|BSTART |21 |9
+|Bundle Split |75 |63
+|BSTART |20 |8
 |Block Split |2 |2
 |Bundle Dimension |1 |1
 |C.BSTART |7 |7
 |LDA/BASE_IMM |9 |9
 |STA/BASE_IMM |9 |9
-|AMO |53 |53
+|AMO |61 |61
 |FSU |30 |30
 |LDA/PC_REL |7 |7
 |LDA/POST_INDEX |19 |19

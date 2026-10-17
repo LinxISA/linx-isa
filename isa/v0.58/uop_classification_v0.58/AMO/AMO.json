@@ -1,6 +1,6 @@
 {
   "big_kind": "AMO",
-  "count": 44,
+  "count": 50,
   "instructions": [
     {
       "class": {
@@ -252,6 +252,30 @@
       "length_bits": [
         32
       ],
+      "mnemonic": "SB.ADD"
+    },
+    {
+      "class": {
+        "note": "User confirmed A: atomic ops execute in AMO class",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "SB.SUB"
+    },
+    {
+      "class": {
+        "note": "User confirmed A: atomic ops execute in AMO class",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        32
+      ],
       "mnemonic": "SC.B"
     },
     {
@@ -360,6 +384,18 @@
       "length_bits": [
         32
       ],
+      "mnemonic": "SD.SUB"
+    },
+    {
+      "class": {
+        "note": "User confirmed A: atomic ops execute in AMO class",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        32
+      ],
       "mnemonic": "SD.UMAX"
     },
     {
@@ -385,6 +421,30 @@
         32
       ],
       "mnemonic": "SD.XOR"
+    },
+    {
+      "class": {
+        "note": "User confirmed A: atomic ops execute in AMO class",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "SH.ADD"
+    },
+    {
+      "class": {
+        "note": "User confirmed A: atomic ops execute in AMO class",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "SH.SUB"
     },
     {
       "class": {
@@ -445,6 +505,18 @@
         32
       ],
       "mnemonic": "SW.SMIN"
+    },
+    {
+      "class": {
+        "note": "User confirmed A: atomic ops execute in AMO class",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "group": "Atomic Operation",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "SW.SUB"
     },
     {
       "class": {

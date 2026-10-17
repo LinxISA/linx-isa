@@ -26,7 +26,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
         self.documents = {
             "meta": load("isa/v0.58/meta.json"),
             "release": load("isa/v0.58/release_manifest.json"),
-            "lock": load("isa/v0.58/pto-spec.lock.json"),
+            "lock": load("isa/v0.58/pto-scalar-proposal.lock.json"),
             "reservations": load(
                 "isa/v0.58/state/extension_encoding_reservations.json"
             ),
@@ -44,7 +44,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
         self.assertEqual(self.validate(self.documents), [])
 
     def test_exact_publication_lock_identity_is_enforced(self) -> None:
-        self.assertEqual(checker.validate_lock_identity(self.documents["lock"]), [])
+        self.assertEqual(checker.validate_lock_identity(load("isa/v0.58/pto-spec.lock.json")), [])
         mutations = {
             "catalog digest": lambda lock: lock["catalogs"]["command_forms"].__setitem__(
                 "sha256", "0" * 64
@@ -59,7 +59,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
         }
         for label, mutate in mutations.items():
             with self.subTest(label=label):
-                lock = copy.deepcopy(self.documents["lock"])
+                lock = copy.deepcopy(load("isa/v0.58/pto-spec.lock.json"))
                 mutate(lock)
                 self.assertTrue(checker.validate_lock_identity(lock))
 
@@ -88,7 +88,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
                 errors = self.validate(documents)
                 self.assertTrue(
                     any(
-                        "extension reservation cardinalities must agree at 46" in error
+                        "extension reservation cardinalities must agree at 50" in error
                         for error in errors
                     ),
                     errors,
@@ -97,7 +97,7 @@ class ExtensionReservationCardinalityTests(unittest.TestCase):
     def test_metadata_narrative_drift_is_rejected(self) -> None:
         documents = copy.deepcopy(self.documents)
         documents["meta"]["notes"] = [
-            note.replace("46 extension reservations", "32 extension reservations")
+            note.replace("50 extension reservations", "32 extension reservations")
             for note in documents["meta"]["notes"]
         ]
         errors = self.validate(documents)

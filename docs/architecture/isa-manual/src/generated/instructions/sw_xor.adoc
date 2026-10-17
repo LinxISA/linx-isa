@@ -5,7 +5,7 @@
 [[inst_sw_xor]]
 ==== SW.XOR
 
-*Syntax:* sw.xor<.{rl, f, rlf}> [SrcL], SrcR
+*Syntax:* sw.xor<.{rl}> [SrcL], SrcR
 
 *Description:* SW.XOR atomically replaces the aligned 32-bit memory value with its bitwise XOR with SrcR; it does not publish the old value.
 

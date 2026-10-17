@@ -36,7 +36,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 
 ## Encoding Notes
 
-- `Begins an atomic compare-and-swap strided indexed TLSU gather block.`
+- `atomic compare-and-swap gather using explicit byte displacements.`
 
 ## Full Catalog Forms
 

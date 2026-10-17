@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]`
+- `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>][, ExecMaskPresent]`
 
 ## Encoding
 
@@ -26,7 +26,7 @@
 
 ## Description
 
-Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.
+Bind up to three absolute GPR inputs and one absolute GPR output; ExecMaskPresent marks final-record GPR ExecutionMask words.
 
 ## Pseudocode (informative)
 
@@ -36,13 +36,13 @@ Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU u
 
 ## Encoding Notes
 
-- `Bind up to three absolute GPR inputs and one absolute GPR output; regular TLSU uses source one as row stride and indexed TLSU uses it as GM row stride in elements.`
+- `Bind up to three absolute GPR inputs and one absolute GPR output; ExecMaskPresent marks final-record GPR ExecutionMask words.`
 
 ## Full Catalog Forms
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>]` | 32 | — |
+| `B.IOR [<gpr>[, <gpr>[, <gpr>]]][, -><gpr>][, ExecMaskPresent]` | 32 | — |
 
 <div class="insn-nav">
 

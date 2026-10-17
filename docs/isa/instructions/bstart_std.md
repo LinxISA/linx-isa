@@ -15,6 +15,7 @@
 - `BSTART.STD IND`
 - `BSTART.STD COND, <label>`
 - `BSTART.STD RET`
+- `BSTART.STD CALL, <label>`
 - `BSTART.STD DIRECT, <label>`
 
 ## Encoding
@@ -39,6 +40,11 @@
 <figure id="encoding-bstart_std_32_7876537dce06">
 <img src="../wavedrom/enc_bstart_std_32_7876537dce06.svg" alt="BSTART.STD encoding form bstart_std_32_7876537dce06" width="100%" />
 <figcaption><code>bstart_std_32_7876537dce06</code> — <code>BSTART.STD RET</code>. MSB is on the left, LSB is on the right.</figcaption>
+</figure>
+
+<figure id="encoding-bstart_std_32_97d38b7be05e">
+<img src="../wavedrom/enc_bstart_std_32_97d38b7be05e.svg" alt="BSTART.STD encoding form bstart_std_32_97d38b7be05e" width="100%" />
+<figcaption><code>bstart_std_32_97d38b7be05e</code> — <code>BSTART.STD CALL, <label></code>. MSB is on the left, LSB is on the right.</figcaption>
 </figure>
 
 <figure id="encoding-bstart_std_32_d3733f87964d">
@@ -70,6 +76,7 @@ EndBlock(); BeginNextBlock(/* kind */);
 | `bstart_std_32_49f2c6a8906f` | `BSTART.STD IND` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_49f2c6a8906f.svg) |
 | `bstart_std_32_696f98ac4bf1` | `BSTART.STD COND, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_696f98ac4bf1.svg) |
 | `bstart_std_32_7876537dce06` | `BSTART.STD RET` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_7876537dce06.svg) |
+| `bstart_std_32_97d38b7be05e` | `BSTART.STD CALL, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_97d38b7be05e.svg) |
 | `bstart_std_32_d3733f87964d` | `BSTART.STD DIRECT, <label>` | 32 | — | [SVG](../wavedrom/enc_bstart_std_32_d3733f87964d.svg) |
 
 <div class="insn-nav">

@@ -11,7 +11,7 @@
 
 ## Assembly Syntax
 
-- `sd.umin<.{rl, f, rlf}> [SrcL], SrcR`
+- `sd.umin<.{rl}> [SrcL], SrcR`
 
 ## Encoding
 
@@ -42,7 +42,7 @@ SD.UMIN atomically replaces the aligned 64-bit memory value with its unsigned mi
 
 | Assembly | Length | Decode |
 |----------|--------|--------|
-| `sd.umin<.{rl, f, rlf}> [SrcL], SrcR` | 32 | — |
+| `sd.umin<.{rl}> [SrcL], SrcR` | 32 | — |
 
 <div class="insn-nav">
 

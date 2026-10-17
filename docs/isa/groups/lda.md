@@ -10,7 +10,7 @@
 
 </div>
 
-Instructions in the **LDA** group of the LinxISA v0.58.6 catalog.
+Instructions in the **LDA** group of the LinxISA v0.58.7 catalog.
 
 ## Instructions
 

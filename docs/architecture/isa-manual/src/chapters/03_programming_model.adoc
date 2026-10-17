@@ -86,11 +86,12 @@ Guidance:
 
 Linx defines three 64-bit *loop-bound* registers: **LB0**, **LB1**, and **LB2**.
 
-They are written by `B.DIM` / `C.B.DIM*` and are intended to carry block-local loop bounds and accelerator metadata.
+They are optionally written by `B.DIM` / `C.B.DIM*` and are intended to carry block-local loop bounds and accelerator metadata. At each block start, an omitted LB has effective value one; an explicit write, including zero, replaces that default.
 
 Rules (bring-up convention):
 
 * LB registers are initialized at block start and used within the current block.
+* Presence is used only for duplicate-write rejection and trap recovery; operation legality consumes the effective values.
 * LB registers are part of the LXCPU architectural state and must be preserved across context switches.
 * Accelerator-style blocks (e.g. tile blocks) may use LB0–LB2 to pass dimensions and valid masks.
 

@@ -20,7 +20,7 @@ TARGETS = {
     48: PROFILE / "opcodes/lx_hl48.opc",
     64: PROFILE / "opcodes/lx_64_prefix.opc",
 }
-GENERATED_MARKER = "# PTO ISA 0.58.6 canonical scalar and command forms"
+GENERATED_MARKER = "# PTO ISA 0.58.7 canonical scalar and command forms"
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -221,7 +221,7 @@ def opcode_line(
         "asm": form["asm"],
         "group": form["semantic_group"],
         "length_bits": form["length_bits"],
-        "note": form.get("semantic_summary", "PTO ISA 0.58.6 canonical form."),
+        "note": form.get("semantic_summary", "PTO ISA 0.58.7 canonical form."),
         "pto_source_constraints": form.get("constraints", []),
     }
     fixed_fields = singleton_pto_fields(form)
@@ -265,16 +265,18 @@ def main() -> int:
     parser.add_argument("--source-root", type=Path, required=True)
     args = parser.parse_args()
     scalar_catalog = load(args.source_root / "spec/catalog/scalar-forms.json")
+    from pto_scalar_proposal import apply_proposal
+    scalar_catalog = apply_proposal(PROFILE, scalar_catalog)
     command_catalog = load(args.source_root / "spec/catalog/command-forms.json")
     reservations = load(
         args.source_root / "spec/catalog/extension-encoding-reservations.json"
     )
-    if command_catalog.get("form_count") != 95:
-        raise ValueError("PTO 0.58.6 must publish exactly 95 command forms")
-    if scalar_catalog.get("form_count") != 466:
-        raise ValueError("PTO 0.58.6 must publish exactly 466 scalar forms")
-    if reservations.get("reservation_count") != 46:
-        raise ValueError("PTO 0.58.6 must publish exactly 46 extension reservations")
+    if command_catalog.get("form_count") != 105:
+        raise ValueError("PTO 0.58.7 must publish exactly 105 command forms")
+    if scalar_catalog.get("form_count") != 473:
+        raise ValueError("PTO 0.58.7 must publish proposal must contain exactly 473 scalar forms")
+    if reservations.get("reservation_count") != 50:
+        raise ValueError("PTO 0.58.7 must publish exactly 50 extension reservations")
 
     removals, preserved = current_owned_lines(
         scalar_catalog, command_catalog, reservations

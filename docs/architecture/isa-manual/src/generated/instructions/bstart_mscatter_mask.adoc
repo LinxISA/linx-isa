@@ -7,7 +7,7 @@
 
 *Syntax:* BSTART.MSCATTER.MASK DataType
 
-*Description:* Begins a predicate-masked strided indexed TLSU scatter block.
+*Description:* Masked scatter using explicit byte displacements.
 
 *Encoding:*
 

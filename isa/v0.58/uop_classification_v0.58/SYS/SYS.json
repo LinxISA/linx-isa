@@ -1,6 +1,6 @@
 {
   "big_kind": "SYS",
-  "count": 10,
+  "count": 11,
   "instructions": [
     {
       "class": {
@@ -121,6 +121,18 @@
         32
       ],
       "mnemonic": "FENCE.I"
+    },
+    {
+      "class": {
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "SYS"
+      },
+      "group": "SYS",
+      "length_bits": [
+        32
+      ],
+      "mnemonic": "SYNC.CORE"
     }
   ],
   "sub_kind": "SYS"

@@ -1,0 +1,20 @@
+---
+// Auto-generated instruction documentation
+// Do not edit by hand
+
+[[inst_sd_sub]]
+==== SD.SUB
+
+*Syntax:* sd.sub<.{rl}> [SrcL], SrcR
+
+*Description:* SD.SUB atomically applies width-sized modular sub and does not publish the old value.
+
+*Encoding:*
+
+image::encodings/enc_sd_sub.svg[SD.SUB encoding,width=800]
+
+*Uop-Class:* AMO
+
+*Compression:* L32 (len=32)
+
+*Uop-Class payload:* `{"note": "User confirmed A: atomic ops execute in AMO class", "source": "group_rule", "uop_kind": "AMO"}`

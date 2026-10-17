@@ -8,25 +8,25 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "rtl" / "LinxCore" / "tools" / "generate"))
+sys.path.insert(0, str(REPO_ROOT / "tools" / "bringup"))
 
-from opcode_catalog_lib import parse_decode_file  # noqa: E402
+from check_qemu_opcode_meta_sync import _parse_decode_forms  # noqa: E402
 
 
 CASES = {
     "LR.W": {
         "qemu_mnemonic": "lr_w",
-        "mask": 0xF000707F,
-        "match": 0x2000000B,
+        "mask": 0x7800707F,
+        "match": 0x1000000B,
         # RegDst=a0, SrcL=a0, SrcZero=31.
-        "raw": 0x21F1010B,
+        "raw": 0x11F1010B,
     },
     "LR.D": {
         "qemu_mnemonic": "lr_d",
-        "mask": 0xF000707F,
-        "match": 0x3000000B,
+        "mask": 0x7800707F,
+        "match": 0x1800000B,
         # RegDst=a0, SrcL=a0, SrcZero=17.
-        "raw": 0x3111010B,
+        "raw": 0x1911010B,
     },
 }
 
@@ -39,20 +39,19 @@ class AtomicLrSrcZeroDecodeTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
-        if golden.get("version") != "0.58.3":
-            raise AssertionError("atomic decode authority must be PTO ISA 0.58.3")
+        if golden.get("version") != "0.58.7":
+            raise AssertionError("atomic decode authority must be PTO ISA 0.58.7")
         cls.golden = {
             insn["mnemonic"]: insn["encoding"]["parts"][0]
             for insn in golden["instructions"]
             if insn["mnemonic"] in CASES
         }
         cls.qemu = {
-            entry.mnemonic: entry
-            for entry in parse_decode_file(
-                REPO_ROOT / "emulator" / "qemu" / "target" / "linx" / "insn32.decode",
-                32,
+            name: (mask, match)
+            for name, width, mask, match in _parse_decode_forms(
+                REPO_ROOT / "emulator/qemu/target/linx/insn32.decode"
             )
-            if entry.mnemonic in {case["qemu_mnemonic"] for case in CASES.values()}
+            if name in {case["qemu_mnemonic"] for case in CASES.values()}
         }
 
     def test_golden_and_qemu_accept_nonzero_srczero(self) -> None:
@@ -71,9 +70,9 @@ class AtomicLrSrcZeroDecodeTests(unittest.TestCase):
                 self.assertEqual(int(golden_form["mask"], 16), case["mask"])
                 self.assertEqual(int(golden_form["match"], 16), case["match"])
                 self.assertEqual(raw & case["mask"], case["match"])
-                self.assertEqual(qemu_form.mask, case["mask"])
-                self.assertEqual(qemu_form.match, case["match"])
-                self.assertEqual(raw & qemu_form.mask, qemu_form.match)
+                self.assertEqual(qemu_form[0], case["mask"])
+                self.assertEqual(qemu_form[1], case["match"])
+                self.assertEqual(raw & qemu_form[0], qemu_form[1])
 
     def test_directed_oracle_uses_the_checked_raw_words(self) -> None:
         source = (
