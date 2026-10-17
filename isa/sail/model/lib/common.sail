@@ -71,6 +71,14 @@ function sext29_to64(imm29 : bits(29)) -> bits(64) = {
   if imm29[28] == 0b1 then sail_ones(35) @ imm29 else sail_zeros(35) @ imm29
 }
 
+// PTO scalar PC-relative AGU address formation.  The caller sign-extends the
+// form-specific immediate width and passes the form's catalog offset scale.
+// Addition on bits(64) supplies modulo-2^PTO_XLEN wrap for this 64-bit profile.
+function scalar_pcr_address(base : bits(64), displacement : bits(64), scale : int) -> bits(64) = {
+  let aligned_base = base & 0xFFFF_FFFF_FFFF_FFFC;
+  aligned_base + sail_shiftleft(displacement, scale)
+}
+
 function sext30_to64(imm30 : bits(30)) -> bits(64) = {
   if imm30[29] == 0b1 then sail_ones(34) @ imm30 else sail_zeros(34) @ imm30
 }
