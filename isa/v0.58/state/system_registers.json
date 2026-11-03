@@ -279,6 +279,13 @@
       },
       {
         "access": "RO",
+        "description": "Executing PE index 0..3 within its Core, zero-extended to XLEN; software leader is PE0. See pto_runtime_startup for the exact inherited identity/lifecycle contract.",
+        "id": "0x0026",
+        "name": "THREAD_ID",
+        "width_bits": 64
+      },
+      {
+        "access": "RO",
         "description": "Block Number. Configured by system controller before kernel launch; identifies total logical blocks participating in a parallel task.",
         "id": "0x0050",
         "name": "BLOCKNUM",
