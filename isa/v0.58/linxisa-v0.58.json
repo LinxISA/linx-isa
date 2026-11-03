@@ -175587,6 +175587,86 @@
       "source_lock": "isa/v0.58/pto-scalar-proposal.lock.json",
       "version": "0.58.7"
     },
+    "pto_runtime_startup": {
+      "pto_runtime_startup": {
+        "clauses": [
+          {
+            "id": "PTO-ARCH-KERNEL-LIFECYCLE-001",
+            "sha256": "7a00e0481a1c36babbb254f418a0ddf3e28ae4c7678934a2082b800d99974418",
+            "source_path": "asl/arch/state/kernel-lifecycle.asl",
+            "text": "// NDF-BEGIN: PTO-ARCH-KERNEL-LIFECYCLE-001\n// ndf: kind=contract level=L1 layer=state status=accepted\n// A Core has at most one active kernel invocation. Launch establishes one\n// common entry PC and new invocation identity for PE0..PE3, invalidating all\n// target-Core prelaunch recovery frames. Successful End and\n// Abort retire invocation-owned active-PE Shared candidate/release metadata\n// while preserving any published Shared parent and committed effects. Abort\n// discards incomplete collective state and cancels reversible work, but\n// preserves committed effects and waits for irrevocable older work to quiesce\n// before a later launch. Completion from an earlier invocation MUST NOT\n// update the current invocation's synchronization state. Lifecycle retirement\n// MUST clear active-PE Shared generation and release metadata matching the\n// retiring Core/invocation while preserving published Shared payloads and\n// operation ordinals; aggregate records and another identity remain untouched.\n// NDF-END: PTO-ARCH-KERNEL-LIFECYCLE-001\n"
+          },
+          {
+            "id": "PTO-ARCH-RUNTIME-STARTUP-ABI-001",
+            "sha256": "e3ab673e963465a7fa1f9f92a3175e2455a3ec4a987d8cc7636804e4b9b5c076",
+            "source_path": "asl/arch/state/kernel-lifecycle.asl",
+            "text": "// NDF-BEGIN: PTO-ARCH-RUNTIME-STARTUP-ABI-001\n// ndf: kind=contract level=L1 layer=architecture status=accepted\n// The four-PE runtime startup ABI MUST preserve the common entry and invocation\n// identity of [[PTO-ARCH-KERNEL-LIFECYCLE-001]]. All four independently executing\n// contexts enter the same runtime entry; it MUST select PE0 as the sole shared\n// initialization leader using [[PTO-THREAD-ID-PE-IDENTITY-001]]. Separate initial\n// leader/worker PCs are not this ABI; branching after common entry is permitted.\n// Before using a stack, private storage, or launch arguments, each PE MUST have\n// valid bootstrap bindings supplied by the loader/platform or established by\n// private entry code. Worker bootstrap MUST NOT read unfinished leader-produced\n// state or overlap storage being initialized by PE0. Concrete bindings belong\n// to the platform ABI, not to LaunchKernelInvocation's state initialization.\n// PE0 MUST perform the invocation's shared initialization. PE1..PE3 MUST perform\n// only necessary private bootstrap, then wait at the startup SYNC.CORE. They\n// MUST NOT duplicate shared initialization or enter the kernel work phase early.\n// Every PE MUST execute the same static startup SYNC.CORE site at generation\n// zero of this invocation, in its legal Scalar SYS envelope. PE0 MUST arrive\n// only after its shared initialization has succeeded. That initialization MUST\n// NOT require a four-PE collective while workers wait at the startup barrier.\n// Each PE may enter the kernel work phase only after consuming its startup\n// release under [[PTO-ARCH-CORE-SYNCHRONIZATION-001]]. Its preceding GM effects\n// and following accesses retain the existing collective memory-order contract.\n// PE_MASK, local fences, a ready flag, elapsed time, or loader return MUST NOT\n// substitute for four actual arrivals and completion of earlier GM obligations.\n// SYNC.CORE is a rendezvous, not a mechanism for creating or waking unlaunched\n// PE contexts. Single-context hosted execution MUST NOT use this startup path.\n// NDF-END: PTO-ARCH-RUNTIME-STARTUP-ABI-001\n"
+          },
+          {
+            "id": "PTO-ARCH-RUNTIME-STARTUP-LIFETIME-001",
+            "sha256": "122beeea681823746524b31d76504128da1189faea5ff8d08e69f98cdcd16c6b",
+            "source_path": "asl/arch/state/kernel-lifecycle.asl",
+            "text": "// NDF-BEGIN: PTO-ARCH-RUNTIME-STARTUP-LIFETIME-001\n// ndf: kind=contract level=L1 layer=architecture status=accepted\n// Shared startup initialization has one software owner, PE0. Process-lifetime\n// initialization, including libc/constructor and process-service setup when\n// present, MUST NOT be repeated by worker PEs or merely because another kernel\n// invocation begins. The hosted ABI owns process lifetime; each invocation\n// still performs its own shared preparation and startup rendezvous. Workers\n// MUST NOT use libc/TLS/host services during bootstrap unless their separate\n// ABI explicitly supplies valid PE-private state and permits that use.\n// A recoverable startup fault or interrupt MUST resume through the existing\n// precise instruction/request restart contract in the same invocation, preserving\n// committed effects. Normal request replay retains its existing semantics; this\n// ABI does not promise exactly-once memory beats. Trap return MUST NOT by itself\n// restart completed process constructors or manufacture an additional arrival.\n// On unrecoverable initialization failure or a missing participant, the runtime\n// MUST NOT report startup success or allow peers into the kernel work phase.\n// Missing arrivals remain blocked; a platform/runtime may request the existing\n// invocation abort, but MUST NOT fabricate a release or silently run fewer PEs.\n// Abort, committed-effect preservation and quiescence before relaunch follow\n// [[PTO-ARCH-KERNEL-LIFECYCLE-001]]. Relaunch MUST use a fresh invocation and a\n// fresh startup rendezvous; stale ready flags, arrivals or release tokens MUST\n// NOT authorize entry. The runtime owns repairing or reinitializing partially\n// prepared application data before a later successful startup; abort does not\n// roll back committed stores. External failure reporting and process exit are\n// platform/hosted ABI obligations, not new instruction fault or exit semantics.\n// NDF-END: PTO-ARCH-RUNTIME-STARTUP-LIFETIME-001\n"
+          },
+          {
+            "id": "PTO-ARCH-RUNTIME-STARTUP-ADAPTATION-001",
+            "sha256": "d8fb81562386a790e23d3f7860ce2def5c862f50430baa317d5f7e72bbc08669",
+            "source_path": "asl/arch/state/kernel-lifecycle.asl",
+            "text": "// NDF-BEGIN: PTO-ARCH-RUNTIME-STARTUP-ADAPTATION-001\n// ndf: kind=contract level=L1 layer=architecture status=accepted\n// Consumers claiming four-PE runtime startup ABI support MUST implement\n// [[PTO-ARCH-RUNTIME-STARTUP-ABI-001]] and\n// [[PTO-ARCH-RUNTIME-STARTUP-LIFETIME-001]] together. Compiler/linker and startup\n// objects MUST preserve common entry, legal THREAD_ID/SYNC.CORE placement,\n// PE0-only shared initialization, and the startup memory-order boundary.\n// Runtime/libc integration MUST separate process/shared initialization from\n// PE-private bootstrap and invocation preparation. Platform loaders MUST bind\n// entry, arguments, isolated private stacks/storage, context creation, invocation\n// identity, and completion/failure/abort interfaces explicitly before use.\n// Functional/timing models MUST execute four real independent PE contexts and\n// preserve waiting, fault, abort and relaunch behavior. Creating host/OS threads\n// alone or repeatedly invoking one architectural context does not satisfy this\n// requirement; a simulator may use host threads to implement independent contexts.\n// Validation MUST include a common-entry runtime-only ELF that demonstrates\n// distinct PE identities and private stacks, exactly one shared initializer,\n// workers blocked before release, initialized-data visibility after release,\n// both leader-first and workers-first arrival, missing-participant blocking,\n// startup failure, and abort/relaunch isolation. Benchmark adoption additionally\n// requires the same ELF and launch bindings across compared models, independent\n// golden output, and declared toolchain/runtime/model revisions. Instruction\n// tests alone MUST NOT be reported as complete runtime or hardware validation.\n// Numeric entry/argument/stack/TLS layouts, ELF identification, launch transport,\n// syscall/fd/exit policy and platform status/reset interfaces remain separately\n// owned ABI decisions; this contract assigns no new values or fallback behavior.\n// NDF-END: PTO-ARCH-RUNTIME-STARTUP-ADAPTATION-001\n"
+          },
+          {
+            "id": "PTO-ARCH-CORE-SYNCHRONIZATION-001",
+            "sha256": "7f807b70f72f62460e3fbc69f6cb09b130c9fb24bc9009b3dc9785a3e91905ab",
+            "source_path": "asl/arch/state/core-synchronization.asl",
+            "text": "// NDF-BEGIN: PTO-ARCH-CORE-SYNCHRONIZATION-001\n// ndf: kind=contract level=L1 layer=state status=accepted\n// Each modeled Core MUST rendezvous exactly PE0 through PE3 at one static\n// SYNC.CORE site and generation in one active invocation. A participant MUST\n// remain parked without advancing its PC until all arrivals and earlier GM\n// obligations are complete. Completion is irrevocable; each PE retains its\n// own release token until consumed once, and a later generation cannot replace\n// an unconsumed token. PE_MASK does not change membership. Memory-event\n// provenance for a completed collective MUST survive release consumption,\n// generation-record reuse, Core selection, and later invocation setup.\n// NDF-END: PTO-ARCH-CORE-SYNCHRONIZATION-001\n"
+          },
+          {
+            "id": "PTO-THREAD-ID-PE-IDENTITY-001",
+            "sha256": "6062e58f667b78e1c14a800eb397311cc344763813ea3c5210c22684751bbeca",
+            "source_path": "asl/scalar/model/sys/semantics.asl",
+            "text": "// NDF-BEGIN: PTO-THREAD-ID-PE-IDENTITY-001\n// ndf: kind=contract level=L1 layer=state status=accepted\n// THREAD_ID at canonical address 0x0026 MUST return the executing PE index\n// 0..3 within its Core, zero-extended to XLEN. It is not a process, OS-thread,\n// or Core identifier. The value MUST remain the same for that PE across\n// Blocks, kernel launches, retries, faults, interrupts and trap return.\n// Reset selects PE0; selecting another PE MUST expose that PE's identity.\n// Every ACR may read it through an otherwise legal SYS-block SSRGET or\n// HL.SSRGET. Writes and swaps MUST reject under the existing read-only rules\n// before register, destination or queue effects, except ordinary trap entry.\n// This contract MUST NOT assign 0x0802 or permit a system-register read in\n// a Standard Block. Common kernel entry is owned by\n// [[PTO-ARCH-KERNEL-LIFECYCLE-001]]; PE0 is the software leader convention.\n// NDF-END: PTO-THREAD-ID-PE-IDENTITY-001\n"
+          }
+        ],
+        "contract_state": "required-downstream-adaptation",
+        "execution_support": {
+          "four_pe_runtime_startup": "unsupported",
+          "sail": "decode-only-single-context"
+        },
+        "interface_bindings": {
+          "SYNC.CORE": {
+            "asm": "sync.core",
+            "constraints": [],
+            "encoding": [
+              {
+                "index": 0,
+                "mask": "0xffffffff",
+                "match": "0x0330a02b",
+                "width_bits": 32
+              }
+            ],
+            "encoding_kind": "L32",
+            "fields": [],
+            "form_id": "sync_core_32_0330a02b7c32",
+            "length_bits": 32,
+            "mnemonic": "SYNC.CORE",
+            "semantic_family": "SYS",
+            "semantic_group": "SYS",
+            "semantic_handler": "SyncCore",
+            "semantic_summary": "Waits for all four PEs at the same Core-local phase boundary and completes their earlier GM obligations.",
+            "status": "accepted"
+          },
+          "THREAD_ID": {
+            "access": "RO",
+            "address": "0x0026",
+            "name": "THREAD_ID",
+            "scope": "base"
+          }
+        }
+      },
+      "source_lock": "isa/v0.58/pto-runtime-startup.lock.json",
+      "source_mode": "immutable-git-objects",
+      "status": "required-downstream-adaptation"
+    },
     "pto_scalar_forms": {
       "family_constraint_application_count": 0,
       "family_constraint_count": 0,
@@ -210466,6 +210546,13 @@
             "description": "Core feature enable.",
             "id": "0x0025",
             "name": "LCFR_EN",
+            "width_bits": 64
+          },
+          {
+            "access": "RO",
+            "description": "Executing PE index 0..3 within its Core, zero-extended to XLEN; software leader is PE0. See pto_runtime_startup for the exact inherited identity/lifecycle contract.",
+            "id": "0x0026",
+            "name": "THREAD_ID",
             "width_bits": 64
           },
           {

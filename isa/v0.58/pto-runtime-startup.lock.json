@@ -1,0 +1,74 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/pto_runtime_startup_lock.v1.json",
+  "existing_catalog_binding": {
+    "lock": "isa/v0.58/pto-scalar-proposal.lock.json",
+    "unchanged": true
+  },
+  "projection": {
+    "path": "isa/v0.58/state/pto_runtime_startup.json",
+    "sha256": "078515b7e4705b9b6a184e8006ea3b12419bfa9467c0131fbd5c278425e81946"
+  },
+  "source": {
+    "commit": "2209562859a89be80b73ea926f5d60b9d018faae",
+    "mode": "immutable-git-objects",
+    "pull_request": "https://github.com/PTO-ISA/pto-spec/pull/417",
+    "repository": "https://github.com/PTO-ISA/pto-spec.git",
+    "tree": "9dc9e0aa528f381d74d0396c503b0682aa936b00"
+  },
+  "sources": {
+    "asl/arch/state/core-synchronization.asl": {
+      "clauses": [
+        {
+          "id": "PTO-ARCH-CORE-SYNCHRONIZATION-001",
+          "sha256": "7f807b70f72f62460e3fbc69f6cb09b130c9fb24bc9009b3dc9785a3e91905ab"
+        }
+      ],
+      "sha256": "a9f34342e9982ea84c4ebf797b32745807792a833c95a5d6e8d66157b66aeb53"
+    },
+    "asl/arch/state/kernel-lifecycle.asl": {
+      "clauses": [
+        {
+          "id": "PTO-ARCH-KERNEL-LIFECYCLE-001",
+          "sha256": "7a00e0481a1c36babbb254f418a0ddf3e28ae4c7678934a2082b800d99974418"
+        },
+        {
+          "id": "PTO-ARCH-RUNTIME-STARTUP-ABI-001",
+          "sha256": "e3ab673e963465a7fa1f9f92a3175e2455a3ec4a987d8cc7636804e4b9b5c076"
+        },
+        {
+          "id": "PTO-ARCH-RUNTIME-STARTUP-LIFETIME-001",
+          "sha256": "122beeea681823746524b31d76504128da1189faea5ff8d08e69f98cdcd16c6b"
+        },
+        {
+          "id": "PTO-ARCH-RUNTIME-STARTUP-ADAPTATION-001",
+          "sha256": "d8fb81562386a790e23d3f7860ce2def5c862f50430baa317d5f7e72bbc08669"
+        }
+      ],
+      "sha256": "e10a4fb3b78c8cf88c06111c4e355190668c35b409b6530711f31bacee8cafe0"
+    },
+    "asl/scalar/model/sys/semantics.asl": {
+      "clauses": [
+        {
+          "id": "PTO-THREAD-ID-PE-IDENTITY-001",
+          "sha256": "6062e58f667b78e1c14a800eb397311cc344763813ea3c5210c22684751bbeca"
+        }
+      ],
+      "sha256": "3fcf8eb96dbd23e683b05a4f5dcf7eacb028c17641f658fc692f7cde88a05306"
+    },
+    "spec/catalog/scalar-forms.json": {
+      "binding": {
+        "mnemonic": "SYNC.CORE",
+        "sha256": "a06402455e5fa020b1a91f0183a70866f3bf5727e359cc695fc52a26743a1aa2"
+      },
+      "sha256": "840ae680f9193ae7a9422a0e7c0e264cd61fa83429149b7b0fff77d41282627d"
+    },
+    "spec/catalog/system-registers.json": {
+      "binding": {
+        "name": "THREAD_ID",
+        "sha256": "d46b2db8dba718a19f60c13ac71208e33fe7086d898c50de1e04909cd41b9452"
+      },
+      "sha256": "2a5d6669b95c28f80651f5917558781de25b8465655399063790e50549e1e2a9"
+    }
+  },
+  "status": "required-downstream-adaptation"
+}

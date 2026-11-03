@@ -26,6 +26,7 @@ SSR access instructions:
 |`0x0023` |`VERSION` |RO |Core version.
 |`0x0024` |`LCFR` |RO |Core feature description (includes LaneNum).
 |`0x0025` |`LCFR_EN` |RW |Core feature enable.
+|`0x0026` |`THREAD_ID` |RO |Executing PE index 0..3 within its Core, zero-extended to XLEN; software leader is PE0. See pto_runtime_startup for the exact inherited identity/lifecycle contract.
 |`0x0050` |`BLOCKNUM` |RO |Block Number. Configured by system controller before kernel launch; identifies total logical blocks participating in a parallel task.
 |`0x0051` |`BLOCKID` |RO |Block ID. Configured by system controller before kernel launch; identifies the current logical block for debug, trace, and block-level parallel programming.
 |`0x0C00` |`CYCLE` |RO |Cycle counter (bring-up may model as instruction count).
