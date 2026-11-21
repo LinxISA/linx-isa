@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate no-writeback immediate and PCR scoped AGU operand decoding."""
+"""Generate scoped single-access AGU operand decoding."""
 
 import argparse
 import json
@@ -34,23 +34,49 @@ def render():
         agu = row.get("agu", {})
         if (
             agu.get("action") not in {"Load", "Store"}
-            or agu["address_kind"] not in {"Immediate", "PCRelative"}
-            or agu["update_mode"] != "None"
+            or agu["address_kind"] not in {"Immediate", "PCRelative", "Register"}
         ):
             continue
 
         load = agu["action"] == "Load"
         pcr = agu["address_kind"] == "PCRelative"
+        indexed = agu["address_kind"] == "Register"
+        update = agu["update_mode"]
         fields = {field["name"]: field for field in row["fields"]}
-        immediate = next(field for field in fields.values() if field["name"].startswith("simm"))
-        if immediate["signedness"] != "signed" or agu["size_bytes"] not in {1, 2, 4, 8}:
-            raise ValueError(f"unexpected address operand for {identity}")
+        if agu["size_bytes"] not in {1, 2, 4, 8} or (pcr and update != "None"):
+            raise ValueError(f"unexpected access for {identity}")
 
-        base = "0b00000" if pcr else field_expression(fields["SrcL" if load else "SrcR"])
-        reg = fields["RegDst"] if load else fields.get("SrcD", fields.get("SrcL"))
-        expected = {reg["name"], immediate["name"]}
+        base_field = "SrcL" if load or indexed else "SrcR"
+        base = "0b00000" if pcr else field_expression(fields[base_field])
+        reg = fields["RegDst" if update == "None" else "RegDst0"] if load else fields.get("SrcD", fields.get("SrcL"))
+        expected = {reg["name"]}
         if not pcr:
-            expected.add("SrcL" if load else "SrcR")
+            expected.add(base_field)
+
+        index = "None()"
+        offset = "0x0000000000000000"
+        if indexed:
+            modifier = field_expression(fields["SrcRType"])
+            index_reg = field_expression(fields["SrcR"])
+            shift = f"0b{agu['offset_scale']:06b}"
+            expected.update({"SrcR", "SrcRType"})
+            if "shamt" in fields:
+                shift = f"sail_zero_extend({field_expression(fields['shamt'])}, 6)"
+                expected.add("shamt")
+            index = f"Some(struct {{ reg = {index_reg}, modifier = {modifier}, shift = {shift} }})"
+        else:
+            immediate = next(field for field in fields.values() if field["name"].startswith("simm"))
+            if immediate["signedness"] != "signed":
+                raise ValueError(f"unexpected immediate for {identity}")
+            expected.add(immediate["name"])
+            offset = f"sail_shiftleft(sail_sign_extend({field_expression(immediate)}, 64), {agu['offset_scale']})"
+
+        writeback = "0b00000"
+        if update != "None":
+            dst = "RegDst1" if load else "RegDst"
+            expected.add(dst)
+            writeback = field_expression(fields[dst])
+        mode = {"None": "ScopedNoWriteback", "PreIndex": "ScopedPreIndex", "PostIndex": "ScopedPostIndex"}[update]
         if expected != fields.keys():
             raise ValueError(f"unhandled operands for {identity}")
 
@@ -59,13 +85,14 @@ def render():
             f"    0x{code:02X} => Some(struct {{",
             f"      is_store = {str(not load).lower()}, pcr = {str(pcr).lower()},",
             f"      base_reg = {base}, data_reg = {field_expression(reg)},",
-            f"      offset = sail_shiftleft(sail_sign_extend({field_expression(immediate)}, 64), {agu['offset_scale']}),",
+            f"      offset = {offset}, index = {index},",
+            f"      update = {mode}, writeback_reg = {writeback},",
             f"      size = 0x{agu['size_bytes']:X}, signed_load = {str(agu['signed_load']).lower()}",
             "    }),",
         ]
         count += 1
-    if count != 60:
-        raise ValueError(f"expected 60 single no-writeback AGU forms, found {count}")
+    if count != 140:
+        raise ValueError(f"expected 140 single-access AGU forms, found {count}")
     return "\n".join(lines + ["    _ => None()", "  }", "}", ""])
 
 

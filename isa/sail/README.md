@@ -13,9 +13,10 @@ The generated `decode_pto_scoped_scalar` accepts a 64-bit word packed in
 instruction-stream order and resolves the carrier to its locked inner Scalar
 form. Directed tests check all 705 published witnesses and rejection of reserved
 prefix fields, padding, excluded operations, and invalid operand encodings.
-The scoped AGU candidate executes the immediate and PC-relative single loads
-and stores without base writeback, using physical GPRs and discarded
-destinations. `prepare_scoped_scalar` captures the outer TPC and the operands.
+The scoped AGU candidate executes immediate, PC-relative and register-offset
+single loads and stores, including pre-index and post-index writeback, using
+physical GPRs and discarded destinations. `prepare_scoped_scalar` captures
+the outer TPC and operands.
 Once GM allows the access, `issue_scoped_scalar` gives the platform a request
 with the captured scope, context and token. `complete_scoped_scalar` applies
 the backend result. A completed access retires eight bytes. Faults keep the
@@ -24,9 +25,9 @@ token. The platform supplies applicability, holds the issuing context, and
 owns memory translation, the GM obligation and store commit. Each issuance
 requires one completion from the platform.
 
-Compressed queue operands, register offsets, writeback, paired accesses and
-atomics still need execution coverage. The candidate entry point is explicit
-while the v0.58 decode path is canonical.
+Base writeback is published only after memory completion. Compressed queue
+operands, paired accesses and atomics still need execution coverage. The
+candidate entry point is explicit while the v0.58 decode path is canonical.
 
 The MSGB transport models the released two-Core reference topology. Its
 receive, admission, BSE and HSCB APIs operate on platform-configured endpoints

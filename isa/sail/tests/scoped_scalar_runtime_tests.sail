@@ -95,3 +95,59 @@ function verify_scoped_scalar_runtime() -> unit = {
   assert(is_none(issue_scoped_scalar(true)) & tpc == 0x000000000000101A);
   ssr_cstate = old_cstate
 }
+
+function verify_scoped_scalar_writeback() -> unit = {
+  let ldi_post : bits(64) = 0xFFE232992FFE091F; // r4 - 16, both results to r5
+  let lw_pre : bits(64) = 0x12622289382E0A1F; // r4 + (r6.sw << 2), ->r5,r7
+  let sw_post : bits(64) = 0x14622049203E081F; // r2, r4 + (r6.uw << 2), ->r4
+  tpc = 0x0000000000002002;
+  write_reg5(0b00010, 0x123456789ABCDEF0);
+  write_reg5(0b00100, 0x0000000000004000);
+  write_reg5(0b00101, 0x1111111111111111);
+  write_reg5(0b00110, 0xBAADF00DFFFFFFFF);
+  write_reg5(0b00111, 0x2222222222222222);
+
+  match prepare_scoped_scalar(ldi_post, 0, 2, 7, true) { ScopedPrepared => (), _ => assert(false) };
+  match issue_scoped_scalar(true) {
+    Some(load) => {
+      assert(load.address == 0x0000000000004000 & load.size == 0x8);
+      assert(complete_scoped_scalar(load.token, ScopedMemoryCommitted, 0xABCDEF0123456789));
+      assert(read_reg5(0b00101) == 0x0000000000003FF0) // Writeback publishes after the aliased result.
+    },
+    None() => assert(false)
+  };
+  assert(tpc == 0x000000000000200A);
+
+  match prepare_scoped_scalar(lw_pre, 0, 2, 7, true) { ScopedPrepared => (), _ => assert(false) };
+  match issue_scoped_scalar(true) {
+    Some(load) => {
+      assert(load.address == 0x0000000000003FFC & load.size == 0x4);
+      assert(complete_scoped_scalar(load.token, ScopedMemoryPageFault, 0x5555555555555555));
+      assert(read_reg5(0b00101) == 0x0000000000003FF0);
+      assert(read_reg5(0b00111) == 0x2222222222222222)
+    },
+    None() => assert(false)
+  };
+  assert(tpc == 0x000000000000200A);
+
+  match prepare_scoped_scalar(sw_post, 0, 2, 7, true) { ScopedPrepared => (), _ => assert(false) };
+  match issue_scoped_scalar(true) {
+    Some(store) => {
+      assert(store.address == 0x0000000000004000 & store.size == 0x4);
+      assert(store.store_data == 0x000000009ABCDEF0);
+      assert(complete_scoped_scalar(store.token, ScopedMemoryBlocked, 0x0000000000000000));
+      assert(read_reg5(0b00100) == 0x0000000000004000);
+      write_reg5(0b00110, 0x0000000000000000);
+      match issue_scoped_scalar(true) {
+        Some(retry) => {
+          assert(retry.token == store.token & retry.address == store.address);
+          assert(complete_scoped_scalar(retry.token, ScopedMemoryCommitted, 0x0000000000000000))
+        },
+        None() => assert(false)
+      };
+      assert(read_reg5(0b00100) == 0x0000000400003FFC)
+    },
+    None() => assert(false)
+  };
+  assert(tpc == 0x0000000000002012)
+}
