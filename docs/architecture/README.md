@@ -11,6 +11,7 @@ Architecture-facing documentation lives under `docs/architecture/`.
 - generated encoding and instruction reference:
   - `docs/isa/encoding.md`
   - `docs/isa/instructions/`
+- [PTO 0.59.1 adoption candidate](v0.59.1-pto-alignment.md)
 - published LinxCore mirrors:
   - `docs/architecture/linxcore/overview.md`
   - `docs/architecture/linxcore/microarchitecture.md`

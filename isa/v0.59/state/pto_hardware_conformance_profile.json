@@ -1,0 +1,1056 @@
+{
+  "arithmetic": {
+    "canonical_nan_output": "When the destination format has a NaN encoding, every produced NaN is replaced by that format's canonical NaN encoding.",
+    "exception_model": "IEEE-754 invalid, divide-by-zero, overflow, underflow, and inexact conditions are reported through the operation-defined architectural status; host traps are not observable.",
+    "fused_operations": "A fused operation rounds once after the exact multiply-add expression.",
+    "signed_zero": "IEEE signed zero is preserved by formats that encode both signs of zero; HiF8 has one zero encoding. Exact cancellation follows the selected rounding mode. Equal-sign zero inputs preserve that sign; a mixed-sign zero tie uses -0 for minimum and +0 for maximum.",
+    "standard": "IEEE 754-2019 operation semantics with the explicitly enumerated low-precision format refinements",
+    "subnormals": "supported by each format that defines subnormal encodings; flush-to-zero and denormals-are-zero are non-conforming for those formats",
+    "tininess_detection": "after-rounding"
+  },
+  "subnormal_policy": {
+    "architectural_mode_state": "none",
+    "configuration_validation": "Any request for FTZ, DAZ, or an operation-local subnormal override is non-conforming and must reject before effects.",
+    "denormals_are_zero": false,
+    "flush_to_zero": false,
+    "input_subnormals": "preserve exact source value",
+    "operation_override": false,
+    "profile_selection": "fixed by pto-hardware-numeric-0.59.1-ieee-v1",
+    "result_subnormals": "gradual underflow to the destination format",
+    "scope": "Every otherwise-supported operation/type tuple whose source or destination format defines subnormal encodings.",
+    "tininess_detection": "after-rounding"
+  },
+  "b_datr": {
+    "canonicalize": {
+      "0": "Do not pre-canonicalize source NaN payloads; every produced NaN in a NaN-capable destination is still canonical.",
+      "1": "Replace every NaN source by its source-format canonical NaN before the operation; signed zero is unchanged."
+    },
+    "comparison_modes": {
+      "0": "EQ",
+      "1": "NE",
+      "2": "LT",
+      "3": "GT",
+      "4": "LE",
+      "5": "GE"
+    },
+    "comparison_reserved": [
+      6,
+      7
+    ],
+    "rounding_modes": {
+      "0": "NONE: use the operation-defined default; the hardware numeric default is RNE",
+      "1": "RNE: nearest, ties to even",
+      "2": "RTZ: toward zero",
+      "3": "RDN: toward negative infinity",
+      "4": "RUP: toward positive infinity",
+      "5": "RNA: nearest, ties away from zero",
+      "6": "RTO: round to odd when inexact",
+      "7": "RHB: nearest, with an exact halfway result selecting the numerically greater candidate toward positive infinity"
+    },
+    "saturation": {
+      "disabled": "Integer arithmetic wraps to destination width; floating overflow follows the destination format; invalid float-to-integer conversion returns the exact destination indefinite value in conversion.float_to_integer_invalid.",
+      "enabled": "Integer arithmetic and conversion clamp to destination minimum/maximum; NaN converts to zero; floating overflow clamps to the destination maximum finite value."
+    }
+  },
+  "claim_scope": "PTO ISA 0.59.1 hardware numeric conformance",
+  "comparisons": {
+    "false_result": 0,
+    "nan": {
+      "EQ": false,
+      "GE": false,
+      "GT": false,
+      "LE": false,
+      "LT": false,
+      "NE": true,
+      "signaling_nan_reports_invalid": true
+    },
+    "signed_zero": "+0 and -0 compare equal and neither is less than the other for formats with signed zero",
+    "true_result": 1
+  },
+  "conversion": {
+    "float_to_integer_invalid": {
+      "packed_rule": "Each logical lane is converted independently; an invalid lane receives the lane-width indefinite value without changing another lane.",
+      "sat_disabled": {
+        "S4X2": {
+          "lane_raw": "0x8",
+          "packed_all_lanes_raw": "0x88"
+        },
+        "S8": "0x80",
+        "S16": "0x8000",
+        "S32": "0x80000000",
+        "S64": "0x8000000000000000",
+        "U4X2": {
+          "lane_raw": "0xF",
+          "packed_all_lanes_raw": "0xFF"
+        },
+        "U8": "0xFF",
+        "U16": "0xFFFF",
+        "U32": "0xFFFFFFFF",
+        "U64": "0xFFFFFFFFFFFFFFFF"
+      },
+      "signed_rule": "The indefinite value is the minimum signed value of the destination lane.",
+      "unsigned_rule": "The indefinite value is the maximum unsigned value of the destination lane."
+    },
+    "rhb": {
+      "definition": "Round to the nearest representable value; if the source is exactly halfway between two candidates, select the numerically greater candidate.",
+      "negative_halfway_example": {
+        "input": "-2.5",
+        "destination": "S32",
+        "expected": "-2"
+      },
+      "positive_halfway_example": {
+        "input": "2.5",
+        "destination": "S32",
+        "expected": "3"
+      }
+    }
+  },
+  "data_types": [
+    {
+      "canonical_qnan": "0x7FF8000000000000",
+      "class": "floating",
+      "code": 0,
+      "format": "IEEE-binary64",
+      "lanes_per_storage": 1,
+      "name": "FP64",
+      "storage_bits": 64
+    },
+    {
+      "canonical_qnan": "0x7FC00000",
+      "class": "floating",
+      "code": 1,
+      "format": "IEEE-binary32",
+      "lanes_per_storage": 1,
+      "name": "FP32",
+      "storage_bits": 32
+    },
+    {
+      "canonical_qnan": "0x7FC00000",
+      "class": "floating",
+      "code": 2,
+      "format": "e8m10 in a 32-bit carrier; discarded fraction bits are zero",
+      "lanes_per_storage": 1,
+      "name": "TF32",
+      "storage_bits": 32
+    },
+    {
+      "canonical_qnan": "0x7FC00000",
+      "class": "floating",
+      "code": 3,
+      "format": "e8m11 in a 32-bit carrier; discarded fraction bits are zero",
+      "lanes_per_storage": 1,
+      "name": "HF32",
+      "storage_bits": 32
+    },
+    {
+      "canonical_qnan": "0x7E00",
+      "class": "floating",
+      "code": 4,
+      "format": "IEEE-binary16",
+      "lanes_per_storage": 1,
+      "name": "FP16",
+      "storage_bits": 16
+    },
+    {
+      "canonical_qnan": "0x7FC0",
+      "class": "floating",
+      "code": 5,
+      "format": "bfloat16-e8m7",
+      "lanes_per_storage": 1,
+      "name": "BF16",
+      "storage_bits": 16
+    },
+    {
+      "canonical_qnan": "0x80",
+      "class": "floating",
+      "code": 6,
+      "encoding": {
+        "denormal": {
+          "condition": "dot prefix 0000 and M in 1..7",
+          "formula": "(-1)^S * 2^(M-23)",
+          "exponent_range": [
+            -22,
+            -16
+          ]
+        },
+        "dot_prefixes": [
+          {
+            "D": "DML",
+            "exponent_bits": 0,
+            "mantissa_bits": 3,
+            "prefix": "0000"
+          },
+          {
+            "D": 0,
+            "exponent_bits": 0,
+            "mantissa_bits": 3,
+            "prefix": "0001"
+          },
+          {
+            "D": 1,
+            "exponent_bits": 1,
+            "mantissa_bits": 3,
+            "prefix": "001"
+          },
+          {
+            "D": 2,
+            "exponent_bits": 2,
+            "mantissa_bits": 3,
+            "prefix": "01"
+          },
+          {
+            "D": 3,
+            "exponent_bits": 3,
+            "mantissa_bits": 2,
+            "prefix": "10"
+          },
+          {
+            "D": 4,
+            "exponent_bits": 4,
+            "mantissa_bits": 1,
+            "prefix": "11"
+          }
+        ],
+        "exponent": "For D>0 Em contains exponent sign Se followed by D-1 stored magnitude bits; prepend an implicit magnitude bit 1. Se=0 is positive and Se=1 is negative. D=0 means E=0.",
+        "layout": "sign S in bit 7, then a variable-length dot prefix, D exponent bits, and the remaining mantissa bits",
+        "normal": {
+          "formula": "(-1)^S * 2^E * (1 + M/2^mantissa_bits)",
+          "exponent_range": [
+            -15,
+            15
+          ]
+        },
+        "special_raw": {
+          "negative_infinity": "0xEF",
+          "nan": "0x80",
+          "positive_infinity": "0x6F",
+          "zero": "0x00"
+        }
+      },
+      "format": "HiF8 dynamic Dot/Exponent/Mantissa",
+      "lanes_per_storage": 1,
+      "name": "HiF8",
+      "storage_bits": 8
+    },
+    {
+      "canonical_qnan": "0x7F",
+      "class": "floating",
+      "code": 7,
+      "encoding": {
+        "bias": 7,
+        "bit_fields": {
+          "exponent": "6:3",
+          "mantissa": "2:0",
+          "sign": "7"
+        },
+        "infinity": "none",
+        "nan": "E=15 and M=7",
+        "normal": "E in 1..15 except E=15,M=7; (-1)^S * 2^(E-7) * (1+M/8)",
+        "subnormal": "E=0; (-1)^S * 2^-6 * (M/8)",
+        "zero": "E=0 and M=0"
+      },
+      "format": "OCP OFP8 E4M3",
+      "lanes_per_storage": 1,
+      "name": "E4M3",
+      "storage_bits": 8
+    },
+    {
+      "canonical_qnan": "0x7E",
+      "class": "floating",
+      "code": 8,
+      "encoding": {
+        "bias": 15,
+        "bit_fields": {
+          "exponent": "6:2",
+          "mantissa": "1:0",
+          "sign": "7"
+        },
+        "infinity": "E=31 and M=0",
+        "nan": "E=31 and M!=0",
+        "normal": "E in 1..30; (-1)^S * 2^(E-15) * (1+M/4)",
+        "subnormal": "E=0; (-1)^S * 2^-14 * (M/4)",
+        "zero": "E=0 and M=0"
+      },
+      "format": "OCP OFP8 E5M2",
+      "lanes_per_storage": 1,
+      "name": "E5M2",
+      "storage_bits": 8
+    },
+    {
+      "class": "floating",
+      "code": 9,
+      "encoding": {
+        "bias": 3,
+        "bit_fields": {
+          "exponent": "4:2",
+          "mantissa": "1:0",
+          "sign": "5"
+        },
+        "finite_only": true,
+        "maximum_finite": "28",
+        "minimum_positive_subnormal": "0.0625",
+        "normal": "E in 1..7; (-1)^S * 2^(E-3) * (1+M/4)",
+        "storage_constraint": "bits 7:6 MUST be zero",
+        "subnormal": "E=0; (-1)^S * 2^-2 * (M/4)",
+        "zero": "E=0 and M=0"
+      },
+      "format": "OCP MX FP6 E3M2 in a zero-extended 8-bit carrier",
+      "lanes_per_storage": 1,
+      "name": "E3M2",
+      "payload_bits": 6,
+      "storage_bits": 8
+    },
+    {
+      "class": "floating",
+      "code": 10,
+      "encoding": {
+        "bias": 1,
+        "bit_fields": {
+          "exponent": "4:3",
+          "mantissa": "2:0",
+          "sign": "5"
+        },
+        "finite_only": true,
+        "maximum_finite": "7.5",
+        "minimum_positive_subnormal": "0.125",
+        "normal": "E in 1..3; (-1)^S * 2^(E-1) * (1+M/8)",
+        "storage_constraint": "bits 7:6 MUST be zero",
+        "subnormal": "E=0; (-1)^S * (M/8)",
+        "zero": "E=0 and M=0"
+      },
+      "format": "OCP MX FP6 E2M3 in a zero-extended 8-bit carrier",
+      "lanes_per_storage": 1,
+      "name": "E2M3",
+      "payload_bits": 6,
+      "storage_bits": 8
+    },
+    {
+      "class": "packed-floating",
+      "code": 11,
+      "encoding": {
+        "finite_only": true,
+        "lane_bit_fields": {
+          "exponent": "2:1",
+          "mantissa": "0",
+          "sign": "3"
+        },
+        "lane_raw_values": {
+          "0x0": "+0",
+          "0x1": "+0.5",
+          "0x2": "+1",
+          "0x3": "+1.5",
+          "0x4": "+2",
+          "0x5": "+3",
+          "0x6": "+4",
+          "0x7": "+6",
+          "0x8": "-0",
+          "0x9": "-0.5",
+          "0xA": "-1",
+          "0xB": "-1.5",
+          "0xC": "-2",
+          "0xD": "-3",
+          "0xE": "-4",
+          "0xF": "-6"
+        }
+      },
+      "format": "two OCP MX FP4 E2M1 logical lanes",
+      "lanes_per_storage": 2,
+      "name": "E2M1X2",
+      "storage_bits": 8
+    },
+    {
+      "class": "packed-floating",
+      "code": 12,
+      "encoding": {
+        "finite_only": true,
+        "lane_bit_fields": {
+          "exponent": "2",
+          "mantissa": "1:0",
+          "sign": "3"
+        },
+        "lane_raw_values": {
+          "0x0": "+0",
+          "0x1": "+0.25",
+          "0x2": "+0.5",
+          "0x3": "+0.75",
+          "0x4": "+1",
+          "0x5": "+1.25",
+          "0x6": "+1.5",
+          "0x7": "+1.75",
+          "0x8": "-0",
+          "0x9": "-0.25",
+          "0xA": "-0.5",
+          "0xB": "-0.75",
+          "0xC": "-1",
+          "0xD": "-1.25",
+          "0xE": "-1.5",
+          "0xF": "-1.75"
+        }
+      },
+      "format": "two public E1M2 logical lanes",
+      "lanes_per_storage": 2,
+      "name": "E1M2X2",
+      "storage_bits": 8
+    },
+    {
+      "canonical_qnan": "0xFF",
+      "class": "scale",
+      "code": 13,
+      "encoding": {
+        "finite": "raw 0x00..0xFE represents 2^(raw-127)",
+        "nan": "raw 0xFF",
+        "sign": "none",
+        "zero": "none"
+      },
+      "format": "OCP MX E8M0 power-of-two scale",
+      "lanes_per_storage": 1,
+      "name": "E8M0",
+      "storage_bits": 8
+    },
+    {
+      "class": "packed-floating",
+      "code": 14,
+      "encoding": {
+        "distinct_identity_from": "E1M2X2",
+        "finite_only": true,
+        "lane_bit_fields": {
+          "exponent": "2",
+          "mantissa": "1:0",
+          "sign": "3"
+        },
+        "lane_raw_values": {
+          "0x0": "+0",
+          "0x1": "+0.25",
+          "0x2": "+0.5",
+          "0x3": "+0.75",
+          "0x4": "+1",
+          "0x5": "+1.25",
+          "0x6": "+1.5",
+          "0x7": "+1.75",
+          "0x8": "-0",
+          "0x9": "-0.25",
+          "0xA": "-0.5",
+          "0xB": "-0.75",
+          "0xC": "-1",
+          "0xD": "-1.25",
+          "0xE": "-1.5",
+          "0xF": "-1.75"
+        }
+      },
+      "format": "two public HiF4 E1M2 logical lanes; a distinct DataType identity used by MX",
+      "lanes_per_storage": 2,
+      "name": "HiF4X2",
+      "storage_bits": 8
+    },
+    {
+      "class": "signed-integer",
+      "code": 16,
+      "lanes_per_storage": 1,
+      "maximum": "9223372036854775807",
+      "minimum": "-9223372036854775808",
+      "name": "S64",
+      "storage_bits": 64
+    },
+    {
+      "class": "signed-integer",
+      "code": 17,
+      "lanes_per_storage": 1,
+      "maximum": "2147483647",
+      "minimum": "-2147483648",
+      "name": "S32",
+      "storage_bits": 32
+    },
+    {
+      "class": "signed-integer",
+      "code": 18,
+      "lanes_per_storage": 1,
+      "maximum": "32767",
+      "minimum": "-32768",
+      "name": "S16",
+      "storage_bits": 16
+    },
+    {
+      "class": "signed-integer",
+      "code": 19,
+      "lanes_per_storage": 1,
+      "maximum": "127",
+      "minimum": "-128",
+      "name": "S8",
+      "storage_bits": 8
+    },
+    {
+      "class": "packed-signed-integer",
+      "code": 20,
+      "lanes_per_storage": 2,
+      "maximum": "7",
+      "minimum": "-8",
+      "name": "S4X2",
+      "storage_bits": 8
+    },
+    {
+      "class": "unsigned-integer",
+      "code": 24,
+      "lanes_per_storage": 1,
+      "maximum": "18446744073709551615",
+      "minimum": "0",
+      "name": "U64",
+      "storage_bits": 64
+    },
+    {
+      "class": "unsigned-integer",
+      "code": 25,
+      "lanes_per_storage": 1,
+      "maximum": "4294967295",
+      "minimum": "0",
+      "name": "U32",
+      "storage_bits": 32
+    },
+    {
+      "class": "unsigned-integer",
+      "code": 26,
+      "lanes_per_storage": 1,
+      "maximum": "65535",
+      "minimum": "0",
+      "name": "U16",
+      "storage_bits": 16
+    },
+    {
+      "class": "unsigned-integer",
+      "code": 27,
+      "lanes_per_storage": 1,
+      "maximum": "255",
+      "minimum": "0",
+      "name": "U8",
+      "storage_bits": 8
+    },
+    {
+      "class": "packed-unsigned-integer",
+      "code": 28,
+      "lanes_per_storage": 2,
+      "maximum": "15",
+      "minimum": "0",
+      "name": "U4X2",
+      "storage_bits": 8
+    }
+  ],
+  "implementation_conformance": {
+    "claim_requires": [
+      "the exact profile ID and release content hash",
+      "all generated hardware numeric boundary vectors",
+      "operation-level legality and exception evidence",
+      "independent downstream byte and effect parity"
+    ],
+    "repository_claim": "contract-and-vector-definition-only"
+  },
+  "isa_release": "0.59.1",
+  "mixed_expdif": {
+    "accepted_operations": [
+      "TROWEXPANDEXPDIF",
+      "TCOLEXPANDEXPDIF",
+      "TEXPDIF"
+    ],
+    "accepted_source_destination_pairs": [
+      [
+        "FP16",
+        "FP16"
+      ],
+      [
+        "BF16",
+        "BF16"
+      ],
+      [
+        "FP32",
+        "FP32"
+      ],
+      [
+        "FP16",
+        "FP32"
+      ],
+      [
+        "BF16",
+        "FP32"
+      ]
+    ],
+    "pipeline": "ExactWidenFP16ToFP32 or ExactWidenBF16ToFP32 for both sources, then FP32 SUB, then FP32 EXP",
+    "exact_widening": {
+      "BF16": {
+        "finite_zero_infinity": "ZeroExtend32(source_bits) << 16",
+        "inexact_flag": false,
+        "rounding": "none"
+      },
+      "FP16": {
+        "finite_zero_infinity": "IEEE binary16 value-preserving widening to the unique FP32 encoding",
+        "inexact_flag": false,
+        "rounding": "none",
+        "subnormals": "normalize to the unique equal-valued FP32 encoding"
+      },
+      "nan": "Use the selected profile FP32 canonical-NaN and signaling-input rule"
+    },
+    "fp32_sub_exp": {
+      "numeric_status": "Use the selected profile FP32 NV/DZ/OF/UF/NX rules",
+      "rounding": "Use the selected profile FP32 rounding rule",
+      "special_values": "Use the selected profile FP32 IEEE special-value rule"
+    },
+    "discriminator_vectors": [
+      {
+        "source_type": "FP16",
+        "a": "0x2000",
+        "b": "0x0001",
+        "widen_first_sub": "0x3BFFFF80",
+        "source_precision_sub_then_widen": "0x3C000000",
+        "widen_first_exp": "0x3F810100",
+        "source_precision_exp": "0x3F810101"
+      },
+      {
+        "source_type": "BF16",
+        "a": "0x3F80",
+        "b": "0x3B00",
+        "widen_first_sub": "0x3F7F8000",
+        "source_precision_sub_then_widen": "0x3F800000",
+        "widen_first_exp": "0x402DA16E",
+        "source_precision_exp": "0x402DF854"
+      }
+    ]
+  },
+  "tcvt_e8m0": {
+    "accepted_source_types": [
+      "FP16",
+      "BF16",
+      "FP32"
+    ],
+    "destination_type": "E8M0",
+    "finite_domain": "positive finite values",
+    "encoding": "rounded_base2_exponent_plus_127",
+    "exact_range": {
+      "minimum": "2^-127",
+      "maximum": "2^127"
+    },
+    "rounding": "resolved B.DATR RMode in the base-two exponent domain",
+    "inexact": "Every non-power-of-two in-range source records NX.",
+    "invalid": {
+      "inputs": [
+        "positive_zero",
+        "negative_zero",
+        "negative_finite",
+        "negative_infinity",
+        "quiet_nan",
+        "signaling_nan"
+      ],
+      "result": "0xFF",
+      "flags": [
+        "NV"
+      ]
+    },
+    "positive_infinity": {
+      "sat0_result": "0xFF",
+      "sat1_result": "0xFE",
+      "flags": [
+        "OF",
+        "NX"
+      ]
+    },
+    "finite_underflow": {
+      "sat0_result": "0xFF",
+      "sat1_result": "0x00",
+      "flags": [
+        "UF",
+        "NX"
+      ]
+    },
+    "finite_overflow": {
+      "sat0_result": "0xFF",
+      "sat1_result": "0xFE",
+      "flags": [
+        "OF",
+        "NX"
+      ]
+    },
+    "canonicalize": "representation-only; it does not change the E8M0 value map"
+  },
+  "matrix": {
+    "destination_model": "Every active CUBE operation writes explicit Local D. Base, BIAS, and MX variants initialize the dot product from zero; .ACC variants initialize it from explicit Local C.",
+    "destination_aliasing": "D == C is read-old/write-new and requires identical dtype, shape, layout, and allocation. There is no architectural implicit ACC singleton and ACCCVT remains removed/reserved.",
+    "bias_order": "BIAS is added in logical result type after the complete dot product; MX BIAS is FP32 and is added after the scaled dot product.",
+    "dot_order": "Products are accumulated in increasing logical K index order with one fused multiply-add rounding to the declared physical ACC type per term.",
+    "ordinary": {
+      "floating_input_types": [
+        "FP32",
+        "TF32",
+        "HF32",
+        "FP16",
+        "BF16",
+        "HiF8",
+        "E4M3",
+        "E5M2",
+        "E3M2",
+        "E2M3",
+        "E2M1X2",
+        "E1M2X2"
+      ],
+      "signed_input_types": [
+        "S16",
+        "S8",
+        "S4X2"
+      ],
+      "unsigned_input_types": [
+        "U16",
+        "U8",
+        "U4X2"
+      ],
+      "pair_rule": "The two inputs may differ only within one listed class.",
+      "accumulator_by_class": {
+        "floating": "FP32",
+        "signed": "S32",
+        "unsigned": "U32"
+      },
+      "bias_by_class": {
+        "floating": "FP32",
+        "signed": "S32",
+        "unsigned": "U32"
+      },
+      "header_data_type": "left input type",
+      "b_datr_data_type": "right input type; omission inherits the left input type"
+    },
+    "mx": {
+      "acc_type": "FP32",
+      "allowed_operand_types": [
+        "FP16",
+        "BF16",
+        "E4M3",
+        "E5M2",
+        "E2M1X2",
+        "E1M2X2"
+      ],
+      "pair_rule": "Every ordered pair of allowed operand types is assigned.",
+      "unscaled_operand_types": [
+        "FP16",
+        "BF16"
+      ],
+      "scaled_operand_types": [
+        "E4M3",
+        "E5M2",
+        "E2M1X2",
+        "E1M2X2"
+      ],
+      "bias_type": "FP32",
+      "header_data_type": "left input type",
+      "scale_a_shape": "M x ceil(K/32)",
+      "scale_b_shape": "ceil(K/32) x N",
+      "scale_block_logical_k_elements": 32,
+      "scale_indexing": "ScaleA[m,floor(k/32)] and ScaleB[floor(k/32),n]",
+      "scale_order": "Decode each present E8M0 scale and multiply the corresponding logical input before fused multiply-add. FP16 and BF16 sides omit the scale. A 0xFF scale makes the FP32 term and resulting ACC lane canonical NaN.",
+      "scale_type": "E8M0"
+    },
+    "postprocess": {
+      "order": [
+        "per-element-b-fpatr-postprocess-through-final-d-encoding",
+        "final-d-domain-row-and-group-reductions",
+        "atomic-output-and-status-publication"
+      ],
+      "fp19": "sign:1, exponent:8 bias 127, fraction:10; positive finite nonzero scale",
+      "integer_sat_disabled": "finite overflow wraps modulo destination width; NaN or infinity uses the common destination indefinite value",
+      "integer_sat_enabled": "finite overflow and infinities clamp; NaN becomes zero",
+      "modes": [
+        {
+          "code": 0,
+          "name": "NoQuant",
+          "source": [
+            "FP32",
+            "S32",
+            "U32"
+          ],
+          "destination": "unchanged",
+          "parameter": "none"
+        },
+        {
+          "code": 1,
+          "name": "F322F16",
+          "source": [
+            "FP32"
+          ],
+          "destination": "FP16",
+          "parameter": "none"
+        },
+        {
+          "code": 2,
+          "name": "VREQ8",
+          "source": [
+            "S32"
+          ],
+          "destination": "S8",
+          "parameter": "vector-fp19-scale-s9-offset"
+        },
+        {
+          "code": 3,
+          "name": "REQ8",
+          "source": [
+            "S32"
+          ],
+          "destination": "S8",
+          "parameter": "scalar-fp19-scale-s9-offset"
+        },
+        {
+          "code": 4,
+          "name": "VDEQF16",
+          "source": [
+            "S32"
+          ],
+          "destination": "FP16",
+          "parameter": "vector-fp19-scale"
+        },
+        {
+          "code": 5,
+          "name": "DEQF16",
+          "source": [
+            "S32"
+          ],
+          "destination": "FP16",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 12,
+          "name": "VSHIFTS322S16",
+          "source": [
+            "S32"
+          ],
+          "destination": "S16",
+          "parameter": "vector-shift-1-through-16"
+        },
+        {
+          "code": 13,
+          "name": "SHIFTS322S16",
+          "source": [
+            "S32"
+          ],
+          "destination": "S16",
+          "parameter": "scalar-shift-1-through-16"
+        },
+        {
+          "code": 16,
+          "name": "F322BF16",
+          "source": [
+            "FP32"
+          ],
+          "destination": "BF16",
+          "parameter": "none"
+        },
+        {
+          "code": 17,
+          "name": "REQ4",
+          "source": [
+            "S32"
+          ],
+          "destination": "S4X2",
+          "parameter": "scalar-fp19-scale-s5-offset"
+        },
+        {
+          "code": 18,
+          "name": "VREQ4",
+          "source": [
+            "S32"
+          ],
+          "destination": "S4X2",
+          "parameter": "vector-fp19-scale-s5-offset"
+        },
+        {
+          "code": 19,
+          "name": "DEQS16",
+          "source": [
+            "S32"
+          ],
+          "destination": "S16",
+          "parameter": "scalar-fp19-scale-s17-offset"
+        },
+        {
+          "code": 20,
+          "name": "VDEQS16",
+          "source": [
+            "S32"
+          ],
+          "destination": "S16",
+          "parameter": "vector-fp19-scale-s17-offset"
+        },
+        {
+          "code": 23,
+          "name": "VQF322B8_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "S8",
+          "parameter": "vector-fp19-scale-s9-offset"
+        },
+        {
+          "code": 24,
+          "name": "QF322B8_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "S8",
+          "parameter": "scalar-fp19-scale-s9-offset"
+        },
+        {
+          "code": 25,
+          "name": "QF322HIF8_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "HiF8",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 26,
+          "name": "QF322FP8_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "E4M3",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 27,
+          "name": "QF322F32_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "FP32",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 28,
+          "name": "VQF322HIF8_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "HiF8",
+          "parameter": "vector-fp19-scale"
+        },
+        {
+          "code": 32,
+          "name": "QF322F16_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "FP16",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 33,
+          "name": "VQF322F16_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "FP16",
+          "parameter": "vector-fp19-scale"
+        },
+        {
+          "code": 34,
+          "name": "QF322BF16_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "BF16",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 35,
+          "name": "QS322BF16_PRE",
+          "source": [
+            "S32"
+          ],
+          "destination": "BF16",
+          "parameter": "scalar-fp19-scale"
+        },
+        {
+          "code": 36,
+          "name": "VQF322BF16_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "BF16",
+          "parameter": "vector-fp19-scale"
+        },
+        {
+          "code": 37,
+          "name": "VQF322FP8_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "E4M3",
+          "parameter": "vector-fp19-scale"
+        },
+        {
+          "code": 38,
+          "name": "VQF322F32_PRE",
+          "source": [
+            "FP32"
+          ],
+          "destination": "FP32",
+          "parameter": "vector-fp19-scale"
+        },
+        {
+          "code": 39,
+          "name": "VQS322BF16_PRE",
+          "source": [
+            "S32"
+          ],
+          "destination": "BF16",
+          "parameter": "vector-fp19-scale"
+        }
+      ]
+    }
+  },
+  "min_max": {
+    "both_nan": "canonical destination NaN when the destination format has NaN",
+    "one_nan": "the numeric operand",
+    "signed_zero_max": "+0",
+    "signed_zero_min": "-0"
+  },
+  "packed_storage": {
+    "applies_to": [
+      "E2M1X2",
+      "E1M2X2",
+      "HiF4X2",
+      "S4X2",
+      "U4X2"
+    ],
+    "dimensions": "Tile rows, columns, valid rows, valid columns, matrix M/N/K, and scale-block K count are logical-lane dimensions, not byte-carrier dimensions.",
+    "lane_order": "Logical lane 2*i is bits 3:0 of storage byte i; logical lane 2*i+1 is bits 7:4 of storage byte i.",
+    "partial_final_byte": "When a logical extent is odd, the unused high nibble of the final storage byte is reserved and MUST be zero on publication. Consumers ignore it."
+  },
+  "profile_id": "pto-hardware-numeric-0.59.1-ieee-v1",
+  "reductions": {
+    "arg_tie": "lowest original logical index",
+    "empty_input": "illegal before effects",
+    "evaluation_order": "increasing logical row-major index; no reassociation",
+    "max_min_nan": "ignore a NaN when a numeric operand exists; all-NaN input returns canonical NaN",
+    "product_sum_nan": "any NaN produces canonical NaN",
+    "rounding": "round to the declared accumulator type after each step"
+  },
+  "reference_model_relation": {
+    "hardware_conformance_claim": false,
+    "profile_id": "pto-v0",
+    "role": "deterministic raw-carrier ASL reference-test profile",
+    "rule": "General pto-v0 output values are not hardware numeric conformance evidence; the B.FPATR postprocess and TCVT-to-E8M0 hooks implement their bit-exact sections of this profile."
+  },
+  "reserved_data_type_codes": [
+    15,
+    21,
+    22,
+    23,
+    29,
+    30
+  ],
+  "schema_version": 2,
+  "sort": {
+    "directions": [
+      "ascending",
+      "descending"
+    ],
+    "equal_values": "stable by original index",
+    "group_size": 32,
+    "nan_order": "after all numeric values and stable by original index in both directions",
+    "output": "value paired with U32 original index",
+    "signed_zero_order": "+0 and -0 compare equal; original index controls their stable order"
+  },
+  "source_lock": "isa/v0.59/pto-spec.lock.json"
+}

@@ -8,6 +8,7 @@
   - `docs/zh/architecture/v0.58-architecture-contract.md`
 - 机器可读权威来源：
   - `isa/v0.58/linxisa-v0.58.json`
+- [PTO 0.59.1 同步候选](v0.59.1-pto-alignment.md)
 - 发布的灵犀Core镜像：
   - `docs/architecture/linxcore/overview.md`
   - `docs/architecture/linxcore/microarchitecture.md`

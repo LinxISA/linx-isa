@@ -2,6 +2,13 @@
 
 This directory contains the active **Sail** formal and executable model for the canonical LinxISA `v0.58` profile.
 
+The modeled base-register addresses `0x0050` and `0x0051` expose the read-only
+`BLOCKNUM` and `BLOCKID` ambient values. Block instructions continue to own
+the internal dimensions and loop counters. The directed suite exercises
+short and long SSR reads, illegal writes and swaps, and reserved-address faults.
+The [PTO 0.59.1 adoption candidate](../../docs/architecture/v0.59.1-pto-alignment.md)
+records the separate execution work for scoped Scalar and HSCB dispatch.
+
 Scope policy:
 
 - The Sail model is an executable reference for `v0.58` semantics and legality checks.

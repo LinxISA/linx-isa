@@ -103,6 +103,21 @@ function assert_pcr_store_source_rejected(selector : bits(5)) -> unit = {
   assert(read_reg5(selector) == 0xCAFE_CAFE_CAFE_CAFE)
 }
 
+function reset_ssr_access_case() -> unit = {
+  reset_scalar_subset_trap_case(0x0000_0000_0000_1800);
+  ssr_blocknum = sail_zeros(64);
+  ssr_blockid = sail_zeros(64);
+  ssr_lb0 = 0x1111_1111_1111_1111;
+  ssr_lb1 = 0x2222_2222_2222_2222;
+  ssr_lb2 = 0x3333_3333_3333_3333;
+  ssr_lc0 = 0x4444_4444_4444_4444;
+  ssr_lc1 = 0x5555_5555_5555_5555;
+  ssr_lc2 = 0x6666_6666_6666_6666;
+  write_reg5(0b00011, 0xAAAA_AAAA_AAAA_AAAA);
+  write_reg5(0b00100, 0xBBBB_BBBB_BBBB_BBBB);
+  write_reg5(reg_t(), 0xCCCC_CCCC_CCCC_CCCC)
+}
+
 function main() : unit -> unit = {
   // PTO golden has 22 scalar PCR memory forms: 11 L32 forms with simm17 and
   // 11 HL48 forms with simm29.  Address formation aligns the current TPC
@@ -261,6 +276,70 @@ function main() : unit -> unit = {
   assert_pcr_store_source_rejected(0b11101);
   assert_pcr_store_source_rejected(0b11110);
   assert_pcr_store_source_rejected(0b11111);
+
+  // BLOCKNUM/BLOCKID are read-only launch-context SSRs.  The staged model has
+  // no HSCB worker binding yet, so their observable ambient/reset values are
+  // zero.  The internal B.DIM/loop state is independent of these addresses.
+  reset_ssr_access_case();
+  decode_execute32(0x0500_01BB); // SSRGET 0x050, ->r3
+  assert(last_e == 0b0);
+  assert(read_reg5(0b00011) == sail_zeros(64));
+  decode_execute32(0x0510_01BB); // SSRGET 0x051, ->r3
+  assert(last_e == 0b0);
+  assert(read_reg5(0b00011) == sail_zeros(64));
+
+  // A normal writable SSR still round-trips through the decoded access path.
+  reset_ssr_access_case();
+  decode_execute32(0x0002_103B); // SSRSET r4, 0x000
+  assert(last_e == 0b0);
+  decode_execute32(0x0000_01BB); // SSRGET 0x000, ->r3
+  assert(last_e == 0b0);
+  assert(read_reg5(0b00011) == 0xBBBB_BBBB_BBBB_BBBB);
+
+  // Writes and swaps of BLOCKNUM reject before reading the source or changing
+  // the destination. Reserved former LB/LC SSR aliases reject in the same way.
+  reset_ssr_access_case();
+  decode_execute32(0x0502_103B); // SSRSET r4, 0x050
+  assert(last_e == 0b1);
+  assert(last_trapnum == trapnum_illegal_inst());
+  assert(ssr_blocknum == sail_zeros(64));
+  assert(read_reg5(0b00100) == 0xBBBB_BBBB_BBBB_BBBB);
+  reset_ssr_access_case();
+  decode_execute32(0x0502_21BB); // SSRSWAP r4, 0x050, ->r3
+  assert(last_e == 0b1);
+  assert(read_reg5(0b00011) == 0xAAAA_AAAA_AAAA_AAAA);
+  assert(read_reg5(0b00100) == 0xBBBB_BBBB_BBBB_BBBB);
+  assert(ssr_blocknum == sail_zeros(64));
+  reset_ssr_access_case();
+  decode_execute32(0x0520_01BB); // SSRGET 0x052, ->r3
+  assert(last_e == 0b1);
+  assert(read_reg5(0b00011) == 0xAAAA_AAAA_AAAA_AAAA);
+  assert(ssr_lb2 == 0x3333_3333_3333_3333);
+  reset_ssr_access_case();
+  decode_execute32(0x0522_103B); // SSRSET r4, 0x052
+  assert(last_e == 0b1);
+  assert(read_reg5(0b00100) == 0xBBBB_BBBB_BBBB_BBBB);
+  assert(ssr_lb2 == 0x3333_3333_3333_3333);
+
+  // Long and compressed accessors also suppress destination publication on a
+  // rejected ID. The source remains intact on the long set path.
+  reset_ssr_access_case();
+  exec_hl_ssrget(0b00011, 0x000052);
+  assert(last_e == 0b1);
+  assert(read_reg5(0b00011) == 0xAAAA_AAAA_AAAA_AAAA);
+  reset_ssr_access_case();
+  decode_execute48(0x0500_01BB_001E); // HL.SSRGET 0x001050, ->r3
+  assert(last_e == 0b1);
+  assert(read_reg5(0b00011) == 0xAAAA_AAAA_AAAA_AAAA);
+  reset_ssr_access_case();
+  exec_hl_ssrset(0b00100, 0x000050);
+  assert(last_e == 0b1);
+  assert(read_reg5(0b00100) == 0xBBBB_BBBB_BBBB_BBBB);
+  assert(ssr_blocknum == sail_zeros(64));
+  reset_ssr_access_case();
+  decode_execute16(0x80AC); // Reserved C.SSRGET ID 2
+  assert(last_e == 0b1);
+  assert(read_reg5(reg_t()) == 0xCCCC_CCCC_CCCC_CCCC);
 
   // Every new block header starts with value-one dimensions. Presence is not
   // required for legality, while an explicit zero remains a real write.
