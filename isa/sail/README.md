@@ -30,8 +30,14 @@ the memory request also carries the second address and data. The backend
 checks both accesses before either effect and completes the pair together
 through `complete_scoped_scalar_pair`, including which access faulted. Sail
 publishes load destinations only after successful pair completion. Compressed
-queue operands and atomics still need execution coverage. The candidate
-entry point is explicit while the v0.58 decode path is canonical.
+queue operands still need execution coverage. Scoped LR/SC, CAS and RMW forms
+use the same one-outstanding platform protocol with an atomic transaction
+descriptor. It contains the operation, width, order, far attribute, captured
+operands, scope, Core and agent identity. The backend owns the indivisible
+transaction and reservation monitor. A committed SC returns status zero or
+one, while LR, CAS and result-producing RMW forms publish the PTO-normalized
+old value. An atomic fault publishes no register result. The candidate entry
+point is explicit while the v0.58 decode path is canonical.
 
 The MSGB transport models the released two-Core reference topology. Its
 receive, admission, BSE and HSCB APIs operate on platform-configured endpoints
