@@ -3391,12 +3391,12 @@ function decode_execute32_opcode_0b0101011_funct3_0b000(inst : bits(32)) -> unit
   if decode_execute32_opcode_0b0101011_funct3_0b000_match_0(inst) then {
     // BSE | bse SrcL | {'file': 'opcodes/lx_32.opc', 'line': 48}
     let srcl : bits(5) = inst[19..15];
-    exec_bse()
+    exec_bse(srcl)
   }
   else if decode_execute32_opcode_0b0101011_funct3_0b000_match_1(inst) then {
     // BWE | bwe SrcL | {'file': 'opcodes/lx_32.opc', 'line': 49}
     let srcl : bits(5) = inst[19..15];
-    exec_bwe()
+    exec_bwe(srcl)
   }
   else if decode_execute32_opcode_0b0101011_funct3_0b000_match_2(inst) then {
     // BWI | bwi SrcL | {'file': 'opcodes/lx_32.opc', 'line': 50}

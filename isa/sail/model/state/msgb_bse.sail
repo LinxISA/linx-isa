@@ -55,13 +55,16 @@ function msgb_store_tx_result(index : msgb_endpoint_index, result : bits(8)) -> 
   msgb_endpoints = vector_update(msgb_endpoints, index, diagnosed)
 }
 
-function msgb_kernel_context_active(ctx : msgb_bse_context, bank : msgb_endpoint) -> bool = {
-  if not_bool(ctx.kernel_origin & bank.enabled) | ctx.key.invocation == 0 |
-     ctx.key.invocation != bank.invocation then false
+function msgb_kernel_invocation_live(ctx : msgb_bse_context) -> bool = {
+  if not_bool(ctx.kernel_origin) | ctx.key.invocation == 0 then false
   else match msgb_cores[ctx.core].active_invocation {
     Some(invocation) => invocation == ctx.key.invocation,
     None() => false
   }
+}
+
+function msgb_kernel_context_active(ctx : msgb_bse_context, bank : msgb_endpoint) -> bool = {
+  bank.enabled & ctx.key.invocation == bank.invocation & msgb_kernel_invocation_live(ctx)
 }
 
 function msgb_context_index(ctx : msgb_bse_context) -> msgb_endpoint_index = {

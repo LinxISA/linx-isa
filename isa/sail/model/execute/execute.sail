@@ -1885,15 +1885,60 @@ function read_launch_system_register(id24 : bits(24)) -> bits(64) = {
   }
 }
 
+function msgb_instruction_fault(result : msgb_bse_outcome) -> unit = {
+  match result {
+    MSGB_BSE_BAD_CONTEXT => trap_illegal_inst(read_pc_or_tpc()),
+    MSGB_BSE_BAD_ENVELOPE => raise_trap(trapnum_block_trap(), sail_zeros(24), read_tpc(), 0b0),
+    MSGB_BSE_BLOCKED => msgb_instruction_blocked = true,
+    MSGB_BSE_COMPLETED => ()
+  }
+}
+
+function msgb_system_block() -> bool = {
+  barg_valid & barg_block_type_cur == 0b0001
+}
+
+function msgb_execute_get(dst : bits(5), address : bits(24)) -> unit = {
+  msgb_instruction_blocked = false;
+  if not_bool(msgb_system_block()) then msgb_instruction_fault(MSGB_BSE_BAD_ENVELOPE)
+  else match msgb_platform_instruction_context() {
+    None() => trap_illegal_ssr(),
+    Some(ctx) => match msgb_read_preflight(ctx, address) {
+      MSGB_BSE_COMPLETED => match msgb_register_read(ctx, address) {
+        None() => trap_illegal_ssr(),
+        Some(value) => write_regdst(dst, value)
+      },
+      result => msgb_instruction_fault(result)
+    }
+  }
+}
+
+function msgb_execute_set(src : bits(5), address : bits(24)) -> unit = {
+  msgb_instruction_blocked = false;
+  if not_bool(msgb_system_block()) then msgb_instruction_fault(MSGB_BSE_BAD_ENVELOPE)
+  else if not_bool(msgb_register_writable(address)) then trap_illegal_ssr()
+  else match msgb_platform_instruction_context() {
+    None() => trap_illegal_ssr(),
+    Some(ctx) => match msgb_effect_preflight(ctx, msgb_config_address(address)) {
+      MSGB_BSE_COMPLETED =>
+        if not_bool(msgb_register_write(ctx, address, read_reg5(src))) then trap_illegal_ssr()
+        else (),
+      result => msgb_instruction_fault(result)
+    }
+  }
+}
+
 function exec_ssrget(RegDst : bits(5), ssr_id12 : bits(12)) -> unit = {
   let id24 : bits(24) = sail_zero_extend(ssr_id12, 24);
-  if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
+  if msgb_address(id24) then msgb_execute_get(RegDst, id24)
+  else if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
   else write_regdst(RegDst, read_launch_system_register(id24))
 }
 
 function exec_ssrset(SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
   let id24 : bits(24) = sail_zero_extend(ssr_id12, 24);
-  if not_bool(system_register_writable(id24)) then trap_illegal_ssr()
+  if msgb_address(id24) then msgb_execute_set(SrcL, id24)
+  else if not_bool(system_register_writable(id24)) then trap_illegal_ssr()
   else write_system_register(id24, read_reg5(SrcL))
 }
 
@@ -1908,12 +1953,14 @@ function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), ssr_id12 : bits(12)) -> 
 }
 
 function exec_hl_ssrget(RegDst : bits(5), ssr_id24 : bits(24)) -> unit = {
-  if not_bool(system_register_readable(ssr_id24)) then trap_illegal_ssr()
+  if msgb_address(ssr_id24) then msgb_execute_get(RegDst, ssr_id24)
+  else if not_bool(system_register_readable(ssr_id24)) then trap_illegal_ssr()
   else write_regdst(RegDst, read_launch_system_register(ssr_id24))
 }
 
 function exec_hl_ssrset(SrcL : bits(5), ssr_id24 : bits(24)) -> unit = {
-  if not_bool(system_register_writable(ssr_id24)) then trap_illegal_ssr()
+  if msgb_address(ssr_id24) then msgb_execute_set(SrcL, ssr_id24)
+  else if not_bool(system_register_writable(ssr_id24)) then trap_illegal_ssr()
   else write_system_register(ssr_id24, read_reg5(SrcL))
 }
 
@@ -2810,8 +2857,31 @@ function exec_bc_iva(SrcL : bits(5)) -> unit = { () }
 // Block split / transform hints (front-end metadata; no architectural effect).
 function exec_bwt() -> unit = { () }
 function exec_bwi() -> unit = { () }
-function exec_bwe() -> unit = { () }
-function exec_bse() -> unit = { () }
+function exec_bwe(SrcL : bits(5)) -> unit = {
+  msgb_instruction_blocked = false;
+  if not_bool(msgb_system_block()) then msgb_instruction_fault(MSGB_BSE_BAD_ENVELOPE)
+  else {
+    publish_execution_control(WaitEvent, read_reg5(SrcL));
+    match msgb_platform_instruction_context() {
+      Some(ctx) => hscb_observe_wait(ctx),
+      None() => ()
+    }
+  }
+}
+
+function exec_bse(SrcL : bits(5)) -> unit = {
+  msgb_instruction_blocked = false;
+  if not_bool(msgb_system_block()) then msgb_instruction_fault(MSGB_BSE_BAD_ENVELOPE)
+  // PTO selects MSGB only for the current bound kernel context.
+  else match msgb_platform_instruction_context() {
+    Some(ctx) if msgb_kernel_context_active(ctx, msgb_endpoints[msgb_context_index(ctx)]) =>
+      match msgb_effect_preflight(ctx, false) {
+        MSGB_BSE_COMPLETED => msgb_instruction_fault(msgb_bse(ctx, read_reg5(SrcL))),
+        result => msgb_instruction_fault(result)
+      },
+    _ => publish_execution_control(SendEvent, read_reg5(SrcL))
+  }
+}
 
 // -----------------------------------------------------------------------------
 // PTO ISA 0.58 tile transaction envelope

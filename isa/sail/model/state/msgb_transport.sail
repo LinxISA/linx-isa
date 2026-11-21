@@ -101,6 +101,16 @@ function msgb_begin_drain(core : range(0, 1)) -> unit = {
 
 // The kernel lifecycle checks completion and drain before asking transport to
 // retire a bank. Remote packets already live in their destination banks.
+function msgb_clear_endpoint_invocation(bank : msgb_endpoint) -> msgb_endpoint = {
+  let empty = msgb_empty_endpoint();
+  let receive = msgb_receive_reset(bank.receive.epoch);
+  {
+    empty with domain_bound = bank.domain_bound, domain = bank.domain,
+    source_epoch = bank.source_epoch, tx_sequence = bank.tx_sequence,
+    receive = { receive with sequence = bank.receive.sequence }
+  }
+}
+
 function msgb_retire_invocation(core : range(0, 1), invocation : int) -> bool = {
   if invocation == 0 | not_bool(msgb_core_quiescent(core)) then false
   else {
@@ -109,14 +119,7 @@ function msgb_retire_invocation(core : range(0, 1), invocation : int) -> bool = 
       let index = core * 128 + offset;
       let bank = endpoints[index];
       if bank.invocation == invocation then {
-        let empty = msgb_empty_endpoint();
-        let receive = msgb_receive_reset(bank.receive.epoch);
-        let cleared = {
-          empty with domain_bound = bank.domain_bound, domain = bank.domain,
-          source_epoch = bank.source_epoch, tx_sequence = bank.tx_sequence,
-          receive = { receive with sequence = bank.receive.sequence }
-        };
-        endpoints = vector_update(endpoints, index, cleared)
+        endpoints = vector_update(endpoints, index, msgb_clear_endpoint_invocation(bank))
       } else ()
     };
     msgb_endpoints = endpoints;
