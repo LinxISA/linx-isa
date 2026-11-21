@@ -2,6 +2,9 @@
 
 $include "../model/linxisa.sail"
 $include "scoped_scalar_witnesses.sail"
+$include "msgb_receive_tests.sail"
+$include "msgb_transport_tests.sail"
+$include "hscb_dispatch_tests.sail"
 
 function reset_fused_call_case(base_pc : bits(64), ra_seed : bits(64)) -> unit = {
   pc = base_pc;
@@ -134,6 +137,10 @@ function main() : unit -> unit = {
   // DMA is excluded, and HL.LB.PO still rejects SrcRType 3.
   assert(decode_pto_scoped_scalar(0x0000_0000_700B_041F) == 0xFF);
   assert(decode_pto_scoped_scalar(0x0600_0009_003E_081F) == 0xFF);
+  verify_msgb_receive();
+  verify_msgb_transport();
+  verify_msgb_bse();
+  verify_hscb_dispatch();
   // PTO golden has 22 scalar PCR memory forms: 11 L32 forms with simm17 and
   // 11 HL48 forms with simm29.  Address formation aligns the current TPC
   // to four bytes, sign-extends the immediate, applies the form's offset
