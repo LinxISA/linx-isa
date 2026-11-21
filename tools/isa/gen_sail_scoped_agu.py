@@ -34,26 +34,34 @@ def render():
         agu = row.get("agu", {})
         if (
             agu.get("action") not in {"Load", "Store", "LoadPair", "StorePair"}
-            or agu["address_kind"] not in {"Immediate", "PCRelative", "Register"}
+            or agu["address_kind"] not in {"Compressed", "Immediate", "PCRelative", "Register"}
         ):
             continue
 
         load = agu["action"] in {"Load", "LoadPair"}
         paired = agu["action"] in {"LoadPair", "StorePair"}
+        compressed = agu["address_kind"] == "Compressed"
         pcr = agu["address_kind"] == "PCRelative"
         indexed = agu["address_kind"] == "Register"
         update = agu["update_mode"]
         fields = {field["name"]: field for field in row["fields"]}
-        if agu["size_bytes"] not in {1, 2, 4, 8} or ((pcr or paired) and update != "None"):
+        if agu["size_bytes"] not in {1, 2, 4, 8} or ((pcr or paired or compressed) and update != "None"):
             raise ValueError(f"unexpected access for {identity}")
 
-        base_field = "SrcL" if load or indexed else "SrcR"
+        base_field = "SrcL" if load or indexed or compressed else "SrcR"
         base = "0b00000" if pcr else field_expression(fields[base_field])
-        if load:
+        expected = set()
+        if compressed:
+            # C.LWI/C.LDI push T. C.SWI/C.SDI read T#1.
+            data_reg = "0b11111" if load else "0b11000"
+        elif load:
             reg = fields["RegDst0" if paired or update != "None" else "RegDst"]
+            expected.add(reg["name"])
+            data_reg = field_expression(reg)
         else:
             reg = fields.get("SrcD", fields.get("SrcL"))
-        expected = {reg["name"]}
+            expected.add(reg["name"])
+            data_reg = field_expression(reg)
         if not pcr:
             expected.add(base_field)
         second = "None()"
@@ -93,15 +101,15 @@ def render():
             f"    // {identity}",
             f"    0x{code:02X} => Some(struct {{",
             f"      is_store = {str(not load).lower()}, pcr = {str(pcr).lower()},",
-            f"      base_reg = {base}, data_reg = {field_expression(reg)}, second_reg = {second},",
+            f"      base_reg = {base}, data_reg = {data_reg}, second_reg = {second},",
             f"      offset = {offset}, index = {index},",
             f"      update = {mode}, writeback_reg = {writeback},",
             f"      size = 0x{agu['size_bytes']:X}, signed_load = {str(agu['signed_load']).lower()}",
             "    }),",
         ]
         count += 1
-    if count != 173:
-        raise ValueError(f"expected 173 AGU forms, found {count}")
+    if count != 177:
+        raise ValueError(f"expected 177 AGU forms, found {count}")
     return "\n".join(lines + ["    _ => None()", "  }", "}", ""])
 
 

@@ -1,3 +1,29 @@
+function verify_scoped_scalar_witness(inst : bits(64), id : bits(8)) -> unit = {
+  assert(decode_pto_scoped_scalar(inst) == id);
+  let outer_tpc = tpc;
+  match prepare_scoped_scalar(inst, 0, 0, 1, true) {
+    ScopedPrepared => (),
+    _ => assert(false)
+  };
+  match issue_scoped_scalar(true) {
+    Some(request) => {
+      assert(request.source_tpc == outer_tpc & request.instruction == inst);
+      match request.shareability {
+        ScalarPrivate => assert(inst[9..8] == 0b00),
+        ScalarIntraCore => assert(inst[9..8] == 0b01),
+        ScalarInterCore => assert(inst[9..8] == 0b10)
+      };
+      let data : bits(64) = 0x0000000000000000;
+      if is_none(request.second) then
+        assert(complete_scoped_scalar(request.token, ScopedMemoryCommitted, data))
+      else
+        assert(complete_scoped_scalar_pair(request.token, ScopedMemoryCommitted, data, data))
+    },
+    None() => assert(false)
+  };
+  assert(tpc == outer_tpc + 8)
+}
+
 function verify_scoped_scalar_runtime() -> unit = {
   let lwi : bits(64) = 0x0000FFF22219051F; // lwi.intra [r4, -4], ->r4
   let sdi : bits(64) = 0x04513059000E0A1F; // hl.sdi.inter r2, [r5, 16]
