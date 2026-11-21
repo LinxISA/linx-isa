@@ -1880,28 +1880,34 @@ function exec_fabs(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 
 function exec_ssrget(RegDst : bits(5), ssr_id12 : bits(12)) -> unit = {
   let id24 : bits(24) = sail_zero_extend(ssr_id12, 24);
-  let v = read_system_register(id24);
-  write_regdst(RegDst, v)
+  if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
+  else write_regdst(RegDst, read_system_register(id24))
 }
 
 function exec_ssrset(SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
   let id24 : bits(24) = sail_zero_extend(ssr_id12, 24);
-  write_system_register(id24, read_reg5(SrcL))
+  if not_bool(system_register_writable(id24)) then trap_illegal_ssr()
+  else write_system_register(id24, read_reg5(SrcL))
 }
 
 function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
   let id24 : bits(24) = sail_zero_extend(ssr_id12, 24);
-  let old = swap_system_register(id24, read_reg5(SrcL));
-  write_regdst(RegDst, old)
+  if not_bool(system_register_readable(id24) & system_register_writable(id24)) then {
+    trap_illegal_ssr()
+  } else {
+    let old = swap_system_register(id24, read_reg5(SrcL));
+    write_regdst(RegDst, old)
+  }
 }
 
 function exec_hl_ssrget(RegDst : bits(5), ssr_id24 : bits(24)) -> unit = {
-  let v = read_system_register(ssr_id24);
-  write_regdst(RegDst, v)
+  if not_bool(system_register_readable(ssr_id24)) then trap_illegal_ssr()
+  else write_regdst(RegDst, read_system_register(ssr_id24))
 }
 
 function exec_hl_ssrset(SrcL : bits(5), ssr_id24 : bits(24)) -> unit = {
-  write_system_register(ssr_id24, read_reg5(SrcL))
+  if not_bool(system_register_writable(ssr_id24)) then trap_illegal_ssr()
+  else write_system_register(ssr_id24, read_reg5(SrcL))
 }
 
 function exec_c_ssrget(ssrid : bits(5)) -> unit = {
@@ -1909,8 +1915,8 @@ function exec_c_ssrget(ssrid : bits(5)) -> unit = {
   // SSR_ID[4:0] = SSRID.
   let id12 : bits(12) = (sail_zeros(7) @ ssrid);
   let id24 : bits(24) = sail_zero_extend(id12, 24);
-  let v = read_system_register(id24);
-  write_regdst(reg_t(), v)
+  if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
+  else write_regdst(reg_t(), read_system_register(id24))
 }
 
 function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
@@ -1919,8 +1925,8 @@ function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
   //   Write(Dst, value)
   // Source: docs/architecture/isa-manual/src/generated/instruction_details.adoc (LSRGET)
   let id24 : bits(24) = sail_zero_extend(lsr_id12, 24);
-  let v = read_system_register(id24);
-  write_regdst(RegDst, v)
+  if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
+  else write_regdst(RegDst, read_system_register(id24))
 }
 
 // -----------------------------------------------------------------------------

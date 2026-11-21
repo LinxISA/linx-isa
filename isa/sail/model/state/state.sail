@@ -362,12 +362,23 @@ function tile_mask_lane_effect(active : bool) -> bits(4) = {
 // NOTE: Sail requires registers to be declared before use, so we declare the
 // small SSR subset needed for vec bring-up here (full SSR block is below).
 register ssr_lcfr : bits(64) = 0x0000_0000_0006_0000 // SSR_ID 0x0024 (RO): LaneNum=6 => vec_length=64 (bring-up)
-register ssr_lb0  : bits(64) = 0x0000_0000_0000_0001 // SSR_ID 0x0050
-register ssr_lb1  : bits(64) = 0x0000_0000_0000_0001 // SSR_ID 0x0051
-register ssr_lb2  : bits(64) = 0x0000_0000_0000_0001 // SSR_ID 0x0052
-register ssr_lc0  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0053
-register ssr_lc1  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0054
-register ssr_lc2  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0055
+// Block-local dimensions and loop counters remain internal B.DIM/vector state.
+// Their former staged SSR aliases are reserved by the canonical register map.
+register ssr_lb0  : bits(64) = 0x0000_0000_0000_0001
+register ssr_lb1  : bits(64) = 0x0000_0000_0000_0001
+register ssr_lb2  : bits(64) = 0x0000_0000_0000_0001
+register ssr_lc0  : bits(64) = 0x0000_0000_0000_0000
+register ssr_lc1  : bits(64) = 0x0000_0000_0000_0000
+register ssr_lc2  : bits(64) = 0x0000_0000_0000_0000
+
+// PTO BLOCKNUM/BLOCKID are read-only launch-context registers. The staged
+// model exposes the reset/ambient values; future HSCB state can update these
+// two registers when an actual worker dispatch is modeled.
+register ssr_blocknum : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0050 (RO)
+register ssr_blockid  : bits(64) = 0x0000_0000_0000_0000 // SSR_ID 0x0051 (RO)
+
+function read_blocknum() -> bits(64) = { ssr_blocknum }
+function read_blockid() -> bits(64) = { ssr_blockid }
 
 function vec_length_from_lcfr() -> int = {
   let ln : int = unsigned(ssr_lcfr[19..16]);
@@ -1176,20 +1187,60 @@ function trap_illegal_ssr() -> unit = {
   trap_illegal_inst(read_pc_or_tpc())
 }
 
+function system_register_readable(id24 : bits(24)) -> bool = {
+  let id : bits(12) = id24[11..0];
+  match id {
+    0x000 => true,
+    0x001 => true,
+    0x020 => true,
+    0x024 => true,
+    // These two base registers have exact 24-bit identities. In particular,
+    // HL.SSRGET must not alias a nonzero upper address onto the base namespace.
+    0x050 => id24 == 0x000050,
+    0x051 => id24 == 0x000051,
+    0xF00 => true,
+    0xF07 => true,
+    0xF30 => true,
+    0xF41 => true,
+    0xF42 => true,
+    0xF43 => true,
+    0xF4F => true,
+    0xF50 => true,
+    _ => false
+  }
+}
+
+function system_register_writable(id24 : bits(24)) -> bool = {
+  let id : bits(12) = id24[11..0];
+  match id {
+    0x000 => true,
+    0x001 => true,
+    0x020 => true,
+    0xF00 => true,
+    0xF07 => true,
+    0xF30 => true,
+    0xF41 => true,
+    0xF42 => true,
+    0xF43 => true,
+    0xF4F => true,
+    0xF50 => true,
+    _ => false
+  }
+}
+
 function read_system_register(id24 : bits(24)) -> bits(64) = {
   // Base SSR namespace is 12-bit for 32-bit forms.
   let id : bits(12) = id24[11..0];
-  match id {
+  if not_bool(system_register_readable(id24)) then {
+    trap_illegal_ssr();
+    0x0000_0000_0000_0000
+  } else match id {
     0x000 => ssr_tp,
     0x001 => ssr_gp,
     0x020 => ssr_cstate,
     0x024 => ssr_lcfr,
-    0x050 => ssr_lb0,
-    0x051 => ssr_lb1,
-    0x052 => ssr_lb2,
-    0x053 => ssr_lc0,
-    0x054 => ssr_lc1,
-    0x055 => ssr_lc2,
+    0x050 => read_blocknum(),
+    0x051 => read_blockid(),
     0xF00 => read_ecstate_for_acr(current_acr_id()),
     0xF07 => {
       let cur_acr : bits(4) = current_acr_id();
@@ -1223,17 +1274,12 @@ function read_system_register(id24 : bits(24)) -> bits(64) = {
 
 function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
   let id : bits(12) = id24[11..0];
-  match id {
+  if not_bool(system_register_writable(id24)) then {
+    trap_illegal_ssr()
+  } else match id {
     0x000 => ssr_tp = v,
     0x001 => ssr_gp = v,
     0x020 => ssr_cstate = v,
-    0x024 => { trap_illegal_inst(read_pc_or_tpc()) },
-    0x050 => ssr_lb0 = v,
-    0x051 => ssr_lb1 = v,
-    0x052 => ssr_lb2 = v,
-    0x053 => ssr_lc0 = v,
-    0x054 => ssr_lc1 = v,
-    0x055 => ssr_lc2 = v,
     0xF00 => write_ecstate_for_acr(current_acr_id(), v),
     0xF07 => {
       let cur_acr : bits(4) = current_acr_id();
@@ -1262,9 +1308,14 @@ function write_system_register(id24 : bits(24), v : bits(64)) -> unit = {
 }
 
 function swap_system_register(id24 : bits(24), v : bits(64)) -> bits(64) = {
-  let old = read_system_register(id24);
-  write_system_register(id24, v);
-  old
+  if not_bool(system_register_readable(id24) & system_register_writable(id24)) then {
+    trap_illegal_ssr();
+    0x0000_0000_0000_0000
+  } else {
+    let old = read_system_register(id24);
+    write_system_register(id24, v);
+    old
+  }
 }
 
 // -----------------------------------------------------------------------------
