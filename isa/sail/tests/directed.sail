@@ -3,6 +3,8 @@
 $include "../model/linxisa.sail"
 $include "scoped_scalar_witnesses.sail"
 $include "scoped_scalar_runtime_tests.sail"
+$include "scoped_scalar_atomic_witnesses.sail"
+$include "scoped_scalar_atomic_tests.sail"
 $include "msgb_receive_tests.sail"
 $include "msgb_transport_tests.sail"
 $include "hscb_dispatch_tests.sail"
@@ -130,6 +132,8 @@ function main() : unit -> unit = {
   verify_scoped_scalar_runtime();
   verify_scoped_scalar_writeback();
   verify_scoped_scalar_pairs();
+  verify_scoped_atomic_witnesses();
+  verify_scoped_scalar_atomic_runtime();
   // Low prefix reserved bits, scope 11 and length 11 reject.
   assert(decode_pto_scoped_scalar(0x0000_0000_001A_101F) == 0xFF);
   assert(decode_pto_scoped_scalar(0x0000_0000_001A_031F) == 0xFF);
