@@ -122,6 +122,8 @@ function reset_ssr_access_case() -> unit = {
   write_reg5(reg_t(), 0xCCCC_CCCC_CCCC_CCCC)
 }
 
+$include "msgb_encoded_tests.sail"
+
 function main() : unit -> unit = {
   verify_pto_scoped_scalar_witnesses();
   // Low prefix reserved bits, scope 11 and length 11 reject.
@@ -141,6 +143,7 @@ function main() : unit -> unit = {
   verify_msgb_transport();
   verify_msgb_bse();
   verify_hscb_dispatch();
+  verify_msgb_encoded();
   // PTO golden has 22 scalar PCR memory forms: 11 L32 forms with simm17 and
   // 11 HL48 forms with simm29.  Address formation aligns the current TPC
   // to four bytes, sign-extends the immediate, applies the form's offset

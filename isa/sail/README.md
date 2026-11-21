@@ -20,10 +20,15 @@ The MSGB transport models the released two-Core reference topology. Its
 receive, admission, BSE and HSCB APIs operate on platform-configured endpoints
 and active invocations. Directed tests cover claim/read/ACK/release, atomic
 delivery, occurrence replay, drain, READY/LAUNCH/DONE, and identity exhaustion.
-With a bound platform context, encoded SSR reads see per-worker launch geometry
-and restore the ambient view after matching DONE. Architectural MSGB register
-configuration, encoded BSE/BWE dispatch, and the host recovery connection are
-the next integration boundary.
+With a bound platform context, the encoded SSR paths configure and access
+MSGB banks, BSE submits the staged payload, and BWE observes readiness.
+Disabled BSE and BWE publish the architectural SendEvent and WaitEvent requests
+with their exact source operands and request epochs.
+Encoded SSRGET exposes per-worker launch geometry until matching DONE.
+The instruction entry reads live ACR and TPC. Platform integration supplies
+Core, PE, thread slot, invocation, execution domain, bundle attributes, and GM
+admission evidence. It consumes the blocked flag before instruction retirement
+and manages the lifetime of the bank and selector state.
 
 Scope policy:
 
