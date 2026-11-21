@@ -1,6 +1,7 @@
 // Directed executable checks for the canonical LinxISA v0.58 Sail model.
 
 $include "../model/linxisa.sail"
+$include "scoped_scalar_witnesses.sail"
 
 function reset_fused_call_case(base_pc : bits(64), ra_seed : bits(64)) -> unit = {
   pc = base_pc;
@@ -119,6 +120,20 @@ function reset_ssr_access_case() -> unit = {
 }
 
 function main() : unit -> unit = {
+  verify_pto_scoped_scalar_witnesses();
+  // Low prefix reserved bits, scope 11 and length 11 reject.
+  assert(decode_pto_scoped_scalar(0x0000_0000_001A_101F) == 0xFF);
+  assert(decode_pto_scoped_scalar(0x0000_0000_001A_031F) == 0xFF);
+  assert(decode_pto_scoped_scalar(0x0000_0000_001A_0C1F) == 0xFF);
+  // Trailing nonzero bits cannot extend a short carrier.
+  assert(decode_pto_scoped_scalar(0x0000_0001_001A_001F) == 0xFF);
+  assert(decode_pto_scoped_scalar(0x0001_0000_0000_041F) == 0xFF);
+  // C.BSTOP and ADDTPC have no released scoped Scalar forms.
+  assert(decode_pto_scoped_scalar(0x0000_0000_0000_001F) == 0xFF);
+  assert(decode_pto_scoped_scalar(0x0000_0000_0007_041F) == 0xFF);
+  // DMA is excluded, and HL.LB.PO still rejects SrcRType 3.
+  assert(decode_pto_scoped_scalar(0x0000_0000_700B_041F) == 0xFF);
+  assert(decode_pto_scoped_scalar(0x0600_0009_003E_081F) == 0xFF);
   // PTO golden has 22 scalar PCR memory forms: 11 L32 forms with simm17 and
   // 11 HL48 forms with simm29.  Address formation aligns the current TPC
   // to four bytes, sign-extends the immediate, applies the form's offset
