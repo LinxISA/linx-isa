@@ -5,3 +5,4 @@ default Order dec
 $include "state/state.sail"
 $include "execute/execute.sail"
 $include "decode/decode.sail"
+$include "decode/scoped_scalar.sail"

@@ -9,6 +9,13 @@ short and long SSR reads, illegal writes and swaps, and reserved-address faults.
 The [PTO 0.59.1 adoption candidate](../../docs/architecture/v0.59.1-pto-alignment.md)
 records the separate execution work for scoped Scalar and HSCB dispatch.
 
+The generated `decode_pto_scoped_scalar` accepts a 64-bit word packed in
+instruction-stream order and resolves the carrier to its locked inner Scalar
+form. Directed tests check all 705 published witnesses and rejection of reserved
+prefix fields, padding, excluded operations, and invalid operand encodings.
+The scoped executor will consume this decoder when the memory request and
+retirement path is integrated.
+
 Scope policy:
 
 - The Sail model is an executable reference for `v0.58` semantics and legality checks.
