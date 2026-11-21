@@ -7,6 +7,13 @@ enum scoped_scalar_start = {
 enum scoped_memory_completion = {
   ScopedMemoryCommitted, ScopedMemoryBlocked, ScopedMemoryAlignment, ScopedMemoryPageFault
 }
+enum scoped_agu_update = { ScopedNoWriteback, ScopedPreIndex, ScopedPostIndex }
+
+struct scoped_agu_index = {
+  reg : bits(5),
+  modifier : bits(2),
+  shift : bits(6)
+}
 
 struct scoped_agu = {
   is_store : bool,
@@ -14,6 +21,9 @@ struct scoped_agu = {
   base_reg : bits(5),
   data_reg : bits(5),
   offset : bits(64),
+  index : option(scoped_agu_index),
+  update : scoped_agu_update,
+  writeback_reg : bits(5),
   size : bits(4),
   signed_load : bool
 }
@@ -37,6 +47,7 @@ struct scoped_scalar_attempt = {
   request : scoped_memory_request,
   destination : bits(5),
   signed_load : bool,
+  writeback : option((bits(5), bits(64))),
   issued : bool
 }
 
@@ -71,9 +82,25 @@ function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
     Some(agu) => {
       let data_supported = if agu.is_store then scalar_gpr_source_supported(agu.data_reg)
         else scalar_gpr_or_discard_destination_supported(agu.data_reg);
-      if not_bool(scalar_gpr_source_supported(agu.base_reg) & data_supported) then
+      let index_supported : bool = match agu.index {
+        Some(index) => scalar_gpr_source_supported(index.reg),
+        None() => true
+      };
+      if not_bool(scalar_gpr_source_supported(agu.base_reg) & data_supported & index_supported &
+          scalar_gpr_or_discard_destination_supported(agu.writeback_reg)) then
         return ScopedUnimplemented;
       let base = if agu.pcr then tpc & 0xFFFFFFFFFFFFFFFC else read_reg5(agu.base_reg);
+      let offset : bits(64) = match agu.index {
+        Some(index) => sail_shiftleft(apply_address_srcrtype64(index.modifier, read_reg5(index.reg)),
+                                    unsigned(index.shift)),
+        None() => agu.offset
+      };
+      let updated = base + offset;
+      let address : bits(64) = match agu.update { ScopedPostIndex => base, _ => updated };
+      let writeback : option((bits(5), bits(64))) = match agu.update {
+        ScopedNoWriteback => None(),
+        _ => Some((agu.writeback_reg, updated))
+      };
       let data = if agu.is_store then scoped_load_value(read_reg5(agu.data_reg), agu.size, false)
         else 0x0000000000000000;
       let scope : scalar_shareability = match inst[9..8] {
@@ -84,12 +111,13 @@ function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
       let request : scoped_memory_request = struct {
         token = scoped_scalar_next_token, core = core, agent = agent, invocation = invocation,
         acr = current_acr_id(), instruction = inst, source_tpc = tpc,
-        shareability = scope, address = base + agu.offset, size = agu.size,
+        shareability = scope, address = address, size = agu.size,
         is_store = agu.is_store, store_data = data
       };
       scoped_scalar_next_token = scoped_scalar_next_token + 1;
       scoped_scalar_pending = Some(struct {
-        request = request, destination = agu.data_reg, signed_load = agu.signed_load, issued = false
+        request = request, destination = agu.data_reg, signed_load = agu.signed_load,
+        writeback = writeback, issued = false
       });
       ScopedPrepared
     }
@@ -121,6 +149,10 @@ function complete_scoped_scalar(token : int, completion : scoped_memory_completi
         ScopedMemoryCommitted => {
           if not_bool(request.is_store) then write_scalar_gpr_or_discard(attempt.destination,
             scoped_load_value(data, request.size, attempt.signed_load));
+          match attempt.writeback {
+            Some((reg, value)) => write_scalar_gpr_or_discard(reg, value),
+            None() => ()
+          };
           tpc = request.source_tpc + 8
         },
         ScopedMemoryBlocked => scoped_scalar_pending = Some({ attempt with issued = false }),

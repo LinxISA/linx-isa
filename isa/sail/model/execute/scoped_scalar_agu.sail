@@ -5,420 +5,1120 @@ function decode_scoped_single_agu(id : bits(8), word : bits(48)) -> option(scope
     0x0C => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = true
+    }),
+    // hl_lb_po_48_5c7f5c82b186
+    0x0D => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x1, signed_load = true
+    }),
+    // hl_lb_pr_48_cf73675cad50
+    0x0E => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x1, signed_load = true
     }),
     // hl_lbi_48_250803040cc8
     0x0F => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = true
+    }),
+    // hl_lbi_po_48_afbc00c48aba
+    0x10 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x1, signed_load = true
+    }),
+    // hl_lbi_pr_48_b4bdbd29f859
+    0x11 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x1, signed_load = true
     }),
     // hl_lbu_pcr_48_504b34c0ec9d
     0x14 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = false
+    }),
+    // hl_lbu_po_48_5c8a5b39e6c5
+    0x15 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x1, signed_load = false
+    }),
+    // hl_lbu_pr_48_bf9a0ea4b0db
+    0x16 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x1, signed_load = false
     }),
     // hl_lbui_48_50579e3558f4
     0x17 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = false
+    }),
+    // hl_lbui_po_48_c889b4445022
+    0x18 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x1, signed_load = false
+    }),
+    // hl_lbui_pr_48_78a81538a7fa
+    0x19 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x1, signed_load = false
     }),
     // hl_ld_pcr_48_703673c266da
     0x1C => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // hl_ld_po_48_870e30995d10
+    0x1D => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_ld_pr_48_7ec4111b123b
+    0x1E => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x8, signed_load = false
     }),
     // hl_ldi_48_088e69e45b37
     0x1F => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 3),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 3), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // hl_ldi_po_48_0cc539e6798d
+    0x20 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 3), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_ldi_pr_48_d07cced5a281
+    0x21 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 3), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x8, signed_load = false
     }),
     // hl_ldi_u_48_894d02c12dcc
     0x22 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // hl_ldi_upo_48_5126b735cfe8
+    0x23 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_ldi_upr_48_7a8e2794526f
+    0x24 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x8, signed_load = false
     }),
     // hl_lh_pcr_48_37df3cfe0d6e
     0x28 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = true
+    }),
+    // hl_lh_po_48_7ca3e8b77906
+    0x29 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = true
+    }),
+    // hl_lh_pr_48_d59f64cde1dc
+    0x2A => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = true
     }),
     // hl_lhi_48_6d94cb04aeac
     0x2B => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 1),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 1), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = true
+    }),
+    // hl_lhi_po_48_aa393747abda
+    0x2C => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 1), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = true
+    }),
+    // hl_lhi_pr_48_9ec8198594ad
+    0x2D => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 1), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = true
     }),
     // hl_lhi_u_48_4d4b89e63c98
     0x2E => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = true
+    }),
+    // hl_lhi_upo_48_81c796b13b12
+    0x2F => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = true
+    }),
+    // hl_lhi_upr_48_2a7c09d4b645
+    0x30 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = true
     }),
     // hl_lhu_pcr_48_444cb4ddde1d
     0x34 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // hl_lhu_po_48_c57c3b4a74e8
+    0x35 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_lhu_pr_48_f874b126e29c
+    0x36 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = false
     }),
     // hl_lhui_48_6450dca3aad9
     0x37 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 1),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 1), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // hl_lhui_po_48_16db8d40eee8
+    0x38 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 1), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_lhui_pr_48_6a99a2b99298
+    0x39 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 1), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = false
     }),
     // hl_lhui_u_48_d75649bac1c7
     0x3A => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // hl_lhui_upo_48_7f2c3eae793e
+    0x3B => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_lhui_upr_48_7e66aaf61701
+    0x3C => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = false
     }),
     // hl_lw_pcr_48_00cf25e2ac36
     0x40 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = true
+    }),
+    // hl_lw_po_48_ff2c6de58064
+    0x41 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = true
+    }),
+    // hl_lw_pr_48_2b0d62d28b57
+    0x42 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = true
     }),
     // hl_lwi_48_549c666c56fd
     0x43 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = true
+    }),
+    // hl_lwi_po_48_2dc642d88d9d
+    0x44 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = true
+    }),
+    // hl_lwi_pr_48_3b5e1524de1b
+    0x45 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = true
     }),
     // hl_lwi_u_48_267e0f4a6222
     0x46 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = true
+    }),
+    // hl_lwi_upo_48_1c25d6266934
+    0x47 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = true
+    }),
+    // hl_lwi_upr_48_03b5f7994b14
+    0x48 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = true
     }),
     // hl_lwu_pcr_48_95ba33b7b68c
     0x4C => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[47..31]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
+    }),
+    // hl_lwu_po_48_98730d2ddead
+    0x4D => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_lwu_pr_48_f105cacec36c
+    0x4E => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = sail_zero_extend(word[47..43], 6) }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = false
     }),
     // hl_lwui_48_eeb551f8269d
     0x4F => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
+    }),
+    // hl_lwui_po_48_09a75b628dc4
+    0x50 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_lwui_pr_48_32de19a508f0
+    0x51 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = false
     }),
     // hl_lwui_u_48_4570cc517629
     0x52 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[35..31], data_reg = word[27..23],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
+    }),
+    // hl_lwui_upo_48_33260eb06a2c
+    0x53 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_lwui_upr_48_998a98c46469
+    0x54 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[35..31], data_reg = word[27..23],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[47..36]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = false
     }),
     // hl_sb_pcr_48_d0ba4b6e0f54
     0x58 => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = false
+    }),
+    // hl_sb_po_48_c21837f2c14d
+    0x59 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x1, signed_load = false
+    }),
+    // hl_sb_pr_48_40eae4513905
+    0x5A => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x1, signed_load = false
     }),
     // hl_sbi_48_3504e6935382
     0x5B => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = false
+    }),
+    // hl_sbi_po_48_493d9c8b27eb
+    0x5C => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x1, signed_load = false
+    }),
+    // hl_sbi_pr_48_d6f48429cca5
+    0x5D => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x1, signed_load = false
     }),
     // hl_sd_pcr_48_8ed6bb942a78
     0x60 => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // hl_sd_po_48_9ced722101a8
+    0x61 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000011 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_sd_pr_48_4f96249f5efe
+    0x62 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000011 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_sd_upo_48_ba930fbec5c7
+    0x63 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_sd_upr_48_af7118270a90
+    0x64 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x8, signed_load = false
     }),
     // hl_sdi_48_3203094081da
     0x65 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 3),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 3), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // hl_sdi_po_48_4b6af4b433bb
+    0x66 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 3), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_sdi_pr_48_8b2688251991
+    0x67 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 3), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x8, signed_load = false
     }),
     // hl_sdi_u_48_d9597eeba6b4
     0x68 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // hl_sdi_upo_48_0ceed9e5fdb0
+    0x69 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x8, signed_load = false
+    }),
+    // hl_sdi_upr_48_f8aba43b65d5
+    0x6A => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x8, signed_load = false
     }),
     // hl_sh_pcr_48_705ea4062d0b
     0x6F => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // hl_sh_po_48_e0b543d5b724
+    0x70 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000001 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_sh_pr_48_40ab17f5a580
+    0x71 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000001 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_sh_upo_48_5bfb8ea0c992
+    0x72 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_sh_upr_48_719102d66e45
+    0x73 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = false
     }),
     // hl_shi_48_38ea3f0a4f08
     0x74 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 1),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 1), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // hl_shi_po_48_636fea832c7b
+    0x75 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 1), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_shi_pr_48_1020eb4dff56
+    0x76 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 1), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = false
     }),
     // hl_shi_u_48_79dbaa14d2c2
     0x77 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // hl_shi_upo_48_de81eed370cf
+    0x78 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x2, signed_load = false
+    }),
+    // hl_shi_upr_48_ca9f1acbb1b2
+    0x79 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x2, signed_load = false
     }),
     // hl_sw_pcr_48_8f8900dfac6b
     0x7E => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..4] @ word[27..23] @ word[47..36]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
+    }),
+    // hl_sw_po_48_84cf0cd97fde
+    0x7F => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000010 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_sw_pr_48_d80424b0a9cb
+    0x80 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000010 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_sw_upo_48_59be7b468f8a
+    0x81 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_sw_upr_48_d4ccb513944a
+    0x82 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[35..31], data_reg = word[47..43],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[40..36], modifier = word[42..41], shift = 0b000000 }),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = false
     }),
     // hl_swi_48_13deb2849df5
     0x83 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
+    }),
+    // hl_swi_po_48_66a80d0fa7f5
+    0x84 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 2), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_swi_pr_48_68b9003e0421
+    0x85 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 2), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
       size = 0x4, signed_load = false
     }),
     // hl_swi_u_48_fac636330fd6
     0x86 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[40..36], data_reg = word[35..31],
-      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[15..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
+    }),
+    // hl_swi_upo_48_243d3c38cd1a
+    0x87 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPostIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // hl_swi_upr_48_15c2fb96aab0
+    0x88 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[40..36], data_reg = word[35..31],
+      offset = sail_shiftleft(sail_sign_extend((word[10..6] @ word[27..23] @ word[47..41]), 64), 0), index = None(),
+      update = ScopedPreIndex, writeback_reg = word[15..11],
+      size = 0x4, signed_load = false
+    }),
+    // lb_32_b718aa88e28f
+    0x8D => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = true
     }),
     // lb_pcr_32_3fa2540b22d0
     0x8E => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x1, signed_load = true
     }),
     // lbi_32_9af2cdbeb38f
     0x8F => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x1, signed_load = true
+    }),
+    // lbu_32_a9a58ab4ea22
+    0x90 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = false
     }),
     // lbu_pcr_32_5b571b0c8dc2
     0x91 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x1, signed_load = false
     }),
     // lbui_32_c39b9aa11f02
     0x92 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x1, signed_load = false
+    }),
+    // ld_32_7c48838bc4e6
+    0x93 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
     }),
     // ld_pcr_32_99bc3d2d487b
     0x97 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x8, signed_load = false
     }),
     // ldi_32_d82a643f7a2b
     0x9D => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 3),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 3), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x8, signed_load = false
     }),
     // ldi_u_32_111bb521a439
     0x9E => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x8, signed_load = false
+    }),
+    // lh_32_d0f04d7d7696
+    0x9F => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = true
     }),
     // lh_pcr_32_aabf46d21e49
     0xA0 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = true
     }),
     // lhi_32_46a45ec7074d
     0xA1 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 1),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 1), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = true
     }),
     // lhi_u_32_bb0c81c6e61d
     0xA2 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = true
+    }),
+    // lhu_32_730caf67ecd1
+    0xA3 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
     }),
     // lhu_pcr_32_9f4a1c04f258
     0xA4 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = false
     }),
     // lhui_32_6da39bba900b
     0xA5 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 1),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 1), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = false
     }),
     // lhui_u_32_748b15cd2ced
     0xA6 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = false
+    }),
+    // lw_32_3a77ffafcb34
+    0xAB => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = true
     }),
     // lw_pcr_32_d135a1aa4ffb
     0xAF => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = true
     }),
     // lwi_32_7085c98058fa
     0xB5 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = true
     }),
     // lwi_u_32_4a7426a70f10
     0xB6 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = true
+    }),
+    // lwu_32_678935925636
+    0xB7 => Some(struct {
+      is_store = false, pcr = false,
+      base_reg = word[19..15], data_reg = word[11..7],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = sail_zero_extend(word[31..27], 6) }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
     }),
     // lwu_pcr_32_df27ea51c564
     0xB8 => Some(struct {
       is_store = false, pcr = true,
       base_reg = 0b00000, data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..15], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
     }),
     // lwui_32_b435f946eb71
     0xB9 => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 2),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
     }),
     // lwui_u_32_1fcbb98df571
     0xBA => Some(struct {
       is_store = false, pcr = false,
       base_reg = word[19..15], data_reg = word[11..7],
-      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0),
+      offset = sail_shiftleft(sail_sign_extend(word[31..20], 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
+    }),
+    // sb_32_43c106ae3749
+    0xBB => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000000 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x1, signed_load = false
     }),
     // sb_pcr_32_7625a9a24c59
     0xBD => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x1, signed_load = false
     }),
     // sbi_32_f3c6b796f0d9
     0xBF => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x1, signed_load = false
+    }),
+    // sd_32_9dbc40328653
+    0xC4 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000011 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
     }),
     // sd_pcr_32_2340e0085413
     0xC8 => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x8, signed_load = false
+    }),
+    // sd_u_32_1602c58c2031
+    0xCC => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000000 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x8, signed_load = false
     }),
     // sdi_32_fab563230a66
     0xD0 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 3),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 3), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x8, signed_load = false
     }),
     // sdi_u_32_cba5a4a04e7b
     0xD1 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x8, signed_load = false
+    }),
+    // sh_32_bc7d4a7dea28
+    0xD2 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000001 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
     }),
     // sh_pcr_32_14ba505eb3c2
     0xD4 => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x2, signed_load = false
+    }),
+    // sh_u_32_fa87afbf8f24
+    0xD6 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000000 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = false
     }),
     // shi_32_21351c202204
     0xD7 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 1),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 1), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = false
     }),
     // shi_u_32_caaf3ed72a8f
     0xD8 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x2, signed_load = false
+    }),
+    // sw_32_28ad317b1b41
+    0xD9 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000010 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
     }),
     // sw_pcr_32_436677679523
     0xDD => Some(struct {
       is_store = true, pcr = true,
       base_reg = 0b00000, data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..20]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
+      size = 0x4, signed_load = false
+    }),
+    // sw_u_32_718a61f75d33
+    0xE1 => Some(struct {
+      is_store = true, pcr = false,
+      base_reg = word[19..15], data_reg = word[31..27],
+      offset = 0x0000000000000000, index = Some(struct { reg = word[24..20], modifier = word[26..25], shift = 0b000000 }),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
     }),
     // swi_32_147e55489c41
     0xE9 => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 2),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 2), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
     }),
     // swi_u_32_1630e926da1a
     0xEA => Some(struct {
       is_store = true, pcr = false,
       base_reg = word[24..20], data_reg = word[19..15],
-      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0),
+      offset = sail_shiftleft(sail_sign_extend((word[11..7] @ word[31..25]), 64), 0), index = None(),
+      update = ScopedNoWriteback, writeback_reg = 0b00000,
       size = 0x4, signed_load = false
     }),
     _ => None()
