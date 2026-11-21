@@ -6,8 +6,8 @@
   "normative_language": "en",
   "pages": {
     "architecture/README.md": {
-      "source_sha256": "75b70ec12c2c22078eed509ea92b2c91a2b4597132bf1dc7d62e0e9d0477e597",
-      "translation_sha256": "cf25ea0ac26da196e1066871153e9ae2432119370a19a2c12e1cbf89c66eaa2e"
+      "source_sha256": "a963b859984d57324d0ad2c8966dbfebd26dada628148ed7fffa5b5866bbb075",
+      "translation_sha256": "7defca9868f7f21c95537828137f69e58f4734085e7735da5d919fedf8a8c31b"
     },
     "architecture/isa-manual/README.md": {
       "source_sha256": "c85b29760a30a5d86ddc347b426f97f68fd4d267b59eb7a3e7ea65ae5a8042ba",
@@ -52,6 +52,10 @@
     "architecture/v0.58-architecture-contract.md": {
       "source_sha256": "a890090d0280b63d74d7057273a7fdfd7aaef4f120cefb6c876364d4369f8ecf",
       "translation_sha256": "2d588dd5ab6a94ee09adbe4859711fee3889e7cb2a1f7d7efb420e0b304f894f"
+    },
+    "architecture/v0.59.1-pto-alignment.md": {
+      "source_sha256": "bb64791bf71dba7259dc1d961e630946249b6dae5eb7dc3cde895363efe98e55",
+      "translation_sha256": "bec02953a0a0efd6e460ca5a339ff3d4e1faf9c97c97e217c1acd2a7c3452ad3"
     },
     "archive/design-updates/README.md": {
       "source_sha256": "80981e0838933412e77e97cb0abcbc7aa0c1ebff2ad11494f8328bc99139772e",
