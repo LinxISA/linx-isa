@@ -95,6 +95,8 @@ def render() -> tuple[str, str]:
         provenance,
         "",
         "function verify_pto_scoped_scalar_witnesses() -> unit = {",
+        "  let queues : vector(4, option(bits(64))) = vector_init(4, Some(0x0000000000000000));",
+        "  assert(bind_scoped_scalar_queues(0, 0, 1, queues, queues));",
     ]
     form_numbers: dict[int, list[int]] = defaultdict(list)
     for number, (identity, variants) in enumerate(sorted(scoped_forms.items())):
@@ -118,7 +120,7 @@ def render() -> tuple[str, str]:
         for row in sorted(variants, key=lambda item: item["scope_code"]):
             witness = validate_carrier(base, row)
             witnesses.append(
-                f"  assert(decode_pto_scoped_scalar(0x{witness:016X}) == 0x{number:02X});"
+                f"  verify_scoped_scalar_witness(0x{witness:016X}, 0x{number:02X});"
             )
 
     for length, numbers in sorted(form_numbers.items()):

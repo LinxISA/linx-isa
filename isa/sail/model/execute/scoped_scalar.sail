@@ -95,6 +95,8 @@ $include "scoped_scalar_atomic.sail"
 register scoped_scalar_next_token : int = 0
 register scoped_scalar_pending : option(scoped_scalar_attempt) = None()
 
+$include "scoped_scalar_queues.sail"
+
 function scoped_load_value(value : bits(64), size : bits(4), signed_load : bool) -> bits(64) = {
   match size {
     0x1 => if signed_load then sail_sign_extend(value[7..0], 64) else sail_zero_extend(value[7..0], 64),
@@ -146,6 +148,10 @@ function scoped_optional_destination_supported(reg : option(bits(5))) -> bool = 
   match reg { Some(selector) => scalar_gpr_or_discard_destination_supported(selector), None() => true }
 }
 
+function scoped_optional_source_available(reg : option(bits(5))) -> bool = {
+  match reg { Some(selector) => scoped_source_available(selector), None() => true }
+}
+
 function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
     invocation : int, applicable : bool) -> scoped_scalar_start = {
   if not_bool(is_none(scoped_scalar_pending)) then return ScopedBusy;
@@ -162,17 +168,24 @@ function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
     None() => match decode_scoped_atomic(id, inst[63..16]) {
       None() => ScopedUnimplemented,
       Some(atomic) => {
-        if not_bool(scalar_gpr_source_supported(atomic.address_reg) &
+        let queue_needed = not_bool(scalar_gpr_source_supported(atomic.address_reg) &
             scoped_optional_source_supported(atomic.operand_reg) &
             scoped_optional_source_supported(atomic.compare_reg) &
-            scoped_optional_destination_supported(atomic.destination)) then
+            scoped_optional_destination_supported(atomic.destination));
+        if queue_needed & not_bool(scoped_queues_bound(core, agent, invocation)) then
           return ScopedUnimplemented;
+        if not_bool(scoped_source_available(atomic.address_reg) &
+            scoped_optional_source_available(atomic.operand_reg) &
+            scoped_optional_source_available(atomic.compare_reg)) then {
+          trap_illegal_inst(tpc);
+          return ScopedIllegal
+        };
         let operand : bits(64) = match atomic.operand_reg {
-          Some(reg) => scoped_load_value(read_reg5(reg), atomic.size, false),
+          Some(reg) => scoped_load_value(read_scoped_reg5(reg), atomic.size, false),
           None() => 0x0000000000000000
         };
         let compare : bits(64) = match atomic.compare_reg {
-          Some(reg) => scoped_load_value(read_reg5(reg), atomic.size, false),
+          Some(reg) => scoped_load_value(read_scoped_reg5(reg), atomic.size, false),
           None() => 0x0000000000000000
         };
         let scope = scoped_shareability(inst);
@@ -185,7 +198,7 @@ function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
           token = scoped_scalar_next_token, core = core, agent = agent,
           invocation = invocation, acr = current_acr_id(), instruction = inst,
           source_tpc = tpc, shareability = scope,
-          address = read_reg5(atomic.address_reg), size = atomic.size,
+          address = read_scoped_reg5(atomic.address_reg), size = atomic.size,
           is_store = not_bool(scoped_atomic_is_load_reserved(atomic.kind)),
           store_data = operand, second = None(), atomic = Some(transaction)
         };
@@ -210,12 +223,23 @@ function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
         Some(index) => scalar_gpr_source_supported(index.reg),
         None() => true
       };
-      if not_bool(scalar_gpr_source_supported(agu.base_reg) & data_supported & second_supported & index_supported &
-          scalar_gpr_or_discard_destination_supported(agu.writeback_reg)) then
+      let queue_needed = not_bool(scalar_gpr_source_supported(agu.base_reg) & data_supported & second_supported &
+        index_supported & scalar_gpr_or_discard_destination_supported(agu.writeback_reg));
+      if queue_needed & not_bool(scoped_queues_bound(core, agent, invocation)) then
         return ScopedUnimplemented;
-      let base = if agu.pcr then tpc & 0xFFFFFFFFFFFFFFFC else read_reg5(agu.base_reg);
+      let index_available : bool = match agu.index {
+        Some(index) => scoped_source_available(index.reg),
+        None() => true
+      };
+      if not_bool(scoped_source_available(agu.base_reg) & index_available) |
+          (agu.is_store & not_bool(scoped_source_available(agu.data_reg) &
+            scoped_optional_source_available(agu.second_reg))) then {
+        trap_illegal_inst(tpc);
+        return ScopedIllegal
+      };
+      let base = if agu.pcr then tpc & 0xFFFFFFFFFFFFFFFC else read_scoped_reg5(agu.base_reg);
       let offset : bits(64) = match agu.index {
-        Some(index) => sail_shiftleft(apply_address_srcrtype64(index.modifier, read_reg5(index.reg)),
+        Some(index) => sail_shiftleft(apply_address_srcrtype64(index.modifier, read_scoped_reg5(index.reg)),
                                     unsigned(index.shift)),
         None() => agu.offset
       };
@@ -225,11 +249,11 @@ function prepare_scoped_scalar(inst : bits(64), core : int, agent : int,
         ScopedNoWriteback => None(),
         _ => Some((agu.writeback_reg, updated))
       };
-      let data = if agu.is_store then scoped_load_value(read_reg5(agu.data_reg), agu.size, false)
+      let data = if agu.is_store then scoped_load_value(read_scoped_reg5(agu.data_reg), agu.size, false)
         else 0x0000000000000000;
       let second : option((bits(64), bits(64))) = match agu.second_reg {
         Some(reg) => {
-          let second_data = if agu.is_store then scoped_load_value(read_reg5(reg), agu.size, false)
+          let second_data = if agu.is_store then scoped_load_value(read_scoped_reg5(reg), agu.size, false)
             else 0x0000000000000000;
           Some((address + sail_zero_extend(agu.size, 64), second_data))
         },
@@ -296,21 +320,21 @@ function complete_scoped_scalar_response(token : int, completion : scoped_memory
               Some(reg) => {
                 let value = if scoped_atomic_is_store_conditional(kind) then data
                   else scoped_atomic_result(data, size);
-                write_scalar_gpr_or_discard(reg, value)
+                write_scoped_reg5(reg, value)
               },
               None() => ()
             },
             None() => if not_bool(request.is_store) then
-              write_scalar_gpr_or_discard(attempt.destination,
+              write_scoped_reg5(attempt.destination,
                 scoped_load_value(data, request.size, attempt.signed_load))
           };
           match (attempt.second_destination, second_data) {
-            (Some(reg), Some(value)) => write_scalar_gpr_or_discard(reg,
+            (Some(reg), Some(value)) => write_scoped_reg5(reg,
               scoped_load_value(value, request.size, attempt.signed_load)),
             _ => ()
           };
           match attempt.writeback {
-            Some((reg, value)) => write_scalar_gpr_or_discard(reg, value),
+            Some((reg, value)) => write_scoped_reg5(reg, value),
             None() => ()
           };
           tpc = request.source_tpc + 8

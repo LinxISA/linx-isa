@@ -13,10 +13,9 @@ The generated `decode_pto_scoped_scalar` accepts a 64-bit word packed in
 instruction-stream order and resolves the carrier to its locked inner Scalar
 form. Directed tests check all 705 published witnesses and rejection of reserved
 prefix fields, padding, excluded operations, and invalid operand encodings.
-The scoped AGU candidate executes immediate, PC-relative and register-offset
-single loads and stores, including pre-index and post-index writeback, using
-physical GPRs and discarded destinations. `prepare_scoped_scalar` captures
-the outer TPC and operands.
+The scoped AGU candidate executes compressed, immediate, PC-relative and
+register-offset loads and stores, including pre-index and post-index
+writeback. `prepare_scoped_scalar` captures the outer TPC and operands.
 Once GM allows the access, `issue_scoped_scalar` gives the platform a request
 with the captured scope, context and token. `complete_scoped_scalar` applies
 the backend result. A completed access retires eight bytes. Faults keep the
@@ -29,15 +28,24 @@ Base writeback is published only after memory completion. For paired accesses,
 the memory request also carries the second address and data. The backend
 checks both accesses before either effect and completes the pair together
 through `complete_scoped_scalar_pair`, including which access faulted. Sail
-publishes load destinations only after successful pair completion. Compressed
-queue operands still need execution coverage. Scoped LR/SC, CAS and RMW forms
-use the same one-outstanding platform protocol with an atomic transaction
-descriptor. It contains the operation, width, order, far attribute, captured
+publishes load destinations only after successful pair completion. Scoped
+LR/SC, CAS and RMW forms use the same one-outstanding platform protocol with
+an atomic transaction descriptor. It contains the operation, width, order,
+far attribute, captured
 operands, scope, Core and agent identity. The backend owns the indivisible
 transaction and reservation monitor. A committed SC returns status zero or
 one, while LR, CAS and result-producing RMW forms publish the PTO-normalized
 old value. An atomic fault publishes no register result. The candidate entry
 point is explicit while the v0.58 decode path is canonical.
+
+The platform loads the architectural T/U queues for its selected Core, agent,
+invocation and ACR with `bind_scoped_scalar_queues` and can read the resulting
+data and validity from `scoped_t_queue` and `scoped_u_queue`. Queue context
+changes require an idle request boundary. Sources with no captured value raise
+Illegal Instruction. Successful Reg5 `->t` and `->u` destinations push their
+respective queues. Compressed loads use `->t` and compressed stores read `T#1`.
+The platform owns queue synchronization with its other instruction paths and
+context transitions.
 
 The MSGB transport models the released two-Core reference topology. Its
 receive, admission, BSE and HSCB APIs operate on platform-configured endpoints
