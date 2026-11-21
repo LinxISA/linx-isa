@@ -1878,10 +1878,17 @@ function exec_fabs(RegDst : bits(5), SrcL : bits(5), SrcType : bits(2)) -> unit 
 // intentionally left to the state layer. The current staged state only backs a
 // small subset of base SSRs.
 
+function read_launch_system_register(id24 : bits(24)) -> bits(64) = {
+  match hscb_read_geometry(id24) {
+    Some(value) => value,
+    None() => read_system_register(id24)
+  }
+}
+
 function exec_ssrget(RegDst : bits(5), ssr_id12 : bits(12)) -> unit = {
   let id24 : bits(24) = sail_zero_extend(ssr_id12, 24);
   if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
-  else write_regdst(RegDst, read_system_register(id24))
+  else write_regdst(RegDst, read_launch_system_register(id24))
 }
 
 function exec_ssrset(SrcL : bits(5), ssr_id12 : bits(12)) -> unit = {
@@ -1902,7 +1909,7 @@ function exec_ssrswap(RegDst : bits(5), SrcL : bits(5), ssr_id12 : bits(12)) -> 
 
 function exec_hl_ssrget(RegDst : bits(5), ssr_id24 : bits(24)) -> unit = {
   if not_bool(system_register_readable(ssr_id24)) then trap_illegal_ssr()
-  else write_regdst(RegDst, read_system_register(ssr_id24))
+  else write_regdst(RegDst, read_launch_system_register(ssr_id24))
 }
 
 function exec_hl_ssrset(SrcL : bits(5), ssr_id24 : bits(24)) -> unit = {
@@ -1926,7 +1933,7 @@ function exec_lsrget(RegDst : bits(5), lsr_id12 : bits(12)) -> unit = {
   // Source: docs/architecture/isa-manual/src/generated/instruction_details.adoc (LSRGET)
   let id24 : bits(24) = sail_zero_extend(lsr_id12, 24);
   if not_bool(system_register_readable(id24)) then trap_illegal_ssr()
-  else write_regdst(RegDst, read_system_register(id24))
+  else write_regdst(RegDst, read_launch_system_register(id24))
 }
 
 // -----------------------------------------------------------------------------

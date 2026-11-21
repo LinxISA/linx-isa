@@ -16,6 +16,15 @@ prefix fields, padding, excluded operations, and invalid operand encodings.
 The scoped executor will consume this decoder when the memory request and
 retirement path is integrated.
 
+The MSGB transport models the released two-Core reference topology. Its
+receive, admission, BSE and HSCB APIs operate on platform-configured endpoints
+and active invocations. Directed tests cover claim/read/ACK/release, atomic
+delivery, occurrence replay, drain, READY/LAUNCH/DONE, and identity exhaustion.
+With a bound platform context, encoded SSR reads see per-worker launch geometry
+and restore the ambient view after matching DONE. Architectural MSGB register
+configuration, encoded BSE/BWE dispatch, and the host recovery connection are
+the next integration boundary.
+
 Scope policy:
 
 - The Sail model is an executable reference for `v0.58` semantics and legality checks.
