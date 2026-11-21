@@ -1,0 +1,1205 @@
+{
+  "hardware_profile_id": "pto-hardware-numeric-0.59.1-ieee-v1",
+  "hardware_profile_sha256": "843d4c2c76823af57dc80f4b134c00e0166c0ba262f6924585854bdc44214325",
+  "implementation_conformance_status": "b-fpatr-and-tcvt-e8m0-asl-proven-other-numeric-domains-unproven",
+  "reference_profile": {
+    "bit_exact_surfaces": [
+      "B.FPATR matrix postprocess",
+      "TCVT FP16/BF16/FP32 to E8M0"
+    ],
+    "hardware_conformance_claim": false,
+    "profile_id": "pto-v0"
+  },
+  "release": "0.59.1",
+  "schema_version": 1,
+  "vector_groups": {
+    "canonical_nan": [
+      {
+        "data_type": "FP64",
+        "expected": "0x7FF8000000000000",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "FP32",
+        "expected": "0x7FC00000",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "TF32",
+        "expected": "0x7FC00000",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "HF32",
+        "expected": "0x7FC00000",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "FP16",
+        "expected": "0x7E00",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "BF16",
+        "expected": "0x7FC0",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "0x80",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "E4M3",
+        "expected": "0x7F",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "E5M2",
+        "expected": "0x7E",
+        "input_class": "any-NaN"
+      },
+      {
+        "data_type": "E8M0",
+        "expected": "0xFF",
+        "input_class": "any-NaN"
+      }
+    ],
+    "comparison": [
+      {
+        "expected": 1,
+        "inputs": [
+          "+0",
+          "-0"
+        ],
+        "mode": "EQ"
+      },
+      {
+        "expected": 0,
+        "inputs": [
+          "-0",
+          "+0"
+        ],
+        "mode": "LT"
+      },
+      {
+        "expected": 1,
+        "inputs": [
+          "qNaN",
+          "1"
+        ],
+        "mode": "NE"
+      },
+      {
+        "expected": 0,
+        "inputs": [
+          "qNaN",
+          "1"
+        ],
+        "mode": "GE"
+      }
+    ],
+    "invalid_float_to_integer": [
+      {
+        "destination": "S64",
+        "expected_raw": "0x8000000000000000",
+        "input": "qNaN",
+        "sat": false
+      },
+      {
+        "destination": "S32",
+        "expected_raw": "0x80000000",
+        "input": "+infinity",
+        "sat": false
+      },
+      {
+        "destination": "S4X2",
+        "expected_lane_raw": "0x8",
+        "input": "qNaN",
+        "sat": false
+      },
+      {
+        "destination": "U64",
+        "expected_raw": "0xFFFFFFFFFFFFFFFF",
+        "input": "qNaN",
+        "sat": false
+      },
+      {
+        "destination": "U8",
+        "expected_raw": "0xFF",
+        "input": "-infinity",
+        "sat": false
+      },
+      {
+        "destination": "U4X2",
+        "expected_lane_raw": "0xF",
+        "input": "qNaN",
+        "sat": false
+      }
+    ],
+    "low_precision_encoding": [
+      {
+        "data_type": "HiF8",
+        "expected": "+0",
+        "raw": "0x00"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "2^-22",
+        "raw": "0x01"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "2^-16",
+        "raw": "0x07"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "1",
+        "raw": "0x08"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "32768",
+        "raw": "0x6E"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "+infinity",
+        "raw": "0x6F"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "NaN",
+        "raw": "0x80"
+      },
+      {
+        "data_type": "HiF8",
+        "expected": "-infinity",
+        "raw": "0xEF"
+      },
+      {
+        "data_type": "E4M3",
+        "expected": "2^-9",
+        "raw": "0x01"
+      },
+      {
+        "data_type": "E4M3",
+        "expected": "448",
+        "raw": "0x7E"
+      },
+      {
+        "data_type": "E4M3",
+        "expected": "NaN",
+        "raw": "0x7F"
+      },
+      {
+        "data_type": "E5M2",
+        "expected": "2^-16",
+        "raw": "0x01"
+      },
+      {
+        "data_type": "E5M2",
+        "expected": "57344",
+        "raw": "0x7B"
+      },
+      {
+        "data_type": "E5M2",
+        "expected": "+infinity",
+        "raw": "0x7C"
+      },
+      {
+        "data_type": "E5M2",
+        "expected": "NaN",
+        "raw": "0x7E"
+      },
+      {
+        "data_type": "E3M2",
+        "expected": "0.0625",
+        "raw": "0x01"
+      },
+      {
+        "data_type": "E3M2",
+        "expected": "28",
+        "raw": "0x1F"
+      },
+      {
+        "data_type": "E2M3",
+        "expected": "0.125",
+        "raw": "0x01"
+      },
+      {
+        "data_type": "E2M3",
+        "expected": "7.5",
+        "raw": "0x1F"
+      },
+      {
+        "data_type": "E8M0",
+        "expected": "2^-127",
+        "raw": "0x00"
+      },
+      {
+        "data_type": "E8M0",
+        "expected": "1",
+        "raw": "0x7F"
+      },
+      {
+        "data_type": "E8M0",
+        "expected": "2",
+        "raw": "0x80"
+      },
+      {
+        "data_type": "E8M0",
+        "expected": "2^127",
+        "raw": "0xFE"
+      },
+      {
+        "data_type": "E8M0",
+        "expected": "NaN",
+        "raw": "0xFF"
+      }
+    ],
+    "matrix": [
+      {
+        "accumulator": "FP32",
+        "expected": [
+          [
+            "19",
+            "22"
+          ],
+          [
+            "43",
+            "50"
+          ]
+        ],
+        "id": "fp32-matmul-2x2",
+        "k_order": [
+          0,
+          1
+        ],
+        "left": [
+          [
+            "1",
+            "2"
+          ],
+          [
+            "3",
+            "4"
+          ]
+        ],
+        "right": [
+          [
+            "5",
+            "6"
+          ],
+          [
+            "7",
+            "8"
+          ]
+        ]
+      },
+      {
+        "bias": [
+          "1",
+          "-2"
+        ],
+        "dot_products": [
+          "19",
+          "22"
+        ],
+        "expected_acc": [
+          "20",
+          "20"
+        ],
+        "id": "fp32-matmul-bias"
+      },
+      {
+        "dot_products": [
+          "19",
+          "22"
+        ],
+        "expected_acc": [
+          "29",
+          "42"
+        ],
+        "id": "fp32-matmul-acc",
+        "prior_acc": [
+          "10",
+          "20"
+        ]
+      },
+      {
+        "base": "1.5",
+        "e8m0": "0x80",
+        "expected": "3.0",
+        "id": "mx-e8m0-scale"
+      },
+      {
+        "expected_acc": "40",
+        "expected_acc_with_bias_2": "42",
+        "expected_acc_with_prior_3": "43",
+        "id": "mx-k-block-33",
+        "left_type": "E4M3",
+        "logical_shape": {
+          "K": 33,
+          "M": 1,
+          "N": 1
+        },
+        "order": "scale-inputs-before-each-fma",
+        "right_type": "E5M2",
+        "scale_a": [
+          "0x7F",
+          "0x80"
+        ],
+        "scale_a_shape": [
+          1,
+          2
+        ],
+        "scale_b": [
+          "0x7F",
+          "0x81"
+        ],
+        "scale_b_shape": [
+          2,
+          1
+        ],
+        "unscaled_inputs": "all-one"
+      }
+    ],
+    "matrix_postprocess": [
+      {
+        "destination": "S8",
+        "expected_raw": "0x05",
+        "fp19_scale": "2.0",
+        "id": "req8-scalar-affine",
+        "input": "3",
+        "mode": 3,
+        "sat": false,
+        "signed_offset": "-1",
+        "source_type": "S32"
+      },
+      {
+        "destination": "S8",
+        "expected_flags": [
+          "OF",
+          "NX"
+        ],
+        "expected_raw": "0x8C",
+        "fp19_scale": "2.0",
+        "id": "req8-wrap",
+        "input": "70",
+        "mode": 3,
+        "sat": false,
+        "signed_offset": "0",
+        "source_type": "S32"
+      },
+      {
+        "destination": "S8",
+        "expected_flags": [
+          "OF",
+          "NX"
+        ],
+        "expected_raw": "0x7F",
+        "fp19_scale": "2.0",
+        "id": "req8-saturate",
+        "input": "70",
+        "mode": 3,
+        "sat": true,
+        "signed_offset": "0",
+        "source_type": "S32"
+      },
+      {
+        "destination": "E4M3",
+        "expected_raw": "0x3C",
+        "fp19_scale": "1.0",
+        "id": "f32-e4m3-exact",
+        "input_raw": "0x3FC00000",
+        "mode": 26,
+        "source_type": "FP32"
+      },
+      {
+        "destination": "HiF8",
+        "expected_raw": "0x0C",
+        "fp19_scale": "1.0",
+        "id": "f32-hif8-exact",
+        "input_raw": "0x3FC00000",
+        "mode": 25,
+        "source_type": "FP32"
+      },
+      {
+        "destination": "S8",
+        "expected_raw": "0xFE",
+        "fp19_alpha": "0.5",
+        "fp19_scale": "1.0",
+        "id": "post-conversion-lrelu",
+        "input_raw": "0xC0800000",
+        "mode": 24,
+        "relu_mode": 2
+      },
+      {
+        "destination": "S8",
+        "expected_flags": [
+          "NV"
+        ],
+        "expected_raw": "0x80",
+        "id": "nan-indefinite",
+        "input": "qNaN",
+        "mode": 24,
+        "sat": false
+      },
+      {
+        "destination": "S8",
+        "expected_flags": [
+          "NV"
+        ],
+        "expected_raw": "0x00",
+        "id": "nan-saturating-zero",
+        "input": "qNaN",
+        "mode": 24,
+        "sat": true
+      }
+    ],
+    "mixed_expdif": {
+      "accepted_operations": [
+        "TROWEXPANDEXPDIF",
+        "TCOLEXPANDEXPDIF",
+        "TEXPDIF"
+      ],
+      "accepted_source_destination_pairs": [
+        [
+          "FP16",
+          "FP16"
+        ],
+        [
+          "BF16",
+          "BF16"
+        ],
+        [
+          "FP32",
+          "FP32"
+        ],
+        [
+          "FP16",
+          "FP32"
+        ],
+        [
+          "BF16",
+          "FP32"
+        ]
+      ],
+      "discriminator_vectors": [
+        {
+          "a": "0x2000",
+          "b": "0x0001",
+          "source_precision_exp": "0x3F810101",
+          "source_precision_sub_then_widen": "0x3C000000",
+          "source_type": "FP16",
+          "widen_first_exp": "0x3F810100",
+          "widen_first_sub": "0x3BFFFF80"
+        },
+        {
+          "a": "0x3F80",
+          "b": "0x3B00",
+          "source_precision_exp": "0x402DF854",
+          "source_precision_sub_then_widen": "0x3F800000",
+          "source_type": "BF16",
+          "widen_first_exp": "0x402DA16E",
+          "widen_first_sub": "0x3F7F8000"
+        }
+      ],
+      "exact_widening": {
+        "BF16": {
+          "finite_zero_infinity": "ZeroExtend32(source_bits) << 16",
+          "inexact_flag": false,
+          "rounding": "none"
+        },
+        "FP16": {
+          "finite_zero_infinity": "IEEE binary16 value-preserving widening to the unique FP32 encoding",
+          "inexact_flag": false,
+          "rounding": "none",
+          "subnormals": "normalize to the unique equal-valued FP32 encoding"
+        },
+        "nan": "Use the selected profile FP32 canonical-NaN and signaling-input rule"
+      },
+      "fp32_sub_exp": {
+        "numeric_status": "Use the selected profile FP32 NV/DZ/OF/UF/NX rules",
+        "rounding": "Use the selected profile FP32 rounding rule",
+        "special_values": "Use the selected profile FP32 IEEE special-value rule"
+      },
+      "pipeline": "ExactWidenFP16ToFP32 or ExactWidenBF16ToFP32 for both sources, then FP32 SUB, then FP32 EXP"
+    },
+    "packed_lane_order": [
+      {
+        "data_type": "E1M2X2",
+        "expected_logical_lanes": [
+          "+0.25",
+          "-0.25"
+        ],
+        "raw_byte": "0x91",
+        "rule": "low-nibble-even-high-nibble-odd"
+      },
+      {
+        "data_type": "HiF4X2",
+        "expected_logical_lanes": [
+          "+0.25",
+          "-0.25"
+        ],
+        "raw_byte": "0x91",
+        "rule": "low-nibble-even-high-nibble-odd"
+      },
+      {
+        "data_type": "E2M1X2",
+        "expected_logical_lanes": [
+          "+0.5",
+          "-0.5"
+        ],
+        "raw_byte": "0x91",
+        "rule": "low-nibble-even-high-nibble-odd"
+      }
+    ],
+    "reduction": [
+      {
+        "expected_index": 1,
+        "inputs": [
+          "5",
+          "7",
+          "7",
+          "3"
+        ],
+        "operation": "ARGMAX"
+      },
+      {
+        "expected": "-2",
+        "inputs": [
+          "qNaN",
+          "4",
+          "-2"
+        ],
+        "operation": "MIN"
+      },
+      {
+        "expected": "canonical-qNaN",
+        "inputs": [
+          "1",
+          "qNaN",
+          "2"
+        ],
+        "operation": "SUM"
+      },
+      {
+        "expected": "+0",
+        "inputs": [
+          "-0",
+          "+0"
+        ],
+        "operation": "MAX"
+      }
+    ],
+    "rounding": [
+      {
+        "destination": "S32",
+        "expected": "2",
+        "input": "2.5",
+        "mode": "RNE"
+      },
+      {
+        "destination": "S32",
+        "expected": "4",
+        "input": "3.5",
+        "mode": "RNE"
+      },
+      {
+        "destination": "S32",
+        "expected": "-1",
+        "input": "-1.9",
+        "mode": "RTZ"
+      },
+      {
+        "destination": "S32",
+        "expected": "-2",
+        "input": "-1.1",
+        "mode": "RDN"
+      },
+      {
+        "destination": "S32",
+        "expected": "2",
+        "input": "1.1",
+        "mode": "RUP"
+      },
+      {
+        "destination": "S32",
+        "expected": "2",
+        "input": "2.1",
+        "mode": "RNA"
+      },
+      {
+        "destination": "S32",
+        "expected": "-2",
+        "input": "-2.1",
+        "mode": "RNA"
+      },
+      {
+        "destination": "S32",
+        "expected": "3",
+        "input": "2.5",
+        "mode": "RNA"
+      },
+      {
+        "destination": "S32",
+        "expected": "-3",
+        "input": "-2.5",
+        "mode": "RNA"
+      },
+      {
+        "destination": "S32",
+        "expected": "2",
+        "input": "2.0",
+        "mode": "RTO"
+      },
+      {
+        "destination": "S32",
+        "expected": "3",
+        "input": "2.25",
+        "mode": "RTO"
+      },
+      {
+        "destination": "S32",
+        "expected": "-3",
+        "input": "-2.25",
+        "mode": "RTO"
+      },
+      {
+        "destination": "S32",
+        "expected": "3",
+        "input": "2.5",
+        "mode": "RHB"
+      },
+      {
+        "destination": "S32",
+        "expected": "-2",
+        "input": "-2.5",
+        "mode": "RHB"
+      }
+    ],
+    "rounding_before_saturation": [
+      {
+        "destination": "S8",
+        "expected": "127",
+        "input": "127.5",
+        "mode": "RNA",
+        "rounded_intermediate": "128",
+        "sat": true
+      },
+      {
+        "destination": "S8",
+        "expected": "-128",
+        "input": "-128.5",
+        "mode": "RNA",
+        "rounded_intermediate": "-129",
+        "sat": true
+      }
+    ],
+    "rounding_selection": [
+      {
+        "encoding_status": "assigned",
+        "expected_mode": "RNE",
+        "namespace": "scalar-core-state-frm",
+        "raw": 0
+      },
+      {
+        "encoding_status": "assigned",
+        "expected_mode": "RTM",
+        "namespace": "scalar-core-state-frm",
+        "raw": 1
+      },
+      {
+        "encoding_status": "assigned",
+        "expected_mode": "RTP",
+        "namespace": "scalar-core-state-frm",
+        "raw": 2
+      },
+      {
+        "encoding_status": "assigned",
+        "expected_mode": "RTZ",
+        "namespace": "scalar-core-state-frm",
+        "raw": 3
+      },
+      {
+        "encoding_status": "reserved-fallback",
+        "expected_mode": "RNE",
+        "namespace": "scalar-core-state-frm",
+        "raw": 4
+      },
+      {
+        "encoding_status": "reserved-fallback",
+        "expected_mode": "RNE",
+        "namespace": "scalar-core-state-frm",
+        "raw": 7
+      },
+      {
+        "expected_mode": "RTZ",
+        "namespace": "bundle-rmode",
+        "operation": "TCVT-float-to-integer",
+        "raw": 0
+      },
+      {
+        "bundle_rmode": 0,
+        "namespace": "public-conversion",
+        "public_name": "CAST_NONE",
+        "raw": 0
+      },
+      {
+        "bundle_rmode": 1,
+        "namespace": "public-conversion",
+        "public_name": "CAST_RINT",
+        "raw": 1
+      },
+      {
+        "bundle_rmode": 5,
+        "namespace": "public-conversion",
+        "public_name": "CAST_ROUND",
+        "raw": 2
+      },
+      {
+        "bundle_rmode": 3,
+        "namespace": "public-conversion",
+        "public_name": "CAST_FLOOR",
+        "raw": 3
+      },
+      {
+        "bundle_rmode": 4,
+        "namespace": "public-conversion",
+        "public_name": "CAST_CEIL",
+        "raw": 4
+      },
+      {
+        "bundle_rmode": 2,
+        "namespace": "public-conversion",
+        "public_name": "CAST_TRUNC",
+        "raw": 5
+      },
+      {
+        "bundle_rmode": 6,
+        "namespace": "public-conversion",
+        "public_name": "CAST_ODD",
+        "raw": 6
+      },
+      {
+        "expected": "reject-before-effects",
+        "namespace": "public-conversion",
+        "raw": 7
+      }
+    ],
+    "saturation": [
+      {
+        "destination": "S8",
+        "expected": "127",
+        "input": "130",
+        "sat": true
+      },
+      {
+        "destination": "S8",
+        "expected": "-128",
+        "input": "-129",
+        "sat": true
+      },
+      {
+        "destination": "U8",
+        "expected": "0",
+        "input": "-1",
+        "sat": true
+      },
+      {
+        "destination": "FP16",
+        "expected": "0x7BFF",
+        "input": "+infinity",
+        "sat": true
+      },
+      {
+        "destination": "S32",
+        "expected": "0",
+        "input": "qNaN",
+        "sat": true
+      }
+    ],
+    "signed_zero": [
+      {
+        "expected": "0x80000000",
+        "id": "fp32-negative-zero-multiply",
+        "inputs": [
+          "-0",
+          "2"
+        ],
+        "operation": "multiply"
+      },
+      {
+        "expected": "0x00000000",
+        "id": "fp32-exact-cancellation-rne",
+        "inputs": [
+          "+1",
+          "-1"
+        ],
+        "operation": "add",
+        "rounding": "RNE"
+      },
+      {
+        "expected": "0x80000000",
+        "id": "fp32-min-zero",
+        "inputs": [
+          "+0",
+          "-0"
+        ],
+        "operation": "minimum"
+      },
+      {
+        "expected": "0x00000000",
+        "id": "fp32-max-zero",
+        "inputs": [
+          "+0",
+          "-0"
+        ],
+        "operation": "maximum"
+      }
+    ],
+    "sort": [
+      {
+        "ascending_expected_original_indices": [
+          31,
+          29,
+          27,
+          25,
+          23,
+          21,
+          19,
+          17,
+          15,
+          13,
+          11,
+          9,
+          6,
+          1,
+          3,
+          4,
+          5,
+          0,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          2,
+          7
+        ],
+        "data_type": "FP32",
+        "descending_expected_original_indices": [
+          30,
+          28,
+          26,
+          24,
+          22,
+          20,
+          18,
+          16,
+          14,
+          12,
+          10,
+          8,
+          0,
+          4,
+          5,
+          1,
+          3,
+          6,
+          9,
+          11,
+          13,
+          15,
+          17,
+          19,
+          21,
+          23,
+          25,
+          27,
+          29,
+          31,
+          2,
+          7
+        ],
+        "input_values": [
+          "3",
+          "+0",
+          "qNaN#0",
+          "-0",
+          "2",
+          "2",
+          "-1",
+          "qNaN#1",
+          "4",
+          "-4",
+          "5",
+          "-5",
+          "6",
+          "-6",
+          "7",
+          "-7",
+          "8",
+          "-8",
+          "9",
+          "-9",
+          "10",
+          "-10",
+          "11",
+          "-11",
+          "12",
+          "-12",
+          "13",
+          "-13",
+          "14",
+          "-14",
+          "15",
+          "-15"
+        ]
+      }
+    ],
+    "subnormal_policy": [
+      {
+        "daz": false,
+        "expected": "accept",
+        "ftz": false,
+        "id": "default-configuration",
+        "operation_override": false
+      },
+      {
+        "daz": false,
+        "expected": "reject-before-effects",
+        "ftz": true,
+        "id": "ftz-request",
+        "operation_override": false
+      },
+      {
+        "daz": true,
+        "expected": "reject-before-effects",
+        "ftz": false,
+        "id": "daz-request",
+        "operation_override": false
+      },
+      {
+        "daz": false,
+        "expected": "reject-before-effects",
+        "ftz": false,
+        "id": "operation-override-request",
+        "operation_override": true
+      },
+      {
+        "data_type": "FP32",
+        "expected_class": "positive-subnormal",
+        "id": "fp32-minimum-subnormal",
+        "input_rule": "preserve-exact-source-value",
+        "raw": "0x00000001"
+      },
+      {
+        "data_type": "FP32",
+        "expected_class": "positive-subnormal",
+        "id": "fp32-maximum-subnormal",
+        "raw": "0x007FFFFF",
+        "result_rule": "gradual-underflow"
+      },
+      {
+        "data_type": "FP32",
+        "expected_class": "positive-normal",
+        "id": "fp32-minimum-normal",
+        "raw": "0x00800000",
+        "tininess_detection": "after-rounding"
+      }
+    ],
+    "tcvt_e8m0": {
+      "contract": {
+        "accepted_source_types": [
+          "FP16",
+          "BF16",
+          "FP32"
+        ],
+        "canonicalize": "representation-only; it does not change the E8M0 value map",
+        "destination_type": "E8M0",
+        "encoding": "rounded_base2_exponent_plus_127",
+        "exact_range": {
+          "maximum": "2^127",
+          "minimum": "2^-127"
+        },
+        "finite_domain": "positive finite values",
+        "finite_overflow": {
+          "flags": [
+            "OF",
+            "NX"
+          ],
+          "sat0_result": "0xFF",
+          "sat1_result": "0xFE"
+        },
+        "finite_underflow": {
+          "flags": [
+            "UF",
+            "NX"
+          ],
+          "sat0_result": "0xFF",
+          "sat1_result": "0x00"
+        },
+        "inexact": "Every non-power-of-two in-range source records NX.",
+        "invalid": {
+          "flags": [
+            "NV"
+          ],
+          "inputs": [
+            "positive_zero",
+            "negative_zero",
+            "negative_finite",
+            "negative_infinity",
+            "quiet_nan",
+            "signaling_nan"
+          ],
+          "result": "0xFF"
+        },
+        "positive_infinity": {
+          "flags": [
+            "OF",
+            "NX"
+          ],
+          "sat0_result": "0xFF",
+          "sat1_result": "0xFE"
+        },
+        "rounding": "resolved B.DATR RMode in the base-two exponent domain"
+      },
+      "unsupported_source_types": [
+        "FP64",
+        "TF32",
+        "HF32",
+        "HiF8",
+        "E4M3",
+        "E5M2",
+        "E3M2",
+        "E2M3",
+        "E2M1X2",
+        "E1M2X2",
+        "E8M0",
+        "HiF4X2",
+        "S64",
+        "S32",
+        "S16",
+        "S8",
+        "S4X2",
+        "U64",
+        "U32",
+        "U16",
+        "U8",
+        "U4X2"
+      ],
+      "vectors": [
+        {
+          "expected": "0x7F",
+          "flags": [],
+          "input": "0x3F80",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "BF16"
+        },
+        {
+          "expected": "0x80",
+          "flags": [
+            "NX"
+          ],
+          "input": "0x3FC0",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "BF16"
+        },
+        {
+          "expected": "0x7F",
+          "flags": [
+            "NX"
+          ],
+          "input": "0x3FC0",
+          "rmode": "RTM",
+          "sat": false,
+          "source_type": "BF16"
+        },
+        {
+          "expected": "0x00",
+          "flags": [],
+          "input": "0x00400000",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "FP32"
+        },
+        {
+          "expected": "0xFF",
+          "flags": [
+            "UF",
+            "NX"
+          ],
+          "input": "0x00200000",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "FP32"
+        },
+        {
+          "expected": "0x00",
+          "flags": [
+            "UF",
+            "NX"
+          ],
+          "input": "0x00200000",
+          "rmode": "RNE",
+          "sat": true,
+          "source_type": "FP32"
+        },
+        {
+          "expected": "0xFE",
+          "flags": [],
+          "input": "0x7F000000",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "FP32"
+        },
+        {
+          "expected": "0xFF",
+          "flags": [
+            "OF",
+            "NX"
+          ],
+          "input": "0x7F7FFFFF",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "FP32"
+        },
+        {
+          "expected": "0xFF",
+          "flags": [
+            "NV"
+          ],
+          "input": "0x0000",
+          "rmode": "RNE",
+          "sat": false,
+          "source_type": "BF16"
+        },
+        {
+          "expected": "0xFE",
+          "flags": [
+            "OF",
+            "NX"
+          ],
+          "input": "0x7F80",
+          "rmode": "RNE",
+          "sat": true,
+          "source_type": "BF16"
+        }
+      ]
+    }
+  },
+  "source_lock": "isa/v0.59/pto-spec.lock.json"
+}
