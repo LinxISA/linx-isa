@@ -58,6 +58,7 @@ jobs:
           python3 tools/isa/gen_sail_scoped_scalar.py --check
           python3 tools/isa/gen_sail_scoped_agu.py --check
           python3 tools/isa/gen_sail_scoped_atomic.py --check
+          python3 -m unittest tools.bringup.test_pto_v0591_scalar_reference
           python3 tools/isa/gen_sail_status.py --check
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest \
             emulator.qemu.tests.linxisa.test_v0583_contract \
