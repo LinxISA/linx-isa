@@ -56,6 +56,7 @@ jobs:
           python3 tools/isa/gen_c_codec.py --check
           python3 tools/isa/gen_sail_decode.py --check
           python3 tools/isa/gen_sail_scoped_scalar.py --check
+          python3 tools/isa/gen_sail_scoped_agu.py --check
           python3 tools/isa/gen_sail_status.py --check
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest \
             emulator.qemu.tests.linxisa.test_v0583_contract \
