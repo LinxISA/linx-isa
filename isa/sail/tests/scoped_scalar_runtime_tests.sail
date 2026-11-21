@@ -96,6 +96,60 @@ function verify_scoped_scalar_runtime() -> unit = {
   ssr_cstate = old_cstate
 }
 
+function verify_scoped_scalar_pairs() -> unit = {
+  let lpair : bits(64) = 0xFFF2229937DE091F; // words from r4 - 4 -> r5,r6
+  let spair : bits(64) = 0x0241305900DE0A1F; // doublewords r2,r3 -> r4 + 8
+  tpc = 0x0000000000003002;
+  write_reg5(0b00010, 0x1111111111111111);
+  write_reg5(0b00011, 0x2222222222222222);
+  write_reg5(0b00100, 0x0000000000004000);
+  write_reg5(0b00101, 0x3333333333333333);
+  write_reg5(0b00110, 0x4444444444444444);
+
+  match prepare_scoped_scalar(lpair, 0, 2, 7, true) { ScopedPrepared => (), _ => assert(false) };
+  match issue_scoped_scalar(true) {
+    Some(load) => {
+      assert(load.address == 0x0000000000003FFC & load.size == 0x4);
+      match load.second { Some((second_address, _)) => assert(second_address == 0x0000000000004000),
+        None() => assert(false) };
+      assert(not_bool(complete_scoped_scalar(load.token, ScopedMemoryCommitted, 0x0000000000000000)));
+      assert(complete_scoped_scalar_pair(load.token, ScopedMemorySecondPageFault,
+        0x0000000011111111, 0x0000000022222222))
+    },
+    None() => assert(false)
+  };
+  assert(last_traparg0 == 0x0000000000004000 & last_trapnum == trapnum_data_page_fault());
+  assert(tpc == 0x0000000000003002 & read_reg5(0b00101) == 0x3333333333333333);
+  assert(read_reg5(0b00110) == 0x4444444444444444);
+
+  match prepare_scoped_scalar(lpair, 0, 2, 7, true) { ScopedPrepared => (), _ => assert(false) };
+  match issue_scoped_scalar(true) {
+    Some(load) => assert(complete_scoped_scalar_pair(load.token, ScopedMemoryCommitted,
+      0x0000000080000001, 0x000000007FFFFFFF)),
+    None() => assert(false)
+  };
+  assert(tpc == 0x000000000000300A & read_reg5(0b00101) == 0xFFFFFFFF80000001);
+  assert(read_reg5(0b00110) == 0x000000007FFFFFFF);
+
+  write_reg5(0b00100, 0xFFFFFFFFFFFFFFF0);
+  match prepare_scoped_scalar(spair, 0, 2, 7, true) { ScopedPrepared => (), _ => assert(false) };
+  match issue_scoped_scalar(true) {
+    Some(store) => {
+      match store.shareability { ScalarInterCore => (), _ => assert(false) };
+      assert(store.is_store & store.address == 0xFFFFFFFFFFFFFFF8 & store.size == 0x8);
+      assert(store.store_data == 0x1111111111111111);
+      match store.second {
+        Some((second_address, value)) => assert(second_address == 0x0000000000000000 & value == 0x2222222222222222),
+        None() => assert(false)
+      };
+      assert(complete_scoped_scalar_pair(store.token, ScopedMemoryCommitted, 0x0000000000000000,
+        0x0000000000000000))
+    },
+    None() => assert(false)
+  };
+  assert(tpc == 0x0000000000003012)
+}
+
 function verify_scoped_scalar_writeback() -> unit = {
   let ldi_post : bits(64) = 0xFFE232992FFE091F; // r4 - 16, both results to r5
   let lw_pre : bits(64) = 0x12622289382E0A1F; // r4 + (r6.sw << 2), ->r5,r7

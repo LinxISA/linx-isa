@@ -25,9 +25,13 @@ token. The platform supplies applicability, holds the issuing context, and
 owns memory translation, the GM obligation and store commit. Each issuance
 requires one completion from the platform.
 
-Base writeback is published only after memory completion. Compressed queue
-operands, paired accesses and atomics still need execution coverage. The
-candidate entry point is explicit while the v0.58 decode path is canonical.
+Base writeback is published only after memory completion. For paired accesses,
+the memory request also carries the second address and data. The backend
+checks both accesses before either effect and completes the pair together
+through `complete_scoped_scalar_pair`, including which access faulted. Sail
+publishes load destinations only after successful pair completion. Compressed
+queue operands and atomics still need execution coverage. The candidate
+entry point is explicit while the v0.58 decode path is canonical.
 
 The MSGB transport models the released two-Core reference topology. Its
 receive, admission, BSE and HSCB APIs operate on platform-configured endpoints
