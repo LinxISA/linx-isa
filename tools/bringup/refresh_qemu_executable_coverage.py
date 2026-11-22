@@ -553,8 +553,7 @@ def _runner_command(
         "--timeout",
         str(timeout),
     ]
-    if profile != "v0.58":
-        command.extend(["--isa-profile", profile])
+    command.extend(["--isa-profile", profile])
     for test_id in test_ids:
         command.extend(["--require-test-id", f"0x{test_id:08x}"])
     if pcs is None:

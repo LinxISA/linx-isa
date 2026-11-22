@@ -182,7 +182,8 @@ class RefreshQemuExecutableCoverageTests(unittest.TestCase):
             for command in (prepare, runtime):
                 index = command.index("--require-test-id")
                 self.assertEqual(command[index + 1], "0x0000140b")
-            self.assertNotIn("--isa-profile", runtime)
+            for command in (prepare, runtime):
+                self.assertEqual(command[command.index("--isa-profile") + 1], "v0.58")
             scoped = refresh._runner_command(**kwargs, pcs=[0x10000], profile="v0.59")
             self.assertEqual(scoped[scoped.index("--isa-profile") + 1], "v0.59")
             self.assertIn("--prepare-only", prepare)
