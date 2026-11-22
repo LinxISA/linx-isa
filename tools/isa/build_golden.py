@@ -1068,6 +1068,8 @@ def _canonical_json(obj: Any) -> str:
 
 
 def _profile_defaults(profile: str = "v0.58") -> Tuple[str, str]:
+    if profile == "v0.59":
+        return "isa/v0.59", "isa/v0.59/linxisa-v0.59-candidate.json"
     return f"isa/{profile}", f"isa/{profile}/linxisa-{profile}.json"
 
 
@@ -1075,7 +1077,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57", "v0.58"],
+        choices=["v0.57", "v0.58", "v0.59"],
         default="v0.58",
         help="ISA profile for default in/out paths",
     )
@@ -1089,7 +1091,14 @@ def main() -> int:
     in_dir = Path(args.in_dir or default_in)
     out_path = Path(args.out or default_out)
 
-    built = build(in_dir)
+    if args.profile == "v0.59":
+        if args.in_dir is not None:
+            ap.error("v0.59 uses the frozen candidate builder and does not accept --in")
+        from build_linxisa_v0591_candidate import build as build_v0591
+
+        built = build_v0591()
+    else:
+        built = build(in_dir)
 
     if args.check and out_path.exists():
         existing = _read_json(out_path)

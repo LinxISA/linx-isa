@@ -1454,7 +1454,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57", "v0.58"],
+        choices=["v0.57", "v0.58", "v0.59"],
         default="v0.58",
         help="ISA profile for default --spec path",
     )
@@ -1465,7 +1465,11 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    default_spec = f"isa/{args.profile}/linxisa-{args.profile}.json"
+    default_spec = (
+        "isa/v0.59/linxisa-v0.59-candidate.json"
+        if args.profile == "v0.59"
+        else f"isa/{args.profile}/linxisa-{args.profile}.json"
+    )
     errors = validate(args.spec or default_spec)
     errors.extend(validate_active_surfaces(Path(".")))
     if errors:

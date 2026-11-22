@@ -1,0 +1,23 @@
+{
+  "isa": "LinxISA",
+  "version": "0.59.1",
+  "status": "inactive-prepublication",
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "cardinality": {
+    "instructions": 1499,
+    "common_forms": 578,
+    "linx_only_forms": 216,
+    "scoped_forms": 705
+  },
+  "catalog": "isa/v0.59/linxisa-v0.59-candidate.json",
+  "notes": [
+    "This is a reproducible prepublication profile; v0.58 remains the default and active profile.",
+    "The 578 common and 705 scoped forms come from the exact frozen PTO ISA 0.59.1 lock; 216 Linx-only rows are preserved from v0.58.",
+    "Catalog presence does not claim Linux, component-leaf, system-runtime, or release qualification."
+  ]
+}
