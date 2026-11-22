@@ -48,7 +48,7 @@
     "note_type_value": 1,
     "section": ".note.pto.isa"
   },
-  "status": "prepublication-not-release-qualified",
+  "status": "development-not-published",
   "identity": {
     "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
     "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
@@ -61,8 +61,8 @@
     "leaf_components_qualified": false,
     "system_runtime_qualified": false,
     "required_before_publication": [
-      "approve the inactive catalog as the published v0.59 profile and remove candidate status",
-      "promote the merged opt-in scoped Sail entry into the approved published profile",
+      "promote the inactive catalog to the published v0.59 profile and remove candidate status",
+      "promote the merged opt-in scoped Sail entry into the published profile",
       "promote exact reviewed component pins in the owning superproject change",
       "complete Linux and leaf-component validation at those exact pins",
       "run release verification and release preparation on the final main commit",

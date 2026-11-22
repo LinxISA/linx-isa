@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import sys
+import tempfile
 import unittest
 
 
@@ -21,7 +23,7 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
         meta, manifest = build()
         self.assertEqual((meta, manifest), build())
         self.assertEqual(meta["status"], "inactive-prepublication")
-        self.assertEqual(manifest["status"], "prepublication-not-release-qualified")
+        self.assertEqual(manifest["status"], "development-not-published")
         self.assertIsNone(manifest["publication"])
         self.assertNotIn("component_pins", manifest)
         self.assertNotIn("tag", manifest)
@@ -75,6 +77,37 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
             (ROOT / "isa/v0.59/release_manifest.json").read_text(encoding="utf-8"),
             render(manifest),
         )
+
+    def test_build_golden_v059_write_is_byte_exact(self):
+        expected = (ROOT / "isa/v0.59/linxisa-v0.59-candidate.json").read_bytes()
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "candidate.json"
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "tools/isa/build_golden.py"),
+                    "--profile",
+                    "v0.59",
+                    "--out",
+                    str(output),
+                ],
+                cwd=ROOT,
+                check=True,
+            )
+            self.assertEqual(output.read_bytes(), expected)
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "tools/isa/build_golden.py"),
+                    "--profile",
+                    "v0.59",
+                    "--out",
+                    str(output),
+                    "--check",
+                ],
+                cwd=ROOT,
+                check=True,
+            )
 
 
 if __name__ == "__main__":

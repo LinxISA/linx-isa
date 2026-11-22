@@ -110,7 +110,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "schema": bindings["schema"],
         },
         "elf_identity": load(V058_MANIFEST)["elf_identity"],
-        "status": "prepublication-not-release-qualified",
+        "status": "development-not-published",
         "identity": identity,
         "publication": None,
         "qualification": {
@@ -119,8 +119,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "leaf_components_qualified": False,
             "system_runtime_qualified": False,
             "required_before_publication": [
-                "approve the inactive catalog as the published v0.59 profile and remove candidate status",
-                "promote the merged opt-in scoped Sail entry into the approved published profile",
+                "promote the inactive catalog to the published v0.59 profile and remove candidate status",
+                "promote the merged opt-in scoped Sail entry into the published profile",
                 "promote exact reviewed component pins in the owning superproject change",
                 "complete Linux and leaf-component validation at those exact pins",
                 "run release verification and release preparation on the final main commit",

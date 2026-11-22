@@ -1095,14 +1095,22 @@ def main() -> int:
         if args.in_dir is not None:
             ap.error("v0.59 uses the frozen candidate builder and does not accept --in")
         from build_linxisa_v0591_candidate import build as build_v0591
+        from build_linxisa_v0591_candidate import render as render_v0591
 
         built = build_v0591()
+        rendered_v0591 = render_v0591(built)
     else:
         built = build(in_dir)
+        rendered_v0591 = None
 
     if args.check and out_path.exists():
-        existing = _read_json(out_path)
-        if _canonical_json(existing) != _canonical_json(built):
+        current = out_path.read_text(encoding="utf-8")
+        stale = (
+            current != rendered_v0591
+            if rendered_v0591 is not None
+            else _canonical_json(json.loads(current)) != _canonical_json(built)
+        )
+        if stale:
             print(f"error: {out_path} is not up-to-date; re-run build_golden.py", file=sys.stderr)
             return 2
         print("OK")
@@ -1112,7 +1120,10 @@ def main() -> int:
         print(f"error: {out_path} does not exist; build is required", file=sys.stderr)
         return 2
 
-    _write_json(out_path, built, pretty=bool(args.pretty))
+    if rendered_v0591 is not None:
+        out_path.write_text(rendered_v0591, encoding="utf-8")
+    else:
+        _write_json(out_path, built, pretty=bool(args.pretty))
     return 0
 
 
