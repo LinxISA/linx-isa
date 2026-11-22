@@ -279,6 +279,9 @@ class Audit:
         self.out, self.catalog, self.tiles = out, catalog, tiles
         self.errors: list[str] = []
         self.docs: dict[str, Node] = {}
+        self.linx_sail = json.loads(
+            (READER_DATA.parent / "manual-linx-sail.json").read_text()
+        )
         self.semantic_owners = json.loads(SEMANTICS.read_text(encoding="utf-8"))[
             "forms"
         ]
@@ -378,6 +381,27 @@ class Audit:
             self.fail(
                 where, "Linx-only form unexpectedly presents PTO ASL as normative"
             )
+        if not source_id:
+            evidence = self.linx_sail["forms"].get(row["id"])
+            model = article.find(tag="details", cls="linx-sail-evidence")
+            if evidence is None or len(model) != 1:
+                self.fail(where, "missing Linx-only Sail dispatch evidence")
+            else:
+                snippets = [
+                    code.raw_text()
+                    for pre in model[0].find(tag="pre")
+                    for code in pre.find(tag="code")
+                ]
+                handlers = self.linx_sail["handlers"]
+                expected = [
+                    evidence["decode"]["excerpt"],
+                    *(handlers[h]["excerpt"] for h in evidence["helpers"]),
+                ]
+                if (
+                    snippets != expected
+                    or model[0].attrs.get("data-disposition") != evidence["disposition"]
+                ):
+                    self.fail(where, "Linx-only Sail path or source text differs")
         text = article.text()
         if "操作" not in text or not article.find(cls="semantic-description"):
             self.fail(where, "missing specific operation section")

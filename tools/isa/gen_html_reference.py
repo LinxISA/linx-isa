@@ -20,6 +20,7 @@ from manual_tag import (
     verified_tag_commit,
 )
 from manual_encoding import render_encoding, validate_catalog
+from manual_linx_sail import sail_detail
 from manual_reader import operation_detail, reader_summary, reader_detail
 from manual_scoped import scoped_detail, tile_detail, tile_summary
 from manual_semantics import detail, summary
@@ -439,7 +440,7 @@ def build():
                 + render_encoding(row, catalog)
                 + "<h3>操作</h3>"
                 + text
-                + (operation_detail(owner) if owner else "")
+                + (operation_detail(owner) if owner else sail_detail(row))
                 + form_provenance(row, commit, common_paths)
                 + "</article>"
             )

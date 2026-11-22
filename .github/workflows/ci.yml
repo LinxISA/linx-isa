@@ -75,6 +75,7 @@ jobs:
         env:
           PTO_SPEC_ROOT: workloads/generated/pto-v0591-release
         run: |
+          python3 tools/isa/manual_linx_sail.py --check
           python3 tools/isa/manual_reader.py --pto-root "$PTO_SPEC_ROOT" --check
           python3 tools/isa/build_manual_semantics_reference.py --source "$PTO_SPEC_ROOT" --check
           python3 tools/isa/build_manual_scoped_data.py --pto-root "$PTO_SPEC_ROOT" --out "$RUNNER_TEMP/tile-manual.json"
