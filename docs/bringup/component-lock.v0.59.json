@@ -29,12 +29,12 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "875e77b072902ff47c03eb3cbab9cabcb896b1d5",
-      "tree": "7b646d84863b3db740439e73b696312adc0db94e",
+      "commit": "d528bcf82200c34220ec0791ee404a203ec1e026",
+      "tree": "15d59c18e72bc9f760000fd53f5b05572743aea2",
       "release": "0.58.7",
-      "role": "v0.58.7 default emulator with opt-in scoped Scalar, direct scoped PCR relocations and Core4 MSGB/HSCB guest execution",
+      "role": "QEMU emulator with opt-in PTO 0.59.1 scoped Scalar, direct scoped PCR relocations, Core4 MSGB/HSCB guest execution, and B.IOT source lifetimes",
       "integration_status": "landed",
-      "review_url": "https://github.com/LinxISA/qemu/pull/94"
+      "review_url": "https://github.com/LinxISA/qemu/pull/98"
     },
     {
       "path": "kernel/linux",
