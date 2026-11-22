@@ -272,6 +272,31 @@ def check_site(site: Path) -> list[str]:
                 errors.append(f"{filename}: accessible 注意 admonition is missing")
         except ValueError as exc:
             errors.append(f"{filename}: {exc}")
+    # MGATHER is a Tile operation, distinct from the BSTART.MGATHER command.
+    # Validate the original data-flow explanation, parameter table and source
+    # program in addition to the generic byte-level article comparison.
+    name = "tile-mgather.html"
+    if name in expected and (site / name).is_file():
+        page = (site / name).read_text(encoding="utf-8")
+        source_html = page.split(START, 1)[-1].split(END, 1)[0]
+        from html import unescape
+
+        plain = unescape(re.sub(r"<[^>]+>", "", source_html))
+        for literal in (
+            "基于间接寻址",
+            "执行模型",
+            "offset_t offset = src[i][j];",
+            "dst[i][j] = Memory[base + offset];",
+            "dst[i][j] = PadValue;",
+        ):
+            if literal not in plain:
+                errors.append(f"{name}: missing original MGATHER content {literal!r}")
+        if "<table" not in source_html or not (
+            0 <= page.find(START) < page.find('class="release-data"')
+        ):
+            errors.append(
+                f"{name}: authored table and original reader must precede release details"
+            )
     return errors
 
 

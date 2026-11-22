@@ -1,0 +1,26 @@
+Block 执行、TPC/BPC 与 C.MOVR
+How do the selected source relationships operate?
+BSTART 打开 block，头部收集配置，主体按编码长度推进 TPC，BPC 保持起点，BSTOP 或下一个 BSTART 提交整个 block。C.MOVR 展示 Reg5 源到目标的完整 XLEN 搬移。
+Source behavior and interpretation notes (some concern the companion views):
+架构顺序示意，不表示真实流水级或周期。
+C.MOVR 的数值不变；源和目标是 Reg5 选择器。
+BPC：block 起始地址: block 内保持指向 BSTART 标记
+BSTART: 打开标准 block；起始处 BPC = TPC
+BSTOP / 下一个 BSTART: 显式或隐式提交边界
+C.MOVR（16 位）: MoveScalarValue：值保持不变
+Reg5 源: 完整 XLEN 值
+Reg5 目标: 发布完整 XLEN 值
+TPC：下一条指令地址: block 内按编码长度推进；C.MOVR 后 +2 字节
+头部命令: 收集属性、维度和操作数绑定
+整体提交: 提交活动 block，并清除头部状态
+Selected original relationships:
+BSTART → 头部命令: 打开 block [control]
+头部命令 → C.MOVR（16 位）: 进入主体 [control]
+Reg5 源 → C.MOVR（16 位）: 读取 XLEN [data]
+C.MOVR（16 位） → Reg5 目标: 原样发布 [data]
+C.MOVR（16 位） → TPC：下一条指令地址: TPC + 2 字节 [control]
+BSTART → BPC：block 起始地址: 固定 block 起点 [control]
+C.MOVR（16 位） → BSTOP / 下一个 BSTART: 继续到提交边界 [control]
+BSTOP / 下一个 BSTART → 整体提交: 提交并清除头部状态 [control]
+Reading task: Which resources belong together and how do their supplied interfaces cross those boundaries?
+Display organization: Organize real ownership levels and source-backed common services. Centrality follows adjacency, not name or visual prominence; functional alignment bands never create ownership or shared hardware.

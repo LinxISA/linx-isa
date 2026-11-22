@@ -90,7 +90,7 @@ class ManualAuthoredTest(unittest.TestCase):
         self.assertIn("0x0010602b", current)
         self.assertIn("没有 SrcL", current)
         self.assertIn("Maintenance_DC_IALL", current)
-        self.assertIn("TPC 增加 4", current)
+        self.assertIn("TPC 前进 4 字节", current)
 
     def test_known_vector_semantic_conflicts_are_scoped(self):
         for mnemonic in ("V.CMP.AND", "V.CMP.ANDI"):

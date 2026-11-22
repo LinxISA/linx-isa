@@ -12,6 +12,7 @@ import subprocess
 from typing import Callable, Mapping
 from urllib.parse import quote, unquote, urlsplit, urlunsplit
 import markdown
+from manual_editorial import edit_article
 from manual_tag import REPO_ROOT, REVIEWED_COMMIT, tagged_bytes
 
 EXTENSIONS = [
@@ -41,6 +42,7 @@ class MarkdownFragment:
 
 @dataclass(frozen=True)
 class SupportBundle:
+    source_paths: dict[str, str]
     fragments: dict[str, str]
     assets: dict[str, bytes]
     external_links: tuple[str, ...]
@@ -266,8 +268,9 @@ class _SafeHTML(HTMLParser):
             self.out.append(escape(data))
 
 
-def render_tagged_markdown(
+def render_markdown_text(
     path: str,
+    markdown_text: str,
     *,
     current_page: str,
     namespace: str | None = None,
@@ -291,13 +294,33 @@ def render_tagged_markdown(
     safe = _SafeHTML(
         path, namespace, follow, current_page, document_routes or {}, omit_title
     )
-    safe.feed(md.convert(tagged_bytes(path).decode()))
+    safe.feed(md.convert(markdown_text))
     safe.close()
     return MarkdownFragment(
         "".join(safe.out),
         tuple(sorted(safe.documents)),
         tuple(sorted(safe.assets)),
         tuple(sorted(safe.external)),
+    )
+
+
+def render_tagged_markdown(
+    path: str,
+    *,
+    current_page: str,
+    namespace: str | None = None,
+    follow_document: Callable[[str, str], bool] | None = None,
+    document_routes: Mapping[str, str] | None = None,
+    omit_title: bool = True,
+) -> MarkdownFragment:
+    return render_markdown_text(
+        path,
+        edit_article(path)[0],
+        current_page=current_page,
+        namespace=namespace,
+        follow_document=follow_document,
+        document_routes=document_routes,
+        omit_title=omit_title,
     )
 
 
@@ -326,6 +349,7 @@ def build_support_bundle(
 ) -> SupportBundle:
     pending = list(dict.fromkeys(entries))
     seen = set()
+    source_paths = {}
     fragments = {}
     assets = {}
     external = set()
@@ -343,12 +367,13 @@ def build_support_bundle(
             omit_title=False,
         )
         seen.add(path)
+        source_paths[support_document_path(path)] = path
         fragments[support_document_path(path)] = f.html
         pending.extend(x for x in f.documents if x not in seen)
         for a in f.assets:
             assets[support_asset_path(a)] = tagged_bytes(a)
         external.update(f.external_links)
-    return SupportBundle(fragments, assets, tuple(sorted(external)))
+    return SupportBundle(source_paths, fragments, assets, tuple(sorted(external)))
 
 
 __all__ = [

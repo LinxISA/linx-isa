@@ -1,0 +1,6 @@
+# Versions used to render the published offline reader.
+MkDocs==1.6.1
+mkdocs-material==9.7.6
+Markdown==3.10.2
+pymdown-extensions==10.21.2
+Pygments==2.20.0

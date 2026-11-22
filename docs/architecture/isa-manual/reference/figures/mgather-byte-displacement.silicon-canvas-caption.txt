@@ -1,0 +1,22 @@
+MGATHER：字节位移、预检与完整发布
+How do the selected source relationships operate?
+LinxISA 0.59.1 MGATHER 的简单未打包 U32 示例。索引是字节位移，所有启用地址先预检，成功后才读取并发布完整目标。
+Source behavior and interpretation notes (some concern the companion views):
+简单未打包 U32 示例；IndexTile 的架构合法类型为 S32、U32、S64、U64。
+重复地址合法：通道 0 和通道 2 都读取 0x1008。
+范围描述符是可选、独立的证书记录，本图省略。
+B.IOR.BaseGPR = 0x1000；其余字段 = 0: 由 B.IOR.RegSrc0 选择；本图 RegSrc1、RegSrc2、RegDst 为零
+GM U32：0x1000→1 / 0x1004→2 / 0x1008→3 / 0x100c→4: 0x1000→1，0x1004→2，0x1008→3，0x100c→4
+IndexTile 字节位移：[8, 0, 8, 4]；类型：S32 / U32 / S64 / U64: 简单未打包有效区域 [8, 0, 8, 4]；从不按元素宽度缩放
+Local DstTile 有效区域：[3, 1, 3, 2]: [3, 1, 3, 2]；目标物理填充按 PadValue 初始化
+地址预检：0x1008 / 0x1000 / 0x1008 / 0x1004: 0x1008、0x1000、0x1008、0x1004；首次读取和目标改变之前完成
+失败：不发布目标: 任一预检故障在首次读取之前返回，并回滚目标分配
+范围描述符：本图省略: 可选 Base/Min/Max 记录与本简单示例分开；不表示逐索引硬件验证
+Selected original relationships:
+B.IOR.BaseGPR = 0x1000；其余字段 = 0 → 地址预检：0x1008 / 0x1000 / 0x1008 / 0x1004: 基址 [data]
+IndexTile 字节位移：[8, 0, 8, 4]；类型：S32 / U32 / S64 / U64 → 地址预检：0x1008 / 0x1000 / 0x1008 / 0x1004: [8, 0, 8, 4] 字节位移 [data]
+地址预检：0x1008 / 0x1000 / 0x1008 / 0x1004 → GM U32：0x1000→1 / 0x1004→2 / 0x1008→3 / 0x100c→4: 全部通过后才读取 [control]
+地址预检：0x1008 / 0x1000 / 0x1008 / 0x1004 → 失败：不发布目标: 任一故障 [control]
+GM U32：0x1000→1 / 0x1004→2 / 0x1008→3 / 0x100c→4 → Local DstTile 有效区域：[3, 1, 3, 2]: 成功：[3, 1, 3, 2] [data]
+Reading task: How do the supplied inputs reach their transformations and leave through outputs or returns?
+Display organization: Keep independent producer paths and joins traceable and place supplied returns in a separate corridor. Preserve the same resource at both ends of a return instead of duplicating it for a tidy row.

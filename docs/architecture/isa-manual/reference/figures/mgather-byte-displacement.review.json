@@ -1,0 +1,150 @@
+{
+  "artifact_id": "4b9ec413cddd462a9f0e619614b6f2be",
+  "image_sha256": "e5f791800a5dc89f39eb74c208ec4a4942421c248edc181fa0c053dab8556986",
+  "reviewed_attempt": 1,
+  "best_attempt_technically_correct": true,
+  "blocking_findings": [],
+  "decision": {
+    "action": "stop",
+    "reason": "Reached the 4-attempt limit. Show the best attempt and the remaining issues to the user.",
+    "attempt": 4,
+    "max_attempts": 4,
+    "technically_correct": true,
+    "prompt": "",
+    "change_list": [
+      "Improve composition: Three boxes sit flush against the right frame, while the middle-left area has ample open space.",
+      "Improve hierarchy: The success path doubles back across the canvas, and the bottom note has as much visual emphasis as the failure outcome.",
+      "Improve color: The lavender and pale yellow fills keep the palette compact, though both have visible decorative gradients."
+    ],
+    "issue_count": {
+      "major": 0,
+      "minor": 3
+    }
+  },
+  "best_attempt_official_decision_snapshot": {
+    "attempt": 1,
+    "score": 90,
+    "action": "edit",
+    "technically_correct": true,
+    "planned_connections": 5,
+    "matched_connections": 5,
+    "major_differences": 0
+  },
+  "independent_technical_review": {
+    "verdict": "approve",
+    "image_sha256": "e5f791800a5dc89f39eb74c208ec4a4942421c248edc181fa0c053dab8556986",
+    "blocking_findings": [],
+    "limitations": [
+      "成功路径的虚线绕行较长。",
+      "上部存在额外留白。"
+    ]
+  },
+  "decision_ref": "#/raw_decision",
+  "raw_decision": {
+    "artifact_id": "4b9ec413cddd462a9f0e619614b6f2be",
+    "figure_id": "overview",
+    "attempt": 4,
+    "score": 85,
+    "decision": {
+      "action": "stop",
+      "reason": "Reached the 4-attempt limit. Show the best attempt and the remaining issues to the user.",
+      "attempt": 4,
+      "max_attempts": 4,
+      "technically_correct": true,
+      "prompt": "",
+      "change_list": [
+        "Improve composition: Three boxes sit flush against the right frame, while the middle-left area has ample open space.",
+        "Improve hierarchy: The success path doubles back across the canvas, and the bottom note has as much visual emphasis as the failure outcome.",
+        "Improve color: The lavender and pale yellow fills keep the palette compact, though both have visible decorative gradients."
+      ],
+      "issue_count": {
+        "major": 0,
+        "minor": 3
+      }
+    },
+    "image_inputs": null,
+    "differences": [],
+    "counts": {
+      "major": 0,
+      "minor": 0,
+      "planned_elements": 7,
+      "planned_connections": 5,
+      "matched_connections": 5
+    },
+    "reading_check": {
+      "cold_summary": "The figure shows a base address and four byte offsets feeding an address precheck: if all four pass, the GM values are read in offset order and the local destination receives [3, 1, 3, 2], while any fault leads to “失败：不发布目标”.",
+      "intended_question": "How do the supplied inputs reach their transformations and leave through outputs or returns?",
+      "note": "If the cold summary misses the intended point, treat it as a hierarchy problem and add it as a host finding next time."
+    },
+    "aesthetic": {
+      "scores": {
+        "composition": {
+          "score": 3,
+          "note": "Three boxes sit flush against the right frame, while the middle-left area has ample open space."
+        },
+        "hierarchy": {
+          "score": 3,
+          "note": "The success path doubles back across the canvas, and the bottom note has as much visual emphasis as the failure outcome."
+        },
+        "color": {
+          "score": 3,
+          "note": "The lavender and pale yellow fills keep the palette compact, though both have visible decorative gradients."
+        },
+        "typography": {
+          "score": 4,
+          "note": ""
+        },
+        "lines": {
+          "score": 4,
+          "note": ""
+        },
+        "finish": {
+          "score": 4,
+          "note": ""
+        }
+      },
+      "mean": 3.5,
+      "passed": false,
+      "polished": false,
+      "issues": [
+        {
+          "type": "aesthetic",
+          "dimension": "composition",
+          "severity": "minor",
+          "score": 3,
+          "note": "Three boxes sit flush against the right frame, while the middle-left area has ample open space."
+        },
+        {
+          "type": "aesthetic",
+          "dimension": "hierarchy",
+          "severity": "minor",
+          "score": 3,
+          "note": "The success path doubles back across the canvas, and the bottom note has as much visual emphasis as the failure outcome."
+        },
+        {
+          "type": "aesthetic",
+          "dimension": "color",
+          "severity": "minor",
+          "score": 3,
+          "note": "The lavender and pale yellow fills keep the palette compact, though both have visible decorative gradients."
+        }
+      ]
+    },
+    "best_attempt": {
+      "attempt": 1,
+      "score": 90,
+      "image_path": "/private/tmp/linxisa-silicon-canvas-artifacts/4b9ec413cddd462a9f0e619614b6f2be/overview.attempt-1.png"
+    },
+    "review_status": "stopped",
+    "next_step": "Show the best attempt to the user with the remaining differences and ask how to proceed."
+  },
+  "provenance_snapshot": {
+    "artifact_id": "4b9ec413cddd462a9f0e619614b6f2be",
+    "image_sha256": "e5f791800a5dc89f39eb74c208ec4a4942421c248edc181fa0c053dab8556986",
+    "best_attempt_image_sha256": "e5f791800a5dc89f39eb74c208ec4a4942421c248edc181fa0c053dab8556986",
+    "best_attempt_file": "overview.attempt-1.png",
+    "published_image_file": "mgather-byte-displacement.png",
+    "decision_ref": "#/raw_decision"
+  },
+  "terminal_response_sha256": "c8d3644af1bcc99999e20213ec269a1eb398012b6a68e1f67e1ee89bf0fda96b"
+}

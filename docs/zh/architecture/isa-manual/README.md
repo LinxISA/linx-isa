@@ -55,3 +55,7 @@ make gen
 在仓库的 `docs/architecture/isa-manual` 目录执行 `make html-reference check-html-reference` 可重新生成并核对。生成器读取正式 tag，并逐项对照 578 个公共形式、705 个 scoped 形式和 216 个 Linx 专有形式。浅克隆需先获取 `v0.59.1` 标签。
 
 生成中文原文页使用仓库现有的 MkDocs 文档依赖。分类与单页的设计依据见[参考站组织结构分析](arm64-reference-organization.md)。
+
+架构状态、执行模型和异常说明同样取自发布标签的中文源文件。系统寄存器表单独列出本版的 100 项定义。22 个无独立原页的条目标为“0.59.1 增补”。从仓库根目录运行 `python3 -m pip install -r docs/architecture/isa-manual/reference/requirements.txt` 即可安装与发布包相同版本的 Markdown 和代码高亮组件。
+
+[独立审阅记录](reader-quality-review.md)列出影响芯片实现的版本差异及修正。
