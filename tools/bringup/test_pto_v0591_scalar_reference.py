@@ -6,6 +6,7 @@ import unittest
 from tools.bringup.check_pto_v0591_scalar_reference import (
     FINISHER_ADDRESS,
     FINISHER_PASS,
+    build_case,
     compare_models,
     require_pass_finisher,
     validate_cases,
@@ -13,6 +14,19 @@ from tools.bringup.check_pto_v0591_scalar_reference import (
 
 
 class ScopedScalarReferenceTest(unittest.TestCase):
+    def test_symbolic_pcr_preserves_oracle_and_uses_carrier_offsets(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            _, numeric_golden, numeric_segments, numeric_relocs = build_case(path)
+            source, golden, segments, relocations = build_case(path, symbolic_pcr=True)
+            self.assertEqual(golden, numeric_golden)
+            self.assertEqual(segments, numeric_segments)
+            self.assertEqual(numeric_relocs, [])
+            self.assertEqual(len(relocations), 66)
+            self.assertEqual({number for _, _, number in relocations}, {33, 34, 35, 36})
+            self.assertTrue(all(offset % 4 == 2 for offset, _, _ in relocations))
+            self.assertEqual(source.read_text().count("[.Lcell"), len(relocations))
+
     def test_compares_each_model_with_golden_and_every_other_model(self):
         good = bytes(8)
         wrong = b"\x01" + bytes(7)
