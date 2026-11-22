@@ -71,6 +71,15 @@ jobs:
           repository: PTO-ISA/pto-spec
           ref: refs/tags/v0.59.1.0
           path: workloads/generated/pto-v0591-release
+      - name: Verify 0.59.1 HTML manual source projections
+        env:
+          PTO_SPEC_ROOT: workloads/generated/pto-v0591-release
+        run: |
+          python3 tools/isa/manual_linx_sail.py --check
+          python3 tools/isa/manual_reader.py --pto-root "$PTO_SPEC_ROOT" --check
+          python3 tools/isa/build_manual_semantics_reference.py --source "$PTO_SPEC_ROOT" --check
+          python3 tools/isa/build_manual_scoped_data.py --pto-root "$PTO_SPEC_ROOT" --out "$RUNNER_TEMP/tile-manual.json"
+          cmp docs/architecture/isa-manual/reference/data/pto-v0591-tile-manual.json "$RUNNER_TEMP/tile-manual.json"
       - name: Verify PTO 0.59.1 import and encoding alignment
         run: |
           python3 tools/isa/import_pto_v0591.py --source-root workloads/generated/pto-v0591-release --check
@@ -166,6 +175,10 @@ jobs:
         working-directory: docs/architecture/isa-manual
       - name: Check documentation projections
         run: python3 docs/check_documentation.py --root .
+      - name: Build and audit the tagged instruction reference
+        run: |
+          python3 tools/isa/gen_html_reference.py --out "$RUNNER_TEMP/linxisa-html"
+          python3 tools/isa/check_html_reference.py --site "$RUNNER_TEMP/linxisa-html"
       - name: Build normative English documentation
         run: mkdocs build --strict --site-dir "${RUNNER_TEMP}/site-en"
       - name: Build secondary Chinese documentation

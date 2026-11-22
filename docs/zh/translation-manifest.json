@@ -10,8 +10,8 @@
       "translation_sha256": "7defca9868f7f21c95537828137f69e58f4734085e7735da5d919fedf8a8c31b"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "c85b29760a30a5d86ddc347b426f97f68fd4d267b59eb7a3e7ea65ae5a8042ba",
-      "translation_sha256": "5a204da0d6aaa4b655872c4c51f940a5ff14889abb6045613e21ae552740e3f7"
+      "source_sha256": "13f6bb1d26c02dca1e4df82c5dd1b770d2cf3b9e146fdbe633155c9d8eb2e5ca",
+      "translation_sha256": "e14303bb4f650514dad9968bb6d6acd5c6de3def57cb36e6d71053b150e2dd22"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
@@ -8106,8 +8106,8 @@
       "translation_sha256": "9c64d925cf0ec57f6231e00df392da8879abc611192e72af780457a2befc61d7"
     },
     "releases/v0.59.1.md": {
-      "source_sha256": "16547c00eb586b80b59850d1c2d0609e88dc839c1993212ae4ee970eb7635b21",
-      "translation_sha256": "1da6c97c4945674bf772a39b2af365b972dc7fa66947aa6e772f2ba772840011"
+      "source_sha256": "817ef0729b2e5aa3e8d46e940541d263aae03d537a0b27684a44ba5b3e5a40cf",
+      "translation_sha256": "573b93bd4163a73562a3d8dcd08135f9d49a44fa0f8e6a32d22d8679a9bc2e4f"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",
