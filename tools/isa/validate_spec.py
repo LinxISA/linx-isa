@@ -65,7 +65,7 @@ V058_DERIVED_VERSIONS = {
     "0.58.5",
     "0.58.6",
     "0.58.7",
-    "0.59.1-candidate",
+    "0.59.1-prepublication",
 }
 
 V058_FIRST_USE_VERSIONS = V058_DERIVED_VERSIONS - {"0.58.0"}
@@ -1465,11 +1465,15 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    default_spec = (
-        "isa/v0.59/linxisa-v0.59-candidate.json"
-        if args.profile == "v0.59"
-        else f"isa/{args.profile}/linxisa-{args.profile}.json"
-    )
+    if args.profile in {"v0.58", "v0.59"}:
+        from select_linxisa_profile import resolve_profile
+
+        selected = resolve_profile(
+            args.profile, allow_prepublication=args.profile == "v0.59"
+        )
+        default_spec = str(selected["catalog"])
+    else:
+        default_spec = f"isa/{args.profile}/linxisa-{args.profile}.json"
     errors = validate(args.spec or default_spec)
     errors.extend(validate_active_surfaces(Path(".")))
     if errors:

@@ -1,0 +1,102 @@
+{
+  "schema": "linxisa.release-package.v1",
+  "profile": "v0.59",
+  "version": "0.59.1",
+  "state": "prepared-prepublication",
+  "publication_allowed": false,
+  "default_profile": "v0.58",
+  "profile_selection": {
+    "path": "isa/profile-selection.json",
+    "sha256": "54202d0ff28201e86197fe75033577bb1127cfe104fd93efed17ac92127bac4c"
+  },
+  "identity": {
+    "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
+    "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
+    "release": "0.59.1"
+  },
+  "catalog": {
+    "path": "isa/v0.59/linxisa-v0.59.json",
+    "sha256": "066e81857bc97fb4b78b376d42f63cc87c0546684c55e99b30f01b238589be5d",
+    "schema": "linxisa.catalog.v0",
+    "status": "prepublication-full-catalog",
+    "instruction_count": 1499,
+    "counts": {
+      "common": 578,
+      "linx_only": 216,
+      "scoped": 705
+    }
+  },
+  "sail": {
+    "entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+    "dispatch": "isa/sail/model/execute/v0591_candidate_dispatch.sail",
+    "directed_tests": "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
+    "toolchain": {
+      "ocaml_version": "4.14.3",
+      "sail_version": "0.20.2",
+      "schema_version": "linx-sail-toolchain-v1"
+    },
+    "state": "scoped-candidate-dispatch-prepared"
+  },
+  "inputs": {
+    "isa/v0.59/linxisa-v0.59.json": "066e81857bc97fb4b78b376d42f63cc87c0546684c55e99b30f01b238589be5d",
+    "isa/v0.59/pto-v0591-candidate.json": "0752d20610b1b3c284292cf0987f64b587136bc13b561578c2d036e7658bd6f9",
+    "isa/v0.59/pto-spec.lock.json": "a526f6dbbddfe67d349640f19e904c1148a24178b0ec697f4dc360ddac624f34",
+    "isa/v0.59/meta.json": "4f3f21ed43d65b22011e0f436dffe5c868691849bee901657e4c314394e784ed",
+    "isa/v0.59/release_manifest.json": "bae19cc1319fe225ccdf7acd5baa7a3dd45e913069cee23d8765a7b9eadac81d",
+    "isa/sail/model/linxisa_v0591_candidate.sail": "e17afe81480dc08c8a2e5907cd1d5f2150a66b178dc22bbc3477ea1272a70d53",
+    "isa/sail/model/execute/v0591_candidate_dispatch.sail": "e28580b278333f10aa3e755af6e7307aaa28391564f7d1e9fca6c10af48e74f6",
+    "isa/sail/tests/v0591_candidate_dispatch_tests.sail": "b857ced3c07d1f670976af65b70daac39b0ea0fde344f2040bc3fb7dc30cc6b9",
+    "isa/sail/toolchain.json": "97d2fde2c646fac908d94e3e4f39ceed13bc89d481692000720d76714afe0513",
+    "tools/isa/build_linxisa_v0591_candidate.py": "6bb220256481cf867eb0e3a3e2b167ad79efda468dec91344803948a0d96a96b",
+    "tools/isa/build_linxisa_v0591_release_prep.py": "140eaf4238142b32bf77c216d96bec0ec65c81352e0c0563c9c54ce0e3e23e47",
+    "tools/isa/build_linxisa_v0591_release_activation.py": "b7d67398748ef4e2dc7503cf9cd0843631236f7109fd96db1d62b57c15c59ee1",
+    "tools/isa/build_golden.py": "88cc9132a1bc82a39b61e089f0617d510aa22edb8186ae1384281648b0415511",
+    "tools/isa/check_linxisa_v0591_candidate_sail.py": "73d11f2572e87a6e9fdb14dbd5318442da22a43f6376fd5479796157060cf234",
+    "tools/isa/check_v0591_candidate_dispatch_sail.py": "7215e992236cc2c6efda0d5511f58ec9b7ac71a9fe9490c937b9ab1851e56ad3",
+    "tools/isa/select_linxisa_profile.py": "9a514ea9a7d8fc3b52ffa5647599e9d47842e2e2a766a5cea2d187fb8bf4f29c",
+    "tools/isa/validate_spec.py": "b7d75285d02bbf1ccd9b5fe0b20ed8f91aaa3ec9137356d5fcff75aacbb69be5",
+    "isa/sail/model/decode/decode.sail": "f758ee029a4b895f9d48b8a91ec0c83e87b12d8bce68cb57ed7ffa0622e84d81",
+    "isa/sail/model/decode/scoped_scalar.sail": "4e9ca04bbd54294a0c8c5001002fed447cb001fb12f491e8c3d4c630e0da12b9",
+    "isa/sail/model/execute/execute.sail": "add95680420831a2874f8e3910a40228244f6cd8f1e64459dc7b5bb84dadd84d",
+    "isa/sail/model/execute/scoped_scalar.sail": "af3225e7579db974484dfee109a5a89bd12cb827c968e8c2979c40e651e26eed",
+    "isa/sail/model/execute/scoped_scalar_agu.sail": "999516b8ccde973aeacbe7af84233b704fbe41f5bd35bb3966379981ce2e1e23",
+    "isa/sail/model/execute/scoped_scalar_atomic.sail": "c12d04e65843d3437ec3730786a0b5afd23aca99f968578d5c9099481c23f4c5",
+    "isa/sail/model/execute/scoped_scalar_queues.sail": "b8387227c6418fac9b868a68b7e2ed3ac3a5809cf3ac0dfdd433ae0ad8e4ac74",
+    "isa/sail/model/lib/common.sail": "9e63adae8e841fd3315ea5c92922707d59f13235cc4b6d4317e1614a9c7dcc46",
+    "isa/sail/model/linxisa.sail": "e53531fd13ee9fe456cefa4c837a223602f849ff7a701c88e45283c109fd2616",
+    "isa/sail/model/linxisa.sail_project": "55cb31aba733b491eaa837f730aa44005548e409ad116e424560f36f12e7c03c",
+    "isa/sail/model/state/hscb_dispatch.sail": "20098c69c20b9450f9907e8cffa2847f71cf6f222a8d7af468cd1c219e599d99",
+    "isa/sail/model/state/msgb_bse.sail": "406f9307d568071183d4fd36503135943a79d876787f0587b321846bd3ba8d0e",
+    "isa/sail/model/state/msgb_receive.sail": "fd318a86921499b04e41d46bfbe9ba8d321507e1f02b4fbde4a39e0ec10ee1f7",
+    "isa/sail/model/state/msgb_registers.sail": "7531202259ed0e249d01449aae976a2d73e11c39c628de641f2021e5f12425fb",
+    "isa/sail/model/state/msgb_transport.sail": "db8ad2af9e3f52166783a73d88971ca5a65a3ea74aff5727797036f001db4077",
+    "isa/sail/model/state/state.sail": "4de171b2dcd92ccd267fe4a32fb2501f7920d1cf7b275d2cb36188d3b8f72c5f"
+  },
+  "inputs_sha256": "0cec2741d64de9388c146f4a4b5b48f5eca74ef178e3362852ed8d15906c524f",
+  "qualification": {
+    "release_qualified": false,
+    "component_pins_qualified": false,
+    "linux_qualified": false,
+    "system_runtime_qualified": false,
+    "evidence": null,
+    "remaining": [
+      "activate the packaged scoped Sail entry as the published v0.59 entry after exact release gates pass",
+      "promote exact reviewed component pins in the owning superproject change",
+      "complete Linux and leaf-component validation at those exact pins",
+      "run release verification and release preparation on the final main commit",
+      "record publication metadata and create the release tag only after all gates pass"
+    ]
+  },
+  "activation_policy": {
+    "explicit_profile_ready": true,
+    "published_default_switch_requires_release_qualification": true,
+    "default_switch_requested": false
+  },
+  "required_checks": [
+    "python3 tools/isa/build_golden.py --profile v0.59 --check",
+    "python3 tools/isa/validate_spec.py --profile v0.59",
+    "python3 tools/isa/check_linxisa_v0591_candidate_sail.py",
+    "python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
+    "python3 tools/isa/build_linxisa_v0591_release_activation.py --check"
+  ]
+}

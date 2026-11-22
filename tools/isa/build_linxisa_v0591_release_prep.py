@@ -9,12 +9,12 @@ import json
 from pathlib import Path
 from typing import Any
 
-from build_linxisa_v0591_candidate import build as build_candidate
+from build_linxisa_v0591_candidate import build as build_catalog
 
 
 ROOT = Path(__file__).resolve().parents[2]
 PROFILE = ROOT / "isa/v0.59"
-CATALOG = PROFILE / "linxisa-v0.59-candidate.json"
+CATALOG = PROFILE / "linxisa-v0.59.json"
 BINDINGS = PROFILE / "pto-v0591-candidate.json"
 LOCK = PROFILE / "pto-spec.lock.json"
 META = PROFILE / "meta.json"
@@ -38,19 +38,18 @@ def sha256(path: Path) -> str:
 
 
 def build() -> tuple[dict[str, Any], dict[str, Any]]:
-    candidate = build_candidate()
-    on_disk = load(CATALOG)
-    if candidate != on_disk:
-        raise ValueError("full v0.59.1 catalog candidate is stale")
+    catalog = build_catalog()
+    if catalog != load(CATALOG):
+        raise ValueError("canonical v0.59.1 prepublication catalog is stale")
     lock = load(LOCK)
     bindings = load(BINDINGS)
-    counts = candidate["candidate_status"]["counts"]
+    counts = catalog["candidate_status"]["counts"]
     expected_counts = {"common": 578, "linx_only": 216, "scoped": 705}
-    if counts != expected_counts or candidate["instruction_count"] != 1499:
-        raise ValueError("v0.59.1 candidate cardinality differs from 578+216+705")
+    if counts != expected_counts or catalog["instruction_count"] != 1499:
+        raise ValueError("v0.59.1 catalog cardinality differs from 578+216+705")
     binding_sha = sha256(BINDINGS)
-    if binding_sha != candidate["candidate_status"]["source_bindings_sha256"]:
-        raise ValueError("candidate source binding hash differs from the frozen file")
+    if binding_sha != catalog["candidate_status"]["source_bindings_sha256"]:
+        raise ValueError("catalog source binding hash differs from the frozen file")
 
     identity = {
         key: lock[key]
@@ -67,7 +66,14 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "linx_only_forms": counts["linx_only"],
             "scoped_forms": counts["scoped"],
         },
-        "catalog": "isa/v0.59/linxisa-v0.59-candidate.json",
+        "catalog": "isa/v0.59/linxisa-v0.59.json",
+        "release_activation": {
+            "state": "prepared-prepublication",
+            "profile_selection": "isa/profile-selection.json",
+            "package": "isa/v0.59/release_package.json",
+            "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+            "default_profile_changed": False,
+        },
         "notes": [
             "This is a reproducible prepublication profile; v0.58 remains the default and active profile.",
             "The 578 common and 705 scoped forms come from the exact frozen PTO ISA 0.59.1 lock; 216 Linx-only rows are preserved from v0.58.",
@@ -99,10 +105,10 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             ),
         },
         "catalog": {
-            "path": "isa/v0.59/linxisa-v0.59-candidate.json",
+            "path": "isa/v0.59/linxisa-v0.59.json",
             "sha256": sha256(CATALOG),
-            "schema": candidate["schema"],
-            "status": candidate["candidate_status"]["state"],
+            "schema": catalog["schema"],
+            "status": catalog["candidate_status"]["state"],
         },
         "frozen_bindings": {
             "path": "isa/v0.59/pto-v0591-candidate.json",
@@ -113,14 +119,21 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "status": "development-not-published",
         "identity": identity,
         "publication": None,
+        "release_activation": {
+            "state": "prepared-prepublication",
+            "profile_selection": "isa/profile-selection.json",
+            "package": "isa/v0.59/release_package.json",
+            "catalog": "isa/v0.59/linxisa-v0.59.json",
+            "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+            "default_profile": "v0.58",
+        },
         "qualification": {
             "release_qualified": False,
             "linux_qualified": False,
             "leaf_components_qualified": False,
             "system_runtime_qualified": False,
             "required_before_publication": [
-                "promote the inactive catalog to the published v0.59 profile and remove candidate status",
-                "promote the merged opt-in scoped Sail entry into the published profile",
+                "activate the packaged scoped Sail entry as the published v0.59 entry after exact release gates pass",
                 "promote exact reviewed component pins in the owning superproject change",
                 "complete Linux and leaf-component validation at those exact pins",
                 "run release verification and release preparation on the final main commit",

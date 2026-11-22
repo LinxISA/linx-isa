@@ -1,0 +1,26 @@
+{
+  "schema": "linxisa.profile-selection.v1",
+  "default_profile": "v0.58",
+  "policy": {
+    "profile_must_be_explicit_for_prepublication": true,
+    "prepublication_requires_opt_in": true,
+    "fallback_between_profiles_allowed": false
+  },
+  "profiles": {
+    "v0.58": {
+      "state": "active-development-profile",
+      "catalog": "isa/v0.58/linxisa-v0.58.json",
+      "sail_entry": "isa/sail/model/linxisa.sail",
+      "release_manifest": "isa/v0.58/release_manifest.json"
+    },
+    "v0.59": {
+      "state": "selectable-prepublication",
+      "version": "0.59.1",
+      "catalog": "isa/v0.59/linxisa-v0.59.json",
+      "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+      "release_manifest": "isa/v0.59/release_manifest.json",
+      "package": "isa/v0.59/release_package.json",
+      "release_qualified": false
+    }
+  }
+}
