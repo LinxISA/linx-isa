@@ -34,7 +34,7 @@ EXPECTED_RELEASES = {
     "workloads/pto_kernels": "0.58.3",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
-REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
+REVIEW_TRACKED_COMPONENTS = {"tools/LinxCoreModel"}
 GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
 
 
@@ -132,13 +132,16 @@ def validate(
                     f"{path} must record release {expected_release}, "
                     f"got {item.get('release')!r}"
                 )
-        if path in REVIEW_ONLY_OPEN_PR_COMPONENTS:
-            if item.get("integration_status") != "review_only_open_pr":
-                errors.append(f"{path} must be recorded as a review-only open PR")
+        if path in REVIEW_TRACKED_COMPONENTS:
+            integration_status = item.get("integration_status")
+            if integration_status not in {"review_only_open_pr", "merged_development"}:
+                errors.append(f"{path} must record a review-only open PR or a merged development PR")
             review_url = item.get("review_url", "")
             if not GITHUB_PR_URL_RE.fullmatch(review_url):
                 errors.append(f"{path} must record its GitHub review PR URL")
-            if item.get("release_tag", "") or item.get("release_url", ""):
+            if integration_status == "review_only_open_pr" and (
+                item.get("release_tag", "") or item.get("release_url", "")
+            ):
                 errors.append(f"{path} review-only pin must not have release metadata")
         module = modules.get(path)
         if module is None:
