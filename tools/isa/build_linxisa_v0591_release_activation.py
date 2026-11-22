@@ -11,6 +11,7 @@ from typing import Any
 
 from build_linxisa_v0591_candidate import build as build_catalog
 from build_linxisa_v0591_release_prep import build as build_release_prep
+from linxisa_v0591_qualification import RECEIPT
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +38,7 @@ PACKAGE_INPUTS = (
     "tools/isa/build_golden.py",
     "tools/isa/export_linxisa_v0591_sail.py",
     "tools/isa/check_v0591_candidate_dispatch_sail.py",
+    "tools/isa/linxisa_v0591_qualification.py",
     "tools/isa/select_linxisa_profile.py",
     "tools/isa/validate_spec.py",
 )
@@ -48,7 +50,8 @@ def package_inputs() -> tuple[str, ...]:
         for path in sorted((ROOT / "isa/sail/model").rglob("*"))
         if path.is_file() and path.suffix in {".sail", ".sail_project"}
     )
-    return tuple(dict.fromkeys((*PACKAGE_INPUTS, *sail_sources)))
+    receipt = (RECEIPT.as_posix(),) if (ROOT / RECEIPT).is_file() else ()
+    return tuple(dict.fromkeys((*PACKAGE_INPUTS, *sail_sources, *receipt)))
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -78,12 +81,14 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         raise ValueError("v0.59 catalog differs from its deterministic builder")
     meta, manifest = build_release_prep()
     if meta != load(META) or manifest != load(MANIFEST):
-        raise ValueError("v0.59 prepublication metadata or manifest is stale")
+        raise ValueError("v0.59 metadata or manifest is stale")
     if catalog.get("instruction_count") != 1499:
         raise ValueError("v0.59 release package requires all 1499 catalog rows")
-    status = catalog.get("candidate_status", {})
-    if status.get("state") != "prepublication-full-catalog":
-        raise ValueError("v0.59 catalog must remain explicitly prepublication")
+    qualification = manifest["qualification"].get("evidence")
+    status = catalog["profile_status" if qualification else "candidate_status"]
+    expected_state = "release-full-catalog" if qualification else "prepublication-full-catalog"
+    if status.get("state") != expected_state:
+        raise ValueError("v0.59 catalog and qualification state disagree")
     if status.get("counts") != {"common": 578, "linx_only": 216, "scoped": 705}:
         raise ValueError("v0.59 catalog cardinality is not 578+216+705")
     lock = load(LOCK)
@@ -169,6 +174,25 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "python3 tools/isa/build_linxisa_v0591_release_activation.py --check",
         ],
     }
+    if qualification:
+        selection["default_profile"] = "v0.59"
+        selection["profiles"]["v0.58"]["state"] = "supported-compatibility-profile"
+        selection["profiles"]["v0.59"].update(
+            state="active-release-profile", release_qualified=True,
+        )
+        package.update(
+            state="release-qualified",
+            publication_allowed=True,
+            default_profile="v0.59",
+        )
+        package["profile_selection"]["sha256"] = canonical_sha256(selection)
+        package["sail"]["state"] = "assembled-release"
+        package["qualification"].update(
+            release_qualified=True, component_pins_qualified=True,
+            linux_qualified=True, system_runtime_qualified=True,
+            evidence=qualification, remaining=[],
+        )
+        package["activation_policy"]["default_switch_requested"] = True
     return selection, package
 
 

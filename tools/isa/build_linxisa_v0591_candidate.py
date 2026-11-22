@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the full-schema LinxISA v0.59.1 prepublication catalog."""
+"""Build the full-schema LinxISA v0.59.1 catalog."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from typing import Any
 
 from build_golden import effective_pto_encoding
 from build_pto_v0591_candidate import build as build_frozen_bindings
+from linxisa_v0591_qualification import qualification_reference
 from report_encoding_space import (
     _build_instructions,
     _conflicts_by_signature,
@@ -461,6 +462,15 @@ def build() -> dict[str, Any]:
         "retired_encodings": copy.deepcopy(baseline["retired_encodings"]),
         "state": state,
     }
+    if qualification_reference(ROOT) is not None:
+        document["version"] = "0.59.1"
+        document["profile_status"] = document.pop("candidate_status")
+        document["profile_status"].update(
+            state="release-full-catalog",
+            active_profile="v0.59",
+            default_profile="v0.59",
+            publication_allowed=True,
+        )
     complete_field_definitions(document)
     if document["instruction_count"] != 1499:
         raise ValueError(f"expected 1499 candidate rows, found {len(instructions)}")

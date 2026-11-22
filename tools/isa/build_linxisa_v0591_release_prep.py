@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from build_linxisa_v0591_candidate import build as build_catalog
+from linxisa_v0591_qualification import qualification_reference
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,15 +41,17 @@ def sha256(path: Path) -> str:
 def build() -> tuple[dict[str, Any], dict[str, Any]]:
     catalog = build_catalog()
     if catalog != load(CATALOG):
-        raise ValueError("canonical v0.59.1 prepublication catalog is stale")
+        raise ValueError("canonical v0.59.1 catalog is stale")
+    qualification = qualification_reference(ROOT)
+    status = catalog["profile_status" if qualification else "candidate_status"]
     lock = load(LOCK)
     bindings = load(BINDINGS)
-    counts = catalog["candidate_status"]["counts"]
+    counts = status["counts"]
     expected_counts = {"common": 578, "linx_only": 216, "scoped": 705}
     if counts != expected_counts or catalog["instruction_count"] != 1499:
         raise ValueError("v0.59.1 catalog cardinality differs from 578+216+705")
     binding_sha = sha256(BINDINGS)
-    if binding_sha != catalog["candidate_status"]["source_bindings_sha256"]:
+    if binding_sha != status["source_bindings_sha256"]:
         raise ValueError("catalog source binding hash differs from the frozen file")
 
     identity = {
@@ -109,7 +112,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "path": "isa/v0.59/linxisa-v0.59.json",
             "sha256": sha256(CATALOG),
             "schema": catalog["schema"],
-            "status": catalog["candidate_status"]["state"],
+            "status": status["state"],
         },
         "frozen_bindings": {
             "path": "isa/v0.59/pto-v0591-candidate.json",
@@ -143,6 +146,29 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             ],
         },
     }
+    if qualification:
+        meta["status"] = "active-release"
+        meta["release_activation"].update(
+            state="release-qualified", default_profile_changed=True,
+        )
+        meta["notes"] = [
+            "The default profile is v0.59. Select v0.58 explicitly for compatibility.",
+            meta["notes"][1],
+        ]
+        manifest["policy"]["default_profile_changed"] = True
+        manifest["status"] = "release-qualified"
+        manifest["publication"] = {"tag": "v0.59.1", "verification": "signed-git-tag"}
+        manifest["release_activation"].update(
+            state="release-qualified", default_profile="v0.59",
+        )
+        manifest["qualification"] = {
+            "release_qualified": True,
+            "linux_qualified": True,
+            "leaf_components_qualified": True,
+            "system_runtime_qualified": True,
+            "evidence": qualification,
+            "required_before_publication": [],
+        }
     return meta, manifest
 
 
@@ -165,7 +191,7 @@ def main() -> int:
         ]
         if stale:
             raise SystemExit(f"stale LinxISA v0.59.1 release preparation: {stale}")
-        print("LinxISA v0.59.1 prepublication metadata and manifest are current")
+        print("LinxISA v0.59.1 metadata and manifest are current")
         return 0
     for path, content in outputs:
         path.write_text(content, encoding="utf-8")
