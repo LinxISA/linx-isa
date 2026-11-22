@@ -10,6 +10,7 @@ from tools.bringup.check_pto_v0591_scalar_reference import (
     MODEL_COMPONENTS,
     build_case,
     compare_models,
+    require_pinned_model_roles,
     require_pass_finisher,
     require_pinned_sources,
     validate_cases,
@@ -17,6 +18,18 @@ from tools.bringup.check_pto_v0591_scalar_reference import (
 
 
 class ScopedScalarReferenceTest(unittest.TestCase):
+    def test_pinned_evidence_rejects_an_aliased_timing_model(self):
+        root = Path("/checkout")
+        directory = root / "tools/LinxCoreModel/bin"
+        tools = {role: directory / role for role in ("gfrun", "gfsim")}
+        identities = {"gfrun": {"sha256": "a"}, "gfsim": {"sha256": "b"}}
+        require_pinned_model_roles(root, tools, identities)
+        with self.assertRaisesRegex(ValueError, "pinned gfsim must use"):
+            require_pinned_model_roles(root, {**tools, "gfsim": tools["gfrun"]}, identities)
+        identities["gfsim"] = identities["gfrun"]
+        with self.assertRaisesRegex(ValueError, "must be distinct binaries"):
+            require_pinned_model_roles(root, tools, identities)
+
     def test_release_evidence_requires_matching_submodule_checkouts(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

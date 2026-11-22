@@ -73,6 +73,15 @@ def require_pinned_sources(root, repositories, timeout):
             raise ValueError(f"{name} does not match the clean gitlink for {path}")
 
 
+def require_pinned_model_roles(root, tools, identities):
+    for name in ("gfrun", "gfsim"):
+        expected = root / MODEL_COMPONENTS[name] / "bin" / name
+        if tools[name] != expected:
+            raise ValueError(f"pinned {name} must use {expected}")
+    if identities["gfrun"]["sha256"] == identities["gfsim"]["sha256"]:
+        raise ValueError("pinned gfrun and gfsim must be distinct binaries")
+
+
 def invoke(argv, *, timeout, input_text=None, env=None, case=None, cwd=None):
     result = subprocess.run(
         argv,
@@ -421,8 +430,10 @@ def main():
     repositories = {
         name: repo_identity(path, args.timeout) for name, path in sources.items()
     }
+    tool_identities = {name: file_identity(path) for name, path in tools.items()}
     if args.require_pinned:
         require_pinned_sources(ROOT, repositories, args.timeout)
+        require_pinned_model_roles(ROOT, tools, tool_identities)
     output = args.output.resolve()
     output.mkdir(parents=True)
     source, golden, segments, pcr_relocations = build_case(output, args.symbolic_pcr)
@@ -459,15 +470,18 @@ def main():
         raise ValueError(f"unexpected result range in ELF: {address:#x}, {size}")
     manifest = output / "resolved_manifest.json"
     write_json(manifest, {"address": address, "size": size, "segments": segments})
-    artifacts = {
-        **tools,
+    generated = {
         "object": obj,
         "elf": elf,
         "manifest": manifest,
         "catalog": CATALOG,
         "pto_lock": PTO_LOCK,
     }
-    identities = {name: file_identity(path) for name, path in artifacts.items()}
+    artifacts = {**tools, **generated}
+    identities = {
+        **tool_identities,
+        **{name: file_identity(path) for name, path in generated.items()},
+    }
     write_json(
         output / "provenance.json",
         {
