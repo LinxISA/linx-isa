@@ -314,6 +314,7 @@ if [[ -z "$CLANG_BIN" ]]; then
   echo "error: clang not found; set CLANG or build toolchain first" >&2
   exit 1
 fi
+printf -v WORKLOAD_CLANG '%q' "${LINX_CLANG:-$CLANG_BIN}"
 
 clang_supports_arch() {
   local arch="$1"
@@ -955,7 +956,7 @@ run_gate \
 run_gate \
   "Workloads" \
   "benchmarks" \
-  "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_benchmarks.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/benchmarks_result.json" \
+  "LINX_CLANG=$WORKLOAD_CLANG LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_benchmarks.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/benchmarks_result.json" \
   "workload_benchmarks_pass" \
   "workload_benchmarks_fail" \
   "workload_benchmarks"
@@ -963,7 +964,7 @@ run_gate \
 run_gate \
   "Workloads" \
   "polybench" \
-  "LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --cflag=-DMINI_DATASET --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
+  "LINX_SPEC_FORCE_STATIC=1 LINX_CLANG=$WORKLOAD_CLANG LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_polybench.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --cflag=-DMINI_DATASET --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/polybench_result.json" \
   "workload_polybench_pass" \
   "workload_polybench_fail" \
   "workload_polybench"
@@ -971,7 +972,7 @@ run_gate \
 run_gate \
   "Workloads" \
   "portfolio" \
-  "LINX_CLANG=$CLANG_BIN LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_portfolio.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --polybench --ctuning-limit ${LINX_CTUNING_LIMIT:-5} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/portfolio_report.json" \
+  "LINX_CLANG=$WORKLOAD_CLANG LINX_SYSROOT=${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} python3 $ROOT/workloads/run_portfolio.py --cc $ROOT/tools/spec2017/linx_cc.sh --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --sysroot ${WORKLOAD_SYSROOT:-$ROOT/out/libc/musl/install/phase-b} --polybench --ctuning-limit ${LINX_CTUNING_LIMIT:-5} --json-out ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/portfolio_report.json" \
   "workload_portfolio_pass" \
   "workload_portfolio_fail" \
   "workload_portfolio"
@@ -996,7 +997,7 @@ if [[ -n "${CTUNING_ROOT:-}" && -d "${CTUNING_ROOT}/program" ]]; then
   run_gate \
     "Workloads" \
     "ctuning curated subset" \
-    "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root $CTUNING_ROOT --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --clang $CLANG_BIN --lld $LLD_BIN --qemu $QEMU_BIN --limit ${LINX_CTUNING_LIMIT:-5} --run --summary-json ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/ctuning_result.json" \
+    "python3 $ROOT/workloads/ctuning/run_milepost_codelets.py --ctuning-root $CTUNING_ROOT --target ${WORKLOAD_TARGET:-linx64-unknown-linux-musl} --clang $WORKLOAD_CLANG --lld $LLD_BIN --qemu $QEMU_BIN --limit ${LINX_CTUNING_LIMIT:-5} --run --summary-json ${WORKLOAD_OUT_DIR:-$ROOT/workloads/generated}/ctuning_result.json" \
     "workload_ctuning_pass" \
     "workload_ctuning_fail" \
     "workload_ctuning"
