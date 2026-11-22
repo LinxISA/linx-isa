@@ -45,6 +45,19 @@ function verify_v0591_candidate_dispatch() -> unit = {
   match decode_execute64_v0591_candidate(lwi) {
     V0591ScopedPrepared => (), _ => assert(false)
   };
+  match decode_execute64_v0591_candidate(ordinary) {
+    V0591ScopedBusy => (), _ => assert(false)
+  };
+  match decode_execute64_v0591_candidate(malformed) {
+    V0591ScopedBusy => (), _ => assert(false)
+  };
+  match scoped_scalar_pending {
+    Some(attempt) => assert(attempt.request.token == 0 &
+      attempt.request.source_tpc == 0x0000000000001002 & not_bool(attempt.issued)),
+    None() => assert(false)
+  };
+  assert(read_reg5(0b00100) == 0x0000000000005000 &
+    tpc == 0x0000000000001002 & last_trapnum == sail_zeros(6));
   assert(is_none(issue_scoped_scalar_v0591_candidate()));
   let stale_slot = v0591_test_context(41, false, false, true);
   msgb_platform_context = Some({ stale_slot with slot = 1 });

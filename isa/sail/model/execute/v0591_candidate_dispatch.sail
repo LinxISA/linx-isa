@@ -47,39 +47,40 @@ function v0591_dispatch_result(result : scoped_scalar_start) -> v0591_candidate_
 }
 
 function decode_execute64_v0591_candidate(inst : bits(64)) -> v0591_candidate_dispatch = {
-  if is_none(scoped_scalar_pending) then
-    v0591_scoped_pending_owner = None()
-  else ();
-  let id = decode_pto_scoped_scalar(inst);
-  if id != 0xFF then match msgb_platform_instruction_context() {
-    None() => {
+  if not_bool(is_none(scoped_scalar_pending)) then V0591ScopedBusy
+  else {
+    v0591_scoped_pending_owner = None();
+    let id = decode_pto_scoped_scalar(inst);
+    if id != 0xFF then match msgb_platform_instruction_context() {
+      None() => {
+        trap_illegal_inst(read_pc_or_tpc());
+        V0591ScopedIllegal
+      },
+      Some(ctx) => {
+        let applicable = v0591_scoped_context_owns(ctx) &
+          v0591_scoped_envelope_matches(id, inst, ctx);
+        let result = prepare_scoped_scalar(
+          inst, ctx.core, ctx.pe, ctx.key.invocation, applicable
+        );
+        match (result, scoped_scalar_pending) {
+          (ScopedPrepared, Some(attempt)) =>
+            v0591_scoped_pending_owner = Some(struct {
+              token = attempt.request.token, slot = ctx.slot,
+              execution_domain = ctx.key.execution_domain
+            }),
+          _ => ()
+        };
+        v0591_dispatch_result(result)
+      }
+    }
+    else if v0591_scoped_prefix(inst) then {
       trap_illegal_inst(read_pc_or_tpc());
       V0591ScopedIllegal
-    },
-    Some(ctx) => {
-      let applicable = v0591_scoped_context_owns(ctx) &
-        v0591_scoped_envelope_matches(id, inst, ctx);
-      let result = prepare_scoped_scalar(
-        inst, ctx.core, ctx.pe, ctx.key.invocation, applicable
-      );
-      match (result, scoped_scalar_pending) {
-        (ScopedPrepared, Some(attempt)) =>
-          v0591_scoped_pending_owner = Some(struct {
-            token = attempt.request.token, slot = ctx.slot,
-            execution_domain = ctx.key.execution_domain
-          }),
-        _ => ()
-      };
-      v0591_dispatch_result(result)
     }
-  }
-  else if v0591_scoped_prefix(inst) then {
-    trap_illegal_inst(read_pc_or_tpc());
-    V0591ScopedIllegal
-  }
-  else {
-    decode_execute64(inst);
-    V0591Ordinary
+    else {
+      decode_execute64(inst);
+      V0591Ordinary
+    }
   }
 }
 
@@ -97,7 +98,8 @@ function v0591_pending_context_owns(
   };
   v0591_scoped_context_owns(ctx) & envelope & owner_matches &
   attempt.request.core == ctx.core & attempt.request.agent == ctx.pe &
-  attempt.request.invocation == ctx.key.invocation
+  attempt.request.invocation == ctx.key.invocation &
+  attempt.request.acr == ctx.key.acr & attempt.request.source_tpc == ctx.key.tpc
 }
 
 function issue_scoped_scalar_v0591_candidate() -> option(scoped_memory_request) = {
