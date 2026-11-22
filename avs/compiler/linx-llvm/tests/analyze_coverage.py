@@ -75,8 +75,14 @@ def canonicalize_mnemonic(mnemonic: str) -> str:
 def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> Set[str]:
     """Recover strict current-profile aliases from selector-style objdump output."""
     selector = canonicalize_mnemonic(mnemonic)
+    derived: Set[str] = set()
+    # VEC and SFU are the canonical engine spellings of the shared TEPL
+    # encoding carrier. Observing either engine therefore proves the carrier;
+    # it does not imply coverage of any unrelated generic BSTART form.
+    if selector in {"BSTART.VEC", "BSTART.SFU"}:
+        derived.add("BSTART.TEPL")
     if not operands:
-        return set()
+        return derived
 
     tileop = canonicalize_mnemonic(operands[0])
     aliases = {
@@ -84,7 +90,9 @@ def derived_selector_mnemonics(mnemonic: str, operands: list[str]) -> Set[str]:
         ("BSTART.TEPL", "ESAVE"): "ESAVE",
     }
     alias = aliases.get((selector, tileop))
-    return {alias} if alias else set()
+    if alias:
+        derived.add(alias)
+    return derived
 
 
 def extract_mnemonics_from_objdump(path: Path) -> Set[str]:
