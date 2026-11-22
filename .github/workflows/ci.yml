@@ -187,9 +187,8 @@ jobs:
         env:
           HUMANIZER_ZH_ROOT: workloads/generated/humanizer-zh
         run: |
-          python3 tools/isa/test_manual_editorial.py
-          python3 tools/isa/test_manual_architecture.py
-          python3 tools/isa/test_manual_supplements.py
+          python3 -m unittest discover -s tools/isa -p 'test_manual*.py'
+          python3 -m unittest discover -s tools/isa -p 'test_check_manual*.py'
       - name: Check documentation projections
         run: python3 docs/check_documentation.py --root .
       - name: Build and audit the tagged instruction reference
