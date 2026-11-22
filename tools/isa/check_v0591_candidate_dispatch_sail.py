@@ -7,14 +7,15 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
-import sys
 import tempfile
+
+from export_linxisa_v0591_sail import check as check_export
+from export_linxisa_v0591_sail import export as export_sail
 
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOLCHAIN = ROOT / "isa/sail/toolchain.json"
 ACTIVE_SPEC = ROOT / "isa/v0.58/linxisa-v0.58.json"
-V0591_SPEC = ROOT / "isa/v0.59/linxisa-v0.59.json"
 
 
 def run(command: list[str], *, input_text: str | None = None) -> str:
@@ -59,19 +60,9 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="linx-sail-v0591-dispatch-") as directory:
         output = Path(directory)
         sail_tree = output / "sail"
-        shutil.copytree(ROOT / "isa/sail", sail_tree)
-        decode = sail_tree / "model/decode/decode.sail"
-        run(
-            [
-                sys.executable,
-                str(ROOT / "tools/isa/gen_sail_decode.py"),
-                "--spec",
-                str(V0591_SPEC),
-                "--out",
-                str(decode),
-            ]
-        )
-        entry = sail_tree / "model/linxisa_v0591_candidate.sail"
+        export_sail(sail_tree)
+        check_export(sail_tree)
+        entry = sail_tree / "model/linxisa_v0591.sail"
         directed_path = sail_tree / "tests/v0591_candidate_dispatch_tests.sail"
         memo = output / "z3-memo"
         run([sail, "--memo-z3-path", str(memo), "--just-check", str(entry)])

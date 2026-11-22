@@ -7,7 +7,7 @@
   "default_profile": "v0.58",
   "profile_selection": {
     "path": "isa/profile-selection.json",
-    "sha256": "54202d0ff28201e86197fe75033577bb1127cfe104fd93efed17ac92127bac4c"
+    "sha256": "0a522452bb0b3d2b2086fbb2d78b1a79ff7361ea9090b2f3e572b19eb8a67a6e"
   },
   "identity": {
     "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
@@ -27,7 +27,9 @@
     }
   },
   "sail": {
-    "entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+    "entry": "model/linxisa_v0591.sail",
+    "exporter": "tools/isa/export_linxisa_v0591_sail.py",
+    "source_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
     "dispatch": "isa/sail/model/execute/v0591_candidate_dispatch.sail",
     "directed_tests": "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
     "toolchain": {
@@ -41,19 +43,20 @@
     "isa/v0.59/linxisa-v0.59.json": "066e81857bc97fb4b78b376d42f63cc87c0546684c55e99b30f01b238589be5d",
     "isa/v0.59/pto-v0591-candidate.json": "0752d20610b1b3c284292cf0987f64b587136bc13b561578c2d036e7658bd6f9",
     "isa/v0.59/pto-spec.lock.json": "a526f6dbbddfe67d349640f19e904c1148a24178b0ec697f4dc360ddac624f34",
-    "isa/v0.59/meta.json": "4f3f21ed43d65b22011e0f436dffe5c868691849bee901657e4c314394e784ed",
-    "isa/v0.59/release_manifest.json": "bae19cc1319fe225ccdf7acd5baa7a3dd45e913069cee23d8765a7b9eadac81d",
+    "isa/v0.59/meta.json": "31981f837956eb917ea201244ddc1503b0b12ddbf4562ddb18d54c7bcfeb5728",
+    "isa/v0.59/release_manifest.json": "aa4b46599b36e20d059a1608009797c063cbb938b1e241d8706740adcf2671d1",
     "isa/sail/model/linxisa_v0591_candidate.sail": "e17afe81480dc08c8a2e5907cd1d5f2150a66b178dc22bbc3477ea1272a70d53",
     "isa/sail/model/execute/v0591_candidate_dispatch.sail": "e28580b278333f10aa3e755af6e7307aaa28391564f7d1e9fca6c10af48e74f6",
     "isa/sail/tests/v0591_candidate_dispatch_tests.sail": "b857ced3c07d1f670976af65b70daac39b0ea0fde344f2040bc3fb7dc30cc6b9",
     "isa/sail/toolchain.json": "97d2fde2c646fac908d94e3e4f39ceed13bc89d481692000720d76714afe0513",
     "tools/isa/build_linxisa_v0591_candidate.py": "6bb220256481cf867eb0e3a3e2b167ad79efda468dec91344803948a0d96a96b",
-    "tools/isa/build_linxisa_v0591_release_prep.py": "140eaf4238142b32bf77c216d96bec0ec65c81352e0c0563c9c54ce0e3e23e47",
-    "tools/isa/build_linxisa_v0591_release_activation.py": "7a1021bfdbd4644ea748ed54fe6e2db77a05d4511c0b3412ff07f01955519f9a",
-    "tools/isa/build_golden.py": "88cc9132a1bc82a39b61e089f0617d510aa22edb8186ae1384281648b0415511",
-    "tools/isa/check_v0591_candidate_dispatch_sail.py": "b213f127e1544e91db049722025684ec81f58cca83b0c1727bb440a1306ef519",
+    "tools/isa/build_linxisa_v0591_release_prep.py": "87f23f4df2dd922505c5727fceb0e505f4511851e439872fdbaeabcce41d3e92",
+    "tools/isa/build_linxisa_v0591_release_activation.py": "03d958fda2578f2dae36361c9d4f55f06277249555c6d06a8e85a0b8586e0a61",
+    "tools/isa/build_golden.py": "bece6ae505f68331df872c20f20f515d24aa1078ebb2efa5be4bd5991f6ce416",
+    "tools/isa/export_linxisa_v0591_sail.py": "bf78ca00c4ca8a6c12637388af64728b7249191d5297c41560a179ff8c970e0e",
+    "tools/isa/check_v0591_candidate_dispatch_sail.py": "56d8b2a79cc4e3c1c3c976fb475fa8289fd2f81c01714625aa52f586d736d89d",
     "tools/isa/select_linxisa_profile.py": "9a514ea9a7d8fc3b52ffa5647599e9d47842e2e2a766a5cea2d187fb8bf4f29c",
-    "tools/isa/validate_spec.py": "b7d75285d02bbf1ccd9b5fe0b20ed8f91aaa3ec9137356d5fcff75aacbb69be5",
+    "tools/isa/validate_spec.py": "d1482f8f714e9b6309ddc4e662d69bf19a275c7a0ee83eefd63e834d0b2b7422",
     "isa/sail/model/decode/decode.sail": "f758ee029a4b895f9d48b8a91ec0c83e87b12d8bce68cb57ed7ffa0622e84d81",
     "isa/sail/model/decode/scoped_scalar.sail": "4e9ca04bbd54294a0c8c5001002fed447cb001fb12f491e8c3d4c630e0da12b9",
     "isa/sail/model/execute/execute.sail": "add95680420831a2874f8e3910a40228244f6cd8f1e64459dc7b5bb84dadd84d",
@@ -71,7 +74,7 @@
     "isa/sail/model/state/msgb_transport.sail": "db8ad2af9e3f52166783a73d88971ca5a65a3ea74aff5727797036f001db4077",
     "isa/sail/model/state/state.sail": "4de171b2dcd92ccd267fe4a32fb2501f7920d1cf7b275d2cb36188d3b8f72c5f"
   },
-  "inputs_sha256": "6d01bd9fbdd68497ba37b173cff7b030a81d8170c2a0d5ceb16aa2565644d073",
+  "inputs_sha256": "eaad16407a0cb3c5c29f3a7ed75315c13ba693d1a9a508f59b43fd10d0ca2bde",
   "qualification": {
     "release_qualified": false,
     "component_pins_qualified": false,

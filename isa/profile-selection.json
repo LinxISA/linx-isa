@@ -17,7 +17,8 @@
       "state": "selectable-prepublication",
       "version": "0.59.1",
       "catalog": "isa/v0.59/linxisa-v0.59.json",
-      "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+      "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
+      "sail_entry": "model/linxisa_v0591.sail",
       "release_manifest": "isa/v0.59/release_manifest.json",
       "package": "isa/v0.59/release_package.json",
       "release_qualified": false
