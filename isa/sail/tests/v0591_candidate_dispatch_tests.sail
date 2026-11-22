@@ -16,6 +16,7 @@ function v0591_test_context(invocation : int, atomic : bool, far : bool,
 
 function reset_v0591_dispatch_case() -> unit = {
   scoped_scalar_pending = None();
+  v0591_scoped_pending_owner = None();
   scoped_scalar_next_token = 0;
   scoped_queue_binding = None();
   msgb_cores = vector_init(2, struct { active_invocation = None(), draining = false });
@@ -33,6 +34,7 @@ function verify_v0591_candidate_dispatch() -> unit = {
   let lwi : bits(64) = 0x0000FFF22219051F; // lwi.intra [r4, -4], ->r4
   let casb : bits(64) = 0x00001C22029B041F;
   let hl_casw : bits(64) = 0x2E22628B00CE091F;
+  let lpair : bits(64) = 0xFFF2229937DE091F;
   let malformed : bits(64) = 0x00000000001A031F; // reserved shareability
   let ordinary : bits(64) = 0x0000000F00000001; // L.BSTOP
 
@@ -44,12 +46,41 @@ function verify_v0591_candidate_dispatch() -> unit = {
     V0591ScopedPrepared => (), _ => assert(false)
   };
   assert(is_none(issue_scoped_scalar_v0591_candidate()));
+  let stale_slot = v0591_test_context(41, false, false, true);
+  msgb_platform_context = Some({ stale_slot with slot = 1 });
+  assert(is_none(issue_scoped_scalar_v0591_candidate()));
+  let stale_domain = v0591_test_context(41, false, false, true);
+  msgb_platform_context = Some({ stale_domain with
+    key = { stale_domain.key with execution_domain = 10 } });
+  assert(is_none(issue_scoped_scalar_v0591_candidate()));
   msgb_platform_context = Some(v0591_test_context(42, false, false, true));
   assert(is_none(issue_scoped_scalar_v0591_candidate()));
   msgb_platform_context = Some(v0591_test_context(41, false, false, true));
   match issue_scoped_scalar_v0591_candidate() {
     Some(request) => {
       assert(request.core == 0 & request.agent == 2 & request.invocation == 41);
+      let owner = v0591_test_context(41, false, false, true);
+      msgb_platform_context = Some({ owner with slot = 1 });
+      assert(not_bool(complete_scoped_scalar_v0591_candidate(request.token,
+        ScopedMemoryCommitted, 0x0000000080000005)));
+      match scoped_scalar_pending {
+        Some(attempt) => assert(attempt.request.token == request.token &
+          attempt.request.address == request.address & attempt.issued),
+        None() => assert(false)
+      };
+      assert(read_reg5(0b00100) == 0x0000000000005000 &
+        tpc == 0x0000000000001002);
+      msgb_platform_context = Some({ owner with
+        key = { owner.key with execution_domain = 10 } });
+      assert(not_bool(complete_scoped_scalar_v0591_candidate(request.token,
+        ScopedMemoryCommitted, 0x0000000080000005)));
+      match scoped_scalar_pending {
+        Some(attempt) => assert(attempt.request.token == request.token &
+          attempt.request.address == request.address & attempt.issued),
+        None() => assert(false)
+      };
+      assert(read_reg5(0b00100) == 0x0000000000005000 &
+        tpc == 0x0000000000001002);
       msgb_platform_context = Some(v0591_test_context(42, false, false, true));
       assert(not_bool(complete_scoped_scalar_v0591_candidate(request.token,
         ScopedMemoryBlocked, 0x0000000000000000)));
@@ -68,6 +99,41 @@ function verify_v0591_candidate_dispatch() -> unit = {
     None() => assert(false)
   };
   assert(tpc == 0x000000000000100A);
+  assert(is_none(v0591_scoped_pending_owner));
+
+  // Pair completion has the same exact slot/domain owner binding.
+  reset_v0591_dispatch_case();
+  write_reg5(0b00100, 0x0000000000004000);
+  write_reg5(0b00101, 0x1111111111111111);
+  write_reg5(0b00110, 0x2222222222222222);
+  match decode_execute64_v0591_candidate(lpair) {
+    V0591ScopedPrepared => (), _ => assert(false)
+  };
+  match issue_scoped_scalar_v0591_candidate() {
+    Some(request) => {
+      let owner = v0591_test_context(41, false, false, true);
+      msgb_platform_context = Some({ owner with slot = 1 });
+      assert(not_bool(complete_scoped_scalar_pair_v0591_candidate(request.token,
+        ScopedMemoryCommitted, 0x0000000080000001, 0x000000007FFFFFFF)));
+      msgb_platform_context = Some({ owner with
+        key = { owner.key with execution_domain = 10 } });
+      assert(not_bool(complete_scoped_scalar_pair_v0591_candidate(request.token,
+        ScopedMemoryCommitted, 0x0000000080000001, 0x000000007FFFFFFF)));
+      match scoped_scalar_pending {
+        Some(attempt) => assert(attempt.request.token == request.token &
+          attempt.request.address == request.address & attempt.issued),
+        None() => assert(false)
+      };
+      assert(read_reg5(0b00101) == 0x1111111111111111 &
+        read_reg5(0b00110) == 0x2222222222222222 &
+        tpc == 0x0000000000001002);
+      msgb_platform_context = Some(owner);
+      assert(complete_scoped_scalar_pair_v0591_candidate(request.token,
+        ScopedMemoryCommitted, 0x0000000080000001, 0x000000007FFFFFFF))
+    },
+    None() => assert(false)
+  };
+  assert(tpc == 0x000000000000100A & is_none(v0591_scoped_pending_owner));
 
   // Missing context and malformed carriers fail closed and never execute ordinary decode.
   reset_v0591_dispatch_case();

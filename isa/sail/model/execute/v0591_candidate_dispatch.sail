@@ -9,6 +9,14 @@ enum v0591_candidate_dispatch = {
   V0591ScopedBusy
 }
 
+struct v0591_scoped_owner = {
+  token : int,
+  slot : range(0, 1),
+  execution_domain : int
+}
+
+register v0591_scoped_pending_owner : option(v0591_scoped_owner) = None()
+
 function v0591_scoped_prefix(inst : bits(64)) -> bool = {
   inst[7..0] == 0x1F
 }
@@ -39,6 +47,9 @@ function v0591_dispatch_result(result : scoped_scalar_start) -> v0591_candidate_
 }
 
 function decode_execute64_v0591_candidate(inst : bits(64)) -> v0591_candidate_dispatch = {
+  if is_none(scoped_scalar_pending) then
+    v0591_scoped_pending_owner = None()
+  else ();
   let id = decode_pto_scoped_scalar(inst);
   if id != 0xFF then match msgb_platform_instruction_context() {
     None() => {
@@ -48,9 +59,18 @@ function decode_execute64_v0591_candidate(inst : bits(64)) -> v0591_candidate_di
     Some(ctx) => {
       let applicable = v0591_scoped_context_owns(ctx) &
         v0591_scoped_envelope_matches(id, inst, ctx);
-      v0591_dispatch_result(
-        prepare_scoped_scalar(inst, ctx.core, ctx.pe, ctx.key.invocation, applicable)
-      )
+      let result = prepare_scoped_scalar(
+        inst, ctx.core, ctx.pe, ctx.key.invocation, applicable
+      );
+      match (result, scoped_scalar_pending) {
+        (ScopedPrepared, Some(attempt)) =>
+          v0591_scoped_pending_owner = Some(struct {
+            token = attempt.request.token, slot = ctx.slot,
+            execution_domain = ctx.key.execution_domain
+          }),
+        _ => ()
+      };
+      v0591_dispatch_result(result)
     }
   }
   else if v0591_scoped_prefix(inst) then {
@@ -70,7 +90,12 @@ function v0591_pending_context_owns(
     Some(transaction) => ctx.atomic & (ctx.far == transaction.far),
     None() => not_bool(ctx.atomic) & not_bool(ctx.far)
   };
-  v0591_scoped_context_owns(ctx) & envelope &
+  let owner_matches : bool = match v0591_scoped_pending_owner {
+    Some(owner) => owner.token == attempt.request.token & owner.slot == ctx.slot &
+      owner.execution_domain == ctx.key.execution_domain,
+    None() => false
+  };
+  v0591_scoped_context_owns(ctx) & envelope & owner_matches &
   attempt.request.core == ctx.core & attempt.request.agent == ctx.pe &
   attempt.request.invocation == ctx.key.invocation
 }
@@ -86,8 +111,13 @@ function issue_scoped_scalar_v0591_candidate() -> option(scoped_memory_request) 
 function complete_scoped_scalar_v0591_candidate(token : int,
     completion : scoped_memory_completion, data : bits(64)) -> bool = {
   match (scoped_scalar_pending, msgb_platform_instruction_context()) {
-    (Some(attempt), Some(ctx)) if v0591_pending_context_owns(attempt, ctx) =>
-      complete_scoped_scalar(token, completion, data),
+    (Some(attempt), Some(ctx)) if v0591_pending_context_owns(attempt, ctx) => {
+      let completed = complete_scoped_scalar(token, completion, data);
+      if completed & is_none(scoped_scalar_pending) then
+        v0591_scoped_pending_owner = None()
+      else ();
+      completed
+    },
     _ => false
   }
 }
@@ -96,8 +126,15 @@ function complete_scoped_scalar_pair_v0591_candidate(token : int,
     completion : scoped_memory_completion, first_data : bits(64),
     second_data : bits(64)) -> bool = {
   match (scoped_scalar_pending, msgb_platform_instruction_context()) {
-    (Some(attempt), Some(ctx)) if v0591_pending_context_owns(attempt, ctx) =>
-      complete_scoped_scalar_pair(token, completion, first_data, second_data),
+    (Some(attempt), Some(ctx)) if v0591_pending_context_owns(attempt, ctx) => {
+      let completed = complete_scoped_scalar_pair(
+        token, completion, first_data, second_data
+      );
+      if completed & is_none(scoped_scalar_pending) then
+        v0591_scoped_pending_owner = None()
+      else ();
+      completed
+    },
     _ => false
   }
 }
