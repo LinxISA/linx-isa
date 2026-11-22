@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build an inactive full-schema LinxISA v0.59.1 catalog candidate."""
+"""Build the full-schema LinxISA v0.59.1 prepublication catalog."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from report_encoding_space import (
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = ROOT / "isa/v0.58/linxisa-v0.58.json"
 PROFILE = ROOT / "isa/v0.59"
-OUTPUT = PROFILE / "linxisa-v0.59-candidate.json"
+OUTPUT = PROFILE / "linxisa-v0.59.json"
 BINDINGS = PROFILE / "pto-v0591-candidate.json"
 SCALARS = PROFILE / "state/pto_scalar_forms.json"
 COMMANDS = PROFILE / "state/pto_command_forms.json"
@@ -439,10 +439,12 @@ def build() -> dict[str, Any]:
     document = {
         "schema": baseline["schema"],
         "isa": baseline["isa"],
-        "version": "0.59.1-candidate",
+        "version": "0.59.1-prepublication",
         "candidate_status": {
-            "state": "inactive-full-catalog",
+            "state": "prepublication-full-catalog",
             "active_profile": "v0.58",
+            "default_profile": "v0.58",
+            "publication_allowed": False,
             "source_bindings": "isa/v0.59/pto-v0591-candidate.json",
             "source_bindings_sha256": bindings_sha256,
             "counts": {"common": 578, "linx_only": 216, "scoped": 705},
@@ -476,8 +478,8 @@ def main() -> int:
         raise SystemExit(f"LinxISA v0.59.1 candidate build failed: {error}") from error
     if args.check:
         if not OUTPUT.is_file() or OUTPUT.read_text(encoding="utf-8") != expected:
-            raise SystemExit(f"stale LinxISA v0.59.1 candidate: {OUTPUT}")
-        print(f"LinxISA v0.59.1 full catalog candidate is current: {OUTPUT}")
+            raise SystemExit(f"stale LinxISA v0.59.1 catalog: {OUTPUT}")
+        print(f"LinxISA v0.59.1 catalog is current: {OUTPUT}")
         return 0
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(expected, encoding="utf-8")

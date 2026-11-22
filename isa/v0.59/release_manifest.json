@@ -21,10 +21,10 @@
     "extension_encoding_reservations": 50
   },
   "catalog": {
-    "path": "isa/v0.59/linxisa-v0.59-candidate.json",
-    "sha256": "536f75910eecd5feaefadb1603fc86081a6c750365da8e5f8ac745903164fb46",
+    "path": "isa/v0.59/linxisa-v0.59.json",
+    "sha256": "066e81857bc97fb4b78b376d42f63cc87c0546684c55e99b30f01b238589be5d",
     "schema": "linxisa.catalog.v0",
-    "status": "inactive-full-catalog"
+    "status": "prepublication-full-catalog"
   },
   "frozen_bindings": {
     "path": "isa/v0.59/pto-v0591-candidate.json",
@@ -55,14 +55,21 @@
     "release": "0.59.1"
   },
   "publication": null,
+  "release_activation": {
+    "state": "prepared-prepublication",
+    "profile_selection": "isa/profile-selection.json",
+    "package": "isa/v0.59/release_package.json",
+    "catalog": "isa/v0.59/linxisa-v0.59.json",
+    "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+    "default_profile": "v0.58"
+  },
   "qualification": {
     "release_qualified": false,
     "linux_qualified": false,
     "leaf_components_qualified": false,
     "system_runtime_qualified": false,
     "required_before_publication": [
-      "promote the inactive catalog to the published v0.59 profile and remove candidate status",
-      "promote the merged opt-in scoped Sail entry into the published profile",
+      "activate the packaged scoped Sail entry as the published v0.59 entry after exact release gates pass",
       "promote exact reviewed component pins in the owning superproject change",
       "complete Linux and leaf-component validation at those exact pins",
       "run release verification and release preparation on the final main commit",

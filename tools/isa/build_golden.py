@@ -1068,8 +1068,13 @@ def _canonical_json(obj: Any) -> str:
 
 
 def _profile_defaults(profile: str = "v0.58") -> Tuple[str, str]:
-    if profile == "v0.59":
-        return "isa/v0.59", "isa/v0.59/linxisa-v0.59-candidate.json"
+    if profile in {"v0.58", "v0.59"}:
+        from select_linxisa_profile import resolve_profile
+
+        selected = resolve_profile(
+            profile, allow_prepublication=profile == "v0.59"
+        )
+        return str(Path(selected["catalog"]).parent), str(selected["catalog"])
     return f"isa/{profile}", f"isa/{profile}/linxisa-{profile}.json"
 
 

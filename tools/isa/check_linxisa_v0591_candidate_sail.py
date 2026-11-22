@@ -12,7 +12,7 @@ import tempfile
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "isa/v0.59/linxisa-v0.59-candidate.json"
+SPEC = ROOT / "isa/v0.59/linxisa-v0.59.json"
 TOOLCHAIN = ROOT / "isa/sail/toolchain.json"
 
 
