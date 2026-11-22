@@ -9,10 +9,12 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/isa"))
 
+import build_linxisa_v0591_candidate as candidate_builder
 from build_linxisa_v0591_candidate import (
     build,
     check_collisions,
@@ -57,6 +59,44 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             if not item.get("pto_source_form_id")
         }
         self.assertEqual({item["id"]: item for item in linx_only}, old_linx)
+
+    def test_state_uses_frozen_v0591_projections_and_preserves_linx_ssr(self):
+        state = self.candidate["state"]
+        for key, relative in {
+            "pto_scalar_forms": "pto_scalar_forms.json",
+            "pto_command_forms": "pto_command_forms.json",
+            "extension_encoding_reservations": "extension_encoding_reservations.json",
+            "pto_system_registers": "pto_system_registers.json",
+        }.items():
+            expected = json.loads(
+                (ROOT / "isa/v0.59/state" / relative).read_text(encoding="utf-8")
+            )
+            self.assertEqual(state[key], expected)
+        self.assertEqual(
+            state["system_registers"], self.baseline["state"]["system_registers"]
+        )
+        inherited = self.candidate["candidate_status"]["inherited_v058_views"]
+        self.assertEqual(
+            inherited["status"],
+            "schema-completeness-only-not-published-v0.59-authority",
+        )
+        self.assertIn("state.engine_ops", inherited["paths"])
+        self.assertIn("state.pto_binder_contracts", inherited["paths"])
+        self.assertIn("semantics_conventions", inherited["paths"])
+
+    def test_binding_hash_is_for_the_payload_used_by_the_builder(self):
+        expected = candidate_builder.hashlib.sha256(
+            candidate_builder.BINDINGS.read_bytes()
+        ).hexdigest()
+        self.assertEqual(
+            self.candidate["candidate_status"]["source_bindings_sha256"], expected
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            stale = Path(directory) / "bindings.json"
+            stale.write_text("{}\n", encoding="utf-8")
+            with mock.patch.object(candidate_builder, "BINDINGS", stale):
+                with self.assertRaisesRegex(ValueError, "differ from rebuilt bindings"):
+                    candidate_builder.frozen_bindings()
 
     def test_full_schema_is_deterministic_and_has_unique_rows(self):
         from validate_spec import V058_DERIVED_VERSIONS, V058_FIRST_USE_VERSIONS

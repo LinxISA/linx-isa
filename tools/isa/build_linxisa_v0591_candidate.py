@@ -28,6 +28,8 @@ OUTPUT = PROFILE / "linxisa-v0.59-candidate.json"
 BINDINGS = PROFILE / "pto-v0591-candidate.json"
 SCALARS = PROFILE / "state/pto_scalar_forms.json"
 COMMANDS = PROFILE / "state/pto_command_forms.json"
+RESERVATIONS = PROFILE / "state/extension_encoding_reservations.json"
+PTO_SYSTEM_REGISTERS = PROFILE / "state/pto_system_registers.json"
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -313,11 +315,20 @@ def complete_field_definitions(document: dict[str, Any]) -> None:
             definition["signed"] = next(iter(entry["signed"]))
 
 
+def frozen_bindings() -> tuple[dict[str, Any], str]:
+    rebuilt = build_frozen_bindings()
+    rebuilt_text = render(rebuilt)
+    on_disk = BINDINGS.read_text(encoding="utf-8")
+    if on_disk != rebuilt_text:
+        raise ValueError("on-disk PTO v0.59.1 bindings differ from rebuilt bindings")
+    return rebuilt, hashlib.sha256(rebuilt_text.encode("utf-8")).hexdigest()
+
+
 def build() -> dict[str, Any]:
     baseline = load(BASELINE)
     scalar = load(SCALARS)
     command = load(COMMANDS)
-    frozen = build_frozen_bindings()
+    frozen, bindings_sha256 = frozen_bindings()
     source_forms = [*scalar["forms"], *command["forms"]]
     source = {form["form_id"]: form for form in source_forms}
     baseline_common = {
@@ -400,6 +411,24 @@ def build() -> dict[str, Any]:
     if len(ids) != len(set(ids)) or len(uids) != len(set(uids)):
         raise ValueError("candidate instruction IDs or UIDs collide")
 
+    state = copy.deepcopy(baseline["state"])
+    state["pto_scalar_forms"] = copy.deepcopy(scalar)
+    state["pto_command_forms"] = copy.deepcopy(command)
+    state["extension_encoding_reservations"] = load(RESERVATIONS)
+    state["pto_system_registers"] = load(PTO_SYSTEM_REGISTERS)
+    inherited_v058_views = [
+        "semantics_conventions",
+        "state.architectural_state",
+        "state.engine_ops",
+        "state.kernel_execution",
+        "state.memory_model",
+        "state.pto_binder_contracts",
+        "state.pto_encoding_map",
+        "state.pto_ops",
+        "state.rendering_profile",
+        "state.shared_tile_registers",
+        "state.system_registers",
+    ]
     document = {
         "schema": baseline["schema"],
         "isa": baseline["isa"],
@@ -408,8 +437,12 @@ def build() -> dict[str, Any]:
             "state": "inactive-full-catalog",
             "active_profile": "v0.58",
             "source_bindings": "isa/v0.59/pto-v0591-candidate.json",
-            "source_bindings_sha256": hashlib.sha256(BINDINGS.read_bytes()).hexdigest(),
+            "source_bindings_sha256": bindings_sha256,
             "counts": {"common": 578, "linx_only": 216, "scoped": 705},
+            "inherited_v058_views": {
+                "status": "schema-completeness-only-not-published-v0.59-authority",
+                "paths": inherited_v058_views,
+            },
         },
         "instruction_count": len(instructions),
         "instructions": instructions,
@@ -417,7 +450,7 @@ def build() -> dict[str, Any]:
         "field_definitions": copy.deepcopy(baseline["field_definitions"]),
         "semantics_conventions": copy.deepcopy(baseline["semantics_conventions"]),
         "retired_encodings": copy.deepcopy(baseline["retired_encodings"]),
-        "state": copy.deepcopy(baseline["state"]),
+        "state": state,
     }
     complete_field_definitions(document)
     if document["instruction_count"] != 1499:
