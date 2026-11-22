@@ -835,8 +835,10 @@ class AiWorkloadFlowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             out_dir = Path(td) / "must-not-exist"
             missing_lock = Path("docs/bringup/missing-component-lock.json")
-            with mock.patch.object(
-                run_ai_workload_flow, "COMPONENT_LOCK_REL", missing_lock
+            with mock.patch.multiple(
+                run_ai_workload_flow,
+                COMPONENT_LOCK_REL=missing_lock,
+                V059_COMPONENT_LOCK_REL=missing_lock,
             ), mock.patch.object(
                 run_ai_workload_flow, "discover_cases", return_value=[]
             ):

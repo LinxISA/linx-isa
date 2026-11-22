@@ -52,8 +52,8 @@ class ComponentLockTests(unittest.TestCase):
         gitlinks = {path: entry["commit"]}
         errors = checker.validate(lock, modules, gitlinks, "v0.59")
         self.assertTrue(any(f"{path} must record release 0.59.1" in error for error in errors))
-        self.assertTrue(any(f"{path} must record a merged development PR" in error for error in errors))
-        entry.update(release="0.59.1", integration_status="merged_development")
+        self.assertTrue(any(f"{path} must record a landed PR" in error for error in errors))
+        entry.update(release="0.59.1", integration_status="landed")
         errors = checker.validate(lock, modules, gitlinks, "v0.59")
         self.assertFalse(any(error.startswith(path) for error in errors), errors)
 

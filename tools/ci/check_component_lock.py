@@ -155,8 +155,9 @@ def validate(
                 )
         if path in reviewed:
             integration_status = item.get("integration_status")
-            if profile == "v0.59" and integration_status != "merged_development":
-                errors.append(f"{path} must record a merged development PR for {profile}")
+            if profile == "v0.59":
+                if integration_status != "landed":
+                    errors.append(f"{path} must record a landed PR for {profile}")
             elif integration_status not in {"review_only_open_pr", "merged_development"}:
                 errors.append(f"{path} must record a review-only open PR or a merged development PR")
             review_url = item.get("review_url", "")

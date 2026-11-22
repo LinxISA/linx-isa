@@ -7,12 +7,12 @@
       "path": "compiler/llvm",
       "url": "https://github.com/LinxISA/llvm-project.git",
       "branch": "main",
-      "commit": "e5748ac8eafc56e2557f64756f432c8651a69705",
-      "tree": "381f94b0c95515ab8baa062aad288e7d24f2b700",
+      "commit": "9dd03841e5758c8be7cc3d20be122413553becf1",
+      "tree": "9dac43d8a396ff517e2f856709f8306f2de63088",
       "release": "0.58.7",
-      "role": "v0.58.7 default compiler with opt-in PTO 0.59.1 scoped Scalar MC and LLD relocation support",
+      "role": "v0.58.7 development compiler, assembler and linker; remaining CodeGen gaps tracked in llvm-project#127",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/llvm-project/pull/177"
+      "review_url": "https://github.com/LinxISA/llvm-project/pull/128"
     },
     {
       "path": "compiler/ptoas",
@@ -29,12 +29,12 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "875e77b072902ff47c03eb3cbab9cabcb896b1d5",
-      "tree": "7b646d84863b3db740439e73b696312adc0db94e",
+      "commit": "d451933b46ec7212a3e95514ee36d876d9c81f7b",
+      "tree": "920c18e813d4c00f97b694836efd767dfbc3cb12",
       "release": "0.58.7",
-      "role": "v0.58.7 default emulator with opt-in scoped Scalar, direct scoped PCR relocations and Core4 MSGB/HSCB guest execution",
+      "role": "v0.58.7 development emulator subset; repeated Tile fault gap tracked in qemu#83",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/qemu/pull/94"
+      "review_url": "https://github.com/LinxISA/qemu/pull/85"
     },
     {
       "path": "kernel/linux",
@@ -103,22 +103,22 @@
       "path": "tools/LinxCoreModel",
       "url": "https://github.com/LinxISA/LinxCoreModel.git",
       "branch": "main",
-      "commit": "384295bf8bdd862c6c3517b9d7f735386966d674",
-      "tree": "45cb518589b8e8aad1c60a5c757b06463333e042",
-      "role": "C++ core model with the retained v0.58.1 integration and validated scoped Scalar and ADDTPC in gfrun/gfsim",
-      "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/40"
+      "commit": "2b16fe22140ec6b6d41ea35becfe9e932d3170f3",
+      "tree": "e81704d8295539a47e727d5ab3b272b9eec4e8c7",
+      "role": "C++ core model",
+      "integration_status": "review_only_open_pr",
+      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/37"
     },
     {
       "path": "tools/model",
       "url": "https://github.com/LinxISA/linx-model.git",
       "branch": "main",
-      "commit": "f3c05078608eded133f4ab4f01374a1283532564",
-      "tree": "92acc4f21513c7e0a0ef2cc4deb8577838855087",
+      "commit": "a6e18c25e8be78a8c0cc8ef02dee1af2c6c92093",
+      "tree": "99ab7340b1c6daf2a1b17d4497285b1f0db3f72d",
       "release": "0.58.7",
-      "role": "v0.58.7 default functional reference with opt-in PTO 0.59.1 single-access immediate/PCR execution",
+      "role": "v0.58.7 development model codec and explicit executable subset; linx-model#23",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/linx-model/pull/26"
+      "review_url": "https://github.com/LinxISA/linx-model/pull/24"
     },
     {
       "path": "tools/pyCircuit",
