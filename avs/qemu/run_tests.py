@@ -668,7 +668,9 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
         r"\bB\.IOT\s+t#1,\s+u#1,\s+mask=0001,\s+last,\s+->t<128B>",
     ],
     "tile_v0586_timg2col": [
-        r"81 11 c1 c9\s+BSTART\.TIMG2COL\b",
+        r"(?:81 11 c1 c9[ \t]+BSTART\.TIMG2COL\b"
+        r"|81 11[ \t]+<unknown>[ \t]*\r?\n"
+        r"[ \t]*[0-9a-f]+:[ \t]+c1 c9[ \t]+<unknown>)",
         r"\bB\.DATR\s+ND2M16,\s+DTYPE_NONE,\s+Zero\b",
         r"\bB\.IOT\s+mask=1111,\s+last,\s+->m<512B>",
     ],

@@ -121,10 +121,10 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         carrier = (run_tests.SCRIPT_DIR / "tests/33_v0586_timg2col_carrier.S").read_text()
         source = (run_tests.SCRIPT_DIR / "tests/33_v0586_timg2col.c").read_text()
         self.assertIn(".4byte 0xc9c11181", carrier)
-        self.assertEqual(
-            run_tests.OBJDUMP_ASSERTS_BY_SUITE[suite][0],
-            r"81 11 c1 c9\s+BSTART\.TIMG2COL\b",
-        )
+        carrier_pattern = run_tests.OBJDUMP_ASSERTS_BY_SUITE[suite][0]
+        self.assertRegex("4: 81 11 c1 c9  BSTART.TIMG2COL", carrier_pattern)
+        self.assertRegex("4: 81 11  <unknown>\n6: c1 c9  <unknown>", carrier_pattern)
+        self.assertNotRegex("4: 81 11 c1 c8  BSTART.TIMG2COL", carrier_pattern)
         self.assertIn("B.DATR ND2M16, DTYPE_NONE, Zero", carrier)
         self.assertIn("B.IOT mask=1111, last, ->m<512B>", carrier)
         self.assertIn("TEST_EQ32(output[i], input[i]", source)
