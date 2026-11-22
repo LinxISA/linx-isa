@@ -35,7 +35,7 @@
       "sail_version": "0.20.2",
       "schema_version": "linx-sail-toolchain-v1"
     },
-    "state": "scoped-candidate-dispatch-prepared"
+    "state": "assembled-catalog-and-scoped-dispatch-prepared"
   },
   "inputs": {
     "isa/v0.59/linxisa-v0.59.json": "066e81857bc97fb4b78b376d42f63cc87c0546684c55e99b30f01b238589be5d",
@@ -49,10 +49,9 @@
     "isa/sail/toolchain.json": "97d2fde2c646fac908d94e3e4f39ceed13bc89d481692000720d76714afe0513",
     "tools/isa/build_linxisa_v0591_candidate.py": "6bb220256481cf867eb0e3a3e2b167ad79efda468dec91344803948a0d96a96b",
     "tools/isa/build_linxisa_v0591_release_prep.py": "140eaf4238142b32bf77c216d96bec0ec65c81352e0c0563c9c54ce0e3e23e47",
-    "tools/isa/build_linxisa_v0591_release_activation.py": "b7d67398748ef4e2dc7503cf9cd0843631236f7109fd96db1d62b57c15c59ee1",
+    "tools/isa/build_linxisa_v0591_release_activation.py": "7a1021bfdbd4644ea748ed54fe6e2db77a05d4511c0b3412ff07f01955519f9a",
     "tools/isa/build_golden.py": "88cc9132a1bc82a39b61e089f0617d510aa22edb8186ae1384281648b0415511",
-    "tools/isa/check_linxisa_v0591_candidate_sail.py": "73d11f2572e87a6e9fdb14dbd5318442da22a43f6376fd5479796157060cf234",
-    "tools/isa/check_v0591_candidate_dispatch_sail.py": "7215e992236cc2c6efda0d5511f58ec9b7ac71a9fe9490c937b9ab1851e56ad3",
+    "tools/isa/check_v0591_candidate_dispatch_sail.py": "b213f127e1544e91db049722025684ec81f58cca83b0c1727bb440a1306ef519",
     "tools/isa/select_linxisa_profile.py": "9a514ea9a7d8fc3b52ffa5647599e9d47842e2e2a766a5cea2d187fb8bf4f29c",
     "tools/isa/validate_spec.py": "b7d75285d02bbf1ccd9b5fe0b20ed8f91aaa3ec9137356d5fcff75aacbb69be5",
     "isa/sail/model/decode/decode.sail": "f758ee029a4b895f9d48b8a91ec0c83e87b12d8bce68cb57ed7ffa0622e84d81",
@@ -72,7 +71,7 @@
     "isa/sail/model/state/msgb_transport.sail": "db8ad2af9e3f52166783a73d88971ca5a65a3ea74aff5727797036f001db4077",
     "isa/sail/model/state/state.sail": "4de171b2dcd92ccd267fe4a32fb2501f7920d1cf7b275d2cb36188d3b8f72c5f"
   },
-  "inputs_sha256": "0cec2741d64de9388c146f4a4b5b48f5eca74ef178e3362852ed8d15906c524f",
+  "inputs_sha256": "6d01bd9fbdd68497ba37b173cff7b030a81d8170c2a0d5ceb16aa2565644d073",
   "qualification": {
     "release_qualified": false,
     "component_pins_qualified": false,
@@ -95,7 +94,6 @@
   "required_checks": [
     "python3 tools/isa/build_golden.py --profile v0.59 --check",
     "python3 tools/isa/validate_spec.py --profile v0.59",
-    "python3 tools/isa/check_linxisa_v0591_candidate_sail.py",
     "python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
     "python3 tools/isa/build_linxisa_v0591_release_activation.py --check"
   ]
