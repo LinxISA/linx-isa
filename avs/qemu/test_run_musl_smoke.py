@@ -64,7 +64,7 @@ class QemuInstructionFailureTests(unittest.TestCase):
             / "tools/bringup/run_runtime_convergence.sh"
         ).read_text(encoding="utf-8")
 
-        self.assertIn('WORKLOAD_CLANG="${LINX_CLANG:-$CLANG_BIN}"', script)
+        self.assertIn("""printf -v WORKLOAD_CLANG '%q' "${LINX_CLANG:-$CLANG_BIN}" """.strip(), script)
         self.assertGreaterEqual(script.count("LINX_CLANG=$WORKLOAD_CLANG"), 3)
         self.assertIn("--clang $WORKLOAD_CLANG", script)
         self.assertIn("CLANG=$CLANG_BIN TARGET=linx64-linx-none-elf", script)

@@ -314,7 +314,7 @@ if [[ -z "$CLANG_BIN" ]]; then
   echo "error: clang not found; set CLANG or build toolchain first" >&2
   exit 1
 fi
-WORKLOAD_CLANG="${LINX_CLANG:-$CLANG_BIN}"
+printf -v WORKLOAD_CLANG '%q' "${LINX_CLANG:-$CLANG_BIN}"
 
 clang_supports_arch() {
   local arch="$1"
