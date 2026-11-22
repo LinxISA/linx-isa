@@ -50,6 +50,8 @@ make gen
 
 ## 0.59.1 离线中文指令手册
 
-从 [0.59.1 正式发行页](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1) 下载 HTML 压缩包，解压后打开 `index.html`。可按助记符、编码或 Tile 操作查阅。版本与来源页列出发布提交和目录文件的校验摘要。
+从 [0.59.1 正式发行页](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1) 下载 HTML 压缩包，解压后打开 `index.html`。首页按 ALU、BBD、BRU、LSU 等功能分类；每类都有独立的助记符索引。进入指令页后可直接阅读本仓库中文站原有的说明、示例和原图，另可展开发布版位图和编码表。版本与来源页列出发布提交和目录文件的校验摘要。
 
 在仓库的 `docs/architecture/isa-manual` 目录执行 `make html-reference check-html-reference` 可重新生成并核对。生成器读取正式 tag，并逐项对照 578 个公共形式、705 个 scoped 形式和 216 个 Linx 专有形式。浅克隆需先获取 `v0.59.1` 标签。
+
+生成中文原文页使用仓库现有的 MkDocs 文档依赖。分类与单页的设计依据见[参考站组织结构分析](arm64-reference-organization.md)。

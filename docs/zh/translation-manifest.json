@@ -10,8 +10,8 @@
       "translation_sha256": "7defca9868f7f21c95537828137f69e58f4734085e7735da5d919fedf8a8c31b"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "b7ffff9a42a020ada46574335eb2e488fedd431cf99dd95c9e054684b0e9b1f8",
-      "translation_sha256": "bc554e45118702314095fec249882783777bf9ef32ca64f3681ff1d59a6749c2"
+      "source_sha256": "676a8f238d1063beaff85caa281c22fb03438f23b6ccdda733dac5b1b08637fd",
+      "translation_sha256": "f2e333fb954717695c6de443cddf3badde79d82aae0308999023a03a6e8bcee5"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
@@ -8106,8 +8106,8 @@
       "translation_sha256": "9c64d925cf0ec57f6231e00df392da8879abc611192e72af780457a2befc61d7"
     },
     "releases/v0.59.1.md": {
-      "source_sha256": "817ef0729b2e5aa3e8d46e940541d263aae03d537a0b27684a44ba5b3e5a40cf",
-      "translation_sha256": "573b93bd4163a73562a3d8dcd08135f9d49a44fa0f8e6a32d22d8679a9bc2e4f"
+      "source_sha256": "646db59fb582d8b18f7c58815f7e76ee6426d169de614f0ca1d1ec5311e09d10",
+      "translation_sha256": "c462fb432d3bb6820db3a5b69924e5d9e68da0bf8a45ae43393695ddaad44927"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",
@@ -8189,6 +8189,7 @@
   "status": "secondary",
   "translation_docs_root": "docs/zh",
   "translation_only_pages": [
+    "architecture/isa-manual/arm64-reference-organization.md",
     "archive/gate-status/README.md",
     "isa/groups/arithmetic.md",
     "isa/groups/arithmetic_operation_32bit.md",

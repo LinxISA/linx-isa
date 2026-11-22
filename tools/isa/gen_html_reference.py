@@ -26,8 +26,11 @@ from manual_terms_zh import FILTER, group_name
 from manual_encoding import render_encoding, validate_catalog
 from manual_linx_sail import sail_detail
 from manual_reader import operation_detail
-from manual_scoped import scoped_detail, scoped_summary, tile_detail, tile_summary
-from manual_semantics import detail, summary
+from manual_authored import authored_for, authored_tile
+from manual_reader_site import ArticleLibrary, authored_synopsis
+from manual_navigation import BY_KEY, cat_file, category_links, index_pages
+from manual_diagrams import make_diagrams
+
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "docs/architecture/isa-manual/reference"
@@ -89,44 +92,24 @@ def search(prompt, classes=()):
     )
 
 
-def page(title, body, commit):
+def page(title, body, commit, prefix=""):
     nav = (
-        ("index.html", "助记符"),
+        ("index.html", "指令分类"),
+        ("mnemonics.html", "全部助记符"),
         ("encoding.html", "编码索引"),
         ("tile.html", "Tile 操作"),
         ("sources.html", "版本与来源"),
     )
     return f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{escape(title)} · LinxISA 0.59.1</title><link rel="stylesheet" href="manual.css">
-<script defer src="index-filter.js"></script></head><body>
+<title>{escape(title)} · LinxISA 0.59.1</title><link rel="stylesheet" href="{prefix}manual.css">
+<script defer src="{prefix}index-filter.js"></script></head><body>
 <a class="skip" href="#content">跳至正文</a><header>
-<a class="brand" href="index.html">LinxISA</a><span class="edition">0.59.1 · 指令集参考手册</span>
-<nav aria-label="手册目录">{"".join(link(*item) for item in nav)}</nav></header>
+<a class="brand" href="{prefix}index.html">LinxISA</a><span class="edition">0.59.1 · 指令集参考手册</span>
+<nav class="class-nav" aria-label="指令类型">{category_links(prefix)}</nav><nav aria-label="手册目录">{"".join(link(prefix + url, label) for url, label in nav)}</nav></header>
 <main id="content"><h1>{escape(title)}</h1>{body}</main>
-<footer>{link("sources.html", TAG)} · 规范提交 <code>{escape(commit[:12])}</code> · {link("#content", "回到页首")}</footer></body></html>
+<footer>{link(prefix + "sources.html", TAG)} · 规范提交 <code>{escape(commit[:12])}</code> · {link("#content", "回到页首")}</footer></body></html>
 """
-
-
-def reference_routes(commit):
-    """Match exact mnemonic filenames on the Chinese site; omit ambiguous routes."""
-    prefix = "docs/zh/isa/inst/"
-    names = (
-        subprocess.check_output(
-            ["git", "ls-tree", "-rz", "--name-only", commit, "--", prefix], cwd=ROOT
-        )
-        .decode()
-        .split("\0")
-    )
-    candidates = defaultdict(list)
-    for name in names:
-        if name.endswith(".md"):
-            path = Path(name)
-            route = path.relative_to("docs/zh").with_suffix("").as_posix()
-            candidates[path.stem.upper()].append(
-                "https://linxisa.github.io/" + quote(route) + "/"
-            )
-    return {name: urls[0] for name, urls in candidates.items() if len(urls) == 1}
 
 
 def listed_item(name, href, text, kind, terms=""):
@@ -303,6 +286,23 @@ def sources(commit, inputs, manifest, lock):
     )
 
 
+def scoped_record(row, source):
+    fields = [
+        ("汇编形式", source["asm"]),
+        ("GM 共享属性", f"{source['scope']}（编码 {source['scope_code']}）"),
+        ("语义处理器", source["semantic_handler"]),
+        ("基础形式", source["base_form_id"]),
+        ("契约状态", source["status"]),
+    ]
+    return (
+        '<section class="scoped-contract"><h3>作用域封装</h3><dl>'
+        + "".join(
+            f"<dt>{k}</dt><dd><code>{escape(str(v))}</code></dd>" for k, v in fields
+        )
+        + "</dl></section>"
+    )
+
+
 def form_provenance(row, commit, common_paths):
     sid = row.get("pto_source_form_id")
     if sid:
@@ -351,16 +351,34 @@ def build():
         raise ValueError("catalog audit failed: " + "\n".join(discrepancies))
     rows = catalog["instructions"]
     forms = unique_names(rows)
-    routes = reference_routes(commit)
+    diagram_html, diagram_assets, diagram_audit = make_diagrams(catalog)
     common_paths = {}
+    source_forms = {}
     for path in paths[4:]:
         doc = json.loads(inputs[path])
         for form in doc["forms"] + doc.get("scoped_forms", []):
             common_paths[form["form_id"]] = path
+            source_forms[form["form_id"]] = form
     direct_ops = tiles["operations"]
     tile_refs = json.loads((ASSETS / "data/pto-v0591-tile-manual.json").read_text())
     tile_owners = {r["mnemonic"]: r for r in tile_refs["operations"]}
     asl_owners = json.loads((ASSETS / "pto-v0591-semantics.json").read_text())["forms"]
+    base_by_id = {
+        r["pto_source_form_id"]: r
+        for r in rows
+        if r.get("pto_source_form_id") and not r.get("pto_scope")
+    }
+    articles = {}
+    for name, variants in forms.items():
+        first = variants[0]
+        base = base_by_id[first["pto_base_form_id"]] if "pto_scope" in first else first
+        articles[op_page(name)] = (name, authored_for(base))
+    for op in direct_ops:
+        articles[tile_page(op["name"])] = (op["name"], authored_tile(op["name"]))
+    example = articles[op_page("C.MOVR")][1]
+    if not example or example.source_path != "docs/zh/isa/inst/misa_c/C.MOVR.md":
+        raise ValueError("the tagged Chinese instruction source tree is missing")
+    library = ArticleLibrary(articles)
     carrier_ops = defaultdict(list)
     bodies, entries, tile_list, audit = {}, [], [], []
     for op in direct_ops:
@@ -368,113 +386,155 @@ def build():
         if carrier not in forms:
             raise ValueError(f"{name} has no carrier {carrier}")
         carrier_ops[carrier].append(op)
-        tile_path = tile_owners[name]["source_path"]
-        desc = tile_summary(op, catalog)
-        tile_list.append((name, tile_page(name), desc, op["engine"], carrier))
-        bodies[tile_page(name)] = (
+        owner = tile_owners[name]
+        url = tile_page(name)
+        article = articles[url][1]
+        desc = authored_synopsis(
+            article, f"{op['engine']} 引擎操作，使用 {carrier} 编码。"
+        )
+        tile_list.append((name, url, desc, op["engine"], carrier))
+        reader = library.render(
+            url,
+            source_context="本节保留中文站的操作示意、汇编示例和原图。本版选择器及块命令见下方 0.59.1 编码。",
+        )
+        if not reader:
+            reader = "<p>本地中文站没有该 Tile 操作的独立说明。</p>"
+        # Keep exact machine record available independently of the reader.
+        fields = [
+            ("引擎", op["engine"]),
+            ("承载指令", carrier),
+            ("选择器", op.get("selector") or f"Function={op['function']}"),
+            ("语义处理器", op["semantic_handler"]),
+        ]
+        metadata = (
+            '<section class="tile-contract"><h3>发布记录</h3><dl>'
+            + "".join(
+                f"<dt>{k}</dt><dd><code>{escape(str(v))}</code></dd>" for k, v in fields
+            )
+            + "<dt>ASL 来源</dt><dd>"
+            + link(owner["source_url"], owner["source_path"])
+            + "</dd></dl></section>"
+        )
+        bodies[url] = (
             name,
-            f'<p class="intro">{escape(desc)}</p>'
-            + tile_header(op, forms[carrier][0], tile_owners[name])
-            + tile_detail(op, catalog)
-            + operation_detail(tile_path),
+            '<p class="meta">'
+            + link(
+                "tiles-" + op["engine"].lower() + ".html", op["engine"] + " 操作索引"
+            )
+            + "</p>"
+            + reader
+            + '<details class="release-data"'
+            + ("" if article else " open")
+            + '><summary>0.59.1 命令编码与核对资料</summary><div class="release-data-body">'
+            + tile_header(op, forms[carrier][0], owner)
+            + metadata
+            + operation_detail(owner["source_path"])
+            + "</div></details>",
         )
     families = defaultdict(list)
     for name, variants in forms.items():
         families[variants[0]["mnemonic"]].append(name)
     for name, variants in forms.items():
-        first = variants[0]
-        base = first["mnemonic"]
-        related = sorted(n for n in families[base] if n != name)
-        short = (
-            scoped_summary(first, catalog)
-            if "pto_scope" in first
-            else summary(first, catalog)
-        )
+        first, url = variants[0], op_page(name)
+        base, key = first["mnemonic"], first["uop_big_kind"]
+        if any(r["uop_big_kind"] != key for r in variants):
+            raise ValueError(f"{name} has more than one main class")
+        article = articles[url][1]
+        scope = first.get("pto_scope")
+        conflict = bool(article and article.classification == "conflicting-current")
+        missing = f"中文站没有 {base} 的独立条目。下列汇编与位图取自 0.59.1 发布目录。"
+        short = authored_synopsis(article, missing)
+        if conflict:
+            short = "；".join(article.current_view) or f"当前汇编为 {first['asm']}。"
+        if scope:
+            short = f"{name} 是 {base} 的 {scope} 作用域形式。" + short
         terms = " ".join([*(r["asm"] for r in variants), *(r["id"] for r in variants)])
-        entries.append((name, op_page(name), short, first["uop_big_kind"], terms))
-        if "pto_scope" not in first:
-            written = first["asm"].split()[0].upper()
-            if (
-                written != name
-                and re.fullmatch(r"[A-Z0-9.]+", written)
-                and written not in forms
-            ):
-                entries.append(
-                    (
-                        written,
-                        op_page(name) + "#" + first["id"],
-                        f"规范汇编拼写。目录名为 {name}。",
-                        first["uop_big_kind"],
-                        name,
-                    )
-                )
+        entries.append((name, url, short, key, terms))
+        written = first["asm"].split()[0].upper()
+        if (
+            not scope
+            and written != name
+            and re.fullmatch(r"[A-Z0-9.]+", written)
+            and written not in forms
+        ):
+            entries.append(
+                (written, url + "#" + first["id"], f"目录名为 {name}。", key, name)
+            )
         sizes = "、".join(str(n) for n in sorted({r["length_bits"] for r in variants}))
-        count = f" · {len(variants)} 种汇编形式" if len(variants) > 1 else ""
-        body = f'<p class="meta">{escape(group_name(first["group"]))} · {sizes} 位{count}</p>'
+        body = f'<p class="meta">{link(cat_file(key), BY_KEY[key][0] + " · " + BY_KEY[key][1])} · {sizes} 位</p>'
+        related = sorted(n for n in families[base] if n != name)
         if related:
             body += (
-                "<p>关联形式　"
+                '<p class="family-links">关联汇编形式　'
                 + " · ".join(link(op_page(n), n) for n in related)
                 + "</p>"
             )
-        if carrier_ops[name]:
-            body += (
-                "<p>Tile 操作　"
-                + " · ".join(
-                    link(tile_page(o["name"]), o["name"]) for o in carrier_ops[name]
-                )
-                + "</p>"
-            )
+        context = ""
+        if scope:
+            context = f"以下是基础指令 {base} 的中文站原文。{name} 是 64 位封装，原页的基础指令位图不能用于译码此封装。"
+        elif article and article.classification == "contextual-original":
+            context = f"下文为中文站的《{article.title}》。原文示例与原图按原页版本阅读，0.59.1 的各编码形式另列。"
+        elif article and not all(
+            p["source"] == "tagged-original-wavedrom-svg"
+            for p in diagram_audit["forms"][first["id"]]["parts"]
+        ):
+            context = "本节沿用中文站原文和原图；本版译码请查阅 0.59.1 的编码位图。"
+        reader = library.render(url, source_context=context, conflict=conflict)
+        multiple = len(variants) > 1
+        if multiple and reader:
+            body += reader
         for sequence, row in enumerate(variants, start=1):
-            multiple = len(variants) > 1
             if multiple:
                 qualifier = ""
                 if sum(v["asm"] == row["asm"] for v in variants) > 1:
                     qualifier = (
                         f" · 匹配值 0x{fixed_bits(row)[1]:0{row['length_bits'] // 4}x}"
                     )
-                initially_open = " open" if sequence == 1 else ""
+                body += f'<details class="variant"{" open" if sequence == 1 else ""}><summary>形式 {sequence}　<code>{escape(row["asm"])}</code>{qualifier}</summary>'
+            form_id = escape(row["id"])
+            body += f'<article class="form" id="{form_id}">'
+            if not multiple and reader and not conflict:
+                body += reader
+            if not reader:
+                body += f'<p class="uncovered">{escape(missing)}</p>'
+            if conflict:
                 body += (
-                    f'<details class="variant"{initially_open}><summary>形式 {sequence}　'
-                    f"<code>{escape(row['asm'])}</code>{qualifier}</summary>"
-                )
-            text = (
-                ""
-                if "pto_scope" in row
-                else detail(row, catalog, show_repeated_summary=False)
-            )
-            if "pto_scope" in row:
-                base_form = next(
-                    r
-                    for r in forms[base]
-                    if r.get("pto_source_form_id") == row["pto_base_form_id"]
-                )
-                text = (
-                    f"<p>基础操作 {link(op_page(base) + '#' + base_form['id'], base_form['asm'])}</p>"
-                    + scoped_detail(row, catalog)
-                    + "<details><summary>未封装基础形式的操作契约</summary>"
-                    + detail(base_form, catalog)
-                    + "</details>"
+                    '<p class="version-context"><strong>0.59.1 版本差异</strong>　'
+                    + escape(" ".join(article.reasons + article.current_view))
+                    + "</p>"
                 )
             source_id = row.get("pto_base_form_id") or row.get("pto_source_form_id")
             owner = asl_owners.get(source_id, {}).get("source_path", "")
-            lead = (
-                scoped_summary(row, catalog)
-                if row.get("pto_scope")
-                else summary(row, catalog)
+            expand = " open" if conflict or not reader or multiple or scope else ""
+            note = (
+                "编码保留；执行必须在读取操作数或产生架构效果之前拒绝。"
+                if "NOT IMPLEMENTED" in row.get("note", "")
+                else ""
             )
-            form_id = escape(row["id"])
             body += (
-                f'<article class="form" id="{form_id}"><h2>说明</h2><p class="intro">{escape(lead)}</p>'
+                f'<details class="release-data"{expand}><summary>0.59.1 汇编、位图与精确编码</summary><div class="form-spec">'
+                + (f'<p class="version-context">{note}</p>' if note else "")
                 + f"<h3>汇编语法</h3><pre><code>{escape(row['asm'])}</code></pre>"
                 + "<h3>编码格式</h3>"
+                + diagram_html[row["id"]]
                 + render_encoding(row, catalog)
-                + "<h3>执行效果与约束</h3>"
-                + text
-                + (operation_detail(owner) if owner else sail_detail(row))
-                + form_provenance(row, commit, common_paths)
-                + "</article>"
             )
+            if scope:
+                base_row = base_by_id[source_id]
+                body += (
+                    "<p>基础形式　"
+                    + link(op_page(base) + "#" + base_row["id"], base_row["asm"])
+                    + "</p>"
+                )
+                body += scoped_record(row, source_forms[row["pto_source_form_id"]])
+            body += (
+                (operation_detail(owner) if owner else sail_detail(row))
+                + form_provenance(row, commit, common_paths)
+                + "</div></details>"
+            )
+            if conflict and not multiple:
+                body += reader
+            body += "</article>"
             if multiple:
                 body += "</details>"
             mask, match = fixed_bits(row)
@@ -483,26 +543,24 @@ def build():
                     "id": row["id"],
                     "mnemonic": base,
                     "asm": row["asm"],
-                    "page": op_page(name) + "#" + row["id"],
+                    "page": url + "#" + row["id"],
                     "bits": row["length_bits"],
                     "mask": hex(mask),
                     "match": hex(match),
                     "source_id": row.get("pto_source_form_id") or row["id"],
-                    "semantic_owner": asl_owners.get(
-                        row.get("pto_base_form_id") or row.get("pto_source_form_id"), {}
-                    ).get("source_path", row["source"]["file"]),
-                    "scope": row.get("pto_scope"),
+                    "semantic_owner": owner or row["source"]["file"],
+                    "scope": scope,
                 }
             )
-        if base in routes:
+        if carrier_ops[name]:
             body += (
-                '<p class="related-doc">'
-                + link(routes[base], f"相关资料：中文站 {base} 指令说明")
+                "<h2>此编码选择的 Tile 操作</h2><p>"
+                + " · ".join(
+                    link(tile_page(o["name"]), o["name"]) for o in carrier_ops[name]
+                )
                 + "</p>"
             )
-        if name == "DC.IALL":
-            body += '<p class="meta">版本差异：中文站的旧例写作 <code>dc.iall SrcL</code>。0.59.1 的指令字固定为 <code>0x0010602b</code>，汇编时省略操作数。</p>'
-        bodies[op_page(name)] = (name, body)
+        bodies[url] = (name, body)
     commands = json.loads(inputs[paths[5]])["forms"]
     carrier_form = next(f for f in commands if f["mnemonic"] == "BSTART.TEPL")
     for engine, alias in carrier_form["canonical_assembly_by_engine"].items():
@@ -526,7 +584,8 @@ def build():
         + link("tile.html", "Tile 操作索引")
         + "。</p>"
     )
-    bodies["index.html"] = (
+    bodies.update(index_pages(rows, entries, alphabetic_index, len(direct_ops)))
+    bodies["mnemonics.html"] = (
         "指令索引",
         alphabetic_index(entries, intro, "例如 ADD、C.LDI.INTER、B.IOT"),
     )
@@ -538,22 +597,84 @@ def build():
             "例如 TADD、TIMG2COL",
         ),
     )
+    tile_links = [
+        (f"tiles-{engine.lower()}.html", engine)
+        for engine in ("VEC", "SFU", "TLSU", "CUBE")
+    ]
+    tile_nav = (
+        '<div class="jump" aria-label="Tile 引擎">'
+        + " · ".join(link(url, engine) for url, engine in tile_links)
+        + "</div>"
+    )
+    title, listing = bodies["tile.html"]
+    bodies["tile.html"] = (title, tile_nav + listing)
+    for url, engine in tile_links:
+        members = [entry for entry in tile_list if entry[3] == engine]
+        bodies[url] = (
+            f"{engine} · Tile 操作索引",
+            tile_nav
+            + alphabetic_index(
+                members,
+                f"<p>{engine} 引擎共 {len(members)} 个操作。</p>",
+                "搜索本引擎的操作",
+            ),
+        )
     bodies["encoding.html"] = ("按编码查找", encoding_index(rows))
     bodies["sources.html"] = (
         "版本与来源",
         sources(commit, inputs, manifest, lock)
+        + '<p><a href="arm64-reference-organization.md">Arm 参考站结构与 LinxISA 分类说明</a></p>'
         + "<h2>许可</h2><p>"
         + link("LICENSE.txt", "LinxISA")
         + " · "
-        + link("PTO-SPEC-LICENSE.txt", "PTO-SPEC（含中文导读）")
+        + link("BITFIELD-LICENSE.txt", "位图工具")
+        + " · "
+        + link("PTO-SPEC-LICENSE.txt", "PTO-SPEC")
         + "</p>",
+    )
+    lacking = [
+        (filename, name)
+        for filename, (name, article) in articles.items()
+        if article is None
+    ]
+    title, source_body = bodies["sources.html"]
+    bodies["sources.html"] = (
+        title,
+        "<h2>中文站原文</h2><p>指令说明、汇编示例与原图读取自发布标签中的 "
+        "<code>docs/zh/isa</code> 和 <code>docs/zh/figs</code>。关联原文按原页展示；有版本差异时，"
+        "本版编码单独列出。原始 Markdown 可从文章上方的“中文站原文”链接打开。</p>"
+        + "<details><summary>本地中文站未找到对应原页的条目</summary><ul>"
+        + "".join(
+            "<li>" + link(filename, name) + "</li>"
+            for filename, name in sorted(lacking)
+        )
+        + "</ul></details>"
+        + source_body,
     )
     files = {
         name: page(title, body, commit).encode()
         for name, (title, body) in bodies.items()
     }
+    for path, fragment in library.support.items():
+        files[path] = page(
+            "中文站参考资料",
+            '<div class="authored-reader">' + fragment + "</div>",
+            commit,
+            prefix="../",
+        ).encode()
+    analysis_path = "docs/zh/architecture/isa-manual/arm64-reference-organization.md"
+    files["arm64-reference-organization.md"] = (ROOT / analysis_path).read_bytes()
+    files.update(library.files)
+    files.update(diagram_assets)
+    files["diagram-audit.json"] = json.dumps(
+        diagram_audit, ensure_ascii=False, indent=2
+    ).encode()
+    files["authored-audit.json"] = json.dumps(
+        library.audit, ensure_ascii=False, indent=2
+    ).encode()
     files["PTO-SPEC-LICENSE.txt"] = (ASSETS / "data/PTO-SPEC-LICENSE.txt").read_bytes()
     files["LICENSE.txt"] = tagged_bytes("LICENSE")
+    files["BITFIELD-LICENSE.txt"] = tagged_bytes("docs/figs/bitfield/LICENSE")
     files.update({"spec/" + Path(path).name: data for path, data in inputs.items()})
     for name in ("manual.css", "index-filter.js"):
         files[name] = (ASSETS / name).read_bytes()
