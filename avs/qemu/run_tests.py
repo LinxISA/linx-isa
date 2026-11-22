@@ -1068,6 +1068,11 @@ def main(argv: list[str]) -> int:
         default="linx64-linx-none-elf",
         help="Target triple (default: linx64-linx-none-elf)",
     )
+    parser.add_argument(
+        "--isa-profile", choices=("v0.58", "v0.59"),
+        default=os.environ.get("LINX_AVS_ISA_PROFILE", "v0.58"),
+        help="Select the catalog, object, linker and QEMU profile (env: LINX_AVS_ISA_PROFILE)",
+    )
     parser.add_argument("--out-dir", default=str(SCRIPT_DIR / "out"), help="Output directory")
     parser.add_argument("--timeout", type=float, default=5.0, help="QEMU timeout in seconds")
     parser.add_argument(
@@ -1181,7 +1186,15 @@ def main(argv: list[str]) -> int:
         _check_exe(llc, "llc")
     if qemu:
         _check_exe(qemu, "qemu-system-linx64")
+    if args.isa_profile not in ("v0.58", "v0.59"):
+        raise SystemExit(f"unsupported LINX_AVS_ISA_PROFILE: {args.isa_profile}")
+    scoped_profile = args.isa_profile == "v0.59"
+    if scoped_profile and not args.target.startswith("linx64"):
+        raise SystemExit("v0.59 requires a linx64 target")
+    linker_flags = ["--linx-pto-v0591-scoped"] if scoped_profile else []
     qemu_env = os.environ.copy()
+    if scoped_profile:
+        qemu_env["LINX_QEMU_SCOPED_SCALAR_RUNTIME"] = "1"
     qemu_env.setdefault("LINX_VIRT_TEST_FINISHER", "1")
     qemu_debug_env = _configure_target_pc_watch_env(qemu_env, evidence_pcs)
 
@@ -1205,8 +1218,9 @@ def main(argv: list[str]) -> int:
             raise SystemExit(
                 f"error: missing Linx disasm vector generator: {LLVM_AVS_DISASM_VECTOR_GEN}"
             )
-        if not LLVM_AVS_SPEC.is_file():
-            raise SystemExit(f"error: missing canonical ISA spec: {LLVM_AVS_SPEC}")
+        selected_spec = REPO_ROOT / "isa/v0.59/linxisa-v0.59.json" if scoped_profile else LLVM_AVS_SPEC
+        if not selected_spec.is_file():
+            raise SystemExit(f"error: missing canonical ISA spec: {selected_spec}")
         generated_dir = out_dir / "generated"
         generated_dir.mkdir(parents=True, exist_ok=True)
         generated_spec_decode = generated_dir / "99_spec_decode_qemu.s"
@@ -1215,7 +1229,7 @@ def main(argv: list[str]) -> int:
                 sys.executable,
                 str(LLVM_AVS_DISASM_VECTOR_GEN),
                 "--spec",
-                str(LLVM_AVS_SPEC),
+                str(selected_spec),
                 "--out",
                 str(generated_spec_decode),
             ],
@@ -1324,6 +1338,8 @@ def main(argv: list[str]) -> int:
         f"-DLINX_TEST_QUIET={'0' if emit_test_logs else '1'}",
         *args.extra_cflag,
     ]
+    if scoped_profile:
+        common_cflags.append("-march=linx64+pto-v0591-scoped")
     if pto_include_dir:
         common_cflags.append(f"-I{pto_include_dir}")
 
@@ -1380,6 +1396,7 @@ def main(argv: list[str]) -> int:
                 f"-mtriple={args.target}",
                 "-O2",
                 "-filetype=obj",
+                *(["-mattr=+pto-v0591-scoped"] if scoped_profile else []),
                 *EXTRA_LLCFLAGS_BY_SUITE.get(src_suite, []),
                 str(ir),
                 "-o",
@@ -1410,7 +1427,7 @@ def main(argv: list[str]) -> int:
         objects.append(obj)
 
     out_obj = out_dir / "linx-qemu-tests.o"
-    cmd = [str(lld), "-r", "-o", str(out_obj), *[str(o) for o in objects]]
+    cmd = [str(lld), *linker_flags, "-r", "-o", str(out_obj), *[str(o) for o in objects]]
     p = _run(cmd, verbose=args.verbose, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if p.returncode != 0:
         sys.stderr.buffer.write(p.stderr)
@@ -1425,6 +1442,7 @@ def main(argv: list[str]) -> int:
     directboot_linker.write_text(DIRECT_BOOT_LINK_SCRIPT, encoding="utf-8")
     cmd = [
         str(lld),
+        *linker_flags,
         "-T",
         str(directboot_linker),
         "-e",

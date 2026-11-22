@@ -503,6 +503,22 @@ def _command_path(repo_root: Path, path: Path) -> str:
         return str(path)
 
 
+def _check_elf_identity(readobj: Path, elf: Path, identity: dict[str, str]) -> None:
+    """Check the executed ELF against the selected profile's exact note bytes."""
+    sections = json.loads(subprocess.check_output(
+        [str(readobj), "--elf-output-style=JSON", "--notes", str(elf)], text=True
+    ))[0]["NoteSections"]
+    notes = [
+        note for entry in sections if entry["NoteSection"]["Name"] == ".note.pto.isa"
+        for note in entry["NoteSection"]["Notes"]
+    ]
+    expected = json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    if (len(notes) != 1 or notes[0]["Owner"] != "PTO"
+            or notes[0]["Type"] != "NT_VERSION (version)"
+            or bytes(notes[0]["Description data"]["Bytes"]) != expected):
+        raise ValueError(f"{elf}: incorrect .note.pto.isa identity")
+
+
 def _runner_command(
     *,
     repo_root: Path,
@@ -513,6 +529,7 @@ def _runner_command(
     timeout: float,
     test_ids: list[int],
     pcs: list[int] | None,
+    profile: str = "v0.58",
 ) -> list[str]:
     command = [
         sys.executable,
@@ -536,6 +553,7 @@ def _runner_command(
         "--timeout",
         str(timeout),
     ]
+    command.extend(["--isa-profile", profile])
     for test_id in test_ids:
         command.extend(["--require-test-id", f"0x{test_id:08x}"])
     if pcs is None:
@@ -572,6 +590,9 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     parser.add_argument("--manifest", type=Path)
+    parser.add_argument("--isa-profile", choices=("v0.58", "v0.59"), default="v0.58",
+                        help="Rebuild the selected oracle suites against this catalog and ELF identity")
+
     parser.add_argument("--run-id", required=True, help="Unique suffix, e.g. ca3e11b-20260717-r1")
     parser.add_argument("--qemu-root", type=Path, default=Path("emulator/qemu"))
     parser.add_argument("--qemu", type=Path, required=True)
@@ -612,7 +633,10 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("error: --run-id must use lowercase letters, digits, dot, dash, or underscore")
     if args.timeout <= 0:
         raise SystemExit("error: --timeout must be positive")
-    manifest_path = (args.manifest or repo_root / "avs/qemu/qemu_executable_coverage_manifest.json").resolve()
+    template = "qemu_executable_coverage_manifest.json"
+    if args.isa_profile == "v0.59":
+        template = "qemu_executable_coverage_v0583_candidate.json"
+    manifest_path = (args.manifest or repo_root / "avs/qemu" / template).resolve()
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("active_release") is not True or manifest.get("release") != ACTIVE_RELEASE:
         raise SystemExit(
@@ -620,9 +644,19 @@ def main(argv: list[str] | None = None) -> int:
             f"{ACTIVE_RELEASE} --manifest template"
         )
     grouped = _suite_entries(manifest, require_all_suites=not args.allow_partial_manifest)
-    spec = json.loads(
-        (repo_root / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8")
-    )
+    profile = args.isa_profile
+    spec_path = repo_root / "isa" / profile / f"linxisa-{profile}.json"
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    output_dir = repo_root / "docs/bringup/gates"
+    published_manifest = manifest_path
+    identity = None
+    if profile == "v0.59":
+        identity = json.loads((spec_path.parent / "release_manifest.json").read_text())["identity"]
+        # Preserve the reviewed source-to-oracle template and the default profile ledger.
+        output_dir = repo_root / "workloads/generated" / args.run_id
+        published_manifest = output_dir / "executable_manifest.json"
+        if output_dir.exists():
+            raise ValueError(f"refusing to overwrite a previous qualification run: {output_dir}")
 
     qemu_root = (args.qemu_root if args.qemu_root.is_absolute() else repo_root / args.qemu_root).resolve()
     qemu = (args.qemu if args.qemu.is_absolute() else repo_root / args.qemu).resolve()
@@ -694,6 +728,7 @@ def main(argv: list[str] | None = None) -> int:
             timeout=args.timeout,
             test_ids=test_ids,
             pcs=None,
+            profile=profile,
         )
         _run(prepare, cwd=repo_root, env=env)
         new_elf = bundle / "linx-qemu-tests.elf"
@@ -726,8 +761,11 @@ def main(argv: list[str] | None = None) -> int:
             timeout=args.timeout,
             test_ids=test_ids,
             pcs=pcs,
+            profile=profile,
         )
         _run(runtime, cwd=repo_root, env=env)
+        if identity is not None:
+            _check_elf_identity(tools["llvm_objdump"].with_name("llvm-readobj"), new_elf, identity)
         (bundle / "linx-qemu-tests-directboot.ld").unlink(missing_ok=True)
         suite_commands.append(
             "LINX_VIRT_TEST_FINISHER=1 " + _portable_command(repo_root, runtime)
@@ -754,17 +792,37 @@ def main(argv: list[str] | None = None) -> int:
             new_entry["run_evidence"] = _repo_relative(repo_root, run_path)
             new_entry["run_evidence_sha256"] = run_digest
 
+    if identity is not None:
+        candidate.update(release=identity["release"], active_release=False,
+                         template_status="measured-prepublication", identity=identity)
+    refresh_cmd = ["python3", "tools/bringup/refresh_qemu_executable_coverage.py",
+                   "--isa-profile", profile, "--run-id", args.run_id,
+                   "--manifest", _command_path(repo_root, manifest_path),
+                   "--qemu-root", _repo_relative(repo_root, qemu_root),
+                   "--qemu", _repo_relative(repo_root, qemu),
+                   "--llvm-root", _command_path(repo_root, llvm_root),
+                   "--timeout", str(args.timeout), "--apply"]
+    for name, path in tools.items():
+        refresh_cmd.extend(["--" + name.replace("_", "-"), _command_path(repo_root, path)])
+    for flag in ("allow_partial_manifest", "prune_generated_artifacts", "allow_dirty_llvm_tools"):
+        if getattr(args, flag):
+            refresh_cmd.append("--" + flag.replace("_", "-"))
     candidate["producer"] = {
-        "refresh_command": "python3 tools/bringup/refresh_qemu_executable_coverage.py "
-        f"--run-id {args.run_id} --qemu-root {_repo_relative(repo_root, qemu_root)} "
-        f"--qemu {_repo_relative(repo_root, qemu)} --llvm-root {_command_path(repo_root, llvm_root)} --apply",
+        "refresh_command": shlex.join(refresh_cmd),
         "suite_commands": suite_commands,
         "qemu_sha": qemu_sha,
         "llvm_sha": llvm_sha,
         "llvm_source_dirty": llvm_dirty,
         "identity_rebinds": identity_rebinds,
         "bundle_policy": "Never overwrite old evidence bundles; publish only after all selected suites pass strict validation.",
-        "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean",
+        "report_command": shlex.join([
+            "python3", "tools/bringup/report_qemu_executable_coverage.py",
+            "--spec", _repo_relative(repo_root, spec_path),
+            "--manifest", _command_path(repo_root, published_manifest),
+            "--report-out", _repo_relative(repo_root, output_dir / "qemu_executable_coverage_latest.json"),
+            "--out-md", _repo_relative(repo_root, output_dir / "qemu_executable_coverage_latest.md"),
+            "--require-nonzero", "--require-clean",
+        ]),
     }
     candidate_bytes = (json.dumps(candidate, indent=2) + "\n").encode()
     candidate_manifest = _candidate_manifest_path(repo_root, args.run_id)
@@ -773,7 +831,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         report = reporter.build_report(
             repo_root=repo_root,
-            spec_path=repo_root / "isa/v0.58/linxisa-v0.58.json",
+            spec_path=spec_path,
             manifest_path=candidate_manifest,
             current_qemu_sha=qemu_sha,
             qemu_root=qemu_root,
@@ -788,11 +846,13 @@ def main(argv: list[str] | None = None) -> int:
             f"strict validation failed: L2={l2} L3={l3} rejected={len(report['rejected'])}"
         )
 
+    output_dir.mkdir(parents=True, exist_ok=True)
+    report["inputs"]["manifest"] = _command_path(repo_root, published_manifest)
     report_json = (json.dumps(report, indent=2, sort_keys=True) + "\n").encode()
     report_markdown = reporter._render_markdown(report).encode()
-    _atomic_write(manifest_path, candidate_bytes)
-    _atomic_write(repo_root / "docs/bringup/gates/qemu_executable_coverage_latest.json", report_json)
-    _atomic_write(repo_root / "docs/bringup/gates/qemu_executable_coverage_latest.md", report_markdown)
+    _atomic_write(published_manifest, candidate_bytes)
+    _atomic_write(output_dir / "qemu_executable_coverage_latest.json", report_json)
+    _atomic_write(output_dir / "qemu_executable_coverage_latest.md", report_markdown)
     summary_path = evidence_root / f"refresh-{args.run_id}.json"
     changed_pcs = [row for row in pc_deltas if row["old_pc"] != row["new_pc"]]
     _atomic_write(
