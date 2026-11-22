@@ -47,6 +47,16 @@ respective queues. Compressed loads use `->t` and compressed stores read `T#1`.
 The platform owns queue synchronization with its other instruction paths and
 context transitions.
 
+The opt-in `linxisa_v0591_candidate.sail` entry adds
+`decode_execute64_v0591_candidate`. It reads the existing platform-supplied
+MSGB context for Core, PE, slot, invocation, execution domain, Atomic, Far and
+GM admission. Recognized scoped carriers use the existing
+prepare/issue/complete protocol; ordinary
+64-bit instructions retain `decode_execute64`. Missing or stale ownership,
+Atomic/Far envelope mismatch, and malformed scoped-prefix words fail closed
+without falling through to unscoped execution. The canonical `linxisa.sail`
+entry remains the active v0.58 surface.
+
 The MSGB transport models the released two-Core reference topology. Its
 receive, admission, BSE and HSCB APIs operate on platform-configured endpoints
 and active invocations. Directed tests cover claim/read/ACK/release, atomic
