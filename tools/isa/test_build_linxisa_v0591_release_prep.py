@@ -41,7 +41,7 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
         )
         self.assertEqual(
             _profile_defaults("v0.59"),
-            ("isa/v0.59", "isa/v0.59/linxisa-v0.59-candidate.json"),
+            ("isa/v0.59", "isa/v0.59/linxisa-v0.59.json"),
         )
 
     def test_manifest_binds_exact_lock_catalog_and_counts(self):
@@ -50,7 +50,7 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
             (ROOT / "isa/v0.59/pto-spec.lock.json").read_text(encoding="utf-8")
         )
         catalog = json.loads(
-            (ROOT / "isa/v0.59/linxisa-v0.59-candidate.json").read_text(
+            (ROOT / "isa/v0.59/linxisa-v0.59.json").read_text(
                 encoding="utf-8"
             )
         )
@@ -79,7 +79,7 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
         )
 
     def test_build_golden_v059_write_is_byte_exact(self):
-        expected = (ROOT / "isa/v0.59/linxisa-v0.59-candidate.json").read_bytes()
+        expected = (ROOT / "isa/v0.59/linxisa-v0.59.json").read_bytes()
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "candidate.json"
             subprocess.run(

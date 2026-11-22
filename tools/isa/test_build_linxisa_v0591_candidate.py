@@ -103,7 +103,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
 
         self.assertIn("0.58.0", V058_DERIVED_VERSIONS)
         self.assertNotIn("0.58.0", V058_FIRST_USE_VERSIONS)
-        self.assertIn("0.59.1-candidate", V058_FIRST_USE_VERSIONS)
+        self.assertIn("0.59.1-prepublication", V058_FIRST_USE_VERSIONS)
         self.assertEqual(render(self.candidate), render(build()))
         self.assertEqual(self.candidate["schema"], "linxisa.catalog.v0")
         self.assertEqual(self.candidate["instruction_count"], 1499)
@@ -175,7 +175,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         sail = render_sail_decode(
             self.candidate,
             (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8"),
-            "isa/v0.59/linxisa-v0.59-candidate.json",
+            "isa/v0.59/linxisa-v0.59.json",
             self.candidate["retired_encodings"],
         )
         self.assertIn("c.ldi.private [srcL, simm], ->t", sail)

@@ -1,10 +1,12 @@
 {
   "schema": "linxisa.catalog.v0",
   "isa": "LinxISA",
-  "version": "0.59.1-candidate",
+  "version": "0.59.1-prepublication",
   "candidate_status": {
-    "state": "inactive-full-catalog",
+    "state": "prepublication-full-catalog",
     "active_profile": "v0.58",
+    "default_profile": "v0.58",
+    "publication_allowed": false,
     "source_bindings": "isa/v0.59/pto-v0591-candidate.json",
     "source_bindings_sha256": "0752d20610b1b3c284292cf0987f64b587136bc13b561578c2d036e7658bd6f9",
     "counts": {
