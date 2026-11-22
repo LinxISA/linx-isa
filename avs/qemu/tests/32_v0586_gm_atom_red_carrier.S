@@ -18,6 +18,7 @@ linx_v0586_mgather_add:
     BSTART.MGATHER.ADD U32
     C.B.DIMI 32, ->lb0
     C.B.DIMI 1, ->lb1
+    C.B.DIMI 32, ->lb2
     B.IOR [a0]
     B.IOT t#1, u#1, mask=0001, last, ->t<128B>
 
@@ -42,6 +43,7 @@ linx_v0586_mscatter_popc:
     BSTART.MSCATTER.POPC U32
     C.B.DIMI 32, ->lb0
     C.B.DIMI 1, ->lb1
+    C.B.DIMI 32, ->lb2
     B.IOR [a0]
     B.IOT t#1, mask=0001, last
     FRET.STK [ra ~ ra], sp!, 8

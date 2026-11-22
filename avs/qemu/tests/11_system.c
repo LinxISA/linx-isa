@@ -98,6 +98,7 @@ enum {
     TESTID_DBG_BP_RESUME = 0x110E,
     TESTID_RI_STEP_TRAP_POLLUTE_RESUME = 0x110F,
     TESTID_CFI_BAD_TARGET = 0x1110,
+    TESTID_ENCODING_ONLY_DMA = 0x1120,
 };
 
 enum {
@@ -137,11 +138,24 @@ __attribute__((noreturn)) static void linx_after_irq_meta_exit(void);
 __attribute__((noreturn)) static void linx_after_acr1_bad_target_trap(void);
 __attribute__((noreturn)) static void linx_after_acr1_bad_target_exit(void);
 __attribute__((noreturn)) static void linx_after_cfi_bad_target_exit(void);
+#if defined(LINX_ENCODING_ONLY_DMA_CASE)
+__attribute__((noreturn)) static void linx_after_encoding_only_dma_exit(void);
+#endif
+__attribute__((noreturn)) static void linx_start_acr0_bad_req_case(void);
 __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void);
 __attribute__((noreturn)) static void linx_system_done(void);
 
 static volatile uint64_t WATCH_TARGET;
 volatile uint32_t STEP_RI_OUT[2];
+#if defined(LINX_ENCODING_ONLY_DMA_CASE)
+static volatile uint64_t ENCODING_ONLY_DMA_DST[2];
+static volatile uint64_t ENCODING_ONLY_DMA_SRC[2];
+#endif
+
+#if defined(LINX_ENCODING_ONLY_DMA_CASE) && \
+    (LINX_ENCODING_ONLY_DMA_CASE < 0 || LINX_ENCODING_ONLY_DMA_CASE > 3)
+#error "LINX_ENCODING_ONLY_DMA_CASE must be in [0, 3]"
+#endif
 
 /* TRAPNO encoding helpers (E/ARGV/CAUSE/TRAPNUM). */
 static inline uint64_t trapno_is_async(uint64_t trapno) { return ((trapno >> 63) & 1ull) ? 0ull : 1ull; }
@@ -238,6 +252,12 @@ extern void linx_acr2_mac_user(void);
 extern void linx_acr1_sec_user(void);
 extern void linx_acr1_bad_req_user(void);
 extern void linx_acr1_bad_target_user(void);
+extern void linx_encoding_only_dma_free_s(const void *addr);
+extern void linx_encoding_only_dma_free_l(const void *addr);
+extern uint64_t linx_encoding_only_mcopy_ds(void *dst, const void *src,
+                                            uint64_t size);
+extern uint64_t linx_encoding_only_mcopy_dl(void *dst, const void *src,
+                                            uint64_t size);
 
 /* ACR1 syscall handler:
  * - mark seen (SSR_SYSCALL_SEEN=1)
@@ -474,6 +494,34 @@ __asm__(
     "linx_trap_resume_to_exit:\n"
     "  C.BSTART\n"
     "  acrc 0\n"
+    "  C.BSTOP\n"
+);
+
+/* Frozen v0.59 encoding-only DMA forms must trap before operand effects. */
+__asm__(
+    ".globl linx_encoding_only_dma_free_s\n"
+    "linx_encoding_only_dma_free_s:\n"
+    "  C.BSTART.STD RET\n"
+    "  .4byte 0x0401700b\n" /* DMA.FREE.S [a0] */
+    "  c.setc.tgt ra\n"
+    "  C.BSTOP\n"
+    ".globl linx_encoding_only_dma_free_l\n"
+    "linx_encoding_only_dma_free_l:\n"
+    "  C.BSTART.STD RET\n"
+    "  .4byte 0x0601700b\n" /* DMA.FREE.L [a0] */
+    "  c.setc.tgt ra\n"
+    "  C.BSTOP\n"
+    ".globl linx_encoding_only_mcopy_ds\n"
+    "linx_encoding_only_mcopy_ds:\n"
+    "  C.BSTART.STD RET\n"
+    "  .4byte 0x22311131\n" /* MCOPY.DS ->a0, [a0, a1, a2] */
+    "  c.setc.tgt ra\n"
+    "  C.BSTOP\n"
+    ".globl linx_encoding_only_mcopy_dl\n"
+    "linx_encoding_only_mcopy_dl:\n"
+    "  C.BSTART.STD RET\n"
+    "  .4byte 0x26311131\n" /* MCOPY.DL ->a0, [a0, a1, a2] */
+    "  c.setc.tgt ra\n"
     "  C.BSTOP\n"
 );
 
@@ -1269,6 +1317,95 @@ __attribute__((noreturn)) static void linx_after_acr1_bad_target_exit(void)
     __builtin_unreachable();
 }
 
+#if defined(LINX_ENCODING_ONLY_DMA_CASE)
+__attribute__((noreturn)) static void linx_encoding_only_dma_free_s_user(void)
+{
+    linx_encoding_only_dma_free_s((const void *)ENCODING_ONLY_DMA_DST);
+    test_fail(TESTID_ENCODING_ONLY_DMA, 0, 1);
+}
+
+__attribute__((noreturn)) static void linx_encoding_only_dma_free_l_user(void)
+{
+    linx_encoding_only_dma_free_l((const void *)ENCODING_ONLY_DMA_DST);
+    test_fail(TESTID_ENCODING_ONLY_DMA + 0x10, 0, 1);
+}
+
+__attribute__((noreturn)) static void linx_encoding_only_mcopy_ds_user(void)
+{
+    (void)linx_encoding_only_mcopy_ds(
+        (void *)ENCODING_ONLY_DMA_DST,
+        (const void *)ENCODING_ONLY_DMA_SRC,
+        sizeof(ENCODING_ONLY_DMA_DST));
+    test_fail(TESTID_ENCODING_ONLY_DMA + 0x20, 0, 1);
+}
+
+__attribute__((noreturn)) static void linx_encoding_only_mcopy_dl_user(void)
+{
+    (void)linx_encoding_only_mcopy_dl(
+        (void *)ENCODING_ONLY_DMA_DST,
+        (const void *)ENCODING_ONLY_DMA_SRC,
+        sizeof(ENCODING_ONLY_DMA_DST));
+    test_fail(TESTID_ENCODING_ONLY_DMA + 0x30, 0, 1);
+}
+
+typedef void (*encoding_only_dma_entry_t)(void);
+
+static encoding_only_dma_entry_t const ENCODING_ONLY_DMA_ENTRIES[] = {
+    linx_encoding_only_dma_free_s_user,
+    linx_encoding_only_dma_free_l_user,
+    linx_encoding_only_mcopy_ds_user,
+    linx_encoding_only_mcopy_dl_user,
+};
+
+__attribute__((noreturn)) static void linx_start_encoding_only_dma_case(void)
+{
+    const uint32_t stage = LINX_ENCODING_ONLY_DMA_CASE;
+    const uint32_t test_id = TESTID_ENCODING_ONLY_DMA + stage * 0x10u;
+
+    ENCODING_ONLY_DMA_DST[0] = UINT64_C(0x1122334455667788);
+    ENCODING_ONLY_DMA_DST[1] = UINT64_C(0x99aabbccddeeff00);
+    ENCODING_ONLY_DMA_SRC[0] = UINT64_C(0x0123456789abcdef);
+    ENCODING_ONLY_DMA_SRC[1] = UINT64_C(0xfedcba9876543210);
+    test_start(test_id);
+
+    ssrset_uimm(SSR_LAST_TRAPNO, 0);
+    ssrset_uimm(SSR_LAST_TRAPARG0, 0);
+    ssrset_uimm(SSR_LAST_EBARG_TPC, 0);
+    hl_ssrset_uimm24(
+        SSR_ETEMP0_ACR1,
+        (uint64_t)(uintptr_t)&linx_trap_resume_to_exit);
+    ssrset_uimm(
+        SSR_CONT_EXIT,
+        (uint64_t)(uintptr_t)&linx_after_encoding_only_dma_exit);
+    hl_ssrset_uimm24(
+        SSR_EVBASE_ACR1,
+        (uint64_t)(uintptr_t)&linx_acr1_record_trap_handler);
+    ssrset_uimm(
+        SSR_EVBASE_ACR0,
+        (uint64_t)(uintptr_t)&linx_acr0_exit_handler);
+    ssrset_uimm(SSR_ECSTATE_ACR0, 2);
+    ssrset_uimm(
+        SSR_EBARG_BPC_CUR_ACR0,
+        (uint64_t)(uintptr_t)ENCODING_ONLY_DMA_ENTRIES[stage]);
+    __asm__ volatile("acre 0" : : : "memory");
+    __builtin_unreachable();
+}
+#endif
+
+__attribute__((noreturn)) static void linx_start_acr0_bad_req_case(void)
+{
+    /* ACR0 privilege check: ACRC is illegal in ACR0. */
+    test_start(TESTID_ACR0_BAD_REQ);
+
+    ssrset_uimm(SSR_ACR0_TRAPNO, 0);
+    ssrset_uimm(SSR_ACR0_TRAPARG0, 0);
+    ssrset_uimm(SSR_ACR0_ECSTATE, 0);
+    ssrset_uimm(SSR_CONT_EXIT, (uint64_t)(uintptr_t)&linx_after_acr0_bad_req_exit);
+    ssrset_uimm(SSR_EVBASE_ACR0, (uint64_t)(uintptr_t)&linx_acr0_exit_handler);
+    __asm__ volatile("acrc 0\n  c.bstop\n" : : : "memory");
+    __builtin_unreachable();
+}
+
 __attribute__((noreturn)) static void linx_after_cfi_bad_target_exit(void)
 {
     const uint64_t trapno = ssrget_uimm(SSR_LAST_TRAPNO);
@@ -1283,19 +1420,34 @@ __attribute__((noreturn)) static void linx_after_cfi_bad_target_exit(void)
 
     test_pass();
 
-    /* --------------------------------------------------------------------- */
-    /* ACR0 privilege check: ACRC is illegal in ACR0                         */
-    /* --------------------------------------------------------------------- */
-    test_start(TESTID_ACR0_BAD_REQ);
-
-    ssrset_uimm(SSR_ACR0_TRAPNO, 0);
-    ssrset_uimm(SSR_ACR0_TRAPARG0, 0);
-    ssrset_uimm(SSR_ACR0_ECSTATE, 0);
-    ssrset_uimm(SSR_CONT_EXIT, (uint64_t)(uintptr_t)&linx_after_acr0_bad_req_exit);
-    ssrset_uimm(SSR_EVBASE_ACR0, (uint64_t)(uintptr_t)&linx_acr0_exit_handler);
-    __asm__ volatile("acrc 0\n  c.bstop\n" : : : "memory");
-    __builtin_unreachable();
+#if defined(LINX_ENCODING_ONLY_DMA_CASE)
+    linx_start_encoding_only_dma_case();
+#else
+    linx_start_acr0_bad_req_case();
+#endif
 }
+
+#if defined(LINX_ENCODING_ONLY_DMA_CASE)
+__attribute__((noreturn)) static void linx_after_encoding_only_dma_exit(void)
+{
+    const uint32_t stage = LINX_ENCODING_ONLY_DMA_CASE;
+    const uint32_t test_id = TESTID_ENCODING_ONLY_DMA + stage * 0x10u;
+    const uint64_t trapno = ssrget_uimm(SSR_LAST_TRAPNO);
+
+    TEST_EQ64(trapno_is_async(trapno), 0, test_id + 1);
+    TEST_EQ64(trapno_trapnum(trapno), TRAPNUM_ILLEGAL_INST, test_id + 2);
+    TEST_EQ64(ENCODING_ONLY_DMA_DST[0],
+              UINT64_C(0x1122334455667788), test_id + 3);
+    TEST_EQ64(ENCODING_ONLY_DMA_DST[1],
+              UINT64_C(0x99aabbccddeeff00), test_id + 4);
+    TEST_EQ64(ENCODING_ONLY_DMA_SRC[0],
+              UINT64_C(0x0123456789abcdef), test_id + 5);
+    TEST_EQ64(ENCODING_ONLY_DMA_SRC[1],
+              UINT64_C(0xfedcba9876543210), test_id + 6);
+    test_pass();
+    linx_start_acr0_bad_req_case();
+}
+#endif
 
 __attribute__((noreturn)) static void linx_after_acr0_bad_req_exit(void)
 {
