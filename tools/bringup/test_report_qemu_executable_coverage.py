@@ -87,6 +87,24 @@ void run_tile(void) {
                 0x2A01,
             )
         )
+        shadowed_id = """
+void unrelated(void) {
+  const uint32_t kTestId = 0x00002A01u;
+  TEST_EQ32(other[i], expected[i], kTestId);
+}
+void run_tile(void) {
+  const uint32_t kTestId = 0x00002A02u;
+  TEST_EQ32(output[i], (uint32_t)input[i], kTestId);
+}
+"""
+        self.assertFalse(
+            coverage._differential_assertion_binds(
+                coverage._function_body(shadowed_id, "run_tile"),
+                shadowed_id,
+                "(uint32_t)input[i]",
+                0x2A01,
+            )
+        )
         literal_source = """
 static const uint32_t kTestId = 0x00002C01u;
 void run_tile(void) { TEST_EQ32(output[i], 0x3F800000u, kTestId); }

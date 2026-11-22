@@ -242,12 +242,12 @@ def _function_body(text: str, symbol: str) -> str | None:
 
 
 def _constant_binds(source: str, name: str, value: int) -> bool:
-    match = re.search(
+    matches = list(re.finditer(
         rf"\b(?:static\s+)?const\s+[A-Za-z_][A-Za-z0-9_]*\s+"
         rf"{re.escape(name)}\s*=\s*(0x[0-9a-fA-F]+|[0-9]+)[uUlL]*\s*;",
         source,
-    )
-    return match is not None and int(match.group(1), 0) == value
+    ))
+    return len(matches) == 1 and int(matches[0].group(1), 0) == value
 
 
 def _argument_binds_constant(argument: str, source: str, value: int) -> bool:
