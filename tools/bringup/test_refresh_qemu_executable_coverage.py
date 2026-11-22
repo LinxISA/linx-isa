@@ -80,6 +80,9 @@ class RefreshQemuExecutableCoverageTests(unittest.TestCase):
         self.assertEqual(refresh._select_candidate(6, [2, 6, 10], "form"), 6)
         self.assertEqual(refresh._select_candidate(6, [10], "form"), 10)
         self.assertEqual(refresh._select_candidate(None, [10], "form"), 10)
+        self.assertEqual(refresh._select_candidate(None, [2, 10], "form", 1), 10)
+        with self.assertRaisesRegex(ValueError, "outside"):
+            refresh._select_candidate(None, [2, 10], "form", 2)
         with self.assertRaisesRegex(ValueError, "ambiguous"):
             refresh._select_candidate(6, [2, 10], "form")
         with self.assertRaisesRegex(ValueError, "ambiguous"):

@@ -334,8 +334,20 @@ def _rebind_manifest_forms(
     return rebinds
 
 
-def _select_candidate(old_relative: int | None, candidates: list[int], identity: str) -> int:
+def _select_candidate(
+    old_relative: int | None,
+    candidates: list[int],
+    identity: str,
+    occurrence: int | None = None,
+) -> int:
     unique = sorted(set(candidates))
+    if occurrence is not None:
+        if occurrence < 0 or occurrence >= len(unique):
+            raise ValueError(
+                f"fresh encoding occurrence {occurrence} is outside "
+                f"{len(unique)} candidates for {identity}"
+            )
+        return unique[occurrence]
     if old_relative is not None and old_relative in unique:
         return old_relative
     if len(unique) == 1:
@@ -369,6 +381,12 @@ def _resolve_entry(
     mask = _parse_int(form_key.get("mask"), "mask")
     match = _parse_int(form_key.get("match"), "match")
     old_relative: int | None = None
+    occurrence_value = instruction.get("occurrence")
+    occurrence = (
+        _parse_int(occurrence_value, "instruction.occurrence")
+        if occurrence_value is not None
+        else None
+    )
     old_elf_path = repo_root / str(old_entry["elf"])
     if old_elf_path.is_file():
         old_elf = Elf64(old_elf_path)
@@ -399,7 +417,7 @@ def _resolve_entry(
         if _mnemonic_matches(binding["disassembly"], str(old_entry["mnemonic"])):
             candidates.append(relative)
     identity = str(old_entry.get("form_id"))
-    relative = _select_candidate(old_relative, candidates, identity)
+    relative = _select_candidate(old_relative, candidates, identity, occurrence)
     pc = new_symbol.value + relative
     binding = reporter._inspect_elf_instruction(
         repo_root, new_elf_path, pc=pc, size=size, symbol=symbol_name

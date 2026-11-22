@@ -1,0 +1,2696 @@
+{
+  "active_release": true,
+  "availability": {
+    "L2": "available",
+    "L3": "available"
+  },
+  "evidence": [
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "fentry_32_c6bb0b89eedd",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00000041"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_fret_stk_slot_redirect"
+      },
+      "max_level": "L3",
+      "mnemonic": "FENTRY",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x22",
+        "kind": "exact_value",
+        "locator": "test_fret_stk_uses_stack_ra",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_fret_stk_slot_redirect",
+        "test_symbol": "test_fret_stk_uses_stack_ra"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x0000140b"
+    },
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "fret_stk_32_1c6ea1521169",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x000ff07f",
+        "match": "0x00053041"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_fret_stk_slot_redirect"
+      },
+      "max_level": "L3",
+      "mnemonic": "FRET.STK",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x22",
+        "kind": "exact_value",
+        "locator": "test_fret_stk_uses_stack_ra",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_fret_stk_slot_redirect",
+        "test_symbol": "test_fret_stk_uses_stack_ra"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x0000140b"
+    },
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "fret_ra_32_362702ebd7d8",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00002041"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_fret_ra_slot_redirect"
+      },
+      "max_level": "L3",
+      "mnemonic": "FRET.RA",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x33",
+        "kind": "exact_value",
+        "locator": "test_fret_ra_uses_snapshot_ra",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_fret_ra_slot_redirect",
+        "test_symbol": "test_fret_ra_uses_snapshot_ra"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x0000140c"
+    },
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "c_bstart_std_16_f98cb0206cb1",
+      "form_key": {
+        "length_bits": 16,
+        "mask": "0xc7ff",
+        "match": "0x0000"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_ret_error_trailer_success"
+      },
+      "max_level": "L3",
+      "mnemonic": "C.BSTART.STD",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x1234",
+        "kind": "exact_value",
+        "locator": "test_ret_error_trailer_returns_via_ra",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_ret_error_trailer_success",
+        "test_symbol": "test_ret_error_trailer_returns_via_ra"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x0000140d"
+    },
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "c_bstart_16_b82b9a0c292c",
+      "form_key": {
+        "length_bits": 16,
+        "mask": "0x000f",
+        "match": "0x0004"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_c_bstart_cond_taken"
+      },
+      "max_level": "L3",
+      "mnemonic": "C.BSTART",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x6655",
+        "kind": "exact_value",
+        "locator": "test_c_bstart_cond_paths",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_c_bstart_cond_taken",
+        "test_symbol": "test_c_bstart_cond_paths"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x0000140f"
+    },
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "j_32_545bba5a7d2e",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00000037"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_j_skip_poison"
+      },
+      "max_level": "L3",
+      "mnemonic": "J",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x77",
+        "kind": "exact_value",
+        "locator": "test_j_isolated",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_j_skip_poison",
+        "test_symbol": "test_j_isolated"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x00001410"
+    },
+    {
+      "elf": "template/callret/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "l_bstart_std_64_49b7cf990e62",
+      "form_key": {
+        "length_bits": 64,
+        "mask": "0x00007fff0000007f",
+        "match": "0x000020010000000f"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "callret_tpl_l_bstart_direct_positive"
+      },
+      "max_level": "L3",
+      "mnemonic": "L.BSTART.STD",
+      "object": "template/callret/obj/14_callret_templates.o",
+      "oracle": {
+        "expected": "0x77",
+        "kind": "exact_value",
+        "locator": "test_l_bstart_direct_positive",
+        "source": "avs/qemu/tests/14_callret.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/14_callret.c",
+        "target_symbol": "callret_tpl_l_bstart_direct_positive",
+        "test_symbol": "test_l_bstart_direct_positive"
+      },
+      "suite": "callret",
+      "suite_completion_test_id": "0x00001412",
+      "test_contract": "valid",
+      "test_id": "0x00001411"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_lwui_po_48_0209610deddf",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006019003e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_lwui_po"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.LWUI.PO",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_lwui_po",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_lwui_po",
+        "test_symbol": "test_hl_lwui_po"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002201"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_lwui_pr_48_4074eea19f29",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006019002e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_lwui_pr"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.LWUI.PR",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_lwui_pr",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_lwui_pr",
+        "test_symbol": "test_hl_lwui_pr"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002202"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "add_32_3af05dd9677d",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00000005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_add"
+      },
+      "max_level": "L3",
+      "mnemonic": "ADD",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x68ac",
+        "kind": "exact_value",
+        "locator": "test_add",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_add",
+        "test_symbol": "test_add"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002501"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sub_32_44e15384f7e6",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00001005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sub"
+      },
+      "max_level": "L3",
+      "mnemonic": "SUB",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x8642",
+        "kind": "exact_value",
+        "locator": "test_sub",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sub",
+        "test_symbol": "test_sub"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002502"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "and_32_947d0acde105",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00002005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_and"
+      },
+      "max_level": "L3",
+      "mnemonic": "AND",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x00f0",
+        "kind": "exact_value",
+        "locator": "test_and",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_and",
+        "test_symbol": "test_and"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002503"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "or_32_3eaea256559e",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00003005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_or"
+      },
+      "max_level": "L3",
+      "mnemonic": "OR",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xfff0",
+        "kind": "exact_value",
+        "locator": "test_or",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_or",
+        "test_symbol": "test_or"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002504"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "xor_32_068757596736",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00004005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_xor"
+      },
+      "max_level": "L3",
+      "mnemonic": "XOR",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xa5a5",
+        "kind": "exact_value",
+        "locator": "test_xor",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_xor",
+        "test_symbol": "test_xor"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002505"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sll_32_ec390af54378",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00007005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sll"
+      },
+      "max_level": "L3",
+      "mnemonic": "SLL",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x1230",
+        "kind": "exact_value",
+        "locator": "test_sll",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sll",
+        "test_symbol": "test_sll"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002506"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "srl_32_68dcf8b0f7e8",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00005005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_srl"
+      },
+      "max_level": "L3",
+      "mnemonic": "SRL",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x0800000000000000",
+        "kind": "exact_value",
+        "locator": "test_srl",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_srl",
+        "test_symbol": "test_srl"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002507"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sra_32_a121613c8ef0",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00006005"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sra"
+      },
+      "max_level": "L3",
+      "mnemonic": "SRA",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xfffffffffffffff0",
+        "kind": "exact_value",
+        "locator": "test_sra",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sra",
+        "test_symbol": "test_sra"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002508"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lb_32_69fa62bab890",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00000009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_lb"
+      },
+      "max_level": "L3",
+      "mnemonic": "LB",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xfffffffffffffffe",
+        "kind": "exact_value",
+        "locator": "test_lb",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_lb",
+        "test_symbol": "test_lb"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002509"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lh_32_ba0f2afd9b3f",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00001009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_lh"
+      },
+      "max_level": "L3",
+      "mnemonic": "LH",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xfffffffffffff234",
+        "kind": "exact_value",
+        "locator": "test_lh",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_lh",
+        "test_symbol": "test_lh"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x0000250a"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lw_32_3ab9351b5a00",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00002009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_lw"
+      },
+      "max_level": "L3",
+      "mnemonic": "LW",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xfffffffff23480fe",
+        "kind": "exact_value",
+        "locator": "test_lw",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_lw",
+        "test_symbol": "test_lw"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x0000250b"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "ld_32_6ccb1c483bc5",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00003009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_ld"
+      },
+      "max_level": "L3",
+      "mnemonic": "LD",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x0123456789abcdef",
+        "kind": "exact_value",
+        "locator": "test_ld",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_ld",
+        "test_symbol": "test_ld"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x0000250c"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sb_32_f0f61f5c7063",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x00007fff",
+        "match": "0x00000049"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sb"
+      },
+      "max_level": "L3",
+      "mnemonic": "SB",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x7",
+        "kind": "architectural_state",
+        "locator": "test_sb",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sb",
+        "test_symbol": "test_sb"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x0000250d"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sh_32_80b2371159a4",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x00007fff",
+        "match": "0x00001049"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sh"
+      },
+      "max_level": "L3",
+      "mnemonic": "SH",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0xf",
+        "kind": "architectural_state",
+        "locator": "test_sh",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sh",
+        "test_symbol": "test_sh"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x0000250e"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sw_32_4fdd666796e5",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x00007fff",
+        "match": "0x00002049"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sw"
+      },
+      "max_level": "L3",
+      "mnemonic": "SW",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x7",
+        "kind": "architectural_state",
+        "locator": "test_sw",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sw",
+        "test_symbol": "test_sw"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x0000250f"
+    },
+    {
+      "elf": "template/executable_scalar/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "sd_32_324dd0ff5d29",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x00007fff",
+        "match": "0x00003049"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_scalar_sd"
+      },
+      "max_level": "L3",
+      "mnemonic": "SD",
+      "object": "template/executable_scalar/obj/23_executable_scalar.o",
+      "oracle": {
+        "expected": "0x7",
+        "kind": "architectural_state",
+        "locator": "test_sd",
+        "source": "avs/qemu/tests/23_executable_scalar.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/23_executable_scalar.c",
+        "target_symbol": "executable_scalar_sd",
+        "test_symbol": "test_sd"
+      },
+      "suite": "executable_scalar",
+      "suite_completion_test_id": "0x00002510",
+      "test_contract": "valid",
+      "test_id": "0x00002510"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_lwui_upo_48_ae76cad8040a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006029003e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_lwui_upo"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.LWUI.UPO",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_lwui_upo",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_lwui_upo",
+        "test_symbol": "test_hl_lwui_upo"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002203"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_lwui_upr_48_3fcf561adb02",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006029002e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_lwui_upr"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.LWUI.UPR",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_lwui_upr",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_lwui_upr",
+        "test_symbol": "test_hl_lwui_upr"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002204"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_swi_po_48_22c0e2195cd7",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00002059003e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_swi_po"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SWI.PO",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_swi_po",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_swi_po",
+        "test_symbol": "test_hl_swi_po"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002205"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_swi_pr_48_109e1049de72",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00002059002e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_swi_pr"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SWI.PR",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_swi_pr",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_swi_pr",
+        "test_symbol": "test_hl_swi_pr"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002206"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_swi_upo_48_60c134e0b774",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006059003e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_swi_upo"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SWI.UPO",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_swi_upo",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_swi_upo",
+        "test_symbol": "test_hl_swi_upo"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002207"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_swi_upr_48_314b5788553e",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006059002e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_swi_upr"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SWI.UPR",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_swi_upr",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_swi_upr",
+        "test_symbol": "test_hl_swi_upr"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002208"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_lwuip_48_0c385f4e5dbb",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006019001e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_lwuip"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.LWUIP",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_lwuip",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_lwuip",
+        "test_symbol": "test_hl_lwuip"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x00002209"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_swip_48_48e44471c6f2",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00002059001e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_swip"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SWIP",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_swip",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_swip",
+        "test_symbol": "test_hl_swip"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x0000220a"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_swip_u_48_be6dc0457f8a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00006059001e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_swip_u"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SWIP.U",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_swip_u",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_swip_u",
+        "test_symbol": "test_hl_swip_u"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x0000220b"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_ldip_48_7ee4459b0119",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00003019001e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_ldip"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.LDIP",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_ldip",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_ldip",
+        "test_symbol": "test_hl_ldip"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x0000220c"
+    },
+    {
+      "elf": "template/executable_memory/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_sdip_48_0a27599f4729",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f003f",
+        "match": "0x00003059001e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_memory_hl_sdip"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SDIP",
+      "object": "template/executable_memory/obj/22_executable_memory.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "architectural_state",
+        "locator": "test_hl_sdip",
+        "source": "avs/qemu/tests/22_executable_memory.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/22_executable_memory.c",
+        "target_symbol": "executable_memory_hl_sdip",
+        "test_symbol": "test_hl_sdip"
+      },
+      "suite": "executable_memory",
+      "suite_completion_test_id": "0x0000220d",
+      "test_contract": "valid",
+      "test_id": "0x0000220d"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lbu_32_3dba99c3867b",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00004009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_lbu"
+      },
+      "max_level": "L3",
+      "mnemonic": "LBU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0xfe",
+        "kind": "exact_value",
+        "locator": "test_lbu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_lbu",
+        "test_symbol": "test_lbu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002601"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lhu_32_050c45d23cc9",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00005009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_lhu"
+      },
+      "max_level": "L3",
+      "mnemonic": "LHU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0xabcd",
+        "kind": "exact_value",
+        "locator": "test_lhu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_lhu",
+        "test_symbol": "test_lhu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002602"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lwu_32_59dfc83ee4f4",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00006009"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_lwu"
+      },
+      "max_level": "L3",
+      "mnemonic": "LWU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x89abcdef",
+        "kind": "exact_value",
+        "locator": "test_lwu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_lwu",
+        "test_symbol": "test_lwu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002603"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "mul_32_39b0b15eeb20",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00000047"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_mul"
+      },
+      "max_level": "L3",
+      "mnemonic": "MUL",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0xffffffffffffffa5",
+        "kind": "exact_value",
+        "locator": "test_mul",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_mul",
+        "test_symbol": "test_mul"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002604"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "div_32_0aea1e39938c",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00000057"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_div"
+      },
+      "max_level": "L3",
+      "mnemonic": "DIV",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0xfffffffffffffff2",
+        "kind": "exact_value",
+        "locator": "test_div",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_div",
+        "test_symbol": "test_div"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002605"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "divu_32_db4cf971d07e",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00001057"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_divu"
+      },
+      "max_level": "L3",
+      "mnemonic": "DIVU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x0fffffffffffffff",
+        "kind": "exact_value",
+        "locator": "test_divu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_divu",
+        "test_symbol": "test_divu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002606"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "rem_32_505d4821713f",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00004057"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_rem"
+      },
+      "max_level": "L3",
+      "mnemonic": "REM",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0xfffffffffffffffe",
+        "kind": "exact_value",
+        "locator": "test_rem",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_rem",
+        "test_symbol": "test_rem"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002607"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "remu_32_6ca426fd271f",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfe00707f",
+        "match": "0x00005057"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_remu"
+      },
+      "max_level": "L3",
+      "mnemonic": "REMU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x2",
+        "kind": "exact_value",
+        "locator": "test_remu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_remu",
+        "test_symbol": "test_remu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002608"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "cmp_eq_32_3c038a11a08f",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xf800707f",
+        "match": "0x00000045"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_cmp_eq"
+      },
+      "max_level": "L3",
+      "mnemonic": "CMP.EQ",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_cmp_eq",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_cmp_eq",
+        "test_symbol": "test_cmp_eq"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x00002609"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "cmp_ne_32_5a105022c779",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xf800707f",
+        "match": "0x00001045"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_cmp_ne"
+      },
+      "max_level": "L3",
+      "mnemonic": "CMP.NE",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_cmp_ne",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_cmp_ne",
+        "test_symbol": "test_cmp_ne"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x0000260a"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "cmp_lt_32_162aa717f9f5",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xf800707f",
+        "match": "0x00004045"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_cmp_lt"
+      },
+      "max_level": "L3",
+      "mnemonic": "CMP.LT",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_cmp_lt",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_cmp_lt",
+        "test_symbol": "test_cmp_lt"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x0000260b"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "cmp_ltu_32_5f14a7edd35a",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xf800707f",
+        "match": "0x00006045"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_cmp_ltu"
+      },
+      "max_level": "L3",
+      "mnemonic": "CMP.LTU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x0",
+        "kind": "exact_value",
+        "locator": "test_cmp_ltu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_cmp_ltu",
+        "test_symbol": "test_cmp_ltu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x0000260c"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "cmp_ge_32_2ed74e719f3f",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xf800707f",
+        "match": "0x00005045"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_cmp_ge"
+      },
+      "max_level": "L3",
+      "mnemonic": "CMP.GE",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x0",
+        "kind": "exact_value",
+        "locator": "test_cmp_ge",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_cmp_ge",
+        "test_symbol": "test_cmp_ge"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x0000260d"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "cmp_geu_32_e4a826feb1e8",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xf800707f",
+        "match": "0x00007045"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_cmp_geu"
+      },
+      "max_level": "L3",
+      "mnemonic": "CMP.GEU",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x1",
+        "kind": "exact_value",
+        "locator": "test_cmp_geu",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_cmp_geu",
+        "test_symbol": "test_cmp_geu"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x0000260e"
+    },
+    {
+      "elf": "template/executable_integer/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "csel_32_380797cd2ab0",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00000077"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_integer_csel"
+      },
+      "max_level": "L3",
+      "mnemonic": "CSEL",
+      "object": "template/executable_integer/obj/24_executable_integer.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_csel",
+        "source": "avs/qemu/tests/24_executable_integer.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/24_executable_integer.c",
+        "target_symbol": "executable_integer_csel",
+        "test_symbol": "test_csel"
+      },
+      "suite": "executable_integer",
+      "suite_completion_test_id": "0x0000260f",
+      "test_contract": "valid",
+      "test_id": "0x0000260f"
+    },
+    {
+      "elf": "template/atomic/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lr_w_32_067262ff6597",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x7800707f",
+        "match": "0x1000000b"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "atomic_lr_w_nonzero_srczero"
+      },
+      "max_level": "L3",
+      "mnemonic": "LR.W",
+      "object": "template/atomic/obj/07_atomic_lr_srczero.o",
+      "oracle": {
+        "expected": "0x1234abcd",
+        "kind": "exact_value",
+        "locator": "test_lr_w_nonzero_srczero",
+        "source": "avs/qemu/tests/07_atomic.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/07_atomic.c",
+        "target_symbol": "atomic_lr_w_nonzero_srczero",
+        "test_symbol": "test_lr_w_nonzero_srczero"
+      },
+      "suite": "atomic",
+      "suite_completion_test_id": "0x00007160",
+      "test_contract": "valid",
+      "test_id": "0x00007162"
+    },
+    {
+      "elf": "template/atomic/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "lr_d_32_fcf6ece7fff8",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x7800707f",
+        "match": "0x1800000b"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "atomic_lr_d_nonzero_srczero"
+      },
+      "max_level": "L3",
+      "mnemonic": "LR.D",
+      "object": "template/atomic/obj/07_atomic_lr_srczero.o",
+      "oracle": {
+        "expected": "0x0123456789abcdef",
+        "kind": "exact_value",
+        "locator": "test_lr_d_nonzero_srczero",
+        "source": "avs/qemu/tests/07_atomic.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/07_atomic.c",
+        "target_symbol": "atomic_lr_d_nonzero_srczero",
+        "test_symbol": "test_lr_d_nonzero_srczero"
+      },
+      "suite": "atomic",
+      "suite_completion_test_id": "0x00007160",
+      "test_contract": "valid",
+      "test_id": "0x00007163"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "setc_andi_32_71953c53b18f",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00002075"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_setc_andi"
+      },
+      "max_level": "L3",
+      "mnemonic": "SETC.ANDI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_setc_andi",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_setc_andi",
+        "test_symbol": "test_setc_andi"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2801"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "setc_ori_32_b8d2423ac08d",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00003075"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_setc_ori"
+      },
+      "max_level": "L3",
+      "mnemonic": "SETC.ORI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_setc_ori",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_setc_ori",
+        "test_symbol": "test_setc_ori"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2802"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_andi_48_0f1b4b325221",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00002075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_andi"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.ANDI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_andi",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_andi",
+        "test_symbol": "test_hl_setc_andi"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2803"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_eqi_48_36b03e040e50",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00000075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_eqi"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.EQI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_eqi",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_eqi",
+        "test_symbol": "test_hl_setc_eqi"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2804"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_gei_48_c8e6af25febe",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00005075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_gei"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.GEI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_gei",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_gei",
+        "test_symbol": "test_hl_setc_gei"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2805"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_geui_48_4dccc643dda4",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00007075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_geui"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.GEUI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_geui",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_geui",
+        "test_symbol": "test_hl_setc_geui"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2806"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_lti_48_4ba5d7d9fa2a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00004075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_lti"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.LTI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_lti",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_lti",
+        "test_symbol": "test_hl_setc_lti"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2807"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_ltui_48_c2daef3063ae",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00006075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_ltui"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.LTUI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_ltui",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_ltui",
+        "test_symbol": "test_hl_setc_ltui"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2808"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_nei_48_1062c234904a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00001075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_nei"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.NEI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_nei",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_nei",
+        "test_symbol": "test_hl_setc_nei"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x2809"
+    },
+    {
+      "elf": "template/executable_setc_imm/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_setc_ori_48_7c8062d805d3",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x00003075000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_setc_imm_hl_setc_ori"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.SETC.ORI",
+      "object": "template/executable_setc_imm/obj/26_executable_setc_imm.o",
+      "oracle": {
+        "expected": "0x3",
+        "kind": "exact_value",
+        "locator": "test_hl_setc_ori",
+        "source": "avs/qemu/tests/26_executable_setc_imm.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/26_executable_setc_imm.c",
+        "target_symbol": "executable_setc_imm_hl_setc_ori",
+        "test_symbol": "test_hl_setc_ori"
+      },
+      "suite": "executable_setc_imm",
+      "suite_completion_test_id": "0x0000280a",
+      "test_contract": "valid",
+      "test_id": "0x280a"
+    },
+    {
+      "elf": "template/executable_maddw_bfi_mi/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "maddw_32_3d8ff30fb154",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0600707f",
+        "match": "0x00007047"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_maddw"
+      },
+      "max_level": "L3",
+      "mnemonic": "MADDW",
+      "object": "template/executable_maddw_bfi_mi/obj/27_executable_maddw_bfi_mi.o",
+      "oracle": {
+        "expected": "0xffffffff80000000",
+        "kind": "exact_value",
+        "locator": "test_maddw",
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c",
+        "target_symbol": "executable_maddw",
+        "test_symbol": "test_maddw"
+      },
+      "suite": "executable_maddw_bfi_mi",
+      "suite_completion_test_id": "0x00002904",
+      "test_contract": "valid",
+      "test_id": "0x00002901"
+    },
+    {
+      "elf": "template/executable_maddw_bfi_mi/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_bfi_48_995211593446",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0xfe00707f000f",
+        "match": "0x0000204d000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_hl_bfi"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.BFI",
+      "object": "template/executable_maddw_bfi_mi/obj/27_executable_maddw_bfi_mi.o",
+      "oracle": {
+        "expected": "0xffff0000000f0000",
+        "kind": "exact_value",
+        "locator": "test_hl_bfi",
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c",
+        "target_symbol": "executable_hl_bfi",
+        "test_symbol": "test_hl_bfi"
+      },
+      "suite": "executable_maddw_bfi_mi",
+      "suite_completion_test_id": "0x00002904",
+      "test_contract": "valid",
+      "test_id": "0x00002902"
+    },
+    {
+      "elf": "template/executable_maddw_bfi_mi/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_miadd_48_988747dddd68",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x0000004d000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_hl_miadd"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.MIADD",
+      "object": "template/executable_maddw_bfi_mi/obj/27_executable_maddw_bfi_mi.o",
+      "oracle": {
+        "expected": "0x0128888889bb9752",
+        "kind": "exact_value",
+        "locator": "test_hl_miadd",
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c",
+        "target_symbol": "executable_hl_miadd",
+        "test_symbol": "test_hl_miadd"
+      },
+      "suite": "executable_maddw_bfi_mi",
+      "suite_completion_test_id": "0x00002904",
+      "test_contract": "valid",
+      "test_id": "0x00002903"
+    },
+    {
+      "elf": "template/executable_maddw_bfi_mi/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "hl_misub_48_f04e7ab7158a",
+      "form_key": {
+        "length_bits": 48,
+        "mask": "0x0000707f000f",
+        "match": "0x0000104d000e"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "executable_hl_misub"
+      },
+      "max_level": "L3",
+      "mnemonic": "HL.MISUB",
+      "object": "template/executable_maddw_bfi_mi/obj/27_executable_maddw_bfi_mi.o",
+      "oracle": {
+        "expected": "0x011e0246899c048c",
+        "kind": "exact_value",
+        "locator": "test_hl_misub",
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/27_executable_maddw_bfi_mi.c",
+        "target_symbol": "executable_hl_misub",
+        "test_symbol": "test_hl_misub"
+      },
+      "suite": "executable_maddw_bfi_mi",
+      "suite_completion_test_id": "0x00002904",
+      "test_contract": "valid",
+      "test_id": "0x00002904"
+    },
+    {
+      "elf": "template/tile_v0583_tlsu/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "bstart_tload_32_5178a1794614",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x07ffffff",
+        "match": "0x00011181"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "linx_v0583_tlsu_copy"
+      },
+      "max_level": "L3",
+      "mnemonic": "BSTART.TLOAD",
+      "object": "template/tile_v0583_tlsu/obj/28_v0583_tile_tlsu_carrier.o",
+      "oracle": {
+        "expected": "(uint32_t)input[i]",
+        "kind": "differential",
+        "locator": "run_tile_v0583_tlsu_tests",
+        "source": "avs/qemu/tests/28_v0583_tile_tlsu.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/28_v0583_tile_tlsu.c",
+        "target_symbol": "linx_v0583_tlsu_copy",
+        "test_symbol": "run_tile_v0583_tlsu_tests"
+      },
+      "suite": "tile_v0583_tlsu",
+      "suite_completion_test_id": "0x00002a01",
+      "test_contract": "valid",
+      "test_id": "0x00002a01"
+    },
+    {
+      "elf": "template/tile_v0583_vec/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "b_iot_32_ba693fbfdca5",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x0000707f",
+        "match": "0x00002013"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "linx_v0583_vec_add"
+      },
+      "max_level": "L3",
+      "mnemonic": "B.IOT",
+      "object": "template/tile_v0583_vec/obj/29_v0583_tile_vec_carrier.o",
+      "oracle": {
+        "expected": "0x40400000",
+        "kind": "exact_value",
+        "locator": "run_tile_v0583_vec_tests",
+        "source": "avs/qemu/tests/29_v0583_tile_vec.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/29_v0583_tile_vec.c",
+        "target_symbol": "linx_v0583_vec_add",
+        "test_symbol": "run_tile_v0583_vec_tests"
+      },
+      "suite": "tile_v0583_vec",
+      "suite_completion_test_id": "0x00002b01",
+      "test_contract": "valid",
+      "test_id": "0x00002b01"
+    },
+    {
+      "elf": "template/tile_v0583_sfu/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "b_iot_32_2f60297debcb",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0xfc00707f",
+        "match": "0x04005013"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "linx_v0583_sfu_exp"
+      },
+      "max_level": "L3",
+      "mnemonic": "B.IOT",
+      "object": "template/tile_v0583_sfu/obj/30_v0583_tile_sfu_carrier.o",
+      "oracle": {
+        "expected": "0x3f800000",
+        "kind": "exact_value",
+        "locator": "run_tile_v0583_sfu_tests",
+        "source": "avs/qemu/tests/30_v0583_tile_sfu.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/30_v0583_tile_sfu.c",
+        "target_symbol": "linx_v0583_sfu_exp",
+        "test_symbol": "run_tile_v0583_sfu_tests"
+      },
+      "suite": "tile_v0583_sfu",
+      "suite_completion_test_id": "0x00002c01",
+      "test_contract": "valid",
+      "test_id": "0x00002c01"
+    },
+    {
+      "elf": "template/tile_v0583_cube/linx-qemu-tests.elf",
+      "failure_attribution": "none",
+      "form_id": "bstart_tmatmul_32_3bb582723869",
+      "form_key": {
+        "length_bits": 32,
+        "mask": "0x07ffffff",
+        "match": "0x00031181"
+      },
+      "instruction": {
+        "occurrence": 0,
+        "pc": "0x0",
+        "symbol": "linx_v0583_cube_matmul"
+      },
+      "max_level": "L3",
+      "mnemonic": "BSTART.TMATMUL",
+      "object": "template/tile_v0583_cube/obj/31_v0583_tile_cube_carrier.o",
+      "oracle": {
+        "expected": "(uint32_t)rhs[i]",
+        "kind": "differential",
+        "locator": "run_tile_v0583_cube_tests",
+        "source": "avs/qemu/tests/31_v0583_tile_cube.c"
+      },
+      "reachability": {
+        "source": "avs/qemu/tests/31_v0583_tile_cube.c",
+        "target_symbol": "linx_v0583_cube_matmul",
+        "test_symbol": "run_tile_v0583_cube_tests"
+      },
+      "suite": "tile_v0583_cube",
+      "suite_completion_test_id": "0x00002d01",
+      "test_contract": "valid",
+      "test_id": "0x00002d01"
+    }
+  ],
+  "producer": {
+    "builder": "tools/bringup/build_qemu_executable_coverage_v0583_candidate.py",
+    "identity_rebinds": [
+      {
+        "from": "fentry_32_a47584ec13b6",
+        "reason": "exact-form-key",
+        "to": "fentry_32_c6bb0b89eedd"
+      },
+      {
+        "from": "fret_stk_32_4fe246bd8241",
+        "reason": "reviewed-encoding-migration",
+        "to": "fret_stk_32_1c6ea1521169"
+      },
+      {
+        "from": "fret_ra_32_659c886221c1",
+        "reason": "exact-form-key",
+        "to": "fret_ra_32_362702ebd7d8"
+      },
+      {
+        "from": "c_bstart_std_16_8b40f078c14a",
+        "reason": "exact-form-key",
+        "to": "c_bstart_std_16_f98cb0206cb1"
+      },
+      {
+        "from": "c_bstart_16_c4e238a9227a",
+        "reason": "exact-form-key",
+        "to": "c_bstart_16_b82b9a0c292c"
+      },
+      {
+        "from": "j_32_a303cf05af42",
+        "reason": "exact-form-key",
+        "to": "j_32_545bba5a7d2e"
+      },
+      {
+        "from": "l_bstart_std_64_37e84068ce61",
+        "reason": "exact-form-key",
+        "to": "l_bstart_std_64_49b7cf990e62"
+      },
+      {
+        "from": "hl_lwui_po_48_09a75b628dc4",
+        "reason": "exact-form-key",
+        "to": "hl_lwui_po_48_0209610deddf"
+      },
+      {
+        "from": "hl_lwui_pr_48_32de19a508f0",
+        "reason": "exact-form-key",
+        "to": "hl_lwui_pr_48_4074eea19f29"
+      },
+      {
+        "from": "add_32_d04202886d0a",
+        "reason": "exact-form-key",
+        "to": "add_32_3af05dd9677d"
+      },
+      {
+        "from": "sub_32_af383d4a2b42",
+        "reason": "exact-form-key",
+        "to": "sub_32_44e15384f7e6"
+      },
+      {
+        "from": "and_32_b6a903a3ec94",
+        "reason": "exact-form-key",
+        "to": "and_32_947d0acde105"
+      },
+      {
+        "from": "or_32_a7fb80e78831",
+        "reason": "exact-form-key",
+        "to": "or_32_3eaea256559e"
+      },
+      {
+        "from": "xor_32_33510860c585",
+        "reason": "exact-form-key",
+        "to": "xor_32_068757596736"
+      },
+      {
+        "from": "sll_32_a100b8961e21",
+        "reason": "exact-form-key",
+        "to": "sll_32_ec390af54378"
+      },
+      {
+        "from": "srl_32_5cfca42c59f3",
+        "reason": "exact-form-key",
+        "to": "srl_32_68dcf8b0f7e8"
+      },
+      {
+        "from": "sra_32_ba03eea6386b",
+        "reason": "exact-form-key",
+        "to": "sra_32_a121613c8ef0"
+      },
+      {
+        "from": "lb_32_b718aa88e28f",
+        "reason": "exact-form-key",
+        "to": "lb_32_69fa62bab890"
+      },
+      {
+        "from": "lh_32_d0f04d7d7696",
+        "reason": "exact-form-key",
+        "to": "lh_32_ba0f2afd9b3f"
+      },
+      {
+        "from": "lw_32_3a77ffafcb34",
+        "reason": "exact-form-key",
+        "to": "lw_32_3ab9351b5a00"
+      },
+      {
+        "from": "ld_32_7c48838bc4e6",
+        "reason": "exact-form-key",
+        "to": "ld_32_6ccb1c483bc5"
+      },
+      {
+        "from": "sb_32_43c106ae3749",
+        "reason": "exact-form-key",
+        "to": "sb_32_f0f61f5c7063"
+      },
+      {
+        "from": "sh_32_bc7d4a7dea28",
+        "reason": "exact-form-key",
+        "to": "sh_32_80b2371159a4"
+      },
+      {
+        "from": "sw_32_28ad317b1b41",
+        "reason": "exact-form-key",
+        "to": "sw_32_4fdd666796e5"
+      },
+      {
+        "from": "sd_32_9dbc40328653",
+        "reason": "exact-form-key",
+        "to": "sd_32_324dd0ff5d29"
+      },
+      {
+        "from": "hl_lwui_upo_48_33260eb06a2c",
+        "reason": "exact-form-key",
+        "to": "hl_lwui_upo_48_ae76cad8040a"
+      },
+      {
+        "from": "hl_lwui_upr_48_998a98c46469",
+        "reason": "exact-form-key",
+        "to": "hl_lwui_upr_48_3fcf561adb02"
+      },
+      {
+        "from": "hl_swi_po_48_66a80d0fa7f5",
+        "reason": "exact-form-key",
+        "to": "hl_swi_po_48_22c0e2195cd7"
+      },
+      {
+        "from": "hl_swi_pr_48_68b9003e0421",
+        "reason": "exact-form-key",
+        "to": "hl_swi_pr_48_109e1049de72"
+      },
+      {
+        "from": "hl_swi_upo_48_243d3c38cd1a",
+        "reason": "exact-form-key",
+        "to": "hl_swi_upo_48_60c134e0b774"
+      },
+      {
+        "from": "hl_swi_upr_48_15c2fb96aab0",
+        "reason": "exact-form-key",
+        "to": "hl_swi_upr_48_314b5788553e"
+      },
+      {
+        "from": "hl_lwuip_48_2a5d6d8f3b70",
+        "reason": "exact-form-key",
+        "to": "hl_lwuip_48_0c385f4e5dbb"
+      },
+      {
+        "from": "hl_swip_48_e2fca8cde001",
+        "reason": "exact-form-key",
+        "to": "hl_swip_48_48e44471c6f2"
+      },
+      {
+        "from": "hl_swip_u_48_e2dc917c8505",
+        "reason": "exact-form-key",
+        "to": "hl_swip_u_48_be6dc0457f8a"
+      },
+      {
+        "from": "hl_ldip_48_60afa6423d39",
+        "reason": "exact-form-key",
+        "to": "hl_ldip_48_7ee4459b0119"
+      },
+      {
+        "from": "hl_sdip_48_6d622cf167ca",
+        "reason": "exact-form-key",
+        "to": "hl_sdip_48_0a27599f4729"
+      },
+      {
+        "from": "lbu_32_a9a58ab4ea22",
+        "reason": "exact-form-key",
+        "to": "lbu_32_3dba99c3867b"
+      },
+      {
+        "from": "lhu_32_730caf67ecd1",
+        "reason": "exact-form-key",
+        "to": "lhu_32_050c45d23cc9"
+      },
+      {
+        "from": "lwu_32_678935925636",
+        "reason": "exact-form-key",
+        "to": "lwu_32_59dfc83ee4f4"
+      },
+      {
+        "from": "mul_32_9f2affd8efb8",
+        "reason": "exact-form-key",
+        "to": "mul_32_39b0b15eeb20"
+      },
+      {
+        "from": "div_32_a6efe85f8662",
+        "reason": "exact-form-key",
+        "to": "div_32_0aea1e39938c"
+      },
+      {
+        "from": "divu_32_cfbc0d1760e4",
+        "reason": "exact-form-key",
+        "to": "divu_32_db4cf971d07e"
+      },
+      {
+        "from": "rem_32_0abbd6a3b865",
+        "reason": "exact-form-key",
+        "to": "rem_32_505d4821713f"
+      },
+      {
+        "from": "remu_32_d7a5d1ebbbf5",
+        "reason": "exact-form-key",
+        "to": "remu_32_6ca426fd271f"
+      },
+      {
+        "from": "cmp_eq_32_6af7c8f41300",
+        "reason": "exact-form-key",
+        "to": "cmp_eq_32_3c038a11a08f"
+      },
+      {
+        "from": "cmp_ne_32_fc47fbb1a0de",
+        "reason": "exact-form-key",
+        "to": "cmp_ne_32_5a105022c779"
+      },
+      {
+        "from": "cmp_lt_32_c0b8cc320f12",
+        "reason": "exact-form-key",
+        "to": "cmp_lt_32_162aa717f9f5"
+      },
+      {
+        "from": "cmp_ltu_32_4377481baebc",
+        "reason": "exact-form-key",
+        "to": "cmp_ltu_32_5f14a7edd35a"
+      },
+      {
+        "from": "cmp_ge_32_d88e3a1cfff4",
+        "reason": "exact-form-key",
+        "to": "cmp_ge_32_2ed74e719f3f"
+      },
+      {
+        "from": "cmp_geu_32_0c002dc415ef",
+        "reason": "exact-form-key",
+        "to": "cmp_geu_32_e4a826feb1e8"
+      },
+      {
+        "from": "csel_32_ba77cbad3c99",
+        "reason": "exact-form-key",
+        "to": "csel_32_380797cd2ab0"
+      },
+      {
+        "from": "lr_w_32_efecc735bb75",
+        "reason": "reviewed-encoding-migration",
+        "to": "lr_w_32_067262ff6597"
+      },
+      {
+        "from": "lr_d_32_84d21a553dc1",
+        "reason": "reviewed-encoding-migration",
+        "to": "lr_d_32_fcf6ece7fff8"
+      },
+      {
+        "from": "setc_andi_32_32fe61c0559b",
+        "reason": "exact-form-key",
+        "to": "setc_andi_32_71953c53b18f"
+      },
+      {
+        "from": "setc_ori_32_183dc15fad54",
+        "reason": "exact-form-key",
+        "to": "setc_ori_32_b8d2423ac08d"
+      },
+      {
+        "from": "hl_setc_andi_48_f27796612fb3",
+        "reason": "exact-form-key",
+        "to": "hl_setc_andi_48_0f1b4b325221"
+      },
+      {
+        "from": "hl_setc_eqi_48_0fe891fb0890",
+        "reason": "exact-form-key",
+        "to": "hl_setc_eqi_48_36b03e040e50"
+      },
+      {
+        "from": "hl_setc_gei_48_9563d6395d06",
+        "reason": "exact-form-key",
+        "to": "hl_setc_gei_48_c8e6af25febe"
+      },
+      {
+        "from": "hl_setc_geui_48_2390319baf54",
+        "reason": "exact-form-key",
+        "to": "hl_setc_geui_48_4dccc643dda4"
+      },
+      {
+        "from": "hl_setc_lti_48_ad4ffebe877c",
+        "reason": "exact-form-key",
+        "to": "hl_setc_lti_48_4ba5d7d9fa2a"
+      },
+      {
+        "from": "hl_setc_ltui_48_cb7a12ba6ead",
+        "reason": "exact-form-key",
+        "to": "hl_setc_ltui_48_c2daef3063ae"
+      },
+      {
+        "from": "hl_setc_nei_48_f0bcf6586274",
+        "reason": "exact-form-key",
+        "to": "hl_setc_nei_48_1062c234904a"
+      },
+      {
+        "from": "hl_setc_ori_48_137bce8aeb04",
+        "reason": "exact-form-key",
+        "to": "hl_setc_ori_48_7c8062d805d3"
+      },
+      {
+        "from": "maddw_32_9f922b15e674",
+        "reason": "exact-form-key",
+        "to": "maddw_32_3d8ff30fb154"
+      },
+      {
+        "from": "hl_bfi_48_8adfd476aacc",
+        "reason": "exact-form-key",
+        "to": "hl_bfi_48_995211593446"
+      },
+      {
+        "from": "hl_miadd_48_ec5127b6dfd6",
+        "reason": "exact-form-key",
+        "to": "hl_miadd_48_988747dddd68"
+      },
+      {
+        "from": "hl_misub_48_e9e4c7b23479",
+        "reason": "exact-form-key",
+        "to": "hl_misub_48_f04e7ab7158a"
+      }
+    ],
+    "policy": "Static mappings only. Dynamic QEMU, binary and run evidence must be produced by refresh_qemu_executable_coverage.py."
+  },
+  "release": "0.58.3",
+  "schema_version": 4,
+  "template_status": "review-candidate-source-backed"
+}
