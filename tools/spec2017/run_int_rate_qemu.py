@@ -152,6 +152,15 @@ def _default_qemu(root: Path = REPO_ROOT) -> str:
     return str(default_qemu_binary(root).resolve())
 
 
+def _default_clang(root: Path = REPO_ROOT) -> str:
+    env = os.environ.get("LINX_CLANG", "").strip()
+    if env:
+        return str(Path(os.path.expanduser(env)).resolve())
+    return str(
+        (root / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang").resolve()
+    )
+
+
 def _usable_static_sysroot(path: Path) -> bool:
     return (
         (path / "usr" / "include" / "errno.h").is_file()
@@ -5347,6 +5356,11 @@ def _fnv1a32(path: Path) -> tuple[int, int]:
 
 
 def _strip_async_qemu_diagnostics(text: str) -> str:
+    # Kernel diagnostics can be written between individual console writes from
+    # the init process, splitting one logical LINX_SPEC_HASH marker across
+    # several physical lines.  Remove only timestamped kernel records while
+    # retaining any marker fragment written before the record.
+    text = re.sub(r"\[\s*\d+\.\d+\][^\n]*(?:\n|$)", "", text)
     for marker in (
         "LINX_HEARTBEAT_STALL",
         "LINX_HEARTBEAT",
@@ -5506,7 +5520,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--qemu", default=_default_qemu())
     parser.add_argument("--kernel", default=str(REPO_ROOT / "kernel" / "linux" / "build-linx-fixed" / "vmlinux"))
     parser.add_argument("--linux-root", default=str(REPO_ROOT / "kernel" / "linux"))
-    parser.add_argument("--clang", default=str(REPO_ROOT / "compiler" / "llvm" / "build-linxisa-clang" / "bin" / "clang"))
+    parser.add_argument("--clang", default=_default_clang())
     parser.add_argument("--sysroot", default=_default_musl_sysroot())
     parser.add_argument("--timeout", type=int, default=240)
     parser.add_argument("--memory-mb", type=int, default=2048)

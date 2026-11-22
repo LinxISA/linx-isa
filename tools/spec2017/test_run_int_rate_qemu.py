@@ -62,6 +62,38 @@ class RunIntRateQemuTests(unittest.TestCase):
                 str((Path(td) / "custom-qemu").resolve()),
             )
 
+    def test_default_clang_honors_linx_clang_env_override(self) -> None:
+        with tempfile.TemporaryDirectory() as td, mock.patch.dict(
+            os.environ, {"LINX_CLANG": f"{td}/profile-clang"}, clear=True
+        ):
+            self.assertEqual(
+                runner._default_clang(Path(td)),
+                str((Path(td) / "profile-clang").resolve()),
+            )
+
+    def test_default_clang_falls_back_to_canonical_build(self) -> None:
+        with tempfile.TemporaryDirectory() as td, mock.patch.dict(
+            os.environ, {}, clear=True
+        ):
+            self.assertEqual(
+                runner._default_clang(Path(td)),
+                str(
+                    (
+                        Path(td)
+                        / "compiler"
+                        / "llvm"
+                        / "build-linxisa-clang"
+                        / "bin"
+                        / "clang"
+                    ).resolve()
+                ),
+            )
+
+    def test_explicit_clang_option_remains_available(self) -> None:
+        source = inspect.getsource(runner.main)
+
+        self.assertIn('parser.add_argument("--clang", default=_default_clang())', source)
+
     def test_gen_init_cpio_prefers_kernel_build_output(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -1469,6 +1501,85 @@ class RunIntRateQemuTests(unittest.TestCase):
 
         self.assertFalse(result["ok"])
         self.assertEqual(result["checks"][0]["actual_hash"], "0x00000000")
+
+    def test_hash_marker_allows_timestamped_kernel_interleaving(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ref = root / "ref.out"
+            log = root / "qemu.log"
+            ref.write_bytes(b"hash payload\n")
+            ref_size, ref_hash = runner._fnv1a32(ref)
+            size_text = str(ref_size)
+            log.write_text(
+                "LINX_SPEC_HASH [    9.255119] kernel diagnostic\n"
+                "rand.11.out[    9.257164] kernel diagnostic\n"
+                f" {size_text[:-1]}[    9.260943] kernel diagnostic\n"
+                f"{size_text[-1]} 0x[    9.272154] kernel diagnostic\n"
+                f"{ref_hash:08x}[    9.274158] kernel diagnostic\n"
+                "\nLINX_SPEC_PASS 999.specrand_ir\n",
+                encoding="utf-8",
+            )
+
+            result = runner._verify_hash_markers(
+                root,
+                log,
+                "999.specrand_ir",
+                {"compares": [{"out": "rand.11.out", "ref": "ref.out"}]},
+                root,
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["checks"][0]["actual_hash"], f"0x{ref_hash:08x}")
+
+    def test_timestamped_kernel_filter_preserves_mismatched_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ref = root / "ref.out"
+            log = root / "qemu.log"
+            ref.write_bytes(b"hash payload\n")
+            ref_size, _ = runner._fnv1a32(ref)
+            log.write_text(
+                "LINX_SPEC_HASH [    9.255119] kernel diagnostic\n"
+                f"rand.11.out {ref_size} 0x[    9.272154] kernel diagnostic\n"
+                "00000000\nLINX_SPEC_PASS 999.specrand_ir\n",
+                encoding="utf-8",
+            )
+
+            result = runner._verify_hash_markers(
+                root,
+                log,
+                "999.specrand_ir",
+                {"compares": [{"out": "rand.11.out", "ref": "ref.out"}]},
+                root,
+            )
+
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["checks"][0]["actual_hash"], "0x00000000")
+
+    def test_timestamped_kernel_filter_does_not_accept_invalid_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            ref = root / "ref.out"
+            log = root / "qemu.log"
+            ref.write_bytes(b"hash payload\n")
+            _, ref_hash = runner._fnv1a32(ref)
+            log.write_text(
+                "LINX_SPEC_HASH [    9.255119] kernel diagnostic\n"
+                f"rand.11.out invalid 0x{ref_hash:08x}\n"
+                "LINX_SPEC_PASS 999.specrand_ir\n",
+                encoding="utf-8",
+            )
+
+            result = runner._verify_hash_markers(
+                root,
+                log,
+                "999.specrand_ir",
+                {"compares": [{"out": "rand.11.out", "ref": "ref.out"}]},
+                root,
+            )
+
+        self.assertFalse(result["ok"])
+        self.assertIsNone(result["checks"][0]["actual_hash"])
 
     def test_indexed_argv_override_targets_requested_argument(self) -> None:
         with mock.patch.dict(os.environ, {"LINX_SPEC_ARGV1_OVERRIDE": "/spec-run/test.txt"}, clear=True):
