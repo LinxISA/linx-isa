@@ -58,6 +58,18 @@ EXPECTED_V058_FIRST_USE_REGISTER = {
     "traparg0": {"VECTOR": 0, "CUBE": 1},
 }
 
+V058_DERIVED_VERSIONS = {
+    "0.58.0",
+    "0.58.1",
+    "0.58.3",
+    "0.58.5",
+    "0.58.6",
+    "0.58.7",
+    "0.59.1-candidate",
+}
+
+V058_FIRST_USE_VERSIONS = V058_DERIVED_VERSIONS - {"0.58.0"}
+
 EXPECTED_V058_FIRST_USE_VECTOR_HEADERS = [
     "BSTART.MPAR",
     "BSTART.MSEQ",
@@ -423,7 +435,7 @@ def _validate_engine_ops(spec: Dict[str, Any], errors: List[str]) -> None:
     if str(spec.get("version") or "") == "0.57.1":
         _validate_engine_ops_v0571(spec, engine_ops, errors)
         return
-    if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}:
+    if str(spec.get("version") or "") in V058_DERIVED_VERSIONS:
         _validate_engine_ops_v058(spec, engine_ops, errors)
         return
 
@@ -1137,7 +1149,7 @@ def _validate_frame_template_contract(spec: Dict[str, Any], errors: List[str]) -
 def _validate_first_use_register_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}:
+    if str(spec.get("version") or "") not in V058_FIRST_USE_VERSIONS:
         return
 
     system_registers = ((spec.get("state") or {}).get("system_registers") or {})
@@ -1183,7 +1195,7 @@ def _validate_first_use_register_contract(
 def _validate_first_use_semantics_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") not in {"0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}:
+    if str(spec.get("version") or "") not in V058_FIRST_USE_VERSIONS:
         return
 
     conventions = spec.get("semantics_conventions") or {}
@@ -1303,7 +1315,7 @@ def validate(path: str) -> List[str]:
         retired_names = {str(entry.get("retired_mnemonic") or "") for entry in retired_entries}
         expected_retired = (
             set()
-            if str(spec.get("version") or "") in {"0.58.0", "0.58.1", "0.58.3", "0.58.5", "0.58.6", "0.58.7"}
+            if str(spec.get("version") or "") in V058_DERIVED_VERSIONS
             else {"B.IOD", "BSTART.PAR"}
         )
         if retired_names != expected_retired:
