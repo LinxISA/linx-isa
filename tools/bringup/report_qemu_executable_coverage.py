@@ -33,7 +33,6 @@ UART_SUCCESS_MARKERS = {
 }
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
-HEX_RE = re.compile(r"0x[0-9a-fA-F]+")
 CANONICAL_EVIDENCE_ROOT = Path("docs/bringup/gates/evidence/qemu-executable")
 
 
@@ -197,10 +196,6 @@ def _spec_forms(spec: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return forms
 
 
-def _extract_numeric_literals(text: str) -> set[int]:
-    return {int(value, 16) for value in HEX_RE.findall(text)}
-
-
 def _execution_observation(
     run_path: Path,
     run: dict[str, Any],
@@ -241,10 +236,130 @@ def _function_body(text: str, symbol: str) -> str | None:
     return None
 
 
-def _assertion_binds(body: str, expected: int, test_id: int) -> bool:
-    for match in re.finditer(r"\bTEST_[A-Z0-9_]+\s*\((.*?)\)\s*;", body, re.DOTALL):
-        literals = _extract_numeric_literals(match.group(1))
-        if expected in literals and test_id in literals:
+def _constant_binds(source: str, name: str, value: int) -> bool:
+    matches = list(re.finditer(
+        rf"\b(?:static\s+)?const\s+[A-Za-z_][A-Za-z0-9_]*\s+"
+        rf"{re.escape(name)}\s*=\s*(0x[0-9a-fA-F]+|[0-9]+)[uUlL]*\s*;",
+        source,
+    ))
+    return len(matches) == 1 and int(matches[0].group(1), 0) == value
+
+
+def _argument_binds_constant(argument: str, source: str, value: int) -> bool:
+    literal = re.fullmatch(r"(0[xX][0-9a-fA-F]+|0|[1-9][0-9]*)[uUlL]*", argument)
+    if literal:
+        return int(literal.group(1), 0) == value
+    return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", argument)) and _constant_binds(
+        source, argument, value
+    )
+
+
+def _split_macro_arguments(arguments: str) -> tuple[str, ...]:
+    result: list[str] = []
+    start = 0
+    depth = 0
+    quote: str | None = None
+    escaped = False
+    for index, char in enumerate(arguments):
+        if quote is not None:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = None
+            continue
+        if char in {'"', "'"}:
+            quote = char
+        elif char in "([{":
+            depth += 1
+        elif char in ")]}":
+            depth -= 1
+            if depth < 0:
+                raise ValueError("assertion macro has unbalanced delimiters")
+        elif char == "," and depth == 0:
+            result.append(arguments[start:index].strip())
+            start = index + 1
+    if quote is not None or depth != 0:
+        raise ValueError("assertion macro has unbalanced delimiters")
+    result.append(arguments[start:].strip())
+    return tuple(result)
+
+
+def _assertion_calls(body: str) -> list[tuple[str, tuple[str, ...]]]:
+    calls: list[tuple[str, tuple[str, ...]]] = []
+    pattern = re.compile(r"\b(TEST_[A-Z0-9_]+)\s*\(")
+    for match in pattern.finditer(body):
+        opening = body.find("(", match.start())
+        depth = 0
+        quote: str | None = None
+        escaped = False
+        closing = None
+        for index in range(opening, len(body)):
+            char = body[index]
+            if quote is not None:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == quote:
+                    quote = None
+                continue
+            if char in {'"', "'"}:
+                quote = char
+            elif char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0:
+                    closing = index
+                    break
+        if closing is None:
+            raise ValueError(f"{match.group(1)} has no closing parenthesis")
+        calls.append(
+            (match.group(1), _split_macro_arguments(body[opening + 1 : closing]))
+        )
+    return calls
+
+
+ASSERTION_POSITIONS = {
+    "TEST_EQ": (1, 2),
+    "TEST_EQ32": (1, 2),
+    "TEST_EQ64": (1, 2),
+    "TEST_EQF": (1, 2),
+    "TEST_ASSERT": (2, 1),
+}
+
+
+def _assertion_binds(body: str, source: str, expected: int, test_id: int) -> bool:
+    for name, arguments in _assertion_calls(body):
+        positions = ASSERTION_POSITIONS.get(name)
+        if positions is None or max(positions) >= len(arguments):
+            continue
+        expected_index, test_id_index = positions
+        if _argument_binds_constant(
+            arguments[expected_index], source, expected
+        ) and _argument_binds_constant(arguments[test_id_index], source, test_id):
+            return True
+    return False
+
+
+def _differential_assertion_binds(
+    body: str, source: str, expected: str, test_id: int
+) -> bool:
+    normalized_expected = re.sub(r"\s+", "", expected)
+    if not normalized_expected:
+        return False
+    for name, arguments in _assertion_calls(body):
+        positions = ASSERTION_POSITIONS.get(name)
+        if positions is None or max(positions) >= len(arguments):
+            continue
+        expected_index, test_id_index = positions
+        if (
+            normalized_expected
+            == re.sub(r"\s+", "", arguments[expected_index])
+            and _argument_binds_constant(arguments[test_id_index], source, test_id)
+        ):
             return True
     return False
 
@@ -594,16 +709,33 @@ def _validate_entry(
             locator_body = _function_body(source_text, locator) if isinstance(locator, str) else None
             if not isinstance(locator, str) or not locator or locator_body is None:
                 reasons.append("oracle locator absent from source")
-            try:
-                expected_value = _parse_int(expected, "oracle.expected")
+            if oracle_kind == "differential":
                 if (
-                    locator_body is None
+                    not isinstance(expected, str)
+                    or locator_body is None
                     or test_id is None
-                    or not _assertion_binds(locator_body, expected_value, int(test_id, 16))
+                    or not _differential_assertion_binds(
+                        locator_body, source_text, expected, int(test_id, 16)
+                    )
                 ):
-                    reasons.append("expected value and test_id are not bound by one locator assertion")
-            except ValueError as exc:
-                reasons.append(str(exc))
+                    reasons.append(
+                        "differential expression and test_id are not bound by one locator assertion"
+                    )
+            else:
+                try:
+                    expected_value = _parse_int(expected, "oracle.expected")
+                    if (
+                        locator_body is None
+                        or test_id is None
+                        or not _assertion_binds(
+                            locator_body, source_text, expected_value, int(test_id, 16)
+                        )
+                    ):
+                        reasons.append(
+                            "expected value and test_id are not bound by one locator assertion"
+                        )
+                except ValueError as exc:
+                    reasons.append(str(exc))
         except ValueError as exc:
             reasons.append(str(exc))
 

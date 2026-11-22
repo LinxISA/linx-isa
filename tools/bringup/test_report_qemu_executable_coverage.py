@@ -25,6 +25,123 @@ def _sha256(path: Path) -> str:
 
 
 class ReportQemuExecutableCoverageTests(unittest.TestCase):
+    def test_constant_argument_rejects_arithmetic_subexpressions(self) -> None:
+        declarations = "const long expected = 0x22; const long case_id = 0x140b;"
+        for expected, test_id in (
+            ("expected + 1", "case_id"),
+            ("expected", "case_id + 1"),
+            ("0x22 + 1", "0x140b"),
+            ("0x22", "0x140b + 1"),
+        ):
+            with self.subTest(expected=expected, test_id=test_id):
+                body = f"TEST_EQ64(r, {expected}, {test_id});"
+                self.assertFalse(
+                    coverage._assertion_binds(body, declarations, 0x22, 0x140b)
+                )
+
+    def test_named_test_id_and_differential_expression_bind_one_assertion(self) -> None:
+        source = """
+static const uint32_t kTestId = 0x00002A01u;
+void run_tile(void) {
+  TEST_EQ32((uint32_t)output[i], (uint32_t)input[i], kTestId);
+}
+"""
+        body = coverage._function_body(source, "run_tile")
+        self.assertIsNotNone(body)
+        self.assertTrue(
+            coverage._differential_assertion_binds(
+                body, source, "(uint32_t)input[i]", 0x2A01
+            )
+        )
+        self.assertFalse(
+            coverage._differential_assertion_binds(
+                body, source, "(uint32_t)other[i]", 0x2A01
+            )
+        )
+        swapped = """
+static const uint32_t kTestId = 0x00002A01u;
+void run_tile(void) {
+  TEST_EQ32((uint32_t)input[i], (uint32_t)output[i], kTestId);
+}
+"""
+        self.assertFalse(
+            coverage._differential_assertion_binds(
+                coverage._function_body(swapped, "run_tile"),
+                swapped,
+                "(uint32_t)input[i]",
+                0x2A01,
+            )
+        )
+        substring = """
+static const uint32_t kTestId = 0x00002A01u;
+void run_tile(void) {
+  TEST_EQ32(output[i], (uint32_t)input[i] + 1, kTestId);
+}
+"""
+        self.assertFalse(
+            coverage._differential_assertion_binds(
+                coverage._function_body(substring, "run_tile"),
+                substring,
+                "(uint32_t)input[i]",
+                0x2A01,
+            )
+        )
+        wrong_id = """
+static const uint32_t kTestId = 0x00002A01u;
+static const uint32_t kOtherId = 0x00002A02u;
+void run_tile(void) {
+  TEST_EQ32(output[i], (uint32_t)input[i], kOtherId);
+}
+"""
+        self.assertFalse(
+            coverage._differential_assertion_binds(
+                coverage._function_body(wrong_id, "run_tile"),
+                wrong_id,
+                "(uint32_t)input[i]",
+                0x2A01,
+            )
+        )
+        shadowed_id = """
+void unrelated(void) {
+  const uint32_t kTestId = 0x00002A01u;
+  TEST_EQ32(other[i], expected[i], kTestId);
+}
+void run_tile(void) {
+  const uint32_t kTestId = 0x00002A02u;
+  TEST_EQ32(output[i], (uint32_t)input[i], kTestId);
+}
+"""
+        self.assertFalse(
+            coverage._differential_assertion_binds(
+                coverage._function_body(shadowed_id, "run_tile"),
+                shadowed_id,
+                "(uint32_t)input[i]",
+                0x2A01,
+            )
+        )
+        literal_source = """
+static const uint32_t kTestId = 0x00002C01u;
+void run_tile(void) { TEST_EQ32(output[i], 0x3F800000u, kTestId); }
+"""
+        literal_body = coverage._function_body(literal_source, "run_tile")
+        self.assertTrue(
+            coverage._assertion_binds(
+                literal_body, literal_source, 0x3F800000, 0x2C01
+            )
+        )
+        literal_swapped = """
+static const uint32_t kTestId = 0x00002C01u;
+void run_tile(void) { TEST_EQ32(0x3F800000u, output[i], kTestId); }
+"""
+        self.assertFalse(
+            coverage._assertion_binds(
+                coverage._function_body(literal_swapped, "run_tile"),
+                literal_swapped,
+                0x3F800000,
+                0x2C01,
+            )
+        )
+
     def test_checked_in_memory_bundle_binds_pc_to_elf_symbol_and_disassembly(self) -> None:
         root = Path(__file__).resolve().parents[2]
         manifest = json.loads(
