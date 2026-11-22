@@ -8,12 +8,13 @@ from html import escape
 from pathlib import PurePosixPath
 import re
 
+from manual_editorial import edit_article
 from manual_markdown import build_support_bundle, render_article, support_asset_path
 from manual_tag import tagged_bytes
 
 
 class ArticleLibrary:
-    def __init__(self, articles):
+    def __init__(self, articles, chapter_routes=None):
         self.articles = articles
         destinations = defaultdict(list)
         for name, (mnemonic, article) in articles.items():
@@ -23,6 +24,7 @@ class ArticleLibrary:
                 matches = PurePosixPath(article.source_path).stem.upper() == mnemonic
                 destinations[article.source_path].append((not matches, name))
         self.routes = {path: min(options)[1] for path, options in destinations.items()}
+        self.routes.update(chapter_routes or {})
         self.fragments = {}
         self.files = {}
         self.audit = {}
@@ -40,6 +42,7 @@ class ArticleLibrary:
         )
         self.files.update(support.assets)
         self.support = support.fragments
+        self.support_sources = support.source_paths
 
     def render(self, filename, *, source_context="", conflict=False):
         item = self.articles.get(filename)
@@ -60,8 +63,9 @@ class ArticleLibrary:
             else article.classification,
             "rendered_sha256": sha256(fragment.encode()).hexdigest(),
             "source_asset": raw,
+            "prose_edits": dict(edit_article(path)[1]),
         }
-        label = f'<p class="article-source">中文站原文 · <a href="{raw}">{escape(article.title)}</a></p>'
+        label = f'<p class="article-source">中文站正文 · <a href="{raw}">查看《{escape(article.title)}》原稿</a></p>'
         context = (
             f'<p class="version-context">{escape(source_context)}</p>'
             if source_context
@@ -88,7 +92,13 @@ def authored_synopsis(article, default):
     # Titles often have an English long name in parentheses, followed by the
     # actual Chinese explanation. Index just the explanation; the complete
     # bilingual heading remains unmodified inside the original article.
+    from manual_editorial import EDITS
+
     text = article.intro.split("。")[0].strip()
+    hits = dict(edit_article(article.source_path)[1])
+    for rule in EDITS:
+        if rule.key in hits:
+            text = text.replace(rule.before, rule.after)
     gloss = re.match(
         r"^[^()（）]{1,90}[（(][A-Za-z][A-Za-z0-9 ,/+:._’'–-]+[）)]\s*(.+)$", text
     )

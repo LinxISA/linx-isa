@@ -1,0 +1,106 @@
+{
+  "schema": "linxisa.manual.silicon-canvas.v1",
+  "silicon_canvas": {
+    "repository": "https://github.com/du-du-wang/silicon-canvas",
+    "commit": "7b590daf2217acc5a95d5c40d289d56d91a9fbfc",
+    "version": "0.7.0",
+    "entrypoint": "silicon-canvas-mcp",
+    "entrypoint_sha256": "5af05b8e3547ae6cdfc861e93d35f4dc97da10b2183da1ae198cc4b2a1e4d13b",
+    "package_tree_sha256": "40847223d8362ed0a5f552128a93add0eda9616f2e4d1dcbe642671671dd5974",
+    "package_file_count": 42
+  },
+  "linxisa": {
+    "tag": "v0.59.1",
+    "commit": "d262515b55c727073997c8f4c95261909f2fe8d3"
+  },
+  "figures": [
+    {
+      "name": "mgather-byte-displacement",
+      "source": "mgather-byte-displacement.silicon-canvas.json",
+      "source_sha256": "bff6a4faf322eff864f197b19660a92964d8757c6a1ac6e0935d495ce4c4c874",
+      "artifact_id": "4b9ec413cddd462a9f0e619614b6f2be",
+      "selected_figure_id": "overview",
+      "guide_role": "target_structure",
+      "canvas": {
+        "aspect": "16:9",
+        "content_ratio": 1.78,
+        "basis": "user request",
+        "gpt_image_size": "1536x1024"
+      },
+      "final_bitmap": {
+        "path": "mgather-byte-displacement.png",
+        "sha256": "e5f791800a5dc89f39eb74c208ec4a4942421c248edc181fa0c053dab8556986",
+        "review": "mgather-byte-displacement.review.json",
+        "terminal_action": "stop",
+        "best_attempt": 1,
+        "score": 90
+      },
+      "assets": {
+        "guide": {
+          "path": "mgather-byte-displacement.silicon-canvas-guide.png",
+          "sha256": "0ec58c5e929a8e629fd56434dd61f0b50c56095bf085daed8ec1c8c40d42fcf1",
+          "bytes": 60469
+        },
+        "export": {
+          "path": "mgather-byte-displacement.silicon-canvas-export.zip",
+          "sha256": "d4414838a8ce1feb42ace7a2cdaef82a6bf168900bcf7503312273c10410b4a0",
+          "bytes": 299005
+        },
+        "prompt": {
+          "path": "mgather-byte-displacement.silicon-canvas-prompt.txt",
+          "sha256": "d8f55dcb7c7483add9ab83d63b92eae3957b68a3070079c7f09f8adfc679e1f5",
+          "bytes": 3118
+        },
+        "caption": {
+          "path": "mgather-byte-displacement.silicon-canvas-caption.txt",
+          "sha256": "27cd0f49bc80e83a4bb228599f0e3765d58e6a0b8a9a0206777cb142a8f5daa5",
+          "bytes": 2356
+        }
+      }
+    },
+    {
+      "name": "block-tpc-cmovr",
+      "source": "block-tpc-cmovr.silicon-canvas.json",
+      "source_sha256": "bbfd94079e14e5f21d9b9386fa287e387763f7cc55d1955d6755a93c6d0a8dd8",
+      "artifact_id": "99e4c94ffa1f463ca318d54405bbabd4",
+      "selected_figure_id": "overview",
+      "guide_role": "target_structure",
+      "canvas": {
+        "aspect": "16:9",
+        "content_ratio": 1.78,
+        "basis": "user request",
+        "gpt_image_size": "1536x1024"
+      },
+      "final_bitmap": {
+        "path": "block-tpc-cmovr.png",
+        "sha256": "fcbebbf80869eaf0e85007eb45c4f648f2f78f8440f0f2d88b5843a40f32d4d2",
+        "review": "block-tpc-cmovr.review.json",
+        "terminal_action": "stop",
+        "best_attempt": 1,
+        "score": 90
+      },
+      "assets": {
+        "guide": {
+          "path": "block-tpc-cmovr.silicon-canvas-guide.png",
+          "sha256": "d8a7d330e8c57ebde33edc4a69461e1e631eceff263e040a73ddf47c477bcd7e",
+          "bytes": 76595
+        },
+        "export": {
+          "path": "block-tpc-cmovr.silicon-canvas-export.zip",
+          "sha256": "b470822e13f7ff6b698adb6207542edf388bc14aef3d2732c3c064126a1aa0a0",
+          "bytes": 198993
+        },
+        "prompt": {
+          "path": "block-tpc-cmovr.silicon-canvas-prompt.txt",
+          "sha256": "f282729de562d673746dcc1080a958b2f7578b501ce09ffef5ec93217eef51bb",
+          "bytes": 3085
+        },
+        "caption": {
+          "path": "block-tpc-cmovr.silicon-canvas-caption.txt",
+          "sha256": "3d78c087ca169eaa1c1ce5b62d9a67478c6a0e4b28e8cd8d3bde0cc308276183",
+          "bytes": 1831
+        }
+      }
+    }
+  ]
+}

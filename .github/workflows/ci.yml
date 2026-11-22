@@ -71,6 +71,8 @@ jobs:
           repository: PTO-ISA/pto-spec
           ref: refs/tags/v0.59.1.0
           path: workloads/generated/pto-v0591-release
+      - name: Verify 0.59.1 reader supplements against the published PTO sources
+        run: python3 tools/isa/manual_supplements.py --pto-root workloads/generated/pto-v0591-release
       - name: Verify 0.59.1 HTML manual source projections
         env:
           PTO_SPEC_ROOT: workloads/generated/pto-v0591-release
@@ -172,9 +174,22 @@ jobs:
           ruby-version: "3.2"
       - name: Install deps
         run: |
-          python -m pip install --upgrade pip "mkdocs<2" mkdocs-material
+          python -m pip install -r reference/requirements.txt
           bundle install
         working-directory: docs/architecture/isa-manual
+      - name: Check out the Chinese editing guide used by the manual
+        uses: actions/checkout@v7
+        with:
+          repository: op7418/humanizer-zh
+          ref: f4518a8eab97b8bfebc66a89d34320a89bef6930
+          path: workloads/generated/humanizer-zh
+      - name: Test architecture coverage and protected Chinese prose edits
+        env:
+          HUMANIZER_ZH_ROOT: workloads/generated/humanizer-zh
+        run: |
+          python3 tools/isa/test_manual_editorial.py
+          python3 tools/isa/test_manual_architecture.py
+          python3 tools/isa/test_manual_supplements.py
       - name: Check documentation projections
         run: python3 docs/check_documentation.py --root .
       - name: Build and audit the tagged instruction reference
@@ -183,6 +198,7 @@ jobs:
           python3 tools/isa/check_html_reference.py --site "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_manual_structure.py --site "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_manual_authored.py --site "$RUNNER_TEMP/linxisa-html"
+          python3 tools/isa/check_manual_site_quality.py --site "$RUNNER_TEMP/linxisa-html"
       - name: Build normative English documentation
         run: mkdocs build --strict --site-dir "${RUNNER_TEMP}/site-en"
       - name: Build secondary Chinese documentation

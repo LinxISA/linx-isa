@@ -9,6 +9,7 @@ from hashlib import sha256
 from html import escape
 from itertools import groupby
 import json
+from importlib.metadata import version
 from pathlib import Path
 import re
 import subprocess
@@ -26,6 +27,19 @@ from manual_terms_zh import FILTER, group_name
 from manual_encoding import render_encoding, validate_catalog
 from manual_linx_sail import sail_detail
 from manual_reader import operation_detail
+from manual_architecture import architecture_routes
+from manual_architecture_view import architecture_bodies
+from manual_canvas_site import include_canvas
+from manual_editorial import (
+    SKILL_COMMIT,
+    SKILL_SHA256,
+    SKILL_URL,
+    edit_article,
+    edit_markdown,
+)
+from manual_supplements import instruction_supplement, tile_supplement
+from manual_markdown import render_markdown_text
+from manual_version_notes import indexed_transfer_note, release_constraints
 from manual_authored import authored_for, authored_tile
 from manual_reader_site import ArticleLibrary, authored_synopsis
 from manual_navigation import BY_KEY, cat_file, category_links, index_pages
@@ -94,6 +108,9 @@ def search(prompt, classes=()):
 
 def page(title, body, commit, prefix=""):
     nav = (
+        ("architecture.html", "架构目录"),
+        ("arch-state.html", "架构状态"),
+        ("execution-model.html", "执行模型"),
         ("index.html", "指令分类"),
         ("mnemonics.html", "全部助记符"),
         ("encoding.html", "编码索引"),
@@ -319,6 +336,39 @@ def form_provenance(row, commit, common_paths):
     )
 
 
+def supplement_excerpt(path):
+    if not path:
+        raise ValueError("missing Chinese page for a released operation")
+    text = Path(path).read_text().split("## 用途", 1)[1].strip()
+    paragraph = " ".join(text.split("\n\n", 1)[0].splitlines())
+    return paragraph.split("。", 1)[0].replace("`", "") + "。"
+
+
+def supplement_reader(path, url, library):
+    if not path:
+        raise ValueError(f"{url}: missing source and release supplement")
+    source = Path(path)
+    relative = source.relative_to(ROOT).as_posix()
+    data = source.read_bytes()
+    raw = "article-source/" + sha256(data).hexdigest() + ".md"
+    library.files[raw] = data
+    fragment = render_markdown_text(
+        relative,
+        edit_markdown(relative, data.decode())[0],
+        current_page=url,
+        document_routes=library.routes,
+    )
+    if fragment.documents or fragment.assets:
+        raise ValueError(f"{relative}: package supplemental dependencies")
+    return (
+        f'<section class="supplement-reader" data-source-path="{escape(relative)}"><p class="article-source">'
+        + link(raw, "本地增补稿")
+        + "</p>"
+        + fragment.html
+        + "</section>"
+    )
+
+
 def build():
     commit = verified_tag_commit()
     paths = (
@@ -378,7 +428,14 @@ def build():
     example = articles[op_page("C.MOVR")][1]
     if not example or example.source_path != "docs/zh/isa/inst/misa_c/C.MOVR.md":
         raise ValueError("the tagged Chinese instruction source tree is missing")
-    library = ArticleLibrary(articles)
+    library = ArticleLibrary(articles, architecture_routes())
+    zh_common = json.loads((ASSETS / "data/manual-semantics-zh.json").read_text())[
+        "forms"
+    ]
+    zh_tile = json.loads((ASSETS / "data/manual-tile-semantics-zh.json").read_text())[
+        "operations"
+    ]
+    supplement_audit = {}
     carrier_ops = defaultdict(list)
     bodies, entries, tile_list, audit = {}, [], [], []
     for op in direct_ops:
@@ -389,16 +446,23 @@ def build():
         owner = tile_owners[name]
         url = tile_page(name)
         article = articles[url][1]
-        desc = authored_synopsis(
-            article, f"{op['engine']} 引擎操作，使用 {carrier} 编码。"
+        desc = (
+            authored_synopsis(article, "")
+            if article
+            else supplement_excerpt(tile_supplement(op))
         )
         tile_list.append((name, url, desc, op["engine"], carrier))
-        reader = library.render(
-            url,
-            source_context="本节保留中文站的操作示意、汇编示例和原图。本版选择器及块命令见下方 0.59.1 编码。",
-        )
+        family_context = ""
+        if article and article.title.upper() != name.upper():
+            family_context = (
+                f"本地中文站以《{article.title}》介绍该操作族。下文保留这篇原页，"
+                f"其中示例使用原页的操作名。{name} 的独立选择器见本页 0.59.1 命令编码。"
+            )
+        reader = library.render(url, source_context=family_context)
         if not reader:
-            reader = "<p>本地中文站没有该 Tile 操作的独立说明。</p>"
+            supplement = tile_supplement(op)
+            reader = supplement_reader(supplement, url, library)
+            supplement_audit[url] = Path(supplement).relative_to(ROOT).as_posix()
         # Keep exact machine record available independently of the reader.
         fields = [
             ("引擎", op["engine"]),
@@ -422,12 +486,14 @@ def build():
                 "tiles-" + op["engine"].lower() + ".html", op["engine"] + " 操作索引"
             )
             + "</p>"
+            + indexed_transfer_note(op, tile_owners)
             + reader
             + '<details class="release-data"'
             + ("" if article else " open")
             + '><summary>0.59.1 命令编码与核对资料</summary><div class="release-data-body">'
             + tile_header(op, forms[carrier][0], owner)
             + metadata
+            + release_constraints(zh_tile[name])
             + operation_detail(owner["source_path"])
             + "</div></details>",
         )
@@ -442,8 +508,12 @@ def build():
         article = articles[url][1]
         scope = first.get("pto_scope")
         conflict = bool(article and article.classification == "conflicting-current")
-        missing = f"中文站没有 {base} 的独立条目。下列汇编与位图取自 0.59.1 发布目录。"
-        short = authored_synopsis(article, missing)
+        missing = f"{base} 的中文增补说明与发布版编码。"
+        short = (
+            authored_synopsis(article, missing)
+            if article
+            else supplement_excerpt(instruction_supplement(first))
+        )
         if conflict:
             short = "；".join(article.current_view) or f"当前汇编为 {first['asm']}。"
         if scope:
@@ -472,6 +542,8 @@ def build():
         context = ""
         if scope:
             context = f"以下是基础指令 {base} 的中文站原文。{name} 是 64 位封装，原页的基础指令位图不能用于译码此封装。"
+        elif article and len(variants) > 1:
+            context = f"《{article.title}》按中文站原页展示。本版共有 {len(variants)} 个编码形式，各形式分别列在原文之后。"
         elif article and article.classification == "contextual-original":
             context = f"下文为中文站的《{article.title}》。原文示例与原图按原页版本阅读，0.59.1 的各编码形式另列。"
         elif article and not all(
@@ -479,6 +551,12 @@ def build():
             for p in diagram_audit["forms"][first["id"]]["parts"]
         ):
             context = "本节沿用中文站原文和原图；本版译码请查阅 0.59.1 的编码位图。"
+        if (
+            not context
+            and article
+            and article.classification == "syntax-compatible-original"
+        ):
+            context = "原页的汇编写法已与本版目录对照；完整编码与使用条件见本页的 0.59.1 记录。"
         reader = library.render(url, source_context=context, conflict=conflict)
         multiple = len(variants) > 1
         if multiple and reader:
@@ -496,7 +574,9 @@ def build():
             if not multiple and reader and not conflict:
                 body += reader
             if not reader:
-                body += f'<p class="uncovered">{escape(missing)}</p>'
+                supplement = instruction_supplement(row)
+                body += supplement_reader(supplement, url, library)
+                supplement_audit[url] = Path(supplement).relative_to(ROOT).as_posix()
             if conflict:
                 body += (
                     '<p class="version-context"><strong>0.59.1 版本差异</strong>　'
@@ -519,6 +599,8 @@ def build():
                 + diagram_html[row["id"]]
                 + render_encoding(row, catalog)
             )
+            if source_id in zh_common:
+                body += release_constraints(zh_common[source_id], base=bool(scope))
             if scope:
                 base_row = base_by_id[source_id]
                 body += (
@@ -623,7 +705,7 @@ def build():
     bodies["sources.html"] = (
         "版本与来源",
         sources(commit, inputs, manifest, lock)
-        + '<p><a href="arm64-reference-organization.md">Arm 参考站结构与 LinxISA 分类说明</a></p>'
+        + '<p><a href="arm64-reference-organization.md">Arm 参考站结构与 LinxISA 分类说明</a> · <a href="reader-quality-review.md">独立审阅记录</a></p>'
         + "<h2>许可</h2><p>"
         + link("LICENSE.txt", "LinxISA")
         + " · "
@@ -643,7 +725,7 @@ def build():
         "<h2>中文站原文</h2><p>指令说明、汇编示例与原图读取自发布标签中的 "
         "<code>docs/zh/isa</code> 和 <code>docs/zh/figs</code>。关联原文按原页展示；有版本差异时，"
         "本版编码单独列出。原始 Markdown 可从文章上方的“中文站原文”链接打开。</p>"
-        + "<details><summary>本地中文站未找到对应原页的条目</summary><ul>"
+        + "<details><summary>另有 0.59.1 中文增补页的条目</summary><ul>"
         + "".join(
             "<li>" + link(filename, name) + "</li>"
             for filename, name in sorted(lacking)
@@ -651,6 +733,22 @@ def build():
         + "</ul></details>"
         + source_body,
     )
+    chapters, chapter_audit = architecture_bodies(library)
+    bodies.update(chapters)
+    _, home_body = bodies["index.html"]
+    bodies["index.html"] = (
+        "LinxISA 0.59.1 芯片开发手册",
+        '<p class="architecture-links">'
+        + link("arch-state.html", "架构状态")
+        + " · "
+        + link("execution-model.html", "执行模型")
+        + " · "
+        + link("arch-ssr.html#system-registers", "系统寄存器表")
+        + "</p>"
+        + "<h2>按指令类型查找</h2>"
+        + home_body,
+    )
+    canvas_files = include_canvas(bodies, ASSETS / "figures")
     files = {
         name: page(title, body, commit).encode()
         for name, (title, body) in bodies.items()
@@ -664,8 +762,63 @@ def build():
         ).encode()
     analysis_path = "docs/zh/architecture/isa-manual/arm64-reference-organization.md"
     files["arm64-reference-organization.md"] = (ROOT / analysis_path).read_bytes()
+    review_path = "docs/zh/architecture/isa-manual/reader-quality-review.md"
+    files["reader-quality-review.md"] = (ROOT / review_path).read_bytes()
     files.update(library.files)
     files.update(diagram_assets)
+    files.update(canvas_files)
+    reviewed_pages = {}
+    for filename, data in sorted(files.items()):
+        if not filename.endswith(".html"):
+            continue
+        source = (
+            library.audit.get(filename, {}).get("source_path")
+            or chapter_audit.get(filename, {}).get("source_path")
+            or library.support_sources.get(filename)
+        )
+        if source:
+            edits = dict(edit_article(source)[1])
+            origin = "tagged-chinese-source"
+        elif filename in supplement_audit:
+            source = supplement_audit[filename]
+            edits = dict(edit_markdown(source, (ROOT / source).read_text())[1])
+            origin = "release-specific-supplement"
+        else:
+            edits = {}
+            origin = "navigation-and-reference"
+        reviewed_pages[filename] = {
+            "html_sha256": sha256(data).hexdigest(),
+            "origin": origin,
+            "source_path": source,
+            "applied_source_edits": edits,
+        }
+    files["editorial-audit.json"] = json.dumps(
+        {
+            "skill": SKILL_URL,
+            "skill_commit": SKILL_COMMIT,
+            "skill_sha256": SKILL_SHA256,
+            "renderer_versions": {
+                name: version(name)
+                for name in (
+                    "MkDocs",
+                    "mkdocs-material",
+                    "Markdown",
+                    "pymdown-extensions",
+                    "Pygments",
+                )
+            },
+            "scope": "正文采用原作者的表述，按上下文校读；代码、链接、表格数值和标题保持原样。空编辑记录表示保留源文字。",
+            "pages": reviewed_pages,
+        },
+        ensure_ascii=False,
+        indent=2,
+    ).encode()
+    files["supplements.json"] = json.dumps(
+        supplement_audit, ensure_ascii=False, indent=2
+    ).encode()
+    files["architecture-audit.json"] = json.dumps(
+        chapter_audit, ensure_ascii=False, indent=2
+    ).encode()
     files["diagram-audit.json"] = json.dumps(
         diagram_audit, ensure_ascii=False, indent=2
     ).encode()

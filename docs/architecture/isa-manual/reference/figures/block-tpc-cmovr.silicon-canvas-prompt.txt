@@ -1,0 +1,34 @@
+Create an architecture block diagram with Image Gen: Block 执行、TPC/BPC 与 C.MOVR.
+Image 1 is a layout sketch. Keep its arrangement, containment, label positions and arrow routes, and redraw it as a finished figure in the style below.
+Canvas: 16:9 landscape. The figure spans about 90% of the width with balanced margins and no large empty bands. If the generator only offers 1536x1024, use it and fill that frame with larger blocks and text instead of leaving empty bands.
+Style: a clean, flat technical figure in the quality of a top-tier computer-architecture paper. Calm, precise and spacious.
+Colors: white background, text and lines in #17324D, block outlines #6E8BAB. Fill by role and nothing else: compute #DCEAFF, memory/storage #FFF0BE, control/state #EEE5FF, interfaces and external parts white. Containers are unfilled with a thin #BFCFE0 outline and a small quiet heading. Same role, same color everywhere.
+Type: one sans-serif typeface (Inter or Helvetica style). Block names medium weight, edge labels regular and smaller. Mathematics in proper italic math typesetting with real superscripts and subscripts.
+Lines: thin uniform strokes, small solid arrowheads, orthogonal routes with small rounded corners. Arrows start and end exactly on block borders and never pass through text.
+Layout: align peers on a common grid, keep spacing even, and let the figure fill the canvas with a modest margin.
+Content. Print every quoted string exactly; words in [brackets] describe a role and are never printed.
+- [state] "BSTART"
+- [control] "头部命令"
+- [state] "Reg5 源"
+- [compute] "C.MOVR（16 位）"
+- [state] "Reg5 目标"
+- [state] "TPC：下一条指令地址"
+- [state] "BPC：block 起始地址"
+- [control] "BSTOP / 下一个 BSTART"
+- [state] "整体提交"
+- Group "活动 block" encloses: "BSTART", "头部命令", "Reg5 源", "C.MOVR（16 位）", "Reg5 目标", "BSTOP / 下一个 BSTART"
+- Group "程序计数器状态" encloses: "TPC：下一条指令地址", "BPC：block 起始地址"
+Connections (from -> to: label):
+- "BSTART" -> "头部命令": "打开 block" (dashed)
+- "头部命令" -> "C.MOVR（16 位）": "进入主体" (dashed)
+- "Reg5 源" -> "C.MOVR（16 位）": "读取 XLEN"
+- "C.MOVR（16 位）" -> "Reg5 目标": "原样发布"
+- "C.MOVR（16 位）" -> "TPC：下一条指令地址": "TPC + 2 字节" (dashed)
+- "BSTART" -> "BPC：block 起始地址": "固定 block 起点" (dashed)
+- "C.MOVR（16 位）" -> "BSTOP / 下一个 BSTART": "继续到提交边界" (dashed)
+- "BSTOP / 下一个 BSTART" -> "整体提交": "提交并清除头部状态" (dashed)
+User appearance request (takes precedence over the style above): 强调 BPC 与 TPC 的不同职责；C.MOVR 数据箭头和 TPC 更新箭头分开。不要添加周期、ROB、流水线或缓存。
+Rules:
+- Print only the text listed above, spelled exactly; no title, legend, footnote, watermark or badge.
+- Draw each listed connection exactly once in the stated direction, and no other arrows.
+- Flat 2D only: no gradients, glow, shadows, 3D blocks, photos or device icons.

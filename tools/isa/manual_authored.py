@@ -296,14 +296,14 @@ def _classify(
     if row["mnemonic"] in {"V.CMP.AND", "V.CMP.ANDI"}:
         reasons.extend(
             (
-                "原文先做按位 AND 再判断结果是否非零；v0.59.1 tagged Sail 先把两个输入分别判为零/非零，再做布尔 AND。输入 1 与 2 可区分两者：原文结果为 0，tagged Sail 结果为 1。",
-                "原文把非活动 lane 写为 0；v0.59.1 tagged Sail 对该 lane 产生未指定值。",
+                "原文先做按位 AND 再判断结果是否非零；v0.59.1 发布版 Sail 模型 先把两个输入分别判为零/非零，再做布尔 AND。输入 1 与 2 可区分两者：原文结果为 0，发布版 Sail 模型 结果为 1。",
+                "原文把非活动通道 写为 0；v0.59.1 发布版 Sail 模型 对该 lane 产生未指定值。",
             )
         )
         return "conflicting-current", tuple(reasons)
     if row["mnemonic"] == "V.REV":
         reasons.append(
-            "原文按 M/N 描述位域内分组翻转；v0.59.1 tagged Sail 固定对每个 32 位 lane 做字节序反转，并忽略 immr/imml。"
+            "原文按 M/N 描述位域内分组翻转；v0.59.1 发布版 Sail 模型 固定对每个 32 位 lane 做字节序反转，并忽略 immr/imml。"
         )
         return "conflicting-current", tuple(reasons)
     if title != row["mnemonic"]:
@@ -328,20 +328,20 @@ def _current_view(row: Mapping[str, Any], classification: str) -> tuple[str, ...
         return (
             "v0.59.1 当前形式为固定机器字 0x0010602b，汇编语法是 dc.iall。",
             "当前形式没有 SrcL 或其他显式操作数；旧文中的寄存器语法和示例不可用于当前编码。",
-            "该指令仅在系统块内合法，成功时记录 Maintenance_DC_IALL、递增数据缓存维护计数并令 TPC 增加 4。",
+            "该指令仅在系统块内合法，成功时记录 Maintenance_DC_IALL、递增数据缓存维护计数并令 TPC 前进 4 字节。",
         )
     if row["mnemonic"] in {"V.CMP.AND", "V.CMP.ANDI"}:
         right = "符号扩展后的 simm12" if row["mnemonic"].endswith("ANDI") else "SrcR"
         return (
-            f"v0.59.1 tagged Sail 对每个活动 lane 计算 (SrcL != 0) AND ({right} != 0)，并写入 0 或 1。",
+            f"v0.59.1 发布版 Sail 模型 对每个活动通道 计算 (SrcL != 0) AND ({right} != 0)，并写入 0 或 1。",
             "判别例 SrcL=1、右输入=2 的结果为 1；这与旧文的按位与结果 0 不同。",
-            "非活动 lane 的结果在 tagged Sail 中未指定，不应沿用旧文的写零说明。",
+            "非活动通道 的结果在 发布版 Sail 模型 中未指定，不应沿用旧文的写零说明。",
         )
     if row["mnemonic"] == "V.REV":
         return (
-            "v0.59.1 tagged Sail 对每个活动 32 位 lane 执行完整字节序反转（bswap32）。",
+            "v0.59.1 发布版 Sail 模型 对每个活动 32 位 lane 执行完整字节序反转（bswap32）。",
             "当前 Sail 忽略编码中的 immr/imml；旧文的 M/N 位域翻转和合法性表仅保留为历史说明，不能作为当前模型行为。",
-            "非活动 lane 的结果在 tagged Sail 中未指定。",
+            "非活动通道 的结果在 发布版 Sail 模型 中未指定。",
         )
     if classification == "conflicting-current":
         return (f"当前规范汇编：{row['asm']}",)

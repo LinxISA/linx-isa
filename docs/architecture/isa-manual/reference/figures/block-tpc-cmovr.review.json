@@ -1,0 +1,143 @@
+{
+  "artifact_id": "99e4c94ffa1f463ca318d54405bbabd4",
+  "image_sha256": "fcbebbf80869eaf0e85007eb45c4f648f2f78f8440f0f2d88b5843a40f32d4d2",
+  "reviewed_attempt": 1,
+  "best_attempt_technically_correct": true,
+  "blocking_findings": [],
+  "decision": {
+    "action": "stop",
+    "reason": "Reached the 4-attempt limit. Show the best attempt and the remaining issues to the user.",
+    "attempt": 4,
+    "max_attempts": 4,
+    "technically_correct": true,
+    "prompt": "",
+    "change_list": [
+      "Improve hierarchy: The oversized orange commit box draws the eye to the endpoint before BSTART, where the flow begins.",
+      "Improve color: The palette is limited, but the gradient fills and shadows decorate nearly every box.",
+      "Nearly identical to attempt 3; the last change did not take effect."
+    ],
+    "issue_count": {
+      "major": 0,
+      "minor": 3
+    }
+  },
+  "best_attempt_official_decision_snapshot": {
+    "attempt": 1,
+    "score": 90,
+    "action": "edit",
+    "technically_correct": true,
+    "planned_connections": 8,
+    "matched_connections": 8,
+    "major_differences": 0
+  },
+  "independent_technical_review": {
+    "verdict": "approve",
+    "image_sha256": "fcbebbf80869eaf0e85007eb45c4f648f2f78f8440f0f2d88b5843a40f32d4d2",
+    "blocking_findings": [],
+    "limitations": [
+      "入口 BSTART 的视觉层级弱于左上角提交框。",
+      "角色填充带有轻微装饰性渐变。"
+    ]
+  },
+  "decision_ref": "#/raw_decision",
+  "raw_decision": {
+    "artifact_id": "99e4c94ffa1f463ca318d54405bbabd4",
+    "figure_id": "overview",
+    "attempt": 4,
+    "score": 88,
+    "decision": {
+      "action": "stop",
+      "reason": "Reached the 4-attempt limit. Show the best attempt and the remaining issues to the user.",
+      "attempt": 4,
+      "max_attempts": 4,
+      "technically_correct": true,
+      "prompt": "",
+      "change_list": [
+        "Improve hierarchy: The oversized orange commit box draws the eye to the endpoint before BSTART, where the flow begins.",
+        "Improve color: The palette is limited, but the gradient fills and shadows decorate nearly every box.",
+        "Nearly identical to attempt 3; the last change did not take effect."
+      ],
+      "issue_count": {
+        "major": 0,
+        "minor": 3
+      }
+    },
+    "image_inputs": null,
+    "differences": [],
+    "counts": {
+      "major": 0,
+      "minor": 0,
+      "planned_elements": 9,
+      "planned_connections": 8,
+      "matched_connections": 8
+    },
+    "reading_check": {
+      "cold_summary": "The diagram shows BSTART opening a block and fixing its start address, then traces a 16-bit C.MOVR that passes a value from Reg5 source to Reg5 destination, advances TPC by 2 bytes, and continues to a boundary where the whole block commits.",
+      "intended_question": "Which resources belong together and how do their supplied interfaces cross those boundaries?",
+      "note": "If the cold summary misses the intended point, treat it as a hierarchy problem and add it as a host finding next time."
+    },
+    "aesthetic": {
+      "scores": {
+        "composition": {
+          "score": 4,
+          "note": ""
+        },
+        "hierarchy": {
+          "score": 3,
+          "note": "The oversized orange commit box draws the eye to the endpoint before BSTART, where the flow begins."
+        },
+        "color": {
+          "score": 3,
+          "note": "The palette is limited, but the gradient fills and shadows decorate nearly every box."
+        },
+        "typography": {
+          "score": 4,
+          "note": ""
+        },
+        "lines": {
+          "score": 4,
+          "note": ""
+        },
+        "finish": {
+          "score": 4,
+          "note": ""
+        }
+      },
+      "mean": 3.67,
+      "passed": false,
+      "polished": false,
+      "issues": [
+        {
+          "type": "aesthetic",
+          "dimension": "hierarchy",
+          "severity": "minor",
+          "score": 3,
+          "note": "The oversized orange commit box draws the eye to the endpoint before BSTART, where the flow begins."
+        },
+        {
+          "type": "aesthetic",
+          "dimension": "color",
+          "severity": "minor",
+          "score": 3,
+          "note": "The palette is limited, but the gradient fills and shadows decorate nearly every box."
+        }
+      ]
+    },
+    "best_attempt": {
+      "attempt": 1,
+      "score": 90,
+      "image_path": "/private/tmp/linxisa-silicon-canvas-artifacts/99e4c94ffa1f463ca318d54405bbabd4/overview.attempt-1.png"
+    },
+    "review_status": "stopped",
+    "next_step": "Show the best attempt to the user with the remaining differences and ask how to proceed."
+  },
+  "provenance_snapshot": {
+    "artifact_id": "99e4c94ffa1f463ca318d54405bbabd4",
+    "image_sha256": "fcbebbf80869eaf0e85007eb45c4f648f2f78f8440f0f2d88b5843a40f32d4d2",
+    "best_attempt_image_sha256": "fcbebbf80869eaf0e85007eb45c4f648f2f78f8440f0f2d88b5843a40f32d4d2",
+    "best_attempt_file": "overview.attempt-1.png",
+    "published_image_file": "block-tpc-cmovr.png",
+    "decision_ref": "#/raw_decision"
+  },
+  "terminal_response_sha256": "1e12bed1dc8bf1f7474b9dc1957b7ef2babe7783ddc822acb9c2831f3da931f8"
+}
