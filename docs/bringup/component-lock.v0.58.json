@@ -29,12 +29,12 @@
       "path": "emulator/qemu",
       "url": "https://github.com/LinxISA/qemu.git",
       "branch": "master",
-      "commit": "a5739067865f27f61a780d790d1f4b05f8dbe628",
-      "tree": "6e890ca6b2a5a0adc774fc1d607a24dd04cd031d",
+      "commit": "875e77b072902ff47c03eb3cbab9cabcb896b1d5",
+      "tree": "7b646d84863b3db740439e73b696312adc0db94e",
       "release": "0.58.7",
-      "role": "v0.58.7 default emulator with opt-in 705 scoped Scalar carriers and Core4 MSGB/HSCB guest execution",
+      "role": "v0.58.7 default emulator with opt-in scoped Scalar, direct scoped PCR relocations and Core4 MSGB/HSCB guest execution",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/qemu/pull/97"
+      "review_url": "https://github.com/LinxISA/qemu/pull/94"
     },
     {
       "path": "kernel/linux",
