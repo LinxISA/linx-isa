@@ -187,7 +187,7 @@ class RefreshQemuExecutableCoverageTests(unittest.TestCase):
             path = refresh._candidate_manifest_path(root, "review-r1")
             self.assertEqual(
                 path,
-                root / "build/qemu-executable-coverage-review-r1.refresh-candidate.json",
+                root / "out/qemu-executable-coverage-review-r1.refresh-candidate.json",
             )
             self.assertTrue(path.is_relative_to(root))
 

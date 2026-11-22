@@ -563,7 +563,7 @@ def _atomic_write(path: Path, data: bytes) -> None:
 def _candidate_manifest_path(repo_root: Path, run_id: str) -> Path:
     return (
         repo_root
-        / "build"
+        / "out"
         / f"qemu-executable-coverage-{run_id}.refresh-candidate.json"
     )
 
