@@ -25,6 +25,13 @@ PCR_RELOCATIONS = {
     (48, "Load"): ("R_LINX_SCOPED_HL_PCR29_LOAD", 35),
     (48, "Store"): ("R_LINX_SCOPED_HL_PCR29_STORE", 36),
 }
+MODEL_COMPONENTS = {
+    "llvm": "compiler/llvm",
+    "qemu": "emulator/qemu",
+    "linx-model": "tools/model",
+    "gfrun": "tools/LinxCoreModel",
+    "gfsim": "tools/LinxCoreModel",
+}
 
 
 def write_json(path, data):
@@ -42,6 +49,28 @@ def repo_identity(path, timeout):
     head = invoke(["git", "-C", repo, "rev-parse", "HEAD"], timeout=timeout).strip()
     changes = invoke(["git", "-C", repo, "status", "--porcelain"], timeout=timeout)
     return {"path": repo, "commit": head, "dirty": bool(changes)}
+
+
+def require_pinned_sources(root, repositories, timeout):
+    if repositories["linx-isa"]["dirty"]:
+        raise ValueError("pinned comparison requires a clean LinxISA checkout")
+    paths = sorted(set(MODEL_COMPONENTS.values()))
+    commit = repositories["linx-isa"]["commit"]
+    entries = invoke(
+        ["git", "-C", root, "ls-tree", commit, "--", *paths], timeout=timeout
+    )
+    gitlinks = {}
+    for line in entries.splitlines():
+        metadata, path = line.split("\t", 1)
+        mode, _, revision = metadata.split()
+        if mode == "160000":
+            gitlinks[path] = revision
+    for name, path in MODEL_COMPONENTS.items():
+        repo = repositories[name]
+        if Path(repo["path"]) != root / path:
+            raise ValueError(f"{name} must be built within the pinned {path} checkout")
+        if repo["dirty"] or repo["commit"] != gitlinks.get(path):
+            raise ValueError(f"{name} does not match the clean gitlink for {path}")
 
 
 def invoke(argv, *, timeout, input_text=None, env=None, case=None, cwd=None):
@@ -368,7 +397,11 @@ def main():
     parser.add_argument("--timeout", default=30, type=int)
     parser.add_argument("--symbolic-pcr", action="store_true",
                         help="assemble PCR targets with the scoped relocation ABI")
+    parser.add_argument("--require-pinned", action="store_true",
+                        help="require four models from the clean LinxISA gitlink checkouts")
     args = parser.parse_args()
+    if args.require_pinned and not (args.gfrun and args.gfsim):
+        parser.error("--require-pinned requires both --gfrun and --gfsim")
     llvm_bin = args.llvm_bin.resolve()
     tools = {name: llvm_bin / name for name in ("llvm-mc", "ld.lld", "llvm-readobj")}
     tools.update({"qemu": args.qemu.resolve(), "linx-model": args.linx_model.resolve()})
@@ -378,6 +411,18 @@ def main():
         if path is not None
     }
     tools.update(core_models)
+    sources = {
+        "linx-isa": ROOT,
+        "llvm": llvm_bin,
+        "qemu": tools["qemu"].parent,
+        "linx-model": tools["linx-model"].parent,
+    }
+    sources.update({name: path.parent for name, path in core_models.items()})
+    repositories = {
+        name: repo_identity(path, args.timeout) for name, path in sources.items()
+    }
+    if args.require_pinned:
+        require_pinned_sources(ROOT, repositories, args.timeout)
     output = args.output.resolve()
     output.mkdir(parents=True)
     source, golden, segments, pcr_relocations = build_case(output, args.symbolic_pcr)
@@ -423,16 +468,6 @@ def main():
         "pto_lock": PTO_LOCK,
     }
     identities = {name: file_identity(path) for name, path in artifacts.items()}
-    sources = {
-        "linx-isa": ROOT,
-        "llvm": llvm_bin,
-        "qemu": tools["qemu"].parent,
-        "linx-model": tools["linx-model"].parent,
-    }
-    sources.update({name: path.parent for name, path in core_models.items()})
-    repositories = {
-        name: repo_identity(path, args.timeout) for name, path in sources.items()
-    }
     write_json(
         output / "provenance.json",
         {
@@ -445,6 +480,7 @@ def main():
             "pto_isa_version": "0.59.1",
             "model_profile": "single-PE scoped immediate/PCR reference",
             "symbolic_pcr_relocations": len(pcr_relocations),
+            "pinned_sources_required": args.require_pinned,
         },
     )
 
