@@ -2691,6 +2691,6 @@
     "policy": "Static mappings only. Dynamic QEMU, binary and run evidence must be produced by refresh_qemu_executable_coverage.py."
   },
   "release": "0.58.3",
-  "schema_version": 4,
+  "schema_version": 1,
   "template_status": "review-candidate-source-backed"
 }

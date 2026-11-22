@@ -181,6 +181,16 @@ class RefreshQemuExecutableCoverageTests(unittest.TestCase):
             "python3 avs/qemu/run_tests.py --suite callret",
         )
 
+    def test_rebound_manifest_is_staged_inside_repository(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            path = refresh._candidate_manifest_path(root, "review-r1")
+            self.assertEqual(
+                path,
+                root / "build/qemu-executable-coverage-review-r1.refresh-candidate.json",
+            )
+            self.assertTrue(path.is_relative_to(root))
+
     def test_checked_in_bundle_rebinds_object_and_elf_to_same_instruction(self) -> None:
         root = refresh.REPO_ROOT
         manifest = json.loads(

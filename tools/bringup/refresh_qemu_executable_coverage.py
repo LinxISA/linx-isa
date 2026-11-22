@@ -560,6 +560,14 @@ def _atomic_write(path: Path, data: bytes) -> None:
     os.replace(temporary, path)
 
 
+def _candidate_manifest_path(repo_root: Path, run_id: str) -> Path:
+    return (
+        repo_root
+        / "build"
+        / f"qemu-executable-coverage-{run_id}.refresh-candidate.json"
+    )
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
@@ -759,7 +767,8 @@ def main(argv: list[str] | None = None) -> int:
         "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean",
     }
     candidate_bytes = (json.dumps(candidate, indent=2) + "\n").encode()
-    candidate_manifest = manifest_path.with_name(manifest_path.name + ".refresh-candidate")
+    candidate_manifest = _candidate_manifest_path(repo_root, args.run_id)
+    candidate_manifest.parent.mkdir(parents=True, exist_ok=True)
     candidate_manifest.write_bytes(candidate_bytes)
     try:
         report = reporter.build_report(

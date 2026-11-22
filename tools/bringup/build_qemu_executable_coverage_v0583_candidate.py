@@ -188,7 +188,7 @@ def build() -> dict[str, Any]:
         evidence.extend(static_entry(entry) for entry in load(path)["evidence"])
     evidence.extend(tile_entry(row, forms) for row in TILE_ROWS)
     candidate = {
-        "schema_version": 4,
+        "schema_version": reporter.SCHEMA_VERSION,
         "release": refresh.ACTIVE_RELEASE,
         "active_release": True,
         "template_status": "review-candidate-source-backed",
