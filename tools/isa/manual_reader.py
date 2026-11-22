@@ -341,12 +341,12 @@ def operation_detail(asl_path: str) -> str:
     for index, block in enumerate(blocks, start=1):
         line_start = int(block["line_start"])
         line_end = int(block["line_end"])
-        label = f"operation {index} · " if len(blocks) > 1 else ""
+        label = f"第 {index} 段 · " if len(blocks) > 1 else ""
         source_url = f"{url}#L{line_start}-L{line_end}"
         rendered.append(
             f'<div class="asl-operation-block"><p>{label}'
             f'<a href="{escape(source_url, quote=True)}" rel="noopener noreferrer">'
-            f"固定源第 {line_start}–{line_end} 行</a></p>"
+            f"规范源文件第 {line_start}–{line_end} 行</a></p>"
             f"<pre><code>{escape(str(block['text']))}</code></pre></div>"
         )
     return (

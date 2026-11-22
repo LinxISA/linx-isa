@@ -305,14 +305,14 @@ def sail_detail(row: Mapping[str, Any]) -> str:
     if not isinstance(evidence, dict) or not _source_matches(row, evidence):
         return ""
     disposition = str(evidence["disposition"])
-    body = [_source_block("精确译码分支", evidence["decode"], "linx-sail-decode")]
+    body = [_source_block("译码分支", evidence["decode"], "linx-sail-decode")]
     if disposition == "calls-sail-helper":
         for helper in evidence["helpers"]:
             handler = _offline()["handlers"].get(helper)
             if not isinstance(handler, dict):
                 return ""
             body.append(
-                _source_block(f"共享 helper · {helper}", handler, "linx-sail-handler")
+                _source_block(f"执行函数 · {helper}", handler, "linx-sail-handler")
             )
     elif disposition == "traps-in-sail-executable-subset":
         body.append(
@@ -322,12 +322,12 @@ def sail_detail(row: Mapping[str, Any]) -> str:
         )
     else:
         body.append(
-            '<p class="linx-sail-result">该分支没有可证明的规范执行 helper；'
+            '<p class="linx-sail-result">该分支未调用已收录的规范执行函数；'
             "结果需由平台实现/译码路径提供。</p>"
         )
     return (
         '<details class="linx-sail-evidence" data-disposition="'
-        f'{escape(disposition, quote=True)}"><summary>精确 Sail 证据 · '
+        f'{escape(disposition, quote=True)}"><summary>发布版 Sail 模型 · '
         f"{escape(str(evidence['mnemonic']))}</summary>{''.join(body)}</details>"
     )
 

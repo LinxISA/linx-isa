@@ -22,6 +22,10 @@ try:
     from manual_tag import tagged_json
 except ModuleNotFoundError:  # package-style unittest import
     from tools.isa.manual_tag import tagged_json
+try:
+    from manual_prose_zh import polish, scalar_synopsis
+except ModuleNotFoundError:  # package-style unittest import
+    from tools.isa.manual_prose_zh import polish, scalar_synopsis
 
 
 @dataclass(frozen=True)
@@ -170,6 +174,15 @@ def _pto_reference() -> dict[str, Mapping[str, Any]]:
     return json.loads(path.read_text(encoding="utf-8"))["forms"]
 
 
+@lru_cache(maxsize=1)
+def _pto_chinese() -> dict[str, Mapping[str, Any]]:
+    path = (
+        Path(__file__).resolve().parents[2]
+        / "docs/architecture/isa-manual/reference/data/manual-semantics-zh.json"
+    )
+    return json.loads(path.read_text(encoding="utf-8"))["forms"]
+
+
 def _pto_source_link(inst: Mapping[str, Any]) -> str | None:
     record = _pto_reference().get(_clean(inst.get("pto_source_form_id")))
     if not record:
@@ -184,96 +197,96 @@ def _pto_form_details(inst: Mapping[str, Any]) -> tuple[str, ...]:
     form_id = _clean(inst.get("pto_source_form_id"))
     form = _pto_forms().get(form_id)
     reference = _pto_reference().get(form_id)
-    if not form or not reference:
+    chinese = _pto_chinese().get(form_id)
+    if not form or not reference or not chinese:
         return ()
-    details = [
-        f"规范语义处理器：{form['semantic_handler']}。",
-        f"PTO semantic family/group：{form['semantic_family']} / {form['semantic_group']}。",
-    ]
-    agu = form.get("agu")
-    if isinstance(agu, dict):
-        action = agu.get("action")
-        kind = agu.get("address_kind")
-        scale = agu.get("offset_scale")
-        update = agu.get("update_mode")
-        size = agu.get("size_bytes")
-        details.append(
-            f"AGU 契约：{action}，{kind} 地址，访问宽度 {size} byte，偏移缩放 2^{scale}，更新模式 {update}。"
+    if inst.get("mnemonic") == "DC.IALL":
+        return (
+            polish("操作数：无显式操作数；唯一合法机器字为 0x0010602b。"),
+            polish(
+                "执行结果：记录 Maintenance_DC_IALL，将数据缓存维护计数加一，成功后 TPC 前进 4 字节。"
+            ),
+            polish(
+                "约束与异常：仅可在 SYS block 内执行；合法执行不做普通访存，也没有指令自身的算术或数据访问异常；在其他 block 中执行会触发 Fault_BundleControl。"
+            ),
         )
-        if action in {"Load", "LoadPair"}:
-            signed = "有符号扩展" if agu.get("signed_load") else "零扩展或完整宽度写回"
-            details.append(
-                f"加载结果采用{signed}；Pair 形式访问两个相邻元素。"
-                if action == "LoadPair"
-                else f"加载结果采用{signed}。"
-            )
-        if update == "PreIndex":
-            details.append(
-                "PreIndex 先形成更新后的有效地址，再访问该地址，并按 Syntax 写回地址结果。"
-            )
-        elif update == "PostIndex":
-            details.append(
-                "PostIndex 使用更新前基址访问，再形成并按 Syntax 写回更新后的地址。"
-            )
-    operands = reference.get("operands") or []
-    if operands:
-        details.append(
-            "操作数："
-            + "；".join(f"{item['field']} = {item['role']}" for item in operands)
-            + "。"
+    roles = chinese["roles"]
+    groups = (
+        ("机制", roles["mechanism"]["statements"][2:]),
+        ("操作数", roles["inputs-outputs"]["statements"]),
+        ("执行结果", roles["effects"]["statements"]),
+        ("约束与异常", roles["constraints"]["statements"]),
+    )
+    return tuple(
+        polish(
+            f"{heading}："
+            + " ".join(_natural_chinese(str(item)) for item in statements)
         )
-    for label, key in (
-        ("状态结果", "state_effects"),
-        ("内存效果", "memory_effects"),
-        ("顺序", "ordering"),
-        ("异常与 fault 边界", "exceptions"),
-        ("合法性", "legality"),
-    ):
-        values = [
-            str(value)
-            for value in reference.get(key, [])
-            if str(value) and str(value) != "none"
-        ]
-        if values:
-            details.append(f"{label}：" + "；".join(values))
-    return tuple(details)
+        for heading, statements in groups
+        if statements
+    )
 
 
 def _pto_short_zh(inst: Mapping[str, Any], exact: str) -> str:
-    form = _pto_forms().get(_clean(inst.get("pto_source_form_id"))) or {}
-    mnemonic = _clean(inst.get("mnemonic"))
-    agu = form.get("agu")
-    if isinstance(agu, dict):
-        actions = {
-            "Load": "加载",
-            "LoadPair": "相邻双元素加载",
-            "Store": "存储",
-            "StorePair": "相邻双元素存储",
-            "Prefetch": "预取",
-        }
-        action = actions.get(str(agu.get("action")), str(agu.get("action")))
-        return f"{mnemonic}：{action} {agu.get('size_bytes')} byte 数据，地址模式 {agu.get('address_kind')}/{agu.get('update_mode')}。{exact}"
-    handler = str(form.get("semantic_handler", ""))
-    labels = (
-        ("Atomic", "原子读改写"),
-        ("Compare", "比较并产生结果"),
-        ("Floating", "浮点运算"),
-        ("ScalarBinary", "标量二元运算"),
-        ("Multiply", "乘法或乘加"),
-        ("Divide", "除法"),
-        ("Remainder", "余数运算"),
-        ("SystemRegister", "系统寄存器访问"),
-        ("Bundle", "block 描述符更新"),
-        ("SetCommit", "提交条件更新"),
-        ("Jump", "控制流转移"),
-        ("Fence", "内存或取指顺序约束"),
-        ("Maintenance", "系统维护操作"),
-        ("Move", "标量值传送"),
-    )
-    label = next(
-        (text for token, text in labels if token in handler), "规范标量或 block 操作"
-    )
-    return f"{mnemonic}：{label}。{exact}"
+    chinese = _pto_chinese().get(_clean(inst.get("pto_source_form_id")))
+    if chinese:
+        fallback = _natural_chinese(
+            _concise_chinese(str(chinese["roles"]["purpose"]["statements"][0]))
+        )
+        return scalar_synopsis(inst, fallback)
+    return polish(exact)
+
+
+def _pto_description_zh(inst: Mapping[str, Any], fallback: str) -> str:
+    if inst.get("mnemonic") == "DC.IALL":
+        return "该指令不读取标量源寄存器。维护完成后，才更新维护记录和 TPC。"
+    chinese = _pto_chinese().get(_clean(inst.get("pto_source_form_id")))
+    if not chinese:
+        return fallback
+    statements = chinese["roles"]["mechanism"]["statements"]
+    return polish(_natural_chinese(" ".join(str(item) for item in statements[:2])))
+
+
+def _natural_chinese(text: str) -> str:
+    replacements = {
+        "并通过 Reg5 目标发布和": "并把结果写入 Reg5 选择的目标",
+        "通过 Reg5 目标发布结果": "把结果写入 Reg5 选择的目标",
+        "发布出的字": "写入的结果",
+        "RegDst 发布结果": "RegDst 写入结果",
+        "和发布或丢弃": "结果写入或丢弃",
+        "发布为 0x": "写入为 0x",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _first_chinese_sentence(text: str) -> str:
+    match = re.match(r"^.*?[。！？](?:[”’])?", text)
+    return match.group(0) if match else text
+
+
+def _concise_chinese(text: str) -> str:
+    sentences = [
+        item.strip()
+        for item in re.findall(r".*?(?:[。！？](?:[”’])?|$)", text)
+        if item.strip()
+    ]
+    selected: list[str] = []
+    for sentence in sentences:
+        if "其记录的摘要为" in sentence or sentence.startswith("设计要点："):
+            continue
+        if selected:
+            first = selected[0]
+            needs_second = len(first) < 30 or "是一条独立的" in first
+            if (
+                not needs_second
+                or len(selected) >= 2
+                or len("".join(selected)) + len(sentence) > 180
+            ):
+                break
+        selected.append(sentence)
+    return "".join(selected) or _first_chinese_sentence(text)
 
 
 def _memory_width(root: str) -> tuple[int, bool] | None:
@@ -294,6 +307,54 @@ def _memory_width(root: str) -> tuple[int, bool] | None:
     return table.get(base)
 
 
+def _linx_note_zh(inst: Mapping[str, Any], exact: str) -> str:
+    mnemonic = _clean(inst.get("mnemonic"))
+    asm = _clean(inst.get("asm"))
+    if mnemonic == "B.TEXT":
+        return polish("B.TEXT 为解耦 block 设置离线 body 的入口地址。")
+    if mnemonic in {"DMA.FREE.L", "DMA.FREE.S", "MCOPY.DL", "MCOPY.DS"}:
+        return polish(
+            f"{mnemonic} 仅保留编码，尚未实现；执行时必须在读取操作数或产生任何架构效果之前拒绝。"
+        )
+    if mnemonic == "HL.BSTART CALL":
+        return polish(
+            "HL.BSTART.CALL 原子地完成调用：目标为 P + (SignExtend(simm25) << 1)，ra 为 (P + 4) + (ZeroExtend(uimm5) << 1)；两个标签分别编码、分别重定位。"
+        )
+    if mnemonic in {"BSTART.MPAR", "BSTART.MSEQ"}:
+        mode = "并行" if mnemonic.endswith("MPAR") else "顺序"
+        return polish(
+            f"{mnemonic} 结束当前 block，并以所选 VS8/VS16 宽度开始新的{mode} SIMT block。"
+        )
+    if mnemonic in {"BSTART.VPAR", "BSTART.VSEQ"}:
+        mode = "并行" if mnemonic.endswith("VPAR") else "顺序"
+        return polish(
+            f"{mnemonic} 开始新的{mode} SIMT block；解耦形式必须由 B.TEXT 提供 body 入口。"
+        )
+    if "BSTART" in mnemonic:
+        block_kind = (
+            "浮点块"
+            if ".FP" in mnemonic
+            else "系统块"
+            if ".SYS" in mnemonic
+            else "标准块"
+        )
+        start = f"结束当前块，并初始化后继{block_kind}的描述符。"
+        if " FALL" in asm:
+            return start + "默认顺序转移。"
+        if " DIRECT" in asm:
+            return start + "直接转移到目标标签。"
+        if " COND" in asm:
+            return start + "按块条件选择是否转移到目标标签。"
+        if " CALL" in asm:
+            call = "以标签给出的地址为调用目标。"
+            if mnemonic.startswith("L."):
+                call += "本形式保持 ra 不变；如需返回，须先用 SETRET 或 C.SETRET 指定返回标签。"
+            return start + call
+        return start
+
+    return polish(exact)
+
+
 def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescription:
     mnemonic = _clean(inst.get("mnemonic")).upper()
     group = _clean(inst.get("group"))
@@ -301,9 +362,9 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
     core = parts[1] if len(parts) > 1 else mnemonic
     suffixes = parts[2:]
     details = [
-        "该形式属于 64-bit Linx vector encoding。普通逐-lane 运算由 64-bit EXEC mask p 隐式谓词化。",
-        "对当前 Sail 中的 packed 64-bit 元素，逻辑元素 i 使用 predicate bit 2*i；不能把 mask bit 与所有元素宽度简单一一对应。",
-        "操作数命名、可选修饰符与目的操作数以本页 Syntax 和 Encoding 为准。",
+        "该形式采用 64 位 Linx 向量编码。普通逐 lane 运算由 64 位执行掩码 p 隐式控制。",
+        "对于 v0.59.1 Sail 中由两个 32 位 lane 承载的 64 位元素，逻辑元素 i 使用谓词位 2*i；不能把一个谓词位简单对应到所有元素宽度。",
+        "操作数名称、可选修饰符与目的操作数以本页汇编语法和编码图为准。",
     ]
     issue_urls: list[str] = []
     evidence_urls: list[str] = []
@@ -315,7 +376,7 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         if operation in {"AND", "ANDI", "OR", "ORI"}:
             example = _logical_compare_result(operation, 1, 2)
             details.append(
-                f"Tagged Sail 先把两个输入分别转换为非零布尔值，再做逻辑 {operation.rstrip('I')}，并写 0 或 1；判别例 (1, 2) 的结果是 {example}，不是按位运算结果。"
+                f"v0.59.1 Sail 先把两个输入分别转换为非零布尔值，再做逻辑 {operation.rstrip('I')}，并写 0 或 1；判别例 (1, 2) 的结果是 {example}，不是按位运算结果。"
             )
             if operation.endswith("I"):
                 details.append(
@@ -330,7 +391,7 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         short = f"逐活动 lane {_VECTOR_BITS[core]}"
         if core == "REV":
             details.append(
-                "当前 checked-in Sail 对每个 32-bit lane 做 bswap32；immr/imml 在该模型中被忽略，因此位域选择语义仍需架构确认。"
+                "v0.59.1 Sail 对每个 32 位 lane 做完整字节序反转；该模型忽略 immr/imml，因此位域选择语义仍需架构确认。"
             )
     elif core in _FP:
         short = _FP[core]
@@ -344,13 +405,13 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         short = f"逐活动 lane {labels[core]}"
         details.append("源类型和目的类型由 st2dt 类型限定符选择。")
         details.append(
-            "不受 checked-in Sail type predicates 支持的 SrcType/DstType 组合触发 ILLEGAL_INST；不得把 staged-model 的零值或 carrier packing 推广为额外架构格式。"
+            "不受 v0.59.1 Sail 类型判定支持的 SrcType/DstType 组合触发 ILLEGAL_INST；不得把阶段模型中的零值或承载打包方式推广为额外架构格式。"
         )
     elif core in {"CSEL", "PSEL"}:
         short = "逐 lane 根据条件源选择左操作数或右操作数"
         if core == "PSEL":
             details[0] = (
-                "当前 tagged Sail 的 V.PSEL 遍历配置的 lane 数，但不读取 EXEC mask p；每个 lane 根据 SrcP 是否非零选择 SrcL 或可选取负后的 SrcR。"
+                "v0.59.1 Sail 的 V.PSEL 遍历配置的 lane 数，但不读取执行掩码 p；每个 lane 根据 SrcP 是否非零选择 SrcL 或可选取负后的 SrcR。"
             )
             evidence_urls.append(_TAGGED_SAIL + "#L3966-L3986")
     elif core.startswith("RD"):
@@ -397,17 +458,17 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         )
         if bridge:
             details.append(
-                "对寄存器索引 .BRG 形式，当前 checked-in Sail 使用 lane 0 的索引形成单一地址；加载值广播到活动 lane，存储使用 lane 0 数据。"
-                "立即数 .BRG 形式当前复用对应立即数 staged handler；这不是额外的芯片 ordering 契约。"
+                "对寄存器索引 .BRG 形式，v0.59.1 Sail 使用 lane 0 的索引形成单一地址；加载值广播到活动 lane，存储使用 lane 0 数据。"
+                "立即数 .BRG 形式当前复用对应的阶段处理函数；这不构成额外的芯片顺序契约。"
             )
         if immediate:
             details.append(
-                "当前 checked-in Sail 的立即数 load 从一个有效地址读取并广播；立即数 store 让每个活动 lane 依次写同一地址。"
-                "该行为属于 staged model，不能推导跨 lane 的最终写入或 fault atomicity 芯片契约。"
+                "v0.59.1 Sail 的立即数加载从一个有效地址读取并广播；立即数存储让每个活动 lane 依次写同一地址。"
+                "该行为属于阶段模型，不能据此推导跨 lane 的最终写入或故障原子性芯片契约。"
             )
         if unscaled:
             details.append(
-                ".U 标记选择 unscaled 编码形式；当前 Sail 对部分 .U handler 直接复用 scaled staged handler，实际缩放契约尚未冻结。"
+                ".U 标记选择非缩放编码形式；当前 Sail 对部分 .U 处理函数直接复用缩放形式的阶段处理函数，实际缩放契约尚未冻结。"
             )
         details.append(
             "C/L、local/BRG 组合及 halfword alignment 尚未冻结，不能把当前模型行为当作芯片契约。"
@@ -431,12 +492,10 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
             if returning
             else "该 store 型形式只更新内存，不返回原值。"
         )
-        details.append(
-            "跨 lane 序列化、ordering、inactive lane 和 fault atomicity 尚未冻结。"
-        )
+        details.append("跨 lane 串行次序、内存顺序、非活动 lane 和故障原子性尚未冻结。")
         if op in {"MAX", "MIN"}:
             details.append(
-                "当前 tagged Sail 按有符号整数顺序选择 MAX/MIN；最终芯片 lane ordering 仍受 issue #149 约束。"
+                "v0.59.1 Sail 按有符号整数顺序选择 MAX/MIN；最终芯片 lane 次序仍受 issue #149 约束。"
             )
             evidence_urls.append(_TAGGED_SAIL + "#L4852-L5258")
         issue_urls.append("https://github.com/LinxISA/linx-isa/issues/149")
@@ -445,35 +504,33 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
 
     asm = _clean(inst.get("asm"))
     if "uimm" in asm:
-        details.append("Syntax 使用 uimm，立即数按无符号值解释。")
+        details.append("汇编语法使用 uimm，立即数按无符号值解释。")
     if "simm" in asm:
-        details.append("Syntax 使用 simm，立即数按有符号值解释。")
+        details.append("汇编语法使用 simm，立即数按有符号值解释。")
     if core in {"SLL", "SRL", "SRA", "SLLI", "SRLI", "SRAI"}:
         details.append(
-            "Tagged Sail 将 shift amount 对 SrcL 的有效整数位宽取模；寄存器形式从 SrcR 的类型化数值取得 shift amount，立即数形式使用无符号 shamt。"
+            "v0.59.1 Sail 将移位量对 SrcL 的有效整数位宽取模；寄存器形式从 SrcR 的类型化数值取得移位量，立即数形式使用无符号 shamt。"
         )
         evidence_urls.append(_TAGGED_SAIL + "#L5266-L5388")
     if core in {"MUL", "MADD"}:
         details.append(
-            "当前 tagged Sail 把类型化输入转换为无符号整数后计算乘积或乘加，再按 DstType 打包结果。"
+            "v0.59.1 Sail 把类型化输入转换为无符号整数后计算乘积或乘加，再按 DstType 打包结果。"
         )
         evidence_urls.append(_TAGGED_SAIL + "#L4360-L4415")
 
     if core in {"QPOP", "QPUSH"}:
         details.append(
-            "队列状态机、empty/full 结果、并发与 fault ABI 尚未冻结；memory-ring 仅是 staged model approximation。"
+            "队列状态机、空/满结果、并发与故障 ABI 尚未冻结；内存环形队列仅是阶段模型的近似实现。"
         )
         issue_urls.append("https://github.com/LinxISA/linx-isa/issues/150")
     if core.startswith("SHFL"):
-        details.append(
-            "inactive/tail lane policy、source snapshot 和 instruction-lockstep 执行尚未冻结。"
-        )
+        details.append("非活动 lane、尾部 lane、源快照和指令锁步执行策略尚未冻结。")
         issue_urls.append("https://github.com/LinxISA/linx-isa/issues/151")
 
     return SemanticDescription(
-        short=short,
-        description=short + "。",
-        details=tuple(details),
+        short=polish(short),
+        description=polish(short + "。"),
+        details=tuple(polish(item) for item in details),
         provenance=tuple((_catalog_source(inst, profile), *evidence_urls, *issue_urls)),
         confidence="derived-from-normative-fields",
     )
@@ -503,11 +560,22 @@ def describe_form(
             )
         if source_link:
             provenance.append(source_link)
-        return SemanticDescription(
-            short=_pto_short_zh(inst, first)
+        chinese_summary = (
+            _pto_short_zh(inst, first)
             if is_v059 and inst.get("pto_source_form_id")
-            else first,
-            description=note,
+            else _linx_note_zh(inst, first)
+            if is_v059
+            else first
+        )
+        return SemanticDescription(
+            short=chinese_summary,
+            description=(
+                _pto_description_zh(inst, chinese_summary)
+                if is_v059 and inst.get("pto_source_form_id")
+                else chinese_summary
+                if is_v059
+                else note
+            ),
             details=_pto_form_details(inst) if is_v059 else (),
             provenance=tuple(dict.fromkeys(provenance)),
             confidence="catalog-semantic-summary",
@@ -516,20 +584,28 @@ def describe_form(
     mnemonic = _clean(inst.get("mnemonic")).upper()
     if mnemonic == "C.BSTART.VPAR":
         return SemanticDescription(
-            short="结束当前 block，并以 VPAR 类型开始下一个 block",
-            description="结束当前 block，并以 VPAR 类型开始下一个 fall-through block。",
+            short=polish("结束当前 block，并以 VPAR 类型开始下一个 block"),
+            description=polish(
+                "结束当前 block，并以 VPAR 类型按顺序落点开始下一个 block。"
+            ),
             details=(
-                "该形式使用 16-bit compressed encoding。FALL 是 assembly 形式名称；编码中没有独立的 FALL 物理字段。",
+                polish(
+                    "该形式使用 16 位压缩编码。FALL 是汇编形式名称；编码中没有独立的 FALL 物理字段。"
+                ),
             ),
             provenance=(_catalog_source(inst, profile),),
             confidence="derived-from-normative-fields",
         )
     if mnemonic == "C.BSTART.VSEQ":
         return SemanticDescription(
-            short="结束当前 block，并以 VSEQ 类型开始下一个 block",
-            description="结束当前 block，并以 VSEQ 类型开始下一个 fall-through block。",
+            short=polish("结束当前 block，并以 VSEQ 类型开始下一个 block"),
+            description=polish(
+                "结束当前 block，并以 VSEQ 类型按顺序落点开始下一个 block。"
+            ),
             details=(
-                "该形式使用 16-bit compressed encoding。FALL 是 assembly 形式名称；编码中没有独立的 FALL 物理字段。",
+                polish(
+                    "该形式使用 16 位压缩编码。FALL 是汇编形式名称；编码中没有独立的 FALL 物理字段。"
+                ),
             ),
             provenance=(_catalog_source(inst, profile),),
             confidence="derived-from-normative-fields",
@@ -601,14 +677,37 @@ def summary(row: Mapping[str, Any], catalog: Mapping[str, Any]) -> str:
     return describe_form(row, _profile_from_catalog(catalog)).short
 
 
-def detail(row: Mapping[str, Any], catalog: Mapping[str, Any]) -> str:
+def detail(
+    row: Mapping[str, Any],
+    catalog: Mapping[str, Any],
+    *,
+    show_repeated_summary: bool = True,
+) -> str:
     """Return safe HTML for the semantic section of one instruction form."""
 
     semantic = describe_form(row, _profile_from_catalog(catalog))
-    blocks = [f'<p class="semantic-description">{escape(semantic.description)}</p>']
+    blocks = []
+    if show_repeated_summary or semantic.description.rstrip(
+        "。"
+    ) != semantic.short.rstrip("。"):
+        blocks.append(
+            f'<p class="semantic-description">{escape(semantic.description)}</p>'
+        )
+
     if semantic.details:
-        items = "".join(f"<li>{escape(item)}</li>" for item in semantic.details)
-        blocks.append(f'<ul class="semantic-details">{items}</ul>')
+        section_names = {"机制", "操作数", "执行结果", "约束与异常"}
+        split_details = [item.split("：", 1) for item in semantic.details]
+        if split_details and all(
+            len(parts) == 2 and parts[0] in section_names for parts in split_details
+        ):
+            sections = "".join(
+                f'<section class="semantic-section"><h4>{escape(heading)}</h4><p>{escape(body)}</p></section>'
+                for heading, body in split_details
+            )
+            blocks.append(f'<div class="semantic-details">{sections}</div>')
+        else:
+            items = "".join(f"<li>{escape(item)}</li>" for item in semantic.details)
+            blocks.append(f'<ul class="semantic-details">{items}</ul>')
     links = [source for source in semantic.provenance if source.startswith("https://")]
     if links:
         anchors = " · ".join(

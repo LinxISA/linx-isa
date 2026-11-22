@@ -94,6 +94,135 @@ def parse(path: Path) -> Node:
     return parser.root
 
 
+ENGLISH_SENTENCE = re.compile(
+    r"\b[A-Za-z][A-Za-z'’-]*\b(?:[\s,:;()]+\b[A-Za-z][A-Za-z'’-]*\b){4,}"
+)
+ENGLISH_PROSE_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "before",
+    "bitwise",
+    "by",
+    "conditionally",
+    "does",
+    "for",
+    "from",
+    "in",
+    "is",
+    "it",
+    "legacy",
+    "matches",
+    "memory",
+    "not",
+    "of",
+    "only",
+    "or",
+    "packed",
+    "prior",
+    "be",
+    "english",
+    "here",
+    "must",
+    "producer",
+    "publishes",
+    "reported",
+    "replaces",
+    "selected",
+    "sentence",
+    "stores",
+    "the",
+    "this",
+    "through",
+    "to",
+    "unsigned",
+    "value",
+    "visible",
+    "when",
+    "while",
+    "width",
+    "with",
+}
+ENGLISH_GRAMMAR_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "before",
+    "by",
+    "does",
+    "for",
+    "from",
+    "in",
+    "is",
+    "it",
+    "not",
+    "of",
+    "only",
+    "or",
+    "the",
+    "this",
+    "through",
+    "to",
+    "when",
+    "while",
+    "with",
+    "must",
+    "be",
+}
+
+
+def default_visible_text(node: Node) -> list[str]:
+    """Return default-visible text, excluding code and closed evidence bodies."""
+    if node.tag in {"code", "pre", "script", "style"}:
+        return []
+    if node.tag == "a" and (
+        re.search(r"[\[\]{}<>]|->", node.text())
+        or any(suffix in node.text() for suffix in (".asl", ".json", ".opc"))
+    ):
+        return []
+    if (
+        node.tag == "details"
+        and "variant" not in node.classes()
+        and "open" not in node.attrs
+    ):
+        return [
+            text
+            for child in node.children
+            if child.tag == "summary"
+            for text in default_visible_text(child)
+        ]
+    out = [chunk for chunk in node.chunks if chunk.strip()]
+    for child in node.children:
+        out.extend(default_visible_text(child))
+    return out
+
+
+def english_visible_fragments(node: Node) -> list[str]:
+    residuals = []
+    for text in default_visible_text(node):
+        normalized = re.sub(r"\s+", " ", text).strip()
+        prose = False
+        for match in ENGLISH_SENTENCE.finditer(normalized):
+            words = [
+                word.lower()
+                for word in re.findall(r"[A-Za-z][A-Za-z'’-]*", match.group())
+            ]
+            if sum(word in ENGLISH_PROSE_WORDS for word in words) >= 3 and any(
+                word in ENGLISH_GRAMMAR_WORDS for word in words
+            ):
+                prose = True
+                break
+        if prose:
+            residuals.append(normalized)
+    return residuals
+
+
 def slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
@@ -117,6 +246,15 @@ def hex_value(value: int, width: int) -> str:
     return f"0x{value:0{(width + 3) // 4}x}"
 
 
+def grouped_binary(value: str) -> str:
+    if len(value) < 8:
+        return value
+    first = len(value) % 4 or 4
+    return " ".join(
+        [value[:first], *(value[i : i + 4] for i in range(first, len(value), 4))]
+    )
+
+
 def expected_fields(row: dict, part_index: int) -> list[tuple[str, str]]:
     raw = row["parts"][part_index]
     encoded = row["encoding"]["parts"][part_index]
@@ -133,12 +271,14 @@ def expected_fields(row: dict, part_index: int) -> list[tuple[str, str]]:
         msb, lsb, width = int(seg["msb"]), int(seg["lsb"]), int(seg["width"])
         bit_range = str(msb) if msb == lsb else f"{msb}:{lsb}"
         if "const" in seg:
-            label = f"{int(seg['const']['value']):0{width}b}"
+            label = grouped_binary(f"{int(seg['const']['value']):0{width}b}")
         else:
             name, piece = pieces[(msb, lsb)]
             bits = ((1 << width) - 1) << lsb
             if mask & bits == bits:
-                label = f"{name} = {(match & bits) >> lsb:0{width}b}"
+                label = (
+                    f"{name} = {grouped_binary(f'{(match & bits) >> lsb:0{width}b}')}"
+                )
             elif "value_msb" in piece:
                 a, b = int(piece["value_msb"]), int(piece["value_lsb"])
                 label = f"{name}[{a}]" if a == b else f"{name}[{a}:{b}]"
@@ -192,7 +332,7 @@ def expected_operand_rows(row: dict) -> list[dict[str, object]]:
                 )
         offset += int(part["width_bits"])
     out = []
-    signed_names = {True: "signed", False: "unsigned", None: "encoding-defined"}
+    signed_names = {True: "有符号", False: "无符号", None: "由编码定义"}
     for name, record in fields.items():
         pieces = record["pieces"]
         has_value_map = all(piece["value_lsb"] is not None for piece in pieces)
@@ -224,7 +364,7 @@ def expected_operand_rows(row: dict) -> list[dict[str, object]]:
                     if piece["value_lsb"] == piece["value_msb"]
                     else f"{piece['value_msb']}:{piece['value_lsb']}"
                 )
-                text += f" → value[{value}]"
+                text += f" → 字段值[{value}]"
             mappings.append(text)
         out.append(
             {
@@ -292,6 +432,12 @@ class Audit:
         self.reader_records = json.loads(READER_DATA.read_text(encoding="utf-8"))[
             "records"
         ]
+        self.scoped_owners = {
+            row["form_id"]: row
+            for row in tagged_json("isa/v0.59/state/pto_scalar_forms.json")[
+                "scoped_forms"
+            ]
+        }
 
     def check_asl_excerpt(
         self, where: str, blocks: list[Node], owner_path: str
@@ -402,12 +548,55 @@ class Audit:
                     or model[0].attrs.get("data-disposition") != evidence["disposition"]
                 ):
                     self.fail(where, "Linx-only Sail path or source text differs")
-        text = article.text()
-        if "操作" not in text or not article.find(cls="semantic-description"):
-            self.fail(where, "missing specific operation section")
-        semantic_nodes = article.find(cls="semantic-description") + article.find(
-            cls="semantic-details"
-        )
+        if row.get("pto_scope"):
+            contracts = article.find(tag="section", cls="scoped-contract")
+            if len(contracts) != 1:
+                self.fail(
+                    where, f"expected one scoped-contract, found {len(contracts)}"
+                )
+            else:
+                pairs = {}
+                for dl in contracts[0].find(tag="dl"):
+                    children = dl.children
+                    for index, child in enumerate(children):
+                        if (
+                            child.tag == "dt"
+                            and index + 1 < len(children)
+                            and children[index + 1].tag == "dd"
+                        ):
+                            pairs[child.text()] = children[index + 1].text()
+                expected_keys = {
+                    "汇编形式",
+                    "GM 共享属性",
+                    "语义处理器",
+                    "基础形式",
+                    "契约状态",
+                }
+                if set(pairs) != expected_keys:
+                    self.fail(where, f"scoped contract keys differ: {set(pairs)!r}")
+                owner = self.scoped_owners.get(str(row.get("pto_source_form_id")))
+                if owner is None:
+                    self.fail(where, "missing exact scoped source owner")
+                else:
+                    expected_values = {
+                        "汇编形式": owner["asm"],
+                        "GM 共享属性": owner["scope"],
+                        "语义处理器": owner["semantic_handler"],
+                        "基础形式": owner["base_form_id"],
+                        "契约状态": owner["status"],
+                    }
+                    for key, value in expected_values.items():
+                        if str(value) not in pairs.get(key, ""):
+                            self.fail(where, f"{key} omits exact value {value!r}")
+        intros = [
+            n for n in article.children if n.tag == "p" and "intro" in n.classes()
+        ]
+        if len(intros) != 1 or not re.search(r"[一-鿿]", intros[0].text()):
+            self.fail(where, "missing Chinese instruction synopsis")
+        descriptions = article.find(cls="semantic-description")
+        if len(descriptions) > 1 or any(not n.text().strip() for n in descriptions):
+            self.fail(where, "invalid operation description")
+        semantic_nodes = intros + descriptions + article.find(cls="semantic-details")
         semantic = " ".join(n.text() for n in semantic_nodes)
         bad = (
             "执行 V.X 所定义的向量操作",
@@ -483,9 +672,9 @@ class Audit:
                         pairs[dt[0].text()] = dd[0].text()
             width = int(expected["width_bits"])
             wanted_exact = {
-                "Mask": hex_value(int(expected["mask"], 0), width),
-                "Match": hex_value(int(expected["match"], 0), width),
-                "Pattern": expected["pattern"],
+                "掩码（Mask）": hex_value(int(expected["mask"], 0), width),
+                "匹配值（Match）": hex_value(int(expected["match"], 0), width),
+                "位模式（Pattern）": expected["pattern"],
             }
             if pairs != wanted_exact:
                 self.fail(
@@ -593,9 +782,14 @@ class Audit:
                 self.fail(page, f"missing carrier row {op['command_mnemonic']}")
             else:
                 owner = self.tile_owners.get(op["name"])
+                try:
+                    from manual_block_zh import translate_block
+                except ImportError:
+                    self.fail(page, "missing manual_block_zh translator")
+                    translate_block = lambda lines: lines
                 expected_pres = [
                     tile_predicate(op, carrier_rows[0]),
-                    "\n".join(owner.get("block", [])) if owner else "",
+                    "\n".join(translate_block(owner.get("block", []))) if owner else "",
                 ]
                 if (
                     len(page_pres) != 2
@@ -605,6 +799,18 @@ class Audit:
                     self.fail(
                         page,
                         f"Tile header code blocks differ: {page_pres!r} != {expected_pres!r}",
+                    )
+                source_blocks = doc.find(tag="details", cls="tile-block-source")
+                source_text = [
+                    code.raw_text()
+                    for detail in source_blocks
+                    for pre in detail.find(tag="pre")
+                    for code in pre.find(tag="code")
+                ]
+                expected_source = "\n".join(owner.get("block", [])) if owner else ""
+                if len(source_blocks) != 1 or source_text != [expected_source]:
+                    self.fail(
+                        page, "folded Tile source block differs from exact original"
                     )
             owner = self.tile_owners.get(op["name"])
             if owner:
@@ -625,15 +831,15 @@ class Audit:
                         pairs[child.text()] = children[i + 1].text()
             selector = str(op.get("selector") or f"Function={op['function']}")
             wanted = {
-                "Engine": op["engine"],
-                "Carrier": op["command_mnemonic"],
-                "Selector": selector,
-                "Semantic handler": op["semantic_handler"],
+                "引擎": op["engine"],
+                "承载指令": op["command_mnemonic"],
+                "选择器": selector,
+                "语义处理器": op["semantic_handler"],
             }
             for key, value in wanted.items():
-                if pairs.get(key) != value:
-                    self.fail(page, f"{key} {pairs.get(key)!r} != {value!r}")
-            if not node.find(tag="a") or not pairs.get("ASL source"):
+                if str(value) not in pairs.get(key, ""):
+                    self.fail(page, f"{key} {pairs.get(key)!r} omits {value!r}")
+            if not node.find(tag="a") or not pairs.get("ASL 来源"):
                 self.fail(page, "missing pinned ASL source")
 
     def check_indexes(self) -> None:
@@ -720,6 +926,8 @@ class Audit:
             doc = self.docs.get(path.name)
             if doc is None:
                 continue
+            for residual in english_visible_fragments(doc):
+                self.fail(path.name, f"default-visible English sentence: {residual!r}")
             for anchor in doc.find(tag="a"):
                 href = anchor.attrs.get("href", "")
                 parsed = urlsplit(href)

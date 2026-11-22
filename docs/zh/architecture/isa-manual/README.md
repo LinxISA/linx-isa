@@ -48,7 +48,7 @@ make gen
 
 注意：`build/` 被 gitignored；本地构建输出不会提交到存储库。
 
-## 0.59.1 离线指令手册
+## 0.59.1 离线中文指令手册
 
 从 [0.59.1 正式发行页](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1) 下载 HTML 压缩包，解压后打开 `index.html`。可按助记符、编码或 Tile 操作查阅。版本与来源页列出发布提交和目录文件的校验摘要。
 

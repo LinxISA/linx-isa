@@ -1,0 +1,80 @@
+"""Presentation names for the published instruction groups and lookup filters."""
+
+GROUP = {
+    "ALU": "整数运算",
+    "AMO": "原子访存",
+    "BRU": "分支与比较",
+    "FSU": "浮点运算",
+    "SYS": "系统指令",
+    "LDA": "加载",
+    "STA": "存储",
+    "BSTART": "指令块起始",
+    "C.BSTART": "压缩块起始",
+    "Arithmetic Operation": "算术运算",
+    "Atomic Operation": "原子操作",
+    "Bit Manipulation": "位操作",
+    "Block Split": "指令块划分",
+    "Bundle Split": "指令块划分",
+    "Bundle Argument": "块参数",
+    "Bundle Control Attribute": "块控制属性",
+    "Bundle Data Attribute": "块数据属性",
+    "Bundle Dimension": "块维度",
+    "Bundle Fixed-Point PostProcess Attribute": "块定点后处理属性",
+    "Bundle Hint": "块提示",
+    "Bundle Input & Output": "块输入与输出",
+    "Bundle Offset": "块偏移",
+    "Bundle Range Modifier": "块范围修饰",
+    "Compare Instruction": "比较指令",
+    "Division": "除法",
+    "Floating Point Arithmetic": "浮点运算",
+    "Format Convert": "格式转换",
+    "General": "通用指令",
+    "General Manager": "通用管理",
+    "Load Immediate Offset": "立即数偏移加载",
+    "Load Register Offset": "寄存器偏移加载",
+    "Load UnScaled": "非缩放偏移加载",
+    "Multi-Cycle ALU": "多周期整数运算",
+    "Reduce Operation with Register": "寄存器归约",
+    "Shuffle": "通道重排",
+    "Store Offset": "偏移存储",
+    "Store Register Offset": "寄存器偏移存储",
+    "Three Source Integer": "三源整数运算",
+    "Three-Source Floating Point": "三源浮点运算",
+    "Two-Source Floating Point": "双源浮点运算",
+}
+ADDRESSING = {
+    "BASE_IMM": "基址加立即数",
+    "BASE_REG": "基址加寄存器",
+    "LONG": "长偏移",
+    "PAIR": "成对访问",
+    "PC_REL": "PC 相对寻址",
+    "POST_INDEX": "后变址",
+    "PRE_INDEX": "前变址",
+    "UNSCALED": "非缩放偏移",
+}
+FILTER = {
+    "AGU": "访存",
+    "ALU": "整数运算",
+    "AMO": "原子访存",
+    "BBD": "块描述",
+    "BRU": "分支与比较",
+    "CMD": "块命令",
+    "FSU": "浮点运算",
+    "SYS": "系统指令",
+    "VEC": "向量",
+    "TLSU": "Tile 访存",
+    "SFU": "特殊函数",
+    "CUBE": "矩阵运算",
+    "C16": "16 位压缩",
+    "L32": "32 位标准",
+    "HL48": "48 位扩展",
+    "L64": "64 位长指令",
+    "SCOPED64": "64 位作用域封装",
+}
+
+
+def group_name(group: str) -> str:
+    if "/" in group:
+        family, addressing = group.split("/", 1)
+        return f"{GROUP[family]} · {ADDRESSING[addressing]}"
+    return GROUP[group]

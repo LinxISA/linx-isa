@@ -37,7 +37,7 @@ make gen
 
 Note: `build/` is gitignored; local build outputs are not committed to the repository.
 
-## 0.59.1 offline instruction reference
+## 0.59.1 offline Chinese instruction reference
 
 Download the HTML ZIP from the [0.59.1 specification release](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1), extract it and open `index.html`. The mnemonic, encoding and Tile indexes work from local files. The release commit and source catalog hashes are on the sources page.
 
