@@ -51,6 +51,10 @@ def repo_identity(path, timeout):
     return {"path": repo, "commit": head, "dirty": bool(changes)}
 
 
+def repository_identities(sources, timeout):
+    return {name: repo_identity(path, timeout) for name, path in sources.items()}
+
+
 def require_pinned_sources(root, repositories, timeout):
     if repositories["linx-isa"]["dirty"]:
         raise ValueError("pinned comparison requires a clean LinxISA checkout")
@@ -427,11 +431,9 @@ def main():
         "linx-model": tools["linx-model"].parent,
     }
     sources.update({name: path.parent for name, path in core_models.items()})
-    repositories = {
-        name: repo_identity(path, args.timeout) for name, path in sources.items()
-    }
     tool_identities = {name: file_identity(path) for name, path in tools.items()}
     if args.require_pinned:
+        repositories = repository_identities(sources, args.timeout)
         require_pinned_sources(ROOT, repositories, args.timeout)
         require_pinned_model_roles(ROOT, tools, tool_identities)
     output = args.output.resolve()
@@ -470,6 +472,9 @@ def main():
         raise ValueError(f"unexpected result range in ELF: {address:#x}, {size}")
     manifest = output / "resolved_manifest.json"
     write_json(manifest, {"address": address, "size": size, "segments": segments})
+    if not args.require_pinned:
+        # Diagnostics may write to an unignored directory in a source checkout.
+        repositories = repository_identities(sources, args.timeout)
     generated = {
         "object": obj,
         "elf": elf,
