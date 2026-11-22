@@ -13,6 +13,69 @@ import refresh_qemu_executable_coverage as refresh
 
 
 class RefreshQemuExecutableCoverageTests(unittest.TestCase):
+    def test_form_identity_rebind_is_exact_and_changed_keys_are_allowlisted(self) -> None:
+        def form(form_id: str, mnemonic: str, mask: int, match: int) -> dict:
+            return {
+                "id": form_id,
+                "mnemonic": mnemonic,
+                "encoding": {
+                    "length_bits": 32,
+                    "parts": [
+                        {
+                            "index": 0,
+                            "width_bits": 32,
+                            "mask": f"0x{mask:08x}",
+                            "match": f"0x{match:08x}",
+                        }
+                    ],
+                },
+            }
+
+        spec = {
+            "instructions": [
+                form("new-same-key", "ADD", 0x7F, 0x33),
+                form("fret_stk_32_1c6ea1521169", "FRET.STK", 0xFF07F, 0x53041),
+            ]
+        }
+        manifest = {
+            "evidence": [
+                {
+                    "form_id": "old-same-key",
+                    "mnemonic": "ADD",
+                    "form_key": {
+                        "length_bits": 32,
+                        "mask": "0x0000007f",
+                        "match": "0x00000033",
+                    },
+                },
+                {
+                    "form_id": "fret_stk_32_4fe246bd8241",
+                    "mnemonic": "FRET.STK",
+                    "form_key": {
+                        "length_bits": 32,
+                        "mask": "0x0000707f",
+                        "match": "0x00003041",
+                    },
+                },
+            ]
+        }
+        rebinds = refresh._rebind_manifest_forms(manifest, spec)
+        self.assertEqual(
+            [entry["form_id"] for entry in manifest["evidence"]],
+            ["new-same-key", "fret_stk_32_1c6ea1521169"],
+        )
+        self.assertEqual(
+            [row["reason"] for row in rebinds],
+            ["exact-form-key", "reviewed-encoding-migration"],
+        )
+        self.assertEqual(
+            manifest["evidence"][1]["form_key"],
+            {"length_bits": 32, "mask": "0x000ff07f", "match": "0x00053041"},
+        )
+        manifest["evidence"][1]["mnemonic"] = "OTHER"
+        with self.assertRaisesRegex(ValueError, "changes mnemonic"):
+            refresh._rebind_manifest_forms(manifest, spec)
+
     def test_relative_candidate_is_preferred_without_pc_shift_guessing(self) -> None:
         self.assertEqual(refresh._select_candidate(6, [2, 6, 10], "form"), 6)
         self.assertEqual(refresh._select_candidate(6, [10], "form"), 10)

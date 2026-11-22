@@ -47,6 +47,11 @@ SUITE_PREFIXES = {
 }
 SUITE_ORDER = tuple(SUITE_PREFIXES)
 RUN_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
+CHANGED_ENCODING_FORM_REBINDS = {
+    "fret_stk_32_4fe246bd8241": "fret_stk_32_1c6ea1521169",
+    "lr_w_32_efecc735bb75": "lr_w_32_067262ff6597",
+    "lr_d_32_84d21a553dc1": "lr_d_32_fcf6ece7fff8",
+}
 
 
 @dataclass(frozen=True)
@@ -271,6 +276,62 @@ def _suite_entries(
         raise ValueError("a suite exceeds QEMU's 16-PC watch limit")
     grouped = {suite: items for suite, items in grouped.items() if items}
     return grouped
+
+
+def _manifest_form_key(entry: dict[str, Any]) -> tuple[int, int, int]:
+    key = entry.get("form_key")
+    if not isinstance(key, dict):
+        raise ValueError(f"{entry.get('form_id')}: missing form_key")
+    return (
+        _parse_int(key.get("length_bits"), "form_key.length_bits"),
+        _parse_int(key.get("mask"), "form_key.mask"),
+        _parse_int(key.get("match"), "form_key.match"),
+    )
+
+
+def _rebind_manifest_forms(
+    manifest: dict[str, Any], spec: dict[str, Any]
+) -> list[dict[str, str]]:
+    """Bind static evidence identities to the current golden without guessing."""
+    forms = reporter._spec_forms(spec)
+    by_key = {
+        (row["length_bits"], row["mask"], row["match"]): form_id
+        for form_id, row in forms.items()
+    }
+    if len(by_key) != len(forms):
+        raise ValueError("current golden form keys are not unique")
+    rebinds: list[dict[str, str]] = []
+    for entry in manifest.get("evidence", []):
+        if not isinstance(entry, dict):
+            raise ValueError("manifest evidence entries must be objects")
+        prior = entry.get("form_id")
+        if not isinstance(prior, str):
+            raise ValueError("manifest evidence form_id must be text")
+        target = prior if prior in forms else by_key.get(_manifest_form_key(entry))
+        reason = "current-form-id"
+        if target is None and prior in CHANGED_ENCODING_FORM_REBINDS:
+            target = CHANGED_ENCODING_FORM_REBINDS[prior]
+            reason = "reviewed-encoding-migration"
+        elif target != prior:
+            reason = "exact-form-key"
+        if target is None or target not in forms:
+            raise ValueError(f"no reviewed current form identity for {prior}")
+        current = forms[target]
+        if entry.get("mnemonic") != current["mnemonic"]:
+            raise ValueError(f"form identity rebind changes mnemonic for {prior}")
+        if prior != target:
+            rebinds.append({"from": prior, "to": target, "reason": reason})
+        entry["form_id"] = target
+        entry["form_key"] = {
+            "length_bits": current["length_bits"],
+            "mask": f"0x{current['mask']:0{(current['length_bits'] + 3) // 4}x}",
+            "match": f"0x{current['match']:0{(current['length_bits'] + 3) // 4}x}",
+        }
+    if len({entry["form_id"] for entry in manifest["evidence"]}) != len(
+        manifest["evidence"]
+    ):
+        raise ValueError("form identity rebind creates duplicate evidence")
+    return rebinds
 
 
 def _select_candidate(old_relative: int | None, candidates: list[int], identity: str) -> int:
@@ -533,6 +594,9 @@ def main(argv: list[str] | None = None) -> int:
             f"{ACTIVE_RELEASE} --manifest template"
         )
     grouped = _suite_entries(manifest, require_all_suites=not args.allow_partial_manifest)
+    spec = json.loads(
+        (repo_root / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8")
+    )
 
     qemu_root = (args.qemu_root if args.qemu_root.is_absolute() else repo_root / args.qemu_root).resolve()
     qemu = (args.qemu if args.qemu.is_absolute() else repo_root / args.qemu).resolve()
@@ -577,6 +641,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     candidate = copy.deepcopy(manifest)
+    identity_rebinds = _rebind_manifest_forms(candidate, spec)
     candidate_grouped = _suite_entries(
         candidate,
         require_all_suites=not args.allow_partial_manifest,
@@ -588,7 +653,12 @@ def main(argv: list[str] | None = None) -> int:
     for suite in grouped:
         bundle = bundles[suite]
         bundle.mkdir(parents=True, exist_ok=False)
-        test_ids = sorted({_parse_int(entry["test_id"], "test_id") for entry in grouped[suite]})
+        test_ids = sorted(
+            {
+                _parse_int(entry["test_id"], "test_id")
+                for entry in candidate_grouped[suite]
+            }
+        )
         prepare = _runner_command(
             repo_root=repo_root,
             suite=suite,
@@ -602,19 +672,19 @@ def main(argv: list[str] | None = None) -> int:
         _run(prepare, cwd=repo_root, env=env)
         new_elf = bundle / "linx-qemu-tests.elf"
         resolved: list[dict[str, str]] = []
-        for old_entry in grouped[suite]:
-            object_name = Path(str(old_entry["object"])).name
+        for template_entry in candidate_grouped[suite]:
+            object_name = Path(str(template_entry["object"])).name
             binding = _resolve_entry(
                 repo_root=repo_root,
-                old_entry=old_entry,
+                old_entry=template_entry,
                 new_elf_path=new_elf,
                 new_object_path=bundle / "obj" / object_name,
             )
             resolved.append(binding)
             pc_deltas.append(
                 {
-                    "form_id": str(old_entry["form_id"]),
-                    "old_pc": str(old_entry["instruction"]["pc"]),
+                    "form_id": str(template_entry["form_id"]),
+                    "old_pc": str(template_entry["instruction"]["pc"]),
                     "new_pc": binding["pc"],
                 }
             )
@@ -639,18 +709,18 @@ def main(argv: list[str] | None = None) -> int:
         run_path = bundle / "run-evidence.json"
         _check_bundle_artifacts(repo_root, bundle, run_path)
         run_digest = _sha256(run_path)
-        for old_entry, new_entry, expected_binding in zip(
-            grouped[suite], candidate_grouped[suite], resolved, strict=True
+        for new_entry, expected_binding in zip(
+            candidate_grouped[suite], resolved, strict=True
         ):
-            object_name = Path(str(old_entry["object"])).name
+            object_name = Path(str(new_entry["object"])).name
             final_binding = _resolve_entry(
                 repo_root=repo_root,
-                old_entry=old_entry,
+                old_entry=new_entry,
                 new_elf_path=new_elf,
                 new_object_path=bundle / "obj" / object_name,
             )
             if final_binding != expected_binding:
-                raise ValueError(f"non-deterministic rebuild changed {old_entry['form_id']}")
+                raise ValueError(f"non-deterministic rebuild changed {new_entry['form_id']}")
             new_entry["elf"] = _repo_relative(repo_root, new_elf)
             new_entry["object"] = _repo_relative(repo_root, bundle / "obj" / object_name)
             new_entry["instruction"] = final_binding
@@ -666,6 +736,7 @@ def main(argv: list[str] | None = None) -> int:
         "qemu_sha": qemu_sha,
         "llvm_sha": llvm_sha,
         "llvm_source_dirty": llvm_dirty,
+        "identity_rebinds": identity_rebinds,
         "bundle_policy": "Never overwrite old evidence bundles; publish only after all selected suites pass strict validation.",
         "report_command": "python3 tools/bringup/report_qemu_executable_coverage.py --require-nonzero --require-clean",
     }
