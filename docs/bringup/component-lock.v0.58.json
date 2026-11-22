@@ -103,11 +103,11 @@
       "path": "tools/LinxCoreModel",
       "url": "https://github.com/LinxISA/LinxCoreModel.git",
       "branch": "main",
-      "commit": "08c8c970f84423ecbca93c86ed503fc2363801c8",
-      "tree": "e3300dfa1effe7a4c144fbca2fa9d5f8a11543aa",
-      "role": "C++ core model retaining the v0.58.1 integration and the validated PTO 0.59.1 gfrun/gfsim scoped subset",
+      "commit": "384295bf8bdd862c6c3517b9d7f735386966d674",
+      "tree": "45cb518589b8e8aad1c60a5c757b06463333e042",
+      "role": "C++ core model with the retained v0.58.1 integration and validated scoped Scalar and ADDTPC in gfrun/gfsim",
       "integration_status": "merged_development",
-      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/39"
+      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/40"
     },
     {
       "path": "tools/model",
