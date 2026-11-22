@@ -2,18 +2,58 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from tools.bringup.check_pto_v0591_scalar_reference import (
     FINISHER_ADDRESS,
     FINISHER_PASS,
+    MODEL_COMPONENTS,
     build_case,
     compare_models,
+    require_pinned_model_roles,
     require_pass_finisher,
+    require_pinned_sources,
     validate_cases,
 )
 
 
 class ScopedScalarReferenceTest(unittest.TestCase):
+    def test_pinned_evidence_rejects_an_aliased_timing_model(self):
+        root = Path("/checkout")
+        directory = root / "tools/LinxCoreModel/bin"
+        tools = {role: directory / role for role in ("gfrun", "gfsim")}
+        identities = {"gfrun": {"sha256": "a"}, "gfsim": {"sha256": "b"}}
+        require_pinned_model_roles(root, tools, identities)
+        with self.assertRaisesRegex(ValueError, "pinned gfsim must use"):
+            require_pinned_model_roles(root, {**tools, "gfsim": tools["gfrun"]}, identities)
+        identities["gfsim"] = identities["gfrun"]
+        with self.assertRaisesRegex(ValueError, "must be distinct binaries"):
+            require_pinned_model_roles(root, tools, identities)
+
+    def test_release_evidence_requires_matching_submodule_checkouts(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            gitlinks = {path: "a" * 40 for path in MODEL_COMPONENTS.values()}
+            result = "".join(
+                f"160000 commit {sha}\t{path}\n" for path, sha in gitlinks.items()
+            )
+            repositories = {
+                name: {"path": str(root / path), "commit": gitlinks[path], "dirty": False}
+                for name, path in MODEL_COMPONENTS.items()
+            }
+            repositories["linx-isa"] = {"dirty": False, "commit": "b" * 40}
+            with patch("tools.bringup.check_pto_v0591_scalar_reference.invoke",
+                       return_value=result) as git:
+                require_pinned_sources(root, repositories, 10)
+                self.assertIn(repositories["linx-isa"]["commit"], git.call_args.args[0])
+                repositories["gfsim"]["commit"] = "c" * 40
+                with self.assertRaisesRegex(ValueError, "gfsim does not match"):
+                    require_pinned_sources(root, repositories, 10)
+                repositories["gfsim"]["commit"] = gitlinks["tools/LinxCoreModel"]
+                repositories["gfsim"]["path"] = str(root / "external-model")
+                with self.assertRaisesRegex(ValueError, "gfsim must be built within"):
+                    require_pinned_sources(root, repositories, 10)
+
     def test_symbolic_pcr_preserves_oracle_and_uses_carrier_offsets(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
