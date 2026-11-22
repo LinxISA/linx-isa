@@ -109,3 +109,21 @@ dd { margin: .25rem 0 .7rem 1rem; }
 main { overflow-wrap:anywhere; }
 .reader-detail-heading { display:flex; gap:.55rem; align-items:baseline; }
 .reader-detail-badge { font-size:.75rem; }
+
+/* Keep explanatory Chinese at a comfortable measure; let bit diagrams use
+   the full width independently of the prose column. */
+.intro { max-width: 42em; margin: .45rem 0 1.15rem; font-size: 1.08rem; line-height: 1.72; }
+.form h2 { margin: 1.15rem 0 .4rem; }
+.form h3, .tile-contract h3 { margin: 1.5rem 0 .45rem; }
+.form p:not(.source), .scoped-contract li, .semantic-details, .tile-contract p, .tile-contract li {
+  max-width: 45em;
+  line-height: 1.72;
+}
+.semantic-details li + li, .tile-contract li + li { margin-top: .35rem; }
+.related-doc { margin-top: 1.1rem; font-size: .9rem; }
+.form details, .tile-contract details, .tile-block-source { margin: .8rem 0; }
+.semantic-sources a + a { margin-left: .4rem; }
+.variant { border-top:1px solid var(--rule); padding:.5rem 0; }
+.variant > summary { color:var(--ink); font-weight:600; padding:.35rem 0; }
+.variant > summary code { color:var(--link); font-size:.93rem; }
+.variant > .form { margin:.65rem 0; border-top:0; }

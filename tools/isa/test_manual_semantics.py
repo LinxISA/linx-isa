@@ -5,18 +5,22 @@ from pathlib import Path
 import subprocess
 import sys
 import unittest
+import re
 
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from tools.isa.manual_semantics import (
+    _concise_chinese,
     _logical_compare_result,
+    _natural_chinese,
     describe_form,
     detail,
     summary,
     validate_catalog_coverage,
 )
+from tools.isa.manual_prose_zh import polish, scalar_synopsis
 
 
 class ManualSemanticsTest(unittest.TestCase):
@@ -81,28 +85,44 @@ class ManualSemanticsTest(unittest.TestCase):
             ],
             [],
         )
-        labels = {
-            "operands": "操作数：",
-            "state_effects": "状态结果：",
-            "memory_effects": "内存效果：",
-            "ordering": "顺序：",
-            "exceptions": "异常与 fault 边界：",
-            "legality": "合法性：",
-        }
+        chinese = json.loads(
+            (
+                ROOT
+                / "docs/architecture/isa-manual/reference/data/manual-semantics-zh.json"
+            ).read_text(encoding="utf-8")
+        )["forms"]
+        self.assertEqual(len(chinese), 578)
+        for form_id, record in chinese.items():
+            for role in (
+                "purpose",
+                "mechanism",
+                "inputs-outputs",
+                "effects",
+                "constraints",
+            ):
+                statements = record["roles"][role]["statements"]
+                self.assertTrue(statements, f"{form_id}:{role}")
+                visible = " ".join(statements)
+                self.assertNotIn("其记录的摘要为", visible)
+                self.assertNotRegex(visible, r"asl/[^ )：]+:\d+")
+                self.assertNotIn("设计要点：", visible)
         missing = []
         for row in common:
             semantic = describe_form(row, "v0.59")
-            record = reference[row["pto_source_form_id"]]
-            for key, label in labels.items():
-                values = [
-                    str(value)
-                    for value in record.get(key, [])
-                    if str(value) and str(value) != "none"
-                ]
-                if values and not any(
-                    item.startswith(label) for item in semantic.details
-                ):
-                    missing.append(f"{row['id']}:{key}")
+            record = chinese[row["pto_source_form_id"]]
+            if row["mnemonic"] == "DC.IALL":
+                continue
+            fallback = _natural_chinese(
+                _concise_chinese(record["roles"]["purpose"]["statements"][0])
+            )
+            expected_summary = scalar_synopsis(row, fallback)
+            if semantic.short != expected_summary:
+                missing.append(f"{row['id']}:summary")
+            rendered = " ".join((semantic.description, *semantic.details))
+            for role in ("mechanism", "inputs-outputs", "effects", "constraints"):
+                for statement in record["roles"][role]["statements"]:
+                    if polish(_natural_chinese(statement)) not in rendered:
+                        missing.append(f"{row['id']}:{role}")
         self.assertEqual(missing, [])
 
     def test_catalog_note_is_preserved_exactly(self) -> None:
@@ -114,9 +134,48 @@ class ManualSemanticsTest(unittest.TestCase):
             "github.com/PTO-ISA/pto-spec/blob/a89a53d",
             detail(row59, self.catalogs["v0.59"]),
         )
-        self.assertIn("标量二元运算", summary(row59, self.catalogs["v0.59"]))
         self.assertIn(
-            "加载 4 byte", summary(self.row("v0.59", "LWI"), self.catalogs["v0.59"])
+            '<section class="semantic-section"><h4>操作数</h4>',
+            detail(row59, self.catalogs["v0.59"]),
+        )
+        self.assertEqual(
+            summary(row59, self.catalogs["v0.59"]),
+            "将 SrcL 与零扩展后的 12 位立即数相加。结果写入 RegDst 指定的目标。",
+        )
+        self.assertIn(
+            "按小端序读取一个 4 字节值",
+            summary(self.row("v0.59", "LWI"), self.catalogs["v0.59"]),
+        )
+
+    def test_all_non_scoped_synopses_are_concise_chinese(self) -> None:
+        rows = [
+            row
+            for row in self.catalogs["v0.59"]["instructions"]
+            if not row.get("pto_scope")
+        ]
+        failures = []
+        for row in rows:
+            text = summary(row, self.catalogs["v0.59"])
+            if not re.search(r"[\u4e00-\u9fff]", text) or len(text) > 180:
+                failures.append((row["id"], text))
+        self.assertEqual(failures, [])
+        dc = describe_form(self.row("v0.59", "DC.IALL"), "v0.59")
+        self.assertEqual(
+            dc.short,
+            "在系统块内同步完成数据缓存全部条目的失效维护。该形式没有显式操作数。",
+        )
+        dc_text = " ".join((dc.description, *dc.details))
+        self.assertIn("无显式操作数", dc_text)
+        self.assertNotIn("SrcL", dc_text)
+        note_rows = [
+            row for row in rows if row.get("note") and not row.get("pto_source_form_id")
+        ]
+        self.assertEqual(len(note_rows), 30)
+        self.assertTrue(
+            all(
+                re.search(r"[\u4e00-\u9fff]", describe_form(row, "v0.59").short)
+                for row in note_rows
+            )
         )
 
     def test_vector_fallback_is_mnemonic_specific(self) -> None:
@@ -141,7 +200,7 @@ class ManualSemanticsTest(unittest.TestCase):
         catalog = self.catalogs["v0.59"]
         self.assertIn("有符号整数除法", summary(self.row("v0.59", "V.DIV"), catalog))
         brg = describe_form(self.row("v0.59", "V.LW.BRG"), "v0.59")
-        self.assertTrue(any("lane 0" in item for item in brg.details))
+        self.assertTrue(any("通道 0" in item for item in brg.details))
         self.assertFalse(any("TSO ordering domain" in item for item in brg.details))
         immediate = describe_form(self.row("v0.59", "V.LWI"), "v0.59")
         self.assertTrue(
@@ -150,7 +209,7 @@ class ManualSemanticsTest(unittest.TestCase):
                 for item in immediate.details
             )
         )
-        self.assertTrue(any("predicate bit 2*i" in item for item in immediate.details))
+        self.assertTrue(any("谓词位 2*i" in item for item in immediate.details))
         for mnemonic in ("C.BSTART.VPAR", "C.BSTART.VSEQ"):
             semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
             self.assertNotIn("FALL 字段", semantic.description)
@@ -212,7 +271,7 @@ class ManualSemanticsTest(unittest.TestCase):
             self.assertIn("无符号整数", semantic.short)
             self.assertTrue(any("无符号整数" in item for item in semantic.details))
         psel = describe_form(self.row("v0.59", "V.PSEL"), "v0.59")
-        self.assertTrue(any("不读取 EXEC mask p" in item for item in psel.details))
+        self.assertTrue(any("不读取执行掩码 p" in item for item in psel.details))
         for mnemonic in ("V.LD.MAX", "V.SW.MIN"):
             atomic = describe_form(self.row("v0.59", mnemonic), "v0.59")
             self.assertIn("有符号", atomic.short)

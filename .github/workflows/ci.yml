@@ -77,6 +77,8 @@ jobs:
         run: |
           python3 tools/isa/manual_linx_sail.py --check
           python3 tools/isa/manual_reader.py --pto-root "$PTO_SPEC_ROOT" --check
+          python3 tools/isa/build_manual_semantics_zh.py --pto-root "$PTO_SPEC_ROOT" --check
+          python3 tools/isa/build_manual_tile_zh.py --pto-root "$PTO_SPEC_ROOT" --check
           python3 tools/isa/build_manual_semantics_reference.py --source "$PTO_SPEC_ROOT" --check
           python3 tools/isa/build_manual_scoped_data.py --pto-root "$PTO_SPEC_ROOT" --out "$RUNNER_TEMP/tile-manual.json"
           cmp docs/architecture/isa-manual/reference/data/pto-v0591-tile-manual.json "$RUNNER_TEMP/tile-manual.json"

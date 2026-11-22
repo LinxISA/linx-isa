@@ -14,6 +14,7 @@ from check_html_reference import (
     Parser,
     SEMANTICS,
     TILE_MANUAL,
+    english_visible_fragments,
     expected_fields,
     fixed_bits,
     hex_value,
@@ -36,6 +37,19 @@ class HtmlReferenceValidatorTest(unittest.TestCase):
         self.assertEqual(len(article), 1)
         self.assertEqual(article[0].attrs["id"], "x")
         self.assertEqual(article[0].find(tag="a")[0].text(), "A & B")
+
+    def test_default_language_scan_excludes_code_and_closed_evidence(self):
+        parser = Parser()
+        parser.feed(
+            "<main><p>This visible English sentence must be reported here.</p>"
+            "<pre><code>This source code sentence remains exact and hidden.</code></pre>"
+            "<details><summary>规范证据</summary><p>Original English evidence stays folded.</p></details>"
+            "<p>中文说明保留 Mode 与 Function 标识符。</p></main>"
+        )
+        self.assertEqual(
+            english_visible_fragments(parser.root),
+            ["This visible English sentence must be reported here."],
+        )
 
     def test_catalog_encoding_expectations_are_exact(self):
         row = next(

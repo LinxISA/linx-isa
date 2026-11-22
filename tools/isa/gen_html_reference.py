@@ -11,6 +11,8 @@ from itertools import groupby
 import json
 from pathlib import Path
 import re
+import subprocess
+from urllib.parse import quote
 import zipfile
 
 from manual_tag import (
@@ -19,10 +21,12 @@ from manual_tag import (
     tagged_json,
     verified_tag_commit,
 )
+from manual_block_zh import translate_block
+from manual_terms_zh import FILTER, group_name
 from manual_encoding import render_encoding, validate_catalog
 from manual_linx_sail import sail_detail
-from manual_reader import operation_detail, reader_summary, reader_detail
-from manual_scoped import scoped_detail, tile_detail, tile_summary
+from manual_reader import operation_detail
+from manual_scoped import scoped_detail, scoped_summary, tile_detail, tile_summary
 from manual_semantics import detail, summary
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -72,7 +76,7 @@ def search(prompt, classes=()):
         options = (
             '<label>分类 <select><option value="">全部</option>'
             + "".join(
-                f'<option value="{escape(k)}">{escape(k)}</option>'
+                f'<option value="{escape(k)}">{escape(FILTER[k])}（{escape(k)}）</option>'
                 for k in sorted(classes)
             )
             + "</select></label>"
@@ -104,14 +108,25 @@ def page(title, body, commit):
 """
 
 
-def brief(asl_path, fallback):
-    # Keep one complete sentence in the alphabetic index. The instruction page
-    # carries the complete purpose paragraph and the normative source text.
-    paragraph = reader_summary(asl_path) if asl_path else ""
-    if paragraph:
-        first, mark, _ = paragraph.partition("。")
-        return first + mark if len(first) <= 180 else fallback
-    return fallback
+def reference_routes(commit):
+    """Match exact mnemonic filenames on the Chinese site; omit ambiguous routes."""
+    prefix = "docs/zh/isa/inst/"
+    names = (
+        subprocess.check_output(
+            ["git", "ls-tree", "-rz", "--name-only", commit, "--", prefix], cwd=ROOT
+        )
+        .decode()
+        .split("\0")
+    )
+    candidates = defaultdict(list)
+    for name in names:
+        if name.endswith(".md"):
+            path = Path(name)
+            route = path.relative_to("docs/zh").with_suffix("").as_posix()
+            candidates[path.stem.upper()].append(
+                "https://linxisa.github.io/" + quote(route) + "/"
+            )
+    return {name: urls[0] for name, urls in candidates.items() if len(urls) == 1}
 
 
 def listed_item(name, href, text, kind, terms=""):
@@ -170,7 +185,8 @@ def tile_header(op, row, owner):
     else:
         labels.append(f"Function = {op['function']}")
     fmt = row["length_bits"] // 4
-    block = "\n".join(owner["block"])
+    block = "\n".join(translate_block(owner["block"]))
+    original = "\n".join(owner["block"])
     return (
         "<h2>命令编码</h2><p>承载指令 "
         + link(op_page(row["mnemonic"]), row["mnemonic"])
@@ -178,9 +194,13 @@ def tile_header(op, row, owner):
         + escape(" · ".join(labels))
         + f"</p><pre><code>(word &amp; 0x{mask:0{fmt}x}) == 0x{match:0{fmt}x}</code></pre>"
         + '<p class="meta">上式匹配指令和操作选择器。数据类型、绑定命令及布局仍须满足本操作的合法性条件。</p>'
-        + "<h3>Block 组成</h3><pre><code>"
+        + "<h3>指令块组成</h3><pre><code>"
         + escape(block)
         + "</code></pre>"
+        + '<details class="tile-block-source"><summary>查看规范中的块模板原文</summary>'
+        + '<pre lang="en"><code>'
+        + escape(original)
+        + "</code></pre></details>"
     )
 
 
@@ -188,8 +208,8 @@ def encoding_index(instructions):
     sections = []
     kinds = {r["encoding_kind"] for r in instructions}
     intro = (
-        "<p>按指令长度和固定比特的 Match 排序。表中数值按逻辑位编号书写，"
-        "先取出的 Part 0 占低位。硬件匹配条件为 <code>(word &amp; mask) == match</code>。"
+        "<p>本表按指令长度分组，组内按固定比特的匹配值排序。"
+        "先取出的片段（Part 0）占低位。译码时先检查 <code>(word &amp; mask) == match</code>。"
         "各形式的字段取值限制见指令页。</p>"
     )
     for width in sorted({r["length_bits"] for r in instructions}):
@@ -214,7 +234,7 @@ def encoding_index(instructions):
         sections.append(
             f'<section data-section id="w{width}"><h2>{width} 位 · {len(rows)} 个形式</h2>'
             '<div class="table-scroll"><table class="lookup bitlookup"><thead><tr>'
-            "<th>汇编形式</th><th>Match</th><th>Mask</th><th>格式</th></tr></thead>"
+            "<th>汇编语法</th><th>匹配值（Match）</th><th>掩码（Mask）</th><th>格式</th></tr></thead>"
             f"<tbody>{''.join(rows)}</tbody></table></div></section>"
         )
     return (
@@ -257,14 +277,21 @@ def sources(commit, inputs, manifest, lock):
         + "</dl>"
     )
     body += (
-        "<h2>如何使用编码图</h2><p>按 Part 编号从小到大取指。每个 Part 内左侧为高位，"
-        "格顶标出本 Part 内的位号。固定的 0、1 进入 Mask/Match，其余位承载字段。"
+        "<h2>如何使用编码图</h2><p>从编号最小的片段开始取指，每段内左侧为高位。"
+        "格顶标出段内位号。掩码为 1 的位必须与匹配值相同；其余位由操作数字段占用。"
         "分散在多个格子里的同名字段按标出的值位组合；字段域和形式约束决定合法取值。</p>"
-        "<h2>语义与实现状态</h2><p>公共与 scoped 形式对照本版锁定的 PTO 定义。"
+        "<h2>语义与实现状态</h2><p>公共指令及带作用域的指令以本版锁定的 PTO 规范为依据。"
         "Linx 专有形式单列其依据和已知语义缺口。芯片实现还需检查操作数合法性、异常及提交时机。"
         "整机验证进度见发行说明。</p>"
     )
-    body += link(repo + "docs/zh/releases/v0.59.1.md", "0.59.1 发行说明")
+    body += (
+        "<p>"
+        + link(repo + "docs/zh/releases/v0.59.1.md", "0.59.1 发行说明")
+        + " · "
+        + link("https://linxisa.github.io/", "灵犀指令集架构中文站")
+        + "</p>"
+    )
+    body += "<p>中文站可查阅指令的设计背景和早期版本的示例。编写 0.59.1 汇编或译码器时，请使用本手册列出的操作数和编码。</p>"
     body += '<h2>离线规范文件</h2><div class="table-scroll"><table><tr><th>文件</th><th>SHA-256</th></tr>'
     for path, data in inputs.items():
         body += f"<tr><td>{link('spec/' + Path(path).name, Path(path).name)}</td><td><code>{sha256(data).hexdigest()}</code></td></tr>"
@@ -324,6 +351,7 @@ def build():
         raise ValueError("catalog audit failed: " + "\n".join(discrepancies))
     rows = catalog["instructions"]
     forms = unique_names(rows)
+    routes = reference_routes(commit)
     common_paths = {}
     for path in paths[4:]:
         doc = json.loads(inputs[path])
@@ -341,11 +369,11 @@ def build():
             raise ValueError(f"{name} has no carrier {carrier}")
         carrier_ops[carrier].append(op)
         tile_path = tile_owners[name]["source_path"]
-        desc = brief(tile_path, tile_summary(op, catalog))
+        desc = tile_summary(op, catalog)
         tile_list.append((name, tile_page(name), desc, op["engine"], carrier))
         bodies[tile_page(name)] = (
             name,
-            reader_detail(tile_path)
+            f'<p class="intro">{escape(desc)}</p>'
             + tile_header(op, forms[carrier][0], tile_owners[name])
             + tile_detail(op, catalog)
             + operation_detail(tile_path),
@@ -357,16 +385,11 @@ def build():
         first = variants[0]
         base = first["mnemonic"]
         related = sorted(n for n in families[base] if n != name)
-        if "pto_scope" in first:
-            short = f"{first['pto_scope']} · " + summary(forms[base][0], catalog)
-        else:
-            short = summary(first, catalog)
-        primary_id = first.get("pto_base_form_id") or first.get("pto_source_form_id")
-        primary_owner = asl_owners.get(primary_id, {}).get("source_path", "")
-        if primary_owner:
-            short = brief(primary_owner, short)
-            if "pto_scope" in first:
-                short = f"{first['pto_scope']} GM 作用域。" + short
+        short = (
+            scoped_summary(first, catalog)
+            if "pto_scope" in first
+            else summary(first, catalog)
+        )
         terms = " ".join([*(r["asm"] for r in variants), *(r["id"] for r in variants)])
         entries.append((name, op_page(name), short, first["uop_big_kind"], terms))
         if "pto_scope" not in first:
@@ -385,20 +408,14 @@ def build():
                         name,
                     )
                 )
-        body = (
-            f'<p class="meta">{escape(first["group"])} · {len(variants)} 个编码形式</p>'
-        )
+        sizes = "、".join(str(n) for n in sorted({r["length_bits"] for r in variants}))
+        count = f" · {len(variants)} 种汇编形式" if len(variants) > 1 else ""
+        body = f'<p class="meta">{escape(group_name(first["group"]))} · {sizes} 位{count}</p>'
         if related:
             body += (
                 "<p>关联形式　"
                 + " · ".join(link(op_page(n), n) for n in related)
                 + "</p>"
-            )
-        if len(variants) > 1:
-            body += (
-                '<ol class="form-links">'
-                + "".join(f"<li>{link('#' + r['id'], r['asm'])}</li>" for r in variants)
-                + "</ol>"
             )
         if carrier_ops[name]:
             body += (
@@ -408,8 +425,24 @@ def build():
                 )
                 + "</p>"
             )
-        for row in variants:
-            text = "" if "pto_scope" in row else detail(row, catalog)
+        for sequence, row in enumerate(variants, start=1):
+            multiple = len(variants) > 1
+            if multiple:
+                qualifier = ""
+                if sum(v["asm"] == row["asm"] for v in variants) > 1:
+                    qualifier = (
+                        f" · 匹配值 0x{fixed_bits(row)[1]:0{row['length_bits'] // 4}x}"
+                    )
+                initially_open = " open" if sequence == 1 else ""
+                body += (
+                    f'<details class="variant"{initially_open}><summary>形式 {sequence}　'
+                    f"<code>{escape(row['asm'])}</code>{qualifier}</summary>"
+                )
+            text = (
+                ""
+                if "pto_scope" in row
+                else detail(row, catalog, show_repeated_summary=False)
+            )
             if "pto_scope" in row:
                 base_form = next(
                     r
@@ -425,25 +458,25 @@ def build():
                 )
             source_id = row.get("pto_base_form_id") or row.get("pto_source_form_id")
             owner = asl_owners.get(source_id, {}).get("source_path", "")
-            explanation = reader_detail(owner) if owner else ""
-            if row.get("pto_scope"):
-                explanation = (
-                    f"<p><strong>{escape(row['pto_scope'])}</strong> GM 作用域。"
-                    "本形式为 64 位封装，成功提交后 TPC 增加 8 字节。以下中文导读与 ASL 摘录描述基础操作。</p>"
-                    + explanation
-                )
+            lead = (
+                scoped_summary(row, catalog)
+                if row.get("pto_scope")
+                else summary(row, catalog)
+            )
             form_id = escape(row["id"])
             body += (
-                f'<article class="form" id="{form_id}"><h2>汇编形式</h2><pre><code>{escape(row["asm"])}</code></pre>'
-                + explanation
-                + "<h3>编码</h3>"
+                f'<article class="form" id="{form_id}"><h2>说明</h2><p class="intro">{escape(lead)}</p>'
+                + f"<h3>汇编语法</h3><pre><code>{escape(row['asm'])}</code></pre>"
+                + "<h3>编码格式</h3>"
                 + render_encoding(row, catalog)
-                + "<h3>操作</h3>"
+                + "<h3>执行效果与约束</h3>"
                 + text
                 + (operation_detail(owner) if owner else sail_detail(row))
                 + form_provenance(row, commit, common_paths)
                 + "</article>"
             )
+            if multiple:
+                body += "</details>"
             mask, match = fixed_bits(row)
             audit.append(
                 {
@@ -461,6 +494,14 @@ def build():
                     "scope": row.get("pto_scope"),
                 }
             )
+        if base in routes:
+            body += (
+                '<p class="related-doc">'
+                + link(routes[base], f"相关资料：中文站 {base} 指令说明")
+                + "</p>"
+            )
+        if name == "DC.IALL":
+            body += '<p class="meta">版本差异：中文站的旧例写作 <code>dc.iall SrcL</code>。0.59.1 的指令字固定为 <code>0x0010602b</code>，汇编时省略操作数。</p>'
         bodies[op_page(name)] = (name, body)
     commands = json.loads(inputs[paths[5]])["forms"]
     carrier_form = next(f for f in commands if f["mnemonic"] == "BSTART.TEPL")

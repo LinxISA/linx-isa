@@ -27,6 +27,16 @@ def _hex(value: int, width_bits: int) -> str:
     return f"0x{value:0{(width_bits + 3) // 4}x}"
 
 
+def _group_binary(value: str) -> str:
+    """Group long binary labels from the least-significant side by nibbles."""
+    if len(value) < 8:
+        return value
+    first = len(value) % 4 or 4
+    return " ".join(
+        [value[:first], *(value[i : i + 4] for i in range(first, len(value), 4))]
+    )
+
+
 def _ranges(values: Iterable[int]) -> str:
     ordered = sorted(set(int(value) for value in values))
     runs: list[str] = []
@@ -349,7 +359,7 @@ def _field_label(
     width = int(segment["width"])
     if "const" in segment:
         value = int(segment["const"]["value"])
-        return f"{value:0{width}b}", "固定值", True
+        return _group_binary(f"{value:0{width}b}"), "固定值", True
     if piece is None:
         raise ValueError("dynamic segment has no compiled field piece")
     name = str(piece["field_name"])
@@ -362,7 +372,11 @@ def _field_label(
         )
     if fixed_by_constraint:
         value = (effective_match & segment_bits) >> lsb
-        return f"{name} = {value:0{width}b}", "单值约束形成的固定字段", True
+        return (
+            f"{name} = {_group_binary(f'{value:0{width}b}')}",
+            "单值约束形成的固定字段",
+            True,
+        )
     value_msb = piece.get("value_msb")
     value_lsb = piece.get("value_lsb")
     if value_msb is not None and value_lsb is not None:
@@ -441,7 +455,7 @@ def _render_constraints(row: dict[str, Any], catalog: dict[str, Any]) -> str:
         value = int(field["value"])
         text = (
             f"源定义固定字段 <code>{escape(str(field['name']))}</code> = "
-            f"<code>{value:#x}</code>（{width} bit）"
+            f"<code>{value:#x}</code>（{width} 位）"
         )
         if text not in seen:
             seen.add(text)
@@ -514,9 +528,9 @@ def _render_field_table(row: dict[str, Any]) -> str:
                     if value_msb == int(piece["value_lsb"])
                     else f"{value_msb}:{piece['value_lsb']}"
                 )
-                mapping += f" → value[{value_range}]"
+                mapping += f" → 字段值[{value_range}]"
             mappings.append(mapping)
-        signed = {True: "signed", False: "unsigned", None: "encoding-defined"}.get(
+        signed = {True: "有符号", False: "无符号", None: "由编码定义"}.get(
             field.get("signed"), str(field.get("signed"))
         )
         rows.append(
@@ -524,7 +538,7 @@ def _render_field_table(row: dict[str, Any]) -> str:
             f"<td><code>{escape(name)}</code></td><td>{width}</td><td><code>{escape(', '.join(mappings))}</code></td><td>{signed}</td></tr>"
         )
     return (
-        '<table class="encoding-operands"><thead><tr><th>Field</th><th>Width</th><th>Instruction/value mapping</th><th>Signedness</th></tr></thead><tbody>'
+        '<table class="encoding-operands"><thead><tr><th>字段</th><th>位宽</th><th>指令位与字段值映射</th><th>符号属性</th></tr></thead><tbody>'
         + "".join(rows)
         + "</tbody></table>"
     )
@@ -561,10 +575,10 @@ def _render_tepl_selectors(row: dict[str, Any]) -> str:
         )
     reserved = 128 - len(used)
     return (
-        '<section class="tepl-selectors"><h4>Published Mode/Function selectors</h4>'
-        f"<p>The published PTO 0.59.1 operation set assigns {len(used)} of 128 composite selectors. "
-        f"The remaining {reserved} unlisted Mode/Function pairs are reserved.</p>"
-        "<table><thead><tr><th>Mode</th><th>Function</th><th>Selector</th><th>Operation</th><th>Engine</th></tr></thead><tbody>"
+        '<section class="tepl-selectors"><h4>已发布的 Mode / Function 选择器</h4>'
+        f"<p>PTO 0.59.1 已发布操作占用 128 个组合选择器中的 {len(used)} 个。"
+        f"其余 {reserved} 个未列出的 Mode / Function 组合均为保留编码。</p>"
+        "<table><thead><tr><th>模式（Mode）</th><th>功能号（Function）</th><th>选择器</th><th>操作</th><th>执行引擎</th></tr></thead><tbody>"
         + "".join(rows)
         + "</tbody></table></section>"
     )
@@ -597,7 +611,7 @@ def render_encoding(row: dict[str, Any], catalog: dict[str, Any]) -> str:
             css_kind = "fixed" if is_fixed else "variable"
             cells.append(
                 f'<div class="encoding-field {css_kind}" style="--field-width:{segment_width}" '
-                f'title="{escape(kind)}，bit {msb}:{lsb}">'
+                f'title="{escape(kind)}，位 {msb}:{lsb}">'
                 f'<span class="encoding-bit-range">{msb}'
                 + (f":{lsb}" if msb != lsb else "")
                 + f"</span><code>{escape(label)}</code></div>"
@@ -607,12 +621,12 @@ def render_encoding(row: dict[str, Any], catalog: dict[str, Any]) -> str:
         logical_msb = logical_offset + width - 1
         part_html.append(
             f'<section class="encoding-part" data-part="{part_index}">'
-            f'<div class="encoding-part-heading"><strong>Part {part_index}</strong>'
-            f"<span>{width} bit · 逻辑位 [{logical_msb}:{logical_offset}]</span></div>"
+            f'<div class="encoding-part-heading"><strong>第 {part_index} 段（Part {part_index}）</strong>'
+            f"<span>{width} 位 · 逻辑位 [{logical_msb}:{logical_offset}]</span></div>"
             f'<div class="encoding-fields" style="--encoding-width:{width}">{"".join(cells)}</div>'
-            f'<dl class="encoding-exact"><div><dt>Mask</dt><dd><code>{_hex(mask, width)}</code></dd></div>'
-            f"<div><dt>Match</dt><dd><code>{_hex(match, width)}</code></dd></div>"
-            f"<div><dt>Pattern</dt><dd><code>{escape(str(encoded_part['pattern']))}</code></dd></div></dl>"
+            f'<dl class="encoding-exact"><div><dt>掩码（Mask）</dt><dd><code>{_hex(mask, width)}</code></dd></div>'
+            f"<div><dt>匹配值（Match）</dt><dd><code>{_hex(match, width)}</code></dd></div>"
+            f"<div><dt>位模式（Pattern）</dt><dd><code>{escape(str(encoded_part['pattern']))}</code></dd></div></dl>"
             f"</section>"
         )
         logical_offset += width
@@ -620,12 +634,12 @@ def render_encoding(row: dict[str, Any], catalog: dict[str, Any]) -> str:
     ordering = ""
     if len(raw_parts) > 1:
         ordering = (
-            '<p class="encoding-order">Catalog 顺序为 Part 0 → Part 1。'
-            "Part 0 先出现在指令流中，并占据组合编码的最低逻辑位。</p>"
+            '<p class="encoding-order">目录中的编码段顺序为 Part 0 → Part 1。'
+            "Part 0 最先出现在指令流中，并占据组合编码的最低逻辑位。</p>"
         )
     return (
         '<div class="instruction-encoding">'
-        f'<div class="encoding-summary"><span>{int(row["length_bits"])} bit</span>'
+        f'<div class="encoding-summary"><span>{int(row["length_bits"])} 位</span>'
         f"<span>{escape(str(row.get('encoding_kind', '')))}</span></div>"
         + ordering
         + "".join(part_html)

@@ -1,5 +1,16 @@
 /* The full index and all links remain usable with scripting disabled. */
 (() => {
+  // Encoding-index links may target any form in a multi-form instruction.
+  function showLinkedForm() {
+    const target = document.getElementById(location.hash.slice(1));
+    const variant = target?.closest("details.variant");
+    if (variant && !variant.open) {
+      variant.open = true;
+      target.scrollIntoView();
+    }
+  }
+  window.addEventListener("hashchange", showLinkedForm);
+  showLinkedForm();
   const controls = document.querySelector(".search");
   if (!controls) return;
   const input = controls.querySelector("input");

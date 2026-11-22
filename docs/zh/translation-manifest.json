@@ -10,8 +10,8 @@
       "translation_sha256": "7defca9868f7f21c95537828137f69e58f4734085e7735da5d919fedf8a8c31b"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "13f6bb1d26c02dca1e4df82c5dd1b770d2cf3b9e146fdbe633155c9d8eb2e5ca",
-      "translation_sha256": "e14303bb4f650514dad9968bb6d6acd5c6de3def57cb36e6d71053b150e2dd22"
+      "source_sha256": "b7ffff9a42a020ada46574335eb2e488fedd431cf99dd95c9e054684b0e9b1f8",
+      "translation_sha256": "bc554e45118702314095fec249882783777bf9ef32ca64f3681ff1d59a6749c2"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
