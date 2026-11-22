@@ -31,6 +31,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             (ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8")
         )
         cls.candidate = build()
+        cls.profile_status = cls.candidate.get("profile_status") or cls.candidate["candidate_status"]
 
     def test_counts_identity_and_linx_only_preservation(self):
         instructions = self.candidate["instructions"]
@@ -75,7 +76,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         self.assertEqual(
             state["system_registers"], self.baseline["state"]["system_registers"]
         )
-        inherited = self.candidate["candidate_status"]["inherited_v058_views"]
+        inherited = self.profile_status["inherited_v058_views"]
         self.assertEqual(
             inherited["status"],
             "schema-completeness-only-not-published-v0.59-authority",
@@ -89,7 +90,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             candidate_builder.BINDINGS.read_bytes()
         ).hexdigest()
         self.assertEqual(
-            self.candidate["candidate_status"]["source_bindings_sha256"], expected
+            self.profile_status["source_bindings_sha256"], expected
         )
         with tempfile.TemporaryDirectory() as directory:
             stale = Path(directory) / "bindings.json"
@@ -104,6 +105,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         self.assertIn("0.58.0", V058_DERIVED_VERSIONS)
         self.assertNotIn("0.58.0", V058_FIRST_USE_VERSIONS)
         self.assertIn("0.59.1-prepublication", V058_FIRST_USE_VERSIONS)
+        self.assertIn("0.59.1", V058_FIRST_USE_VERSIONS)
         self.assertEqual(render(self.candidate), render(build()))
         self.assertEqual(self.candidate["schema"], "linxisa.catalog.v0")
         self.assertEqual(self.candidate["instruction_count"], 1499)

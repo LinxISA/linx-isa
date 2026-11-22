@@ -20,22 +20,26 @@ from export_linxisa_v0591_sail import export as export_sail
 
 
 class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
-    def test_package_is_deterministic_and_prepublication(self):
+    def test_package_is_deterministic_and_tracks_qualification(self):
         selection, package = build()
         self.assertEqual((selection, package), build())
-        self.assertEqual(selection["default_profile"], "v0.58")
-        self.assertEqual(selection["profiles"]["v0.59"]["state"], "selectable-prepublication")
-        self.assertFalse(selection["profiles"]["v0.59"]["release_qualified"])
-        self.assertEqual(package["state"], "prepared-prepublication")
-        self.assertFalse(package["publication_allowed"])
+        evidence = package["qualification"]["evidence"]
+        qualified = evidence is not None
+        self.assertEqual(selection["default_profile"], "v0.59" if qualified else "v0.58")
+        self.assertEqual(
+            selection["profiles"]["v0.59"]["state"],
+            "active-release-profile" if qualified else "selectable-prepublication",
+        )
+        self.assertEqual(selection["profiles"]["v0.59"]["release_qualified"], qualified)
+        self.assertEqual(package["state"], "release-qualified" if qualified else "prepared-prepublication")
+        self.assertEqual(package["publication_allowed"], qualified)
         self.assertTrue(package["activation_policy"]["explicit_profile_ready"])
         self.assertTrue(
             package["activation_policy"][
                 "published_default_switch_requires_release_qualification"
             ]
         )
-        self.assertFalse(package["qualification"]["release_qualified"])
-        self.assertIsNone(package["qualification"]["evidence"])
+        self.assertEqual(package["qualification"]["release_qualified"], qualified)
 
     def test_package_binds_full_catalog_and_candidate_sail(self):
         _selection, package = build()
@@ -80,20 +84,27 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             self.assertIn("model/decode/decode.sail", package["files"])
             self.assertIn("model/linxisa_v0591.sail", package["files"])
 
-    def test_selector_requires_explicit_prepublication_opt_in(self):
+    def test_selector_uses_qualification_and_preserves_v058_compatibility(self):
         command = [sys.executable, "tools/isa/select_linxisa_profile.py"]
+        _, package = build()
+        release_qualified = package["qualification"]["release_qualified"]
         default = subprocess.run(
             command, cwd=ROOT, check=True, capture_output=True, text=True
         )
-        self.assertEqual(json.loads(default.stdout)["profile"], "v0.58")
-        blocked = subprocess.run(
+        self.assertEqual(json.loads(default.stdout)["profile"], "v0.59" if release_qualified else "v0.58")
+        compatible = subprocess.run(
+            [*command, "--profile", "v0.58"],
+            cwd=ROOT, check=True, capture_output=True, text=True,
+        )
+        self.assertEqual(json.loads(compatible.stdout)["profile"], "v0.58")
+        explicit = subprocess.run(
             [*command, "--profile", "v0.59"],
             cwd=ROOT,
             check=False,
             capture_output=True,
             text=True,
         )
-        self.assertNotEqual(blocked.returncode, 0)
+        self.assertEqual(explicit.returncode == 0, release_qualified)
         selected = subprocess.run(
             [*command, "--profile", "v0.59", "--allow-prepublication"],
             cwd=ROOT,
@@ -101,7 +112,10 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             capture_output=True,
             text=True,
         )
-        self.assertEqual(json.loads(selected.stdout)["state"], "selectable-prepublication")
+        self.assertEqual(
+            json.loads(selected.stdout)["state"],
+            "active-release-profile" if release_qualified else "selectable-prepublication",
+        )
         qualified = subprocess.run(
             [
                 *command,
@@ -115,7 +129,7 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             capture_output=True,
             text=True,
         )
-        self.assertNotEqual(qualified.returncode, 0)
+        self.assertEqual(qualified.returncode == 0, release_qualified)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "isa/sail"
 SPEC = ROOT / "isa/v0.59/linxisa-v0.59.json"
-ENTRY_TEXT = """// Generated LinxISA v0.59.1 prepublication entry.
+ENTRY_TEXT = """// Generated LinxISA v0.59.1 entry.
 // The package exporter replaces decode/decode.sail from the canonical catalog.
 
 $include "linxisa.sail"
@@ -75,7 +75,7 @@ def export(output: Path) -> dict:
         "schema": "linxisa.sail-package.v1",
         "profile": "v0.59",
         "version": "0.59.1",
-        "state": "prepublication",
+        "state": "release" if spec["version"] == "0.59.1" else "prepublication",
         "entry": "model/linxisa_v0591.sail",
         "catalog": {
             "path": "isa/v0.59/linxisa-v0.59.json",
@@ -117,9 +117,8 @@ def check(output: Path) -> None:
         raise ValueError("Sail package checksums are stale")
     with tempfile.TemporaryDirectory(prefix="linx-sail-v0591-export-check-") as directory:
         expected = Path(directory) / "sail"
-        export(expected)
-        expected_files = package_files(expected)
-    if files != expected_files:
+        expected_package = export(expected)
+    if package != expected_package:
         raise ValueError("Sail package differs from a fresh export")
 
 

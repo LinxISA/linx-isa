@@ -66,6 +66,7 @@ V058_DERIVED_VERSIONS = {
     "0.58.6",
     "0.58.7",
     "0.59.1-prepublication",
+    "0.59.1",
 }
 
 V058_FIRST_USE_VERSIONS = V058_DERIVED_VERSIONS - {"0.58.0"}

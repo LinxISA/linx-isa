@@ -70,6 +70,17 @@
       "freshness_hours": 24
     },
     {
+      "gate_key": "ISA::v0.59 catalog and assembled Sail",
+      "domain": "ISA",
+      "owner": "arch",
+      "command": "python3 \"$ROOT/tools/isa/build_golden.py\" --profile v0.59 --check && python3 \"$ROOT/tools/isa/validate_spec.py\" --profile v0.59 && python3 \"$ROOT/tools/isa/build_linxisa_v0591_release_activation.py\" --check && python3 \"$ROOT/tools/isa/check_v0591_candidate_dispatch_sail.py\"",
+      "profiles": ["release-strict"],
+      "tiers": ["pr", "nightly"],
+      "required": true,
+      "artifacts": ["isa/v0.59/linxisa-v0.59.json", "isa/v0.59/release_package.json"],
+      "freshness_hours": 24
+    },
+    {
       "gate_key": "ISA::AVS contract",
       "domain": "ISA",
       "owner": "integration",
