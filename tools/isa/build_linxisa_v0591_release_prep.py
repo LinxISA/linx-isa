@@ -71,7 +71,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "state": "prepared-prepublication",
             "profile_selection": "isa/profile-selection.json",
             "package": "isa/v0.59/release_package.json",
-            "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+            "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
+            "sail_entry": "model/linxisa_v0591.sail",
             "default_profile_changed": False,
         },
         "notes": [
@@ -124,7 +125,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "profile_selection": "isa/profile-selection.json",
             "package": "isa/v0.59/release_package.json",
             "catalog": "isa/v0.59/linxisa-v0.59.json",
-            "sail_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+            "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
+            "sail_entry": "model/linxisa_v0591.sail",
             "default_profile": "v0.58",
         },
         "qualification": {

@@ -9,11 +9,12 @@ import shutil
 import subprocess
 import tempfile
 
+from export_linxisa_v0591_sail import check as check_export
+from export_linxisa_v0591_sail import export as export_sail
+
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOLCHAIN = ROOT / "isa/sail/toolchain.json"
-ENTRY = ROOT / "isa/sail/model/linxisa_v0591_candidate.sail"
-DIRECTED = ROOT / "isa/sail/tests/v0591_candidate_dispatch_tests.sail"
 ACTIVE_SPEC = ROOT / "isa/v0.58/linxisa-v0.58.json"
 
 
@@ -58,8 +59,13 @@ def main() -> int:
         )
     with tempfile.TemporaryDirectory(prefix="linx-sail-v0591-dispatch-") as directory:
         output = Path(directory)
+        sail_tree = output / "sail"
+        export_sail(sail_tree)
+        check_export(sail_tree)
+        entry = sail_tree / "model/linxisa_v0591.sail"
+        directed_path = sail_tree / "tests/v0591_candidate_dispatch_tests.sail"
         memo = output / "z3-memo"
-        run([sail, "--memo-z3-path", str(memo), "--just-check", str(ENTRY)])
+        run([sail, "--memo-z3-path", str(memo), "--just-check", str(entry)])
         run(
             [
                 sail,
@@ -68,7 +74,7 @@ def main() -> int:
                 "-c",
                 "-o",
                 str(output / "linxisa_v0591_candidate"),
-                str(ENTRY),
+                str(entry),
             ]
         )
         directed = run(
@@ -79,14 +85,15 @@ def main() -> int:
                 "--no-color",
                 "--no-warn",
                 "-i",
-                str(DIRECTED),
+                str(directed_path),
             ],
             input_text="main()\n:run\n",
         )
         if "Result = ()" not in directed:
             raise RuntimeError("candidate dispatch directed tests did not complete")
     print(
-        f"OK: opt-in v0.59.1 dispatch passed Sail {expected} parser, directed tests and C backend"
+        f"OK: assembled v0.59.1 catalog and scoped dispatch passed Sail {expected} "
+        "parser, directed tests and C backend"
     )
     return 0
 
