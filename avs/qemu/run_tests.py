@@ -642,6 +642,12 @@ EXTRA_LLCFLAGS_BY_SUITE: dict[str, list[str]] = {
 }
 
 OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
+    "atomic": [
+        r"0b 70 01 04\s+dma\.free\.s\b",
+        r"0b 70 01 06\s+dma\.free\.l\b",
+        r"31 11 31 22\s+MCOPY\.DS\b",
+        r"31 11 31 26\s+MCOPY\.DL\b",
+    ],
     "tile_v0583_tlsu": [
         r"\bBSTART\.TLOAD\s+S32\b",
         r"\bBSTART\.TSTORE\s+S32\b",
@@ -665,10 +671,13 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
     "tile_v0586_gm_atom_red": [
         r"\bBSTART\.MGATHER\.ADD\s+U32\b",
         r"\bBSTART\.MSCATTER\.POPC\s+U32\b",
+        r"\bC\.B\.DIMI\s+32,\s+->lb2\b",
         r"\bB\.IOT\s+t#1,\s+u#1,\s+mask=0001,\s+last,\s+->t<128B>",
     ],
     "tile_v0586_timg2col": [
-        r"81 11\s+.*<unknown>[\s\S]*?c1 c9\s+.*<unknown>",
+        r"(?:81 11 c1 c9[ \t]+BSTART\.TIMG2COL\b"
+        r"|81 11[ \t]+<unknown>[ \t]*\r?\n"
+        r"[ \t]*[0-9a-f]+:[ \t]+c1 c9[ \t]+<unknown>)",
         r"\bB\.DATR\s+ND2M16,\s+DTYPE_NONE,\s+Zero\b",
         r"\bB\.IOT\s+mask=1111,\s+last,\s+->m<512B>",
     ],
@@ -694,7 +703,7 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
     ],
 }
 
-OBJDUMP_CARRIER_SUITES: set[str] = set(EXTRA_SOURCES_BY_SUITE)
+OBJDUMP_CARRIER_SUITES: set[str] = set(EXTRA_SOURCES_BY_SUITE) | {"atomic"}
 
 EXPERIMENTAL_SUITES: set[str] = {
     # Compiler-generated SIMT remains opt-in until its objdump expectations are

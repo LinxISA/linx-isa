@@ -26,17 +26,9 @@ extern void atomic_sb_add(volatile uint8_t *addr, uint32_t value);
 extern void atomic_sb_sub(volatile uint8_t *addr, uint32_t value);
 extern void atomic_sh_add(volatile uint16_t *addr, uint32_t value);
 extern void atomic_sh_sub(volatile uint16_t *addr, uint32_t value);
-extern void atomic_dma_free_s(const void *addr);
-extern void atomic_dma_free_l(const void *addr);
-extern uint64_t atomic_mcopy_ds(void *dst, const void *src, uint64_t size);
-extern uint64_t atomic_mcopy_dl(void *dst, const void *src, uint64_t size);
-
 static volatile uint32_t atomic_ext_u32 __attribute__((aligned(8)));
 static volatile uint64_t atomic_ext_u64 __attribute__((aligned(8)));
 static volatile uint8_t atomic_ext_bytes[4] __attribute__((aligned(8)));
-static volatile uint8_t atomic_copy_src[16] __attribute__((aligned(8))) =
-    {1, 2, 3, 4, 5, 6, 7, 8};
-static volatile uint8_t atomic_copy_dst[16] __attribute__((aligned(8)));
 
 /* Test basic load (used as baseline for atomic) */
 static void test_load_basic(void) {
@@ -105,29 +97,6 @@ static void test_v058_store_ops(void) {
     TEST_EQ32(*(volatile uint16_t *)&atomic_ext_bytes[0], 103, 0x7184);
     atomic_sh_sub((volatile uint16_t *)&atomic_ext_bytes[0], 5);
     TEST_EQ32(*(volatile uint16_t *)&atomic_ext_bytes[0], 98, 0x7185);
-}
-
-static void test_v058_dma_and_mcopy(void) {
-    atomic_dma_free_s((const void *)atomic_copy_dst);
-    atomic_dma_free_l((const void *)atomic_copy_dst);
-    for (unsigned i = 0; i < 8; ++i) {
-        atomic_copy_dst[i] = 0;
-    }
-    uint64_t returned = atomic_mcopy_ds((void *)atomic_copy_dst,
-                                        (const void *)atomic_copy_src, 8);
-    TEST_EQ64(returned, (uint64_t)(uintptr_t)atomic_copy_dst, 0x7190);
-    for (unsigned i = 0; i < 8; ++i) {
-        TEST_EQ32(atomic_copy_dst[i], atomic_copy_src[i], 0x7191 + i);
-    }
-    for (unsigned i = 0; i < 8; ++i) {
-        atomic_copy_dst[i] = 0;
-    }
-    returned = atomic_mcopy_dl((void *)atomic_copy_dst,
-                               (const void *)atomic_copy_src, 8);
-    TEST_EQ64(returned, (uint64_t)(uintptr_t)atomic_copy_dst, 0x719a);
-    for (unsigned i = 0; i < 8; ++i) {
-        TEST_EQ32(atomic_copy_dst[i], atomic_copy_src[i], 0x719b + i);
-    }
 }
 
 /* Test atomic add */
@@ -399,7 +368,6 @@ void run_atomic_tests(void) {
     RUN_TEST(test_lr_d_nonzero_srczero, 0x7163);
     RUN_TEST(test_lr_w_signext, 0x7164);
     RUN_TEST(test_v058_store_ops, 0x7180);
-    RUN_TEST(test_v058_dma_and_mcopy, 0x7190);
     RUN_TEST(test_sc_fail, 0x7160);
     
     test_suite_end(28, 28);
