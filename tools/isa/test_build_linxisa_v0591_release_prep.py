@@ -19,22 +19,22 @@ from build_golden import _profile_defaults
 
 
 class LinxISAV0591ReleasePrepTest(unittest.TestCase):
-    def test_manifest_is_deterministic_and_explicitly_unqualified(self):
+    def test_manifest_is_deterministic_and_specification_qualified(self):
         meta, manifest = build()
         self.assertEqual((meta, manifest), build())
-        self.assertEqual(meta["status"], "inactive-prepublication")
-        self.assertEqual(manifest["status"], "development-not-published")
-        self.assertIsNone(manifest["publication"])
+        self.assertEqual(meta["status"], "published-specification")
+        self.assertEqual(manifest["status"], "published-specification")
+        self.assertEqual(manifest["publication"]["version"], "0.59.1")
         self.assertNotIn("component_pins", manifest)
         self.assertNotIn("tag", manifest)
         self.assertFalse(manifest["policy"]["default_profile_changed"])
-        self.assertTrue(
-            all(
-                value is False
-                for key, value in manifest["qualification"].items()
-                if key.endswith("_qualified")
-            )
-        )
+        self.assertTrue(manifest["qualification"]["release_qualified"])
+        self.assertTrue(manifest["qualification"]["specification_qualified"])
+        self.assertTrue(manifest["qualification"]["encoding_qualified"])
+        self.assertTrue(manifest["qualification"]["sail_package_qualified"])
+        self.assertFalse(manifest["qualification"]["linux_qualified"])
+        self.assertFalse(manifest["qualification"]["leaf_components_qualified"])
+        self.assertFalse(manifest["qualification"]["system_runtime_qualified"])
         self.assertEqual(
             _profile_defaults(),
             ("isa/v0.58", "isa/v0.58/linxisa-v0.58.json"),
@@ -55,6 +55,14 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
             )
         )
         self.assertEqual(manifest["identity"]["release"], lock["release"])
+        self.assertEqual(
+            manifest["upstream_pto"],
+            {
+                "release": lock["release"],
+                "specification_status": lock["specification_status"],
+                "publication": lock["publication"],
+            },
+        )
         self.assertEqual(manifest["identity"]["encoding_abi"], lock["encoding_abi"])
         self.assertEqual(
             meta["cardinality"]["instructions"], catalog["instruction_count"]
@@ -66,6 +74,19 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
                 for key in ("common_forms", "linx_only_forms", "scoped_forms")
             },
             {"common_forms": 578, "linx_only_forms": 216, "scoped_forms": 705},
+        )
+        tile = manifest["authoritative_sources"]["tile_operations"]
+        self.assertEqual(tile["path"], "isa/v0.59/state/pto_tile_operations.json")
+        self.assertEqual(tile["count"], 119)
+        self.assertEqual(tile["upstream_sha256"], lock["catalogs"]["tile_operations"]["sha256"])
+        self.assertEqual(tile["precedence"], "overrides-archival-catalog-state.pto_ops")
+        self.assertEqual(
+            manifest["authoritative_sources"]["system_registers"]["upstream_sha256"],
+            lock["catalogs"]["system_registers"]["sha256"],
+        )
+        self.assertEqual(
+            manifest["authoritative_sources"]["numeric_conformance_vectors"]["upstream_sha256"],
+            lock["numeric_conformance_vectors"]["sha256"],
         )
 
     def test_checked_files_match_builder(self):

@@ -1,9 +1,9 @@
 {
   "schema": "linxisa.pto-v0591-candidate.v1",
-  "version": "0.59.1-candidate",
-  "candidate_status": {
-    "state": "inactive-static-integration",
-    "active_profile": "v0.58",
+  "version": "0.59.1",
+  "release_status": {
+    "state": "published-frozen-bindings",
+    "selection": "explicit-v0.59-profile",
     "source_lock": "isa/v0.59/pto-spec.lock.json",
     "pto_release": "0.59.1",
     "publication": {
@@ -14,7 +14,7 @@
     },
     "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
     "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
-    "scope": "Static released-catalog integration. Scoped execution and full PTO 0.59.1 Sail/QEMU/leaf adoption remain separate gates."
+    "scope": "Published LinxISA 0.59.1 specification bindings. Platform, QEMU, Linux, RTL, and leaf-component adoption remain separate gates."
   },
   "baseline": {
     "path": "isa/v0.58/linxisa-v0.58.json",

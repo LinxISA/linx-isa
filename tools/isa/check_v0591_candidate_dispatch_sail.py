@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the opt-in v0.59.1 dispatch entry with pinned Sail."""
+"""Check the published v0.59.1 dispatch entry with pinned Sail."""
 
 from __future__ import annotations
 
@@ -36,11 +36,11 @@ def main() -> int:
     expected = str(json.loads(TOOLCHAIN.read_text(encoding="utf-8"))["sail_version"])
     sail = shutil.which("sail")
     if sail is None:
-        raise SystemExit("candidate dispatch Sail check failed: sail binary not found")
+        raise SystemExit("v0.59.1 dispatch Sail check failed: sail binary not found")
     version = run([sail, "--version"])
     if f"Sail {expected}" not in version:
         raise SystemExit(
-            f"candidate dispatch Sail check failed: expected Sail {expected}, got {version.strip()!r}"
+            f"v0.59.1 dispatch Sail check failed: expected Sail {expected}, got {version.strip()!r}"
         )
     active = json.loads(ACTIVE_SPEC.read_text(encoding="utf-8"))
     prefix_overlaps = []
@@ -54,7 +54,7 @@ def main() -> int:
             prefix_overlaps.append(item["id"])
     if prefix_overlaps:
         raise SystemExit(
-            "candidate dispatch Sail check failed: scoped prefix overlaps active "
+            "v0.59.1 dispatch Sail check failed: scoped prefix overlaps active "
             f"64-bit forms {prefix_overlaps}"
         )
     with tempfile.TemporaryDirectory(prefix="linx-sail-v0591-dispatch-") as directory:
@@ -102,4 +102,4 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except (OSError, RuntimeError, ValueError) as error:
-        raise SystemExit(f"candidate dispatch Sail check failed: {error}") from error
+        raise SystemExit(f"v0.59.1 dispatch Sail check failed: {error}") from error

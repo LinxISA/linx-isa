@@ -188,18 +188,18 @@ def build() -> dict[str, Any]:
     ]
     return {
         "schema": "linxisa.pto-v0591-candidate.v1",
-        "version": "0.59.1-candidate",
-        "candidate_status": {
-        "state": "inactive-static-integration",
-        "active_profile": "v0.58",
+        "version": "0.59.1",
+        "release_status": {
+        "state": "published-frozen-bindings",
+        "selection": "explicit-v0.59-profile",
         "source_lock": "isa/v0.59/pto-spec.lock.json",
         "pto_release": lock["release"],
         "publication": lock["publication"],
         "encoding_abi": lock["encoding_abi"],
         "encoding_projection_sha256": lock["encoding_projection_sha256"],
         "scope": (
-            "Static released-catalog integration. Scoped execution and full "
-            "PTO 0.59.1 Sail/QEMU/leaf adoption remain separate gates."
+            "Published LinxISA 0.59.1 specification bindings. Platform, QEMU, "
+            "Linux, RTL, and leaf-component adoption remain separate gates."
         ),
         },
         "baseline": {

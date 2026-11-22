@@ -25,6 +25,10 @@ PACKAGE_INPUTS = (
     "isa/v0.59/linxisa-v0.59.json",
     "isa/v0.59/pto-v0591-candidate.json",
     "isa/v0.59/pto-spec.lock.json",
+    "isa/v0.59/state/pto_tile_operations.json",
+    "isa/v0.59/state/pto_system_registers.json",
+    "isa/v0.59/state/pto_hardware_conformance_profile.json",
+    "isa/v0.59/state/pto_hardware_numeric_vectors.json",
     "isa/v0.59/meta.json",
     "isa/v0.59/release_manifest.json",
     "isa/sail/model/linxisa_v0591_candidate.sail",
@@ -32,10 +36,12 @@ PACKAGE_INPUTS = (
     "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
     "isa/sail/toolchain.json",
     "tools/isa/build_linxisa_v0591_candidate.py",
+    "tools/isa/build_pto_v0591_candidate.py",
     "tools/isa/build_linxisa_v0591_release_prep.py",
     "tools/isa/build_linxisa_v0591_release_activation.py",
     "tools/isa/build_golden.py",
     "tools/isa/export_linxisa_v0591_sail.py",
+    "tools/isa/gen_sail_decode.py",
     "tools/isa/check_v0591_candidate_dispatch_sail.py",
     "tools/isa/select_linxisa_profile.py",
     "tools/isa/validate_spec.py",
@@ -78,12 +84,12 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         raise ValueError("v0.59 catalog differs from its deterministic builder")
     meta, manifest = build_release_prep()
     if meta != load(META) or manifest != load(MANIFEST):
-        raise ValueError("v0.59 prepublication metadata or manifest is stale")
+        raise ValueError("v0.59 publication metadata or manifest is stale")
     if catalog.get("instruction_count") != 1499:
         raise ValueError("v0.59 release package requires all 1499 catalog rows")
-    status = catalog.get("candidate_status", {})
-    if status.get("state") != "prepublication-full-catalog":
-        raise ValueError("v0.59 catalog must remain explicitly prepublication")
+    status = catalog.get("release_status", {})
+    if status.get("state") != "published-specification-catalog":
+        raise ValueError("v0.59 catalog is not the published specification catalog")
     if status.get("counts") != {"common": 578, "linx_only": 216, "scoped": 705}:
         raise ValueError("v0.59 catalog cardinality is not 578+216+705")
     lock = load(LOCK)
@@ -95,6 +101,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "policy": {
             "profile_must_be_explicit_for_prepublication": True,
             "prepublication_requires_opt_in": True,
+            "published_nondefault_profiles_require_explicit_selection": True,
             "fallback_between_profiles_allowed": False,
         },
         "profiles": {
@@ -105,14 +112,20 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
                 "release_manifest": "isa/v0.58/release_manifest.json",
             },
             "v0.59": {
-                "state": "selectable-prepublication",
+                "state": "published-explicit-profile",
                 "version": "0.59.1",
                 "catalog": "isa/v0.59/linxisa-v0.59.json",
                 "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
                 "sail_entry": "model/linxisa_v0591.sail",
                 "release_manifest": "isa/v0.59/release_manifest.json",
                 "package": "isa/v0.59/release_package.json",
-                "release_qualified": False,
+                "release_qualified": True,
+                "qualification_scope": [
+                    "architecture-specification",
+                    "encoding",
+                    "sail-package",
+                ],
+                "platform_qualified": False,
             },
         },
     }
@@ -123,8 +136,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "schema": "linxisa.release-package.v1",
         "profile": "v0.59",
         "version": "0.59.1",
-        "state": "prepared-prepublication",
-        "publication_allowed": False,
+        "state": "published-specification",
+        "publication_allowed": True,
         "default_profile": "v0.58",
         "profile_selection": {
             "path": "isa/profile-selection.json",
@@ -143,23 +156,42 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "dispatch": "isa/sail/model/execute/v0591_candidate_dispatch.sail",
             "directed_tests": "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
             "toolchain": toolchain,
-            "state": "assembled-catalog-and-scoped-dispatch-prepared",
+            "state": "published-catalog-and-scoped-dispatch",
         },
         "inputs": input_hashes,
         "inputs_sha256": canonical_sha256(input_hashes),
+        "upstream_source_hashes": {
+            "tile_operations": lock["catalogs"]["tile_operations"],
+            "system_registers": lock["catalogs"]["system_registers"],
+            "hardware_conformance_profile": lock["hardware_conformance_profile"],
+            "numeric_conformance_vectors": lock["numeric_conformance_vectors"],
+        },
         "qualification": {
-            "release_qualified": False,
+            "release_qualified": True,
+            "qualification_scope": [
+                "architecture-specification",
+                "encoding",
+                "sail-package",
+            ],
+            "specification_qualified": True,
+            "encoding_qualified": True,
+            "sail_package_qualified": True,
             "component_pins_qualified": False,
             "linux_qualified": False,
             "system_runtime_qualified": False,
-            "evidence": None,
+            "platform_qualified": False,
+            "evidence": {
+                "catalog_builder": "tools/isa/build_linxisa_v0591_candidate.py --check",
+                "encoding_validator": "tools/isa/validate_spec.py --profile v0.59",
+                "sail_validator": "tools/isa/check_v0591_candidate_dispatch_sail.py",
+            },
             "remaining": list(
-                manifest["qualification"]["required_before_publication"]
+                manifest["qualification"]["remaining_platform_qualification"]
             ),
         },
         "activation_policy": {
             "explicit_profile_ready": True,
-            "published_default_switch_requires_release_qualification": True,
+            "published_default_switch_requires_platform_qualification": True,
             "default_switch_requested": False,
         },
         "required_checks": [

@@ -3,6 +3,16 @@
   "profile": "v0.59",
   "version": "0.59.1",
   "source_lock": "isa/v0.59/pto-spec.lock.json",
+  "upstream_pto": {
+    "release": "0.59.1",
+    "specification_status": "draft",
+    "publication": {
+      "tag": "v0.59.1.0",
+      "tag_object": "480b4661a6ee5088c7327552b5d66f32d083c83b",
+      "version": "0.59.1.0",
+      "release_url": "https://github.com/PTO-ISA/pto-spec/releases/tag/v0.59.1.0"
+    }
+  },
   "policy": {
     "pto_spec_is_sole_source_for_common_and_scoped_forms": true,
     "linx_only_rows_are_preserved_from_v0.58": true,
@@ -20,15 +30,45 @@
     "system_registers": 100,
     "extension_encoding_reservations": 50
   },
+  "authoritative_sources": {
+    "tile_operations": {
+      "path": "isa/v0.59/state/pto_tile_operations.json",
+      "sha256": "01c2900497d48b33fcfa54814db3f1ed12955dfd538adf3d7ea418c7fd2bf906",
+      "count": 119,
+      "upstream_path": "spec/catalog/tile-operations.json",
+      "upstream_sha256": "29f1ffe575c701b416b9205ff9377f92f72b5d48a091c1aa3f9c9fc7e0d49033",
+      "precedence": "overrides-archival-catalog-state.pto_ops"
+    },
+    "system_registers": {
+      "path": "isa/v0.59/state/pto_system_registers.json",
+      "sha256": "308456fe28ce4dab1b90e802f316c8b8d65fe5afcd86a672dcf3804bf73fc668",
+      "count": 100,
+      "upstream_path": "spec/catalog/system-registers.json",
+      "upstream_sha256": "5694af24779c48bd81e87b0304ad97c9cb6bab8d4a11498c2ba5c5bb628171a2"
+    },
+    "hardware_conformance_profile": {
+      "path": "isa/v0.59/state/pto_hardware_conformance_profile.json",
+      "sha256": "fafba0b567012d727fb435fde668333ba6711870def1a4e17e95e896c6e614b0",
+      "profile_id": "pto-hardware-numeric-0.59.1-ieee-v1",
+      "upstream_path": "spec/hardware-conformance-profile.json",
+      "upstream_sha256": "843d4c2c76823af57dc80f4b134c00e0166c0ba262f6924585854bdc44214325"
+    },
+    "numeric_conformance_vectors": {
+      "path": "isa/v0.59/state/pto_hardware_numeric_vectors.json",
+      "sha256": "6708e3dc3642c405b21cdbcfc9cd403cfb7c63f2a537a0d8c6a7523b1cddf88b",
+      "upstream_path": "spec/evidence/pto-isa-0591-hardware-numeric-vectors.json",
+      "upstream_sha256": "09a9b243ffcf801c2d05436507508ad5e1af919baa127b787eb485cd3ee4018f"
+    }
+  },
   "catalog": {
     "path": "isa/v0.59/linxisa-v0.59.json",
-    "sha256": "066e81857bc97fb4b78b376d42f63cc87c0546684c55e99b30f01b238589be5d",
+    "sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c",
     "schema": "linxisa.catalog.v0",
-    "status": "prepublication-full-catalog"
+    "status": "published-specification-catalog"
   },
   "frozen_bindings": {
     "path": "isa/v0.59/pto-v0591-candidate.json",
-    "sha256": "0752d20610b1b3c284292cf0987f64b587136bc13b561578c2d036e7658bd6f9",
+    "sha256": "d9e98932c47fb591d74d0a6688b678a2ca3204de9d93608b52d9695966fff4f5",
     "schema": "linxisa.pto-v0591-candidate.v1"
   },
   "elf_identity": {
@@ -48,15 +88,24 @@
     "note_type_value": 1,
     "section": ".note.pto.isa"
   },
-  "status": "development-not-published",
+  "status": "published-specification",
   "identity": {
     "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
     "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
     "release": "0.59.1"
   },
-  "publication": null,
+  "publication": {
+    "version": "0.59.1",
+    "date": "2026-11-22",
+    "scope": [
+      "architecture-specification",
+      "encoding",
+      "sail-package"
+    ],
+    "profile_selection": "explicit-v0.59"
+  },
   "release_activation": {
-    "state": "prepared-prepublication",
+    "state": "published-explicit-profile",
     "profile_selection": "isa/profile-selection.json",
     "package": "isa/v0.59/release_package.json",
     "catalog": "isa/v0.59/linxisa-v0.59.json",
@@ -65,16 +114,23 @@
     "default_profile": "v0.58"
   },
   "qualification": {
-    "release_qualified": false,
+    "release_qualified": true,
+    "qualification_scope": [
+      "architecture-specification",
+      "encoding",
+      "sail-package"
+    ],
+    "specification_qualified": true,
+    "encoding_qualified": true,
+    "sail_package_qualified": true,
     "linux_qualified": false,
     "leaf_components_qualified": false,
     "system_runtime_qualified": false,
-    "required_before_publication": [
-      "activate the packaged scoped Sail entry as the published v0.59 entry after exact release gates pass",
+    "remaining_platform_qualification": [
       "promote exact reviewed component pins in the owning superproject change",
       "complete Linux and leaf-component validation at those exact pins",
-      "run release verification and release preparation on the final main commit",
-      "record publication metadata and create the release tag only after all gates pass"
+      "qualify RTL and full system runtime against the published specification identity",
+      "switch the default platform profile only after exact platform gates pass"
     ]
   }
 }

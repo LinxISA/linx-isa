@@ -2,6 +2,8 @@
 
 `isa/` is the canonical specification root for the public LinxISA repository.
 
+The [0.59.1 specification release](../docs/releases/v0.59.1.md) publishes the v0.59 catalog and Sail model. The following defaults apply to platform bring-up.
+
 ## Canonical Artifacts
 
 - Latest stable profile package: `isa/v0.58/`
