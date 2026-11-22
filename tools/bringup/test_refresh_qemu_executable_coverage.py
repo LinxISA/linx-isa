@@ -5,6 +5,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -13,6 +14,24 @@ import refresh_qemu_executable_coverage as refresh
 
 
 class RefreshQemuExecutableCoverageTests(unittest.TestCase):
+    def test_scoped_elf_requires_exactly_one_matching_pto_note(self) -> None:
+        identity = {"release": "0.59.1"}
+        note = {
+            "Owner": "PTO", "Type": "NT_VERSION (version)",
+            "Description data": {"Bytes": list(b'{"release":"0.59.1"}')},
+        }
+        def inspect(notes):
+            payload = [{"NoteSections": [{"NoteSection": {
+                "Name": ".note.pto.isa", "Notes": notes,
+            }}]}]
+            with patch.object(refresh.subprocess, "check_output", return_value=json.dumps(payload)):
+                refresh._check_elf_identity(Path("llvm-readobj"), Path("test.elf"), identity)
+        inspect([note])
+        for notes in ([], [note, note], [{**note, "Owner": "GNU"}],
+                      [{**note, "Description data": {"Bytes": list(b'{"release":"0.58.7"}')}}]):
+            with self.subTest(notes=notes), self.assertRaisesRegex(ValueError, "incorrect"):
+                inspect(notes)
+
     def test_form_identity_rebind_is_exact_and_changed_keys_are_allowlisted(self) -> None:
         def form(form_id: str, mnemonic: str, mask: int, match: int) -> dict:
             return {
@@ -163,6 +182,9 @@ class RefreshQemuExecutableCoverageTests(unittest.TestCase):
             for command in (prepare, runtime):
                 index = command.index("--require-test-id")
                 self.assertEqual(command[index + 1], "0x0000140b")
+            self.assertNotIn("--isa-profile", runtime)
+            scoped = refresh._runner_command(**kwargs, pcs=[0x10000], profile="v0.59")
+            self.assertEqual(scoped[scoped.index("--isa-profile") + 1], "v0.59")
             self.assertIn("--prepare-only", prepare)
             self.assertNotIn("--evidence-out", prepare)
             self.assertIn("--evidence-out", runtime)
