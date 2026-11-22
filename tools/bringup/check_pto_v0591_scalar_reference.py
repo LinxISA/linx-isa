@@ -19,6 +19,12 @@ STORE_VALUE = 0x555A
 U64_MASK = (1 << 64) - 1
 FINISHER_ADDRESS = 0x10009000
 FINISHER_PASS = 0x5555
+PCR_RELOCATIONS = {
+    (32, "Load"): ("R_LINX_SCOPED_PCR17_LOAD", 33),
+    (32, "Store"): ("R_LINX_SCOPED_PCR17_STORE", 34),
+    (48, "Load"): ("R_LINX_SCOPED_HL_PCR29_LOAD", 35),
+    (48, "Store"): ("R_LINX_SCOPED_HL_PCR29_STORE", 36),
+}
 
 
 def write_json(path, data):
@@ -107,7 +113,7 @@ def pack_carrier(row, register_values, immediate):
     return word
 
 
-def build_case(output):
+def build_case(output, symbolic_pcr=False):
     cases = scoped_cases()
     length = len(cases) * 8
     header = [
@@ -121,7 +127,10 @@ def build_case(output):
         ((0x8877665544332281 + i * 0x102030405060709) & U64_MASK)
         for i in range(len(cases))
     ]
-    header += [f".8byte 0x{value:016x}" for value in cells]
+    for i, value in enumerate(cells):
+        if symbolic_pcr:
+            header.append(f".Lcell{i}:")
+        header.append(f".8byte 0x{value:016x}")
     header += [
         "_start:",
         "C.BSTART",
@@ -133,6 +142,7 @@ def build_case(output):
     pc = length + 2 + 6 + 6
     instructions = []
     segments = []
+    pcr_relocations = []
     golden = bytearray()
     for i, ((row, agu), initial) in enumerate(zip(cases, cells, strict=True)):
         offset = 8 * i
@@ -144,8 +154,16 @@ def build_case(output):
         if displacement % scale:
             raise ValueError(f"nonrepresentable target for {row['form_id']}")
         regs = {"RegDst": 3, "SrcL": 2 if load else 4, "SrcR": 2, "SrcD": 4}
-        word = pack_carrier(row, regs, displacement // scale)
-        instructions.append(f".8byte 0x{word:016x}")
+        if symbolic_pcr and agu["address_kind"] == "PCRelative":
+            mnemonic = row["asm"].split(" ", 1)[0]
+            target = f"[.Lcell{i}]"
+            operands = f"{target}, ->a1" if load else f"a2, {target}"
+            instructions.append(f"{mnemonic} {operands}")
+            name, number = PCR_RELOCATIONS[row["inner_length_bits"], agu["action"]]
+            pcr_relocations.append((pc, name, number))
+        else:
+            word = pack_carrier(row, regs, displacement // scale)
+            instructions.append(f".8byte 0x{word:016x}")
         pc += 8
         bits = agu["size_bytes"] * 8
         mask = (1 << bits) - 1
@@ -174,7 +192,23 @@ def build_case(output):
     source = output / "scoped_scalar.s"
     source.write_text("\n".join(header + instructions + end) + "\n", encoding="utf-8")
     (output / "golden.bin").write_bytes(golden)
-    return source, bytes(golden), segments
+    return source, bytes(golden), segments, pcr_relocations
+
+
+def check_pcr_relocations(readobj, obj, expected, timeout):
+    output = invoke(
+        [readobj, "--elf-output-style=JSON", "--expand-relocs", "--relocations", obj],
+        timeout=timeout,
+    )
+    actual = []
+    for section in json.loads(output)[0]["Relocations"]:
+        for entry in section["Relocs"]:
+            rel = entry["Relocation"]
+            name = rel["Type"]["Name"]
+            if name.startswith("R_LINX_SCOPED_"):
+                actual.append((rel["Offset"], name, rel["Type"]["Value"]))
+    if sorted(actual) != expected:
+        raise ValueError("scoped PCR relocations differ in type or carrier-start offset")
 
 
 def read_elf_contract(readobj, elf, timeout):
@@ -332,6 +366,8 @@ def main():
     parser.add_argument("--gfsim", type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--timeout", default=30, type=int)
+    parser.add_argument("--symbolic-pcr", action="store_true",
+                        help="assemble PCR targets with the scoped relocation ABI")
     args = parser.parse_args()
     llvm_bin = args.llvm_bin.resolve()
     tools = {name: llvm_bin / name for name in ("llvm-mc", "ld.lld", "llvm-readobj")}
@@ -344,7 +380,7 @@ def main():
     tools.update(core_models)
     output = args.output.resolve()
     output.mkdir(parents=True)
-    source, golden, segments = build_case(output)
+    source, golden, segments, pcr_relocations = build_case(output, args.symbolic_pcr)
     obj, elf = output / "scoped_scalar.o", output / "scoped_scalar.elf"
     invoke(
         [
@@ -358,6 +394,8 @@ def main():
         ],
         timeout=args.timeout,
     )
+    if args.symbolic_pcr:
+        check_pcr_relocations(tools["llvm-readobj"], obj, pcr_relocations, args.timeout)
     invoke(
         [
             tools["ld.lld"],
@@ -378,6 +416,7 @@ def main():
     write_json(manifest, {"address": address, "size": size, "segments": segments})
     artifacts = {
         **tools,
+        "object": obj,
         "elf": elf,
         "manifest": manifest,
         "catalog": CATALOG,
@@ -405,6 +444,7 @@ def main():
             "linxisa_encoding_version": "v0.59-candidate",
             "pto_isa_version": "0.59.1",
             "model_profile": "single-PE scoped immediate/PCR reference",
+            "symbolic_pcr_relocations": len(pcr_relocations),
         },
     )
 
