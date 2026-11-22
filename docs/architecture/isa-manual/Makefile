@@ -43,3 +43,12 @@ html: bundle-check gen | $(BUILD_DIR)
 
 clean:
 	rm -rf $(BUILD_DIR) $(GEN_DIR) vendor/bundle .bundle
+
+.PHONY: html-reference check-html-reference
+
+html-reference:
+	python3 ../../../tools/isa/gen_html_reference.py --out $(BUILD_DIR)/instruction-reference --zip $(BUILD_DIR)/linxisa-0.59.1-html.zip
+
+check-html-reference:
+	python3 ../../../tools/isa/gen_html_reference.py --check --out $(BUILD_DIR)/instruction-reference
+	python3 ../../../tools/isa/check_html_reference.py --site $(BUILD_DIR)/instruction-reference

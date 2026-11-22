@@ -47,3 +47,9 @@ make gen
 ```
 
 注意：`build/` 被 gitignored；本地构建输出不会提交到存储库。
+
+## 0.59.1 离线指令手册
+
+从 [0.59.1 正式发行页](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1) 下载 HTML 压缩包，解压后打开 `index.html`。可按助记符、编码或 Tile 操作查阅。版本与来源页列出发布提交和目录文件的校验摘要。
+
+在仓库的 `docs/architecture/isa-manual` 目录执行 `make html-reference check-html-reference` 可重新生成并核对。生成器读取正式 tag，并逐项对照 578 个公共形式、705 个 scoped 形式和 216 个 Linx 专有形式。浅克隆需先获取 `v0.59.1` 标签。
