@@ -671,6 +671,7 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
     "tile_v0586_gm_atom_red": [
         r"\bBSTART\.MGATHER\.ADD\s+U32\b",
         r"\bBSTART\.MSCATTER\.POPC\s+U32\b",
+        r"\bC\.B\.DIMI\s+32,\s+->lb2\b",
         r"\bB\.IOT\s+t#1,\s+u#1,\s+mask=0001,\s+last,\s+->t<128B>",
     ],
     "tile_v0586_timg2col": [

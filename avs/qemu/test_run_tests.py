@@ -108,6 +108,7 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         source = (run_tests.SCRIPT_DIR / "tests/32_v0586_gm_atom_red.c").read_text()
         self.assertIn("BSTART.MGATHER.ADD U32", carrier)
         self.assertIn("BSTART.MSCATTER.POPC U32", carrier)
+        self.assertEqual(carrier.count("C.B.DIMI 32, ->lb2"), 2)
         self.assertIn("TEST_EQ32(old_values[i], 3u + i", source)
         self.assertIn("TEST_EQ32(target[i], 9u + i", source)
 
