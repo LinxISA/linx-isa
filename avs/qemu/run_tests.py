@@ -642,6 +642,12 @@ EXTRA_LLCFLAGS_BY_SUITE: dict[str, list[str]] = {
 }
 
 OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
+    "atomic": [
+        r"0b 70 01 04\s+dma\.free\.s\b",
+        r"0b 70 01 06\s+dma\.free\.l\b",
+        r"31 11 31 22\s+MCOPY\.DS\b",
+        r"31 11 31 26\s+MCOPY\.DL\b",
+    ],
     "tile_v0583_tlsu": [
         r"\bBSTART\.TLOAD\s+S32\b",
         r"\bBSTART\.TSTORE\s+S32\b",
@@ -696,7 +702,7 @@ OBJDUMP_ASSERTS_BY_SUITE: dict[str, list[str]] = {
     ],
 }
 
-OBJDUMP_CARRIER_SUITES: set[str] = set(EXTRA_SOURCES_BY_SUITE)
+OBJDUMP_CARRIER_SUITES: set[str] = set(EXTRA_SOURCES_BY_SUITE) | {"atomic"}
 
 EXPERIMENTAL_SUITES: set[str] = {
     # Compiler-generated SIMT remains opt-in until its objdump expectations are

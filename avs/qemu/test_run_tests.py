@@ -111,6 +111,32 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         self.assertIn("TEST_EQ32(old_values[i], 3u + i", source)
         self.assertIn("TEST_EQ32(target[i], 9u + i", source)
 
+    def test_encoding_only_dma_forms_are_rejection_only(self) -> None:
+        source = (run_tests.SCRIPT_DIR / "tests/07_atomic.c").read_text()
+        system = (run_tests.SCRIPT_DIR / "tests/11_system.c").read_text()
+        strict = (run_tests.SCRIPT_DIR / "check_system_strict.sh").read_text()
+        patterns = run_tests.OBJDUMP_ASSERTS_BY_SUITE["atomic"]
+
+        self.assertIn("atomic", run_tests.OBJDUMP_CARRIER_SUITES)
+        self.assertNotIn("test_v058_dma_and_mcopy", source)
+        self.assertIn("LINX_ENCODING_ONLY_DMA_CASE", system)
+        self.assertNotIn("ENCODING_ONLY_DMA_STAGE", system)
+        for case_index, (name, test_id, mnemonic) in enumerate(
+            (
+                ("dma_free_s", "0x1120", "dma\\.free\\.s"),
+                ("dma_free_l", "0x1130", "dma\\.free\\.l"),
+                ("mcopy_ds", "0x1140", "MCOPY\\.DS"),
+                ("mcopy_dl", "0x1150", "MCOPY\\.DL"),
+            )
+        ):
+            self.assertIn(name, strict)
+            self.assertIn(test_id, strict)
+            self.assertIn(
+                f"LINX_ENCODING_ONLY_DMA_CASE=$case_index",
+                strict,
+            )
+            self.assertTrue(any(mnemonic in pattern for pattern in patterns))
+
     def test_v0586_timg2col_suite_has_runtime_oracle(self) -> None:
         suite = "tile_v0586_timg2col"
         self.assertEqual(
