@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 
@@ -14,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/isa"))
 
 from build_linxisa_v0591_release_activation import build, render
+from export_linxisa_v0591_sail import check as check_sail_export
+from export_linxisa_v0591_sail import export as export_sail
 
 
 class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
@@ -43,7 +46,11 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         )
         self.assertEqual(
             package["sail"]["entry"],
-            "isa/sail/model/linxisa_v0591_candidate.sail",
+            "model/linxisa_v0591.sail",
+        )
+        self.assertEqual(
+            package["sail"]["exporter"],
+            "tools/isa/export_linxisa_v0591_sail.py",
         )
         self.assertEqual(
             package["identity"]["encoding_abi"],
@@ -62,6 +69,16 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             (ROOT / "isa/v0.59/release_package.json").read_text(encoding="utf-8"),
             render(package),
         )
+
+    def test_sail_export_materializes_canonical_entry_and_decoder(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "sail"
+            package = export_sail(output)
+            check_sail_export(output)
+            self.assertEqual(package["entry"], "model/linxisa_v0591.sail")
+            self.assertEqual(package["catalog"]["instruction_count"], 1499)
+            self.assertIn("model/decode/decode.sail", package["files"])
+            self.assertIn("model/linxisa_v0591.sail", package["files"])
 
     def test_selector_requires_explicit_prepublication_opt_in(self):
         command = [sys.executable, "tools/isa/select_linxisa_profile.py"]

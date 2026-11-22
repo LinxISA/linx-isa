@@ -52,11 +52,11 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
             system_source,
         )
 
-    def test_active_catalog_is_the_exact_v0586_catalog(self) -> None:
+    def test_active_catalog_is_the_exact_v0587_catalog(self) -> None:
         self.assertEqual(run_tests.LLVM_AVS_SPEC, run_tests.REPO_ROOT / "isa/v0.58/linxisa-v0.58.json")
         catalog = json.loads(run_tests.LLVM_AVS_SPEC.read_text())
-        self.assertEqual(catalog["version"], "0.58.6")
-        self.assertEqual(catalog["instruction_count"], 773)
+        self.assertEqual(catalog["version"], "0.58.7")
+        self.assertEqual(catalog["instruction_count"], 794)
 
     def test_v0583_tile_engine_suites_have_exact_carriers(self) -> None:
         expected = {
@@ -108,8 +108,35 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         source = (run_tests.SCRIPT_DIR / "tests/32_v0586_gm_atom_red.c").read_text()
         self.assertIn("BSTART.MGATHER.ADD U32", carrier)
         self.assertIn("BSTART.MSCATTER.POPC U32", carrier)
+        self.assertEqual(carrier.count("C.B.DIMI 32, ->lb2"), 2)
         self.assertIn("TEST_EQ32(old_values[i], 3u + i", source)
         self.assertIn("TEST_EQ32(target[i], 9u + i", source)
+
+    def test_encoding_only_dma_forms_are_rejection_only(self) -> None:
+        source = (run_tests.SCRIPT_DIR / "tests/07_atomic.c").read_text()
+        system = (run_tests.SCRIPT_DIR / "tests/11_system.c").read_text()
+        strict = (run_tests.SCRIPT_DIR / "check_system_strict.sh").read_text()
+        patterns = run_tests.OBJDUMP_ASSERTS_BY_SUITE["atomic"]
+
+        self.assertIn("atomic", run_tests.OBJDUMP_CARRIER_SUITES)
+        self.assertNotIn("test_v058_dma_and_mcopy", source)
+        self.assertIn("LINX_ENCODING_ONLY_DMA_CASE", system)
+        self.assertNotIn("ENCODING_ONLY_DMA_STAGE", system)
+        for case_index, (name, test_id, mnemonic) in enumerate(
+            (
+                ("dma_free_s", "0x1120", "dma\\.free\\.s"),
+                ("dma_free_l", "0x1130", "dma\\.free\\.l"),
+                ("mcopy_ds", "0x1140", "MCOPY\\.DS"),
+                ("mcopy_dl", "0x1150", "MCOPY\\.DL"),
+            )
+        ):
+            self.assertIn(name, strict)
+            self.assertIn(test_id, strict)
+            self.assertIn(
+                f"LINX_ENCODING_ONLY_DMA_CASE=$case_index",
+                strict,
+            )
+            self.assertTrue(any(mnemonic in pattern for pattern in patterns))
 
     def test_v0586_timg2col_suite_has_runtime_oracle(self) -> None:
         suite = "tile_v0586_timg2col"
@@ -121,6 +148,10 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
         carrier = (run_tests.SCRIPT_DIR / "tests/33_v0586_timg2col_carrier.S").read_text()
         source = (run_tests.SCRIPT_DIR / "tests/33_v0586_timg2col.c").read_text()
         self.assertIn(".4byte 0xc9c11181", carrier)
+        carrier_pattern = run_tests.OBJDUMP_ASSERTS_BY_SUITE[suite][0]
+        self.assertRegex("4: 81 11 c1 c9  BSTART.TIMG2COL", carrier_pattern)
+        self.assertRegex("4: 81 11  <unknown>\n6: c1 c9  <unknown>", carrier_pattern)
+        self.assertNotRegex("4: 81 11 c1 c8  BSTART.TIMG2COL", carrier_pattern)
         self.assertIn("B.DATR ND2M16, DTYPE_NONE, Zero", carrier)
         self.assertIn("B.IOT mask=1111, last, ->m<512B>", carrier)
         self.assertIn("TEST_EQ32(output[i], input[i]", source)
@@ -135,10 +166,10 @@ class StructuredEvidenceParsingTests(unittest.TestCase):
 
     def test_elf_identity_fixture_matrix_is_exact(self) -> None:
         expected = (
-            b'{"encoding_abi":"pto-isa-0.58.6-mode-function-v1",'
+            b'{"encoding_abi":"pto-isa-0.58.7-mode-function-v1",'
             b'"encoding_projection_sha256":'
-            b'"a757f2e50ec8050d2131b6b9ad38657511df80cf3f9424d5f009ea6e0cc35839",'
-            b'"release":"0.58.6"}'
+            b'"9c49cdfa79a4eda6b27c1548bfd06ef681b6189f7d02d466ddfd43f59993b93d",'
+            b'"release":"0.58.7"}'
         )
         self.assertEqual(elf_identity.IDENTITY, expected)
         self.assertEqual(len(elf_identity.IDENTITY), 165)

@@ -3,8 +3,8 @@
     .type linx_v0586_timg2col,@function
 linx_v0586_timg2col:
     FENTRY [ra ~ ra], sp!, 8
-    # LLVM 3d79447f does not yet parse BSTART.TIMG2COL. Encode the exact
-    # PTO 0.58.6 U32 word (DataType=25, match=0x01c11181) until it does.
+    # Keep the exact PTO U32 word (DataType=25, match=0x01c11181) visible in
+    # this object-shape fixture even when the active disassembler names it.
     .4byte 0xc9c11181
     B.DATR ND2M16, DTYPE_NONE, Zero
     C.B.DIMI 8, ->lb0

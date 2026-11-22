@@ -291,7 +291,7 @@ if [[ -d "$ASM_DIR" ]]; then
           --require B.IOT \
           --require BSTART.VEC \
           --require BSTART.SFU \
-          --require BSTART.CALL \
+          --require HL.BSTART.CALL \
           --require BSTART.ICALL \
           --require FENTRY \
           --require FRET.STK \

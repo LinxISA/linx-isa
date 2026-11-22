@@ -1455,8 +1455,8 @@ def main() -> int:
     ap.add_argument(
         "--profile",
         choices=["v0.57", "v0.58", "v0.59"],
-        default="v0.58",
-        help="ISA profile for default --spec path",
+        default=None,
+        help="ISA profile; omitted uses isa/profile-selection.json",
     )
     ap.add_argument(
         "--spec",
@@ -1465,15 +1465,16 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    if args.profile in {"v0.58", "v0.59"}:
-        from select_linxisa_profile import resolve_profile
+    from select_linxisa_profile import resolve_profile
 
+    selected_profile = args.profile or resolve_profile()["profile"]
+    if selected_profile in {"v0.58", "v0.59"}:
         selected = resolve_profile(
-            args.profile, allow_prepublication=args.profile == "v0.59"
+            selected_profile, allow_prepublication=selected_profile == "v0.59"
         )
         default_spec = str(selected["catalog"])
     else:
-        default_spec = f"isa/{args.profile}/linxisa-{args.profile}.json"
+        default_spec = f"isa/{selected_profile}/linxisa-{selected_profile}.json"
     errors = validate(args.spec or default_spec)
     errors.extend(validate_active_surfaces(Path(".")))
     if errors:

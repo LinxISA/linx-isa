@@ -39,6 +39,8 @@ CMD=(
   --heartbeat-sec "$HEARTBEAT_SEC"
   --no-progress-timeout "$NO_PROGRESS_TIMEOUT"
 )
+DMA_CASE_NAMES=(dma_free_s dma_free_l mcopy_ds mcopy_dl)
+DMA_TEST_IDS=(0x1120 0x1130 0x1140 0x1150)
 
 if ! [[ "$RETRIES" =~ ^[0-9]+$ ]] || [[ "$RETRIES" -lt 1 ]]; then
   echo "error: RETRIES must be a positive integer (got: $RETRIES)" >&2
@@ -49,9 +51,26 @@ LAST_RC=1
 LAST_LOG=""
 for attempt in $(seq 1 "$RETRIES"); do
   ATTEMPT_LOG="$OUT_LOG.attempt$attempt"
+  : >"$ATTEMPT_LOG"
   set +e
-  LINX_DISABLE_TIMER_IRQ="$STRICT_TIMER_IRQ_DISABLE" "${CMD[@]}" >"$ATTEMPT_LOG" 2>&1
+  LINX_DISABLE_TIMER_IRQ="$STRICT_TIMER_IRQ_DISABLE" \
+    "${CMD[@]}" >>"$ATTEMPT_LOG" 2>&1
   LAST_RC=$?
+  if [[ "$LAST_RC" -eq 0 ]]; then
+    for case_index in "${!DMA_CASE_NAMES[@]}"; do
+      echo "-- encoding-only DMA negative: ${DMA_CASE_NAMES[$case_index]}" \
+        >>"$ATTEMPT_LOG"
+      LINX_DISABLE_TIMER_IRQ="$STRICT_TIMER_IRQ_DISABLE" \
+        "${CMD[@]}" \
+        "--extra-cflag=-DLINX_ENCODING_ONLY_DMA_CASE=$case_index" \
+        --require-test-id "${DMA_TEST_IDS[$case_index]}" \
+        >>"$ATTEMPT_LOG" 2>&1
+      LAST_RC=$?
+      if [[ "$LAST_RC" -ne 0 ]]; then
+        break
+      fi
+    done
+  fi
   set -e
   LAST_LOG="$ATTEMPT_LOG"
 
