@@ -128,6 +128,26 @@ class AiWorkloadFlowTests(unittest.TestCase):
             "\n".join(evidence["errors"]),
         )
 
+    def test_exact_pin_evidence_prefers_the_v059_component_lock(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            component_rel, component_sha = self.exact_pin_fixture(root)
+            legacy = root / run_ai_workload_flow.COMPONENT_LOCK_REL
+            current = root / run_ai_workload_flow.V059_COMPONENT_LOCK_REL
+            lock = json.loads(legacy.read_text(encoding="utf-8"))
+            lock["profile"] = "v0.59"
+            current.write_text(json.dumps(lock), encoding="utf-8")
+            lock["components"][0]["commit"] = "0" * 40
+            legacy.write_text(json.dumps(lock), encoding="utf-8")
+            self.git(root, "add", str(legacy), str(current))
+            self.git(root, "commit", "-m", "add v0.59 lock")
+            evidence = run_ai_workload_flow.exact_pin_evidence(root)
+
+        self.assertTrue(evidence["valid"], evidence["errors"])
+        self.assertEqual(evidence["component_lock"]["profile"], "v0.59")
+        self.assertEqual(evidence["component_lock"]["path"], run_ai_workload_flow.V059_COMPONENT_LOCK_REL.as_posix())
+        self.assertEqual(evidence["components"][component_rel]["component_lock_sha"], component_sha)
+
     def test_exact_pin_evidence_rejects_checkout_gitlink_mismatch(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

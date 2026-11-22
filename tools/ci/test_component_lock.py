@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -20,9 +21,41 @@ def load_checker():
 
 
 class ComponentLockTests(unittest.TestCase):
-    def test_current_v058_component_lock_matches_staged_topology(self) -> None:
+    def test_current_component_lock_matches_staged_topology(self) -> None:
         checker = load_checker()
         self.assertEqual(checker.check_repository(ROOT), [])
+
+    def test_v059_lock_selects_merged_runtime_consumers(self) -> None:
+        checker = load_checker()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.assertEqual(checker.component_lock_profile(root), "v0.58")
+            lock_path = root / checker.LOCK_PATHS["v0.59"]
+            lock_path.parent.mkdir(parents=True)
+            lock_path.touch()
+            self.assertEqual(checker.component_lock_profile(root), "v0.59")
+
+        path = "lib/musl"
+        entry = {
+            "path": path,
+            "url": "https://github.com/LinxISA/musl.git",
+            "branch": "master",
+            "commit": "1" * 40,
+            "tree": "2" * 40,
+            "role": "PTO identity consumer",
+            "release": "0.58.3",
+            "integration_status": "review_only_open_pr",
+            "review_url": "https://github.com/LinxISA/musl/pull/15",
+        }
+        lock = {"schema_version": 1, "profile": "v0.59", "components": [entry]}
+        modules = {path: {"url": entry["url"], "branch": "master", "update": "checkout"}}
+        gitlinks = {path: entry["commit"]}
+        errors = checker.validate(lock, modules, gitlinks, "v0.59")
+        self.assertTrue(any(f"{path} must record release 0.59.1" in error for error in errors))
+        self.assertTrue(any(f"{path} must record a merged development PR" in error for error in errors))
+        entry.update(release="0.59.1", integration_status="merged_development")
+        errors = checker.validate(lock, modules, gitlinks, "v0.59")
+        self.assertFalse(any(error.startswith(path) for error in errors), errors)
 
     def test_standalone_supernpu_gitlink_is_forbidden(self) -> None:
         checker = load_checker()
