@@ -123,9 +123,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y z3
       - name: Install pinned Sail toolchain
         run: opam install --yes sail.0.20.2
-      - name: Check inactive v0.59.1 full catalog with Sail
-        run: opam exec -- python3 tools/isa/check_linxisa_v0591_candidate_sail.py
-      - name: Check opt-in v0.59.1 scoped dispatch with Sail
+      - name: Check assembled v0.59.1 catalog and scoped dispatch with Sail
         run: opam exec -- python3 tools/isa/check_v0591_candidate_dispatch_sail.py
       - name: Run AVS contract gate
         run: python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml

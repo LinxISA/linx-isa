@@ -1067,8 +1067,8 @@ def _canonical_json(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"))
 
 
-def _profile_defaults(profile: str = "v0.58") -> Tuple[str, str]:
-    if profile in {"v0.58", "v0.59"}:
+def _profile_defaults(profile: str | None = None) -> Tuple[str, str]:
+    if profile is None or profile in {"v0.58", "v0.59"}:
         from select_linxisa_profile import resolve_profile
 
         selected = resolve_profile(
@@ -1083,8 +1083,8 @@ def main() -> int:
     ap.add_argument(
         "--profile",
         choices=["v0.57", "v0.58", "v0.59"],
-        default="v0.58",
-        help="ISA profile for default in/out paths",
+        default=None,
+        help="ISA profile; omitted uses isa/profile-selection.json",
     )
     ap.add_argument("--in", dest="in_dir", default=None, help="Golden source directory")
     ap.add_argument("--out", default=None, help="Output catalog JSON path")
@@ -1092,11 +1092,14 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="Verify output is up-to-date without writing")
     args = ap.parse_args()
 
-    default_in, default_out = _profile_defaults(args.profile)
+    from select_linxisa_profile import resolve_profile
+
+    selected_profile = args.profile or resolve_profile()["profile"]
+    default_in, default_out = _profile_defaults(selected_profile)
     in_dir = Path(args.in_dir or default_in)
     out_path = Path(args.out or default_out)
 
-    if args.profile == "v0.59":
+    if selected_profile == "v0.59":
         if args.in_dir is not None:
             ap.error("v0.59 uses the frozen candidate builder and does not accept --in")
         from build_linxisa_v0591_candidate import build as build_v0591
