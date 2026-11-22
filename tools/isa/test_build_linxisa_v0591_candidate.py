@@ -59,6 +59,11 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         self.assertEqual({item["id"]: item for item in linx_only}, old_linx)
 
     def test_full_schema_is_deterministic_and_has_unique_rows(self):
+        from validate_spec import V058_DERIVED_VERSIONS, V058_FIRST_USE_VERSIONS
+
+        self.assertIn("0.58.0", V058_DERIVED_VERSIONS)
+        self.assertNotIn("0.58.0", V058_FIRST_USE_VERSIONS)
+        self.assertIn("0.59.1-candidate", V058_FIRST_USE_VERSIONS)
         self.assertEqual(render(self.candidate), render(build()))
         self.assertEqual(self.candidate["schema"], "linxisa.catalog.v0")
         self.assertEqual(self.candidate["instruction_count"], 1499)

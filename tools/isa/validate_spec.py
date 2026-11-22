@@ -68,6 +68,8 @@ V058_DERIVED_VERSIONS = {
     "0.59.1-candidate",
 }
 
+V058_FIRST_USE_VERSIONS = V058_DERIVED_VERSIONS - {"0.58.0"}
+
 EXPECTED_V058_FIRST_USE_VECTOR_HEADERS = [
     "BSTART.MPAR",
     "BSTART.MSEQ",
@@ -1147,7 +1149,7 @@ def _validate_frame_template_contract(spec: Dict[str, Any], errors: List[str]) -
 def _validate_first_use_register_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") not in V058_DERIVED_VERSIONS:
+    if str(spec.get("version") or "") not in V058_FIRST_USE_VERSIONS:
         return
 
     system_registers = ((spec.get("state") or {}).get("system_registers") or {})
@@ -1193,7 +1195,7 @@ def _validate_first_use_register_contract(
 def _validate_first_use_semantics_contract(
     spec: Dict[str, Any], errors: List[str]
 ) -> None:
-    if str(spec.get("version") or "") not in V058_DERIVED_VERSIONS:
+    if str(spec.get("version") or "") not in V058_FIRST_USE_VERSIONS:
         return
 
     conventions = spec.get("semantics_conventions") or {}
