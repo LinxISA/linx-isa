@@ -75,21 +75,47 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         self.assertEqual(
             state["system_registers"], self.baseline["state"]["system_registers"]
         )
-        inherited = self.candidate["candidate_status"]["inherited_v058_views"]
+        inherited = self.candidate["release_status"]["inherited_v058_views"]
         self.assertEqual(
             inherited["status"],
-            "schema-completeness-only-not-published-v0.59-authority",
+            "archival-schema-view-non-normative-for-v0.59",
         )
         self.assertIn("state.engine_ops", inherited["paths"])
         self.assertIn("state.pto_binder_contracts", inherited["paths"])
         self.assertIn("semantics_conventions", inherited["paths"])
+        self.assertEqual(
+            self.candidate["release_status"]["authoritative_v059_paths"],
+            [
+                "instructions",
+                "state.pto_scalar_forms",
+                "state.pto_command_forms",
+                "state.extension_encoding_reservations",
+                "state.pto_system_registers",
+            ],
+        )
+        self.assertEqual(
+            self.candidate["release_status"]["linx_only_inheritance"],
+            {
+                "status": "published-linx-specific-rows",
+                "row_count": 216,
+                "verification": "byte-identical-to-v0.58-catalog-rows",
+            },
+        )
+        self.assertEqual(
+            self.candidate["release_status"]["external_authoritative_v059_files"]
+            ["tile_operations"],
+            {
+                "path": "isa/v0.59/state/pto_tile_operations.json",
+                "precedence": "overrides-archival-state.pto_ops",
+            },
+        )
 
     def test_binding_hash_is_for_the_payload_used_by_the_builder(self):
         expected = candidate_builder.hashlib.sha256(
             candidate_builder.BINDINGS.read_bytes()
         ).hexdigest()
         self.assertEqual(
-            self.candidate["candidate_status"]["source_bindings_sha256"], expected
+            self.candidate["release_status"]["source_bindings_sha256"], expected
         )
         with tempfile.TemporaryDirectory() as directory:
             stale = Path(directory) / "bindings.json"
@@ -103,7 +129,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
 
         self.assertIn("0.58.0", V058_DERIVED_VERSIONS)
         self.assertNotIn("0.58.0", V058_FIRST_USE_VERSIONS)
-        self.assertIn("0.59.1-prepublication", V058_FIRST_USE_VERSIONS)
+        self.assertIn("0.59.1", V058_FIRST_USE_VERSIONS)
         self.assertEqual(render(self.candidate), render(build()))
         self.assertEqual(self.candidate["schema"], "linxisa.catalog.v0")
         self.assertEqual(self.candidate["instruction_count"], 1499)

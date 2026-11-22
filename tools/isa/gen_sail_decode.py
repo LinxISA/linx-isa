@@ -804,8 +804,8 @@ def prelude_lines(inst: dict, raw_fields: dict[str, tuple[str, int]], width: int
 
 def branch_body(inst: dict, exec_params: dict[str, list[str]]) -> list[str]:
     if (
-        inst.get("implementation_status") == "inactive-catalog-candidate"
-        and inst.get("decoder_dispatch") == "external-scoped-runtime-required"
+        inst.get("implementation_status") == "published-architecture-form"
+        and inst.get("decoder_dispatch") == "scoped-sail-dispatch"
     ):
         return [
             f"// {inst['mnemonic']} | {inst['asm']} | external scoped runtime dispatch required",

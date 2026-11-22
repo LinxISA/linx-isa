@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the full-schema LinxISA v0.59.1 prepublication catalog."""
+"""Build the published LinxISA v0.59.1 architecture catalog."""
 
 from __future__ import annotations
 
@@ -248,8 +248,8 @@ def full_scoped_instruction(
                 "file": "state/pto_scalar_forms.json",
                 "form_id": form["form_id"],
             },
-            "implementation_status": "inactive-catalog-candidate",
-            "decoder_dispatch": "external-scoped-runtime-required",
+            "implementation_status": "published-architecture-form",
+            "decoder_dispatch": "scoped-sail-dispatch",
         }
     )
     return item
@@ -439,17 +439,43 @@ def build() -> dict[str, Any]:
     document = {
         "schema": baseline["schema"],
         "isa": baseline["isa"],
-        "version": "0.59.1-prepublication",
-        "candidate_status": {
-            "state": "prepublication-full-catalog",
-            "active_profile": "v0.58",
+        "version": "0.59.1",
+        "release_status": {
+            "state": "published-specification-catalog",
+            "selection": "explicit-v0.59-profile",
             "default_profile": "v0.58",
-            "publication_allowed": False,
+            "publication_allowed": True,
+            "qualification_scope": ["architecture-specification", "encoding", "sail-package"],
+            "platform_qualified": False,
             "source_bindings": "isa/v0.59/pto-v0591-candidate.json",
             "source_bindings_sha256": bindings_sha256,
             "counts": {"common": 578, "linx_only": 216, "scoped": 705},
+            "authoritative_v059_paths": [
+                "instructions",
+                "state.pto_scalar_forms",
+                "state.pto_command_forms",
+                "state.extension_encoding_reservations",
+                "state.pto_system_registers",
+            ],
+            "external_authoritative_v059_files": {
+                "tile_operations": {
+                    "path": "isa/v0.59/state/pto_tile_operations.json",
+                    "precedence": "overrides-archival-state.pto_ops",
+                },
+                "hardware_conformance_profile": {
+                    "path": "isa/v0.59/state/pto_hardware_conformance_profile.json"
+                },
+                "numeric_conformance_vectors": {
+                    "path": "isa/v0.59/state/pto_hardware_numeric_vectors.json"
+                },
+            },
+            "linx_only_inheritance": {
+                "status": "published-linx-specific-rows",
+                "row_count": 216,
+                "verification": "byte-identical-to-v0.58-catalog-rows",
+            },
             "inherited_v058_views": {
-                "status": "schema-completeness-only-not-published-v0.59-authority",
+                "status": "archival-schema-view-non-normative-for-v0.59",
                 "paths": inherited_v058_views,
             },
         },
@@ -463,7 +489,7 @@ def build() -> dict[str, Any]:
     }
     complete_field_definitions(document)
     if document["instruction_count"] != 1499:
-        raise ValueError(f"expected 1499 candidate rows, found {len(instructions)}")
+        raise ValueError(f"expected 1499 published rows, found {len(instructions)}")
     check_collisions(document)
     return document
 

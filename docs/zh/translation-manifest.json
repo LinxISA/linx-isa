@@ -54,8 +54,8 @@
       "translation_sha256": "2d588dd5ab6a94ee09adbe4859711fee3889e7cb2a1f7d7efb420e0b304f894f"
     },
     "architecture/v0.59.1-pto-alignment.md": {
-      "source_sha256": "27ede37d2213eb31373b6b3e65489fc7feea6dc142fd36e5b13a6e0caf31c2b6",
-      "translation_sha256": "1ba34a34a9315691aad3d962aff06009e39f421c91ce9ec579e93b7a0e17b720"
+      "source_sha256": "3d90b7a4e9fdad961881c4bd4985fcd63f3b0b96279ab6142d3d23b1226b6d46",
+      "translation_sha256": "faac3c36d208194526e6fdc02a2b947cee76ce8961c47f5a578cc10dbbfd3a12"
     },
     "archive/design-updates/README.md": {
       "source_sha256": "80981e0838933412e77e97cb0abcbc7aa0c1ebff2ad11494f8328bc99139772e",
@@ -8104,6 +8104,10 @@
     "releases/v0.58.3.md": {
       "source_sha256": "c130ae010d1d7fcbc478e872514060a3b16de569ff67ac41a8c7b44ddee35a31",
       "translation_sha256": "9c64d925cf0ec57f6231e00df392da8879abc611192e72af780457a2befc61d7"
+    },
+    "releases/v0.59.1.md": {
+      "source_sha256": "16547c00eb586b80b59850d1c2d0609e88dc839c1993212ae4ee970eb7635b21",
+      "translation_sha256": "1da6c97c4945674bf772a39b2af365b972dc7fa66947aa6e772f2ba772840011"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",

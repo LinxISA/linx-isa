@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve a LinxISA profile without silently promoting prepublication state."""
+"""Resolve a LinxISA profile without silently changing the platform default."""
 
 from __future__ import annotations
 

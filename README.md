@@ -23,7 +23,7 @@
 
 This repository serves as the **superproject** that pins together all ecosystem components: compiler (LLVM), emulator (QEMU), Linux kernel, RTL (LinxCore), and standard libraries (glibc, musl).
 
-The current machine-readable ISA authority is
+The published architecture specification, encodings and Sail model are available in the [0.59.1 specification release](docs/releases/v0.59.1.md). The platform bring-up default is
 `isa/v0.58/linxisa-v0.58.json`. Historical profiles and archives do not define
 current encodings or semantics.
 

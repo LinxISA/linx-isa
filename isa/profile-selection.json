@@ -4,6 +4,7 @@
   "policy": {
     "profile_must_be_explicit_for_prepublication": true,
     "prepublication_requires_opt_in": true,
+    "published_nondefault_profiles_require_explicit_selection": true,
     "fallback_between_profiles_allowed": false
   },
   "profiles": {
@@ -14,14 +15,20 @@
       "release_manifest": "isa/v0.58/release_manifest.json"
     },
     "v0.59": {
-      "state": "selectable-prepublication",
+      "state": "published-explicit-profile",
       "version": "0.59.1",
       "catalog": "isa/v0.59/linxisa-v0.59.json",
       "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
       "sail_entry": "model/linxisa_v0591.sail",
       "release_manifest": "isa/v0.59/release_manifest.json",
       "package": "isa/v0.59/release_package.json",
-      "release_qualified": false
+      "release_qualified": true,
+      "qualification_scope": [
+        "architecture-specification",
+        "encoding",
+        "sail-package"
+      ],
+      "platform_qualified": false
     }
   }
 }

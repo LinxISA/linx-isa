@@ -20,22 +20,25 @@ from export_linxisa_v0591_sail import export as export_sail
 
 
 class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
-    def test_package_is_deterministic_and_prepublication(self):
+    def test_package_is_deterministic_and_published_for_specification(self):
         selection, package = build()
         self.assertEqual((selection, package), build())
         self.assertEqual(selection["default_profile"], "v0.58")
-        self.assertEqual(selection["profiles"]["v0.59"]["state"], "selectable-prepublication")
-        self.assertFalse(selection["profiles"]["v0.59"]["release_qualified"])
-        self.assertEqual(package["state"], "prepared-prepublication")
-        self.assertFalse(package["publication_allowed"])
+        self.assertEqual(selection["profiles"]["v0.59"]["state"], "published-explicit-profile")
+        self.assertTrue(selection["profiles"]["v0.59"]["release_qualified"])
+        self.assertFalse(selection["profiles"]["v0.59"]["platform_qualified"])
+        self.assertEqual(package["state"], "published-specification")
+        self.assertTrue(package["publication_allowed"])
         self.assertTrue(package["activation_policy"]["explicit_profile_ready"])
         self.assertTrue(
             package["activation_policy"][
-                "published_default_switch_requires_release_qualification"
+                "published_default_switch_requires_platform_qualification"
             ]
         )
-        self.assertFalse(package["qualification"]["release_qualified"])
-        self.assertIsNone(package["qualification"]["evidence"])
+        self.assertTrue(package["qualification"]["release_qualified"])
+        self.assertTrue(package["qualification"]["specification_qualified"])
+        self.assertFalse(package["qualification"]["platform_qualified"])
+        self.assertIsNotNone(package["qualification"]["evidence"])
 
     def test_package_binds_full_catalog_and_candidate_sail(self):
         _selection, package = build()
@@ -58,6 +61,18 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         )
         self.assertIn("isa/sail/model/state/state.sail", package["inputs"])
         self.assertIn("isa/sail/model/linxisa.sail", package["inputs"])
+        self.assertIn("isa/v0.59/state/pto_tile_operations.json", package["inputs"])
+        lock = json.loads(
+            (ROOT / "isa/v0.59/pto-spec.lock.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            package["upstream_source_hashes"]["tile_operations"]["sha256"],
+            lock["catalogs"]["tile_operations"]["sha256"],
+        )
+        self.assertNotEqual(
+            package["inputs"]["isa/v0.59/state/pto_tile_operations.json"],
+            package["upstream_source_hashes"]["tile_operations"]["sha256"],
+        )
 
     def test_checked_files_match_builder(self):
         selection, package = build()
@@ -80,42 +95,33 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             self.assertIn("model/decode/decode.sail", package["files"])
             self.assertIn("model/linxisa_v0591.sail", package["files"])
 
-    def test_selector_requires_explicit_prepublication_opt_in(self):
+    def test_selector_keeps_published_profile_explicit_but_selectable(self):
         command = [sys.executable, "tools/isa/select_linxisa_profile.py"]
         default = subprocess.run(
             command, cwd=ROOT, check=True, capture_output=True, text=True
         )
         self.assertEqual(json.loads(default.stdout)["profile"], "v0.58")
-        blocked = subprocess.run(
-            [*command, "--profile", "v0.59"],
-            cwd=ROOT,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        self.assertNotEqual(blocked.returncode, 0)
         selected = subprocess.run(
-            [*command, "--profile", "v0.59", "--allow-prepublication"],
+            [*command, "--profile", "v0.59"],
             cwd=ROOT,
             check=True,
             capture_output=True,
             text=True,
         )
-        self.assertEqual(json.loads(selected.stdout)["state"], "selectable-prepublication")
+        self.assertEqual(json.loads(selected.stdout)["state"], "published-explicit-profile")
         qualified = subprocess.run(
             [
                 *command,
                 "--profile",
                 "v0.59",
-                "--allow-prepublication",
                 "--require-release-qualified",
             ],
             cwd=ROOT,
-            check=False,
+            check=True,
             capture_output=True,
             text=True,
         )
-        self.assertNotEqual(qualified.returncode, 0)
+        self.assertTrue(json.loads(qualified.stdout)["release_qualified"])
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "isa/sail"
 SPEC = ROOT / "isa/v0.59/linxisa-v0.59.json"
-ENTRY_TEXT = """// Generated LinxISA v0.59.1 prepublication entry.
+ENTRY_TEXT = """// Generated LinxISA v0.59.1 published specification entry.
 // The package exporter replaces decode/decode.sail from the canonical catalog.
 
 $include "linxisa.sail"
@@ -75,7 +75,7 @@ def export(output: Path) -> dict:
         "schema": "linxisa.sail-package.v1",
         "profile": "v0.59",
         "version": "0.59.1",
-        "state": "prepublication",
+        "state": "published-specification",
         "entry": "model/linxisa_v0591.sail",
         "catalog": {
             "path": "isa/v0.59/linxisa-v0.59.json",
