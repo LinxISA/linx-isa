@@ -179,6 +179,11 @@ def _default_clangxx(clang: Path) -> Path:
     return cands[-1]
 
 
+def _driver_path(value: str) -> Path:
+    """Make a driver path absolute without resolving its clang/clang++ name."""
+    return Path(os.path.expanduser(value)).absolute()
+
+
 def _default_qemu() -> Path:
     env = os.environ.get("QEMU")
     if env:
@@ -318,6 +323,21 @@ def _musl_reuse_errors(
     ]
     errors.extend(str(path) for path in required if not path.is_file())
     return errors
+
+
+def _musl_profile_flags(mode_summary: dict[str, str]) -> tuple[list[str], list[str]]:
+    """Return driver flags required by the validated musl identity profile."""
+    if mode_summary.get("pto_identity_release") == "0.59.1":
+        incomplete = [
+            key for key in ("m1", "m2", "m3") if mode_summary.get(key) != "pass"
+        ]
+        if incomplete:
+            raise ValueError(
+                "PTO 0.59.1 mode summary is not validated: " + ", ".join(incomplete)
+            )
+        march = "-march=linx64+pto-v0591-scoped"
+        return [march], [march, "-Wl,--linx-pto-v0591-scoped"]
+    return [], []
 
 
 def _write_summary(path: Path, payload: dict[str, Any]) -> None:
@@ -521,6 +541,9 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
             "kernel_sha256": mode_summary.get("kernel_sha256", ""),
             "qemu_provenance": mode_summary.get("qemu_provenance", {}),
             "runtime_assets": mode_summary.get("runtime_assets", {}),
+            "pto_identity_release": mode_summary.get("pto_identity_release", ""),
+            "profile_compile_flags": mode_summary.get("profile_compile_flags", []),
+            "profile_link_flags": mode_summary.get("profile_link_flags", []),
         }
 
     evidence_keys = {
@@ -528,6 +551,9 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
             mode_results[mode]["kernel_sha256"],
             json.dumps(mode_results[mode]["qemu_provenance"], sort_keys=True),
             json.dumps(mode_results[mode]["runtime_assets"], sort_keys=True),
+            mode_results[mode]["pto_identity_release"],
+            json.dumps(mode_results[mode]["profile_compile_flags"]),
+            json.dumps(mode_results[mode]["profile_link_flags"]),
         )
         for mode in ("static", "shared")
     }
@@ -543,8 +569,8 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
         "paths": {
             "linux_root": str(Path(os.path.expanduser(args.linux_root)).resolve()),
             "musl_root": str(Path(os.path.expanduser(args.musl_root)).resolve()),
-            "clang": str(Path(os.path.expanduser(args.clang)).resolve()),
-            "clangxx": str(Path(os.path.expanduser(args.clangxx)).resolve()),
+            "clang": str(_driver_path(args.clang)),
+            "clangxx": str(_driver_path(args.clangxx)),
             "lld": str(Path(os.path.expanduser(args.lld)).absolute()),
             "qemu": str(Path(os.path.expanduser(args.qemu)).resolve()),
             "qemu_user": str(Path(os.path.expanduser(args.qemu_user)).resolve()),
@@ -554,6 +580,9 @@ def _run_split_link_modes(args: argparse.Namespace, out_dir: Path, selected_samp
             "runner": args.runner,
         },
         "link_modes": ["static", "shared"],
+        "pto_identity_release": mode_results["static"]["pto_identity_release"],
+        "profile_compile_flags": mode_results["static"]["profile_compile_flags"],
+        "profile_link_flags": mode_results["static"]["profile_link_flags"],
         "mode_results": mode_results,
         "result": {
             "ok": overall_ok,
@@ -675,11 +704,11 @@ def main(argv: list[str]) -> int:
 
     linux_root = Path(os.path.expanduser(args.linux_root)).resolve()
     musl_root = Path(os.path.expanduser(args.musl_root)).resolve()
-    clang = Path(os.path.expanduser(args.clang)).resolve()
+    clang = _driver_path(args.clang)
     clangxx = (
-        Path(os.path.expanduser(args.clangxx)).resolve()
+        _driver_path(args.clangxx)
         if args.clangxx
-        else _default_clangxx(clang).resolve()
+        else _default_clangxx(clang).absolute()
     )
     lld = Path(os.path.expanduser(args.lld)).absolute()
     qemu = Path(os.path.expanduser(args.qemu)).resolve()
@@ -848,6 +877,19 @@ def main(argv: list[str]) -> int:
         for name, path in reusable_assets.items()
         if path.is_file()
     }
+    try:
+        profile_compile_flags, profile_link_flags = _musl_profile_flags(mode_summary)
+    except ValueError as error:
+        add_stage("sample-compile", "fail", str(error))
+        summary["result"] = {
+            "ok": False,
+            "classification": "musl_identity_profile_validation_failure",
+        }
+        _write_summary(summary_path, summary)
+        return 2
+    summary["pto_identity_release"] = mode_summary.get("pto_identity_release", "")
+    summary["profile_compile_flags"] = profile_compile_flags
+    summary["profile_link_flags"] = profile_link_flags
     env_compile = os.environ.copy()
     env_compile["PATH"] = f"{lld.parent}:{env_compile.get('PATH', '')}"
     if args.runner == "system":
@@ -874,6 +916,12 @@ def main(argv: list[str]) -> int:
 
         audit_log = out_dir / "callret_crossstack.log"
         audit_env = os.environ.copy()
+        sibling_objdump = clang.parent / "llvm-objdump"
+        if sibling_objdump.is_file():
+            audit_env.setdefault("LLVM_OBJDUMP", str(sibling_objdump))
+        sibling_readelf = clang.parent / "llvm-readelf"
+        if sibling_readelf.is_file():
+            audit_env.setdefault("LLVM_READELF", str(sibling_readelf))
         # Whole-vmlinux disassembly audit is expensive and can be enabled
         # explicitly when needed; keep object-level contract checks on by default.
         audit_env["LINX_AUDIT_VMLINUX"] = os.environ.get("LINX_AUDIT_VMLINUX", "0")
@@ -996,6 +1044,7 @@ def main(argv: list[str]) -> int:
                 args.target,
                 "--sysroot",
                 str(sysroot),
+                *profile_compile_flags,
             ]
             if is_cpp:
                 compile_sample_cmd += [
@@ -1049,6 +1098,7 @@ def main(argv: list[str]) -> int:
                         args.target,
                         "--sysroot",
                         str(sysroot),
+                        *profile_link_flags,
                         "-std=c++17",
                         "-fno-exceptions",
                         "-fno-rtti",
@@ -1075,6 +1125,7 @@ def main(argv: list[str]) -> int:
                         args.target,
                         "--sysroot",
                         str(sysroot),
+                        *profile_link_flags,
                         "-static",
                         "-Wl,-pie",
                         "-fuse-ld=lld",
@@ -1109,6 +1160,7 @@ def main(argv: list[str]) -> int:
                         args.target,
                         "--sysroot",
                         str(sysroot),
+                        *profile_link_flags,
                         "-std=c++17",
                         "-fno-exceptions",
                         "-fno-rtti",
@@ -1137,6 +1189,7 @@ def main(argv: list[str]) -> int:
                         args.target,
                         "--sysroot",
                         str(sysroot),
+                        *profile_link_flags,
                         "-Wl,-pie",
                         "-fuse-ld=lld",
                         "-nostdlib",

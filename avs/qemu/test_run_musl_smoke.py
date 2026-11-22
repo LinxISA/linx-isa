@@ -12,6 +12,64 @@ import run_musl_smoke
 
 
 class QemuInstructionFailureTests(unittest.TestCase):
+    def test_driver_path_preserves_clangxx_symlink_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            target = root / "clang-23"
+            target.write_bytes(b"driver")
+            clangxx = root / "clang++"
+            clangxx.symlink_to(target.name)
+
+            self.assertEqual(run_musl_smoke._driver_path(str(clangxx)), clangxx)
+
+    def test_v0591_mode_summary_selects_matching_compile_and_link_flags(self) -> None:
+        compile_flags, link_flags = run_musl_smoke._musl_profile_flags(
+            {
+                "m1": "pass",
+                "m2": "pass",
+                "m3": "pass",
+                "pto_identity_release": "0.59.1",
+            }
+        )
+
+        self.assertEqual(compile_flags, ["-march=linx64+pto-v0591-scoped"])
+        self.assertEqual(
+            link_flags,
+            [
+                "-march=linx64+pto-v0591-scoped",
+                "-Wl,--linx-pto-v0591-scoped",
+            ],
+        )
+
+    def test_legacy_or_explicit_mode_does_not_gain_profile_flags(self) -> None:
+        self.assertEqual(
+            run_musl_smoke._musl_profile_flags(
+                {"m1": "pass", "m2": "pass", "m3": "pass"}
+            ),
+            ([], []),
+        )
+        with self.assertRaisesRegex(ValueError, "not validated: m3"):
+            run_musl_smoke._musl_profile_flags(
+                {
+                    "m1": "pass",
+                    "m2": "pass",
+                    "m3": "fail",
+                    "pto_identity_release": "0.59.1",
+                }
+            )
+
+    def test_runtime_convergence_preserves_workload_clang_override(self) -> None:
+        script = (
+            Path(__file__).resolve().parents[2]
+            / "tools/bringup/run_runtime_convergence.sh"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn('WORKLOAD_CLANG="${LINX_CLANG:-$CLANG_BIN}"', script)
+        self.assertGreaterEqual(script.count("LINX_CLANG=$WORKLOAD_CLANG"), 3)
+        self.assertIn("--clang $WORKLOAD_CLANG", script)
+        self.assertIn("CLANG=$CLANG_BIN TARGET=linx64-linx-none-elf", script)
+        self.assertIn("--clang $CLANG_BIN --gmake", script)
+
     def test_pto_cube_is_a_focused_system_sample(self) -> None:
         self.assertEqual(run_musl_smoke._select_samples(["pto_cube"]), ["pto_cube"])
         self.assertEqual(
