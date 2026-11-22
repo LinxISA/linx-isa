@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Compare scoped single-access Scalar results from QEMU and linx-model."""
+"""Compare scoped Scalar results from QEMU, linx-model and LinxCoreModel."""
 
 import argparse
 import hashlib
+from itertools import combinations
 import json
 import os
 from pathlib import Path
@@ -37,7 +38,7 @@ def repo_identity(path, timeout):
     return {"path": repo, "commit": head, "dirty": bool(changes)}
 
 
-def invoke(argv, *, timeout, input_text=None, env=None, case=None):
+def invoke(argv, *, timeout, input_text=None, env=None, case=None, cwd=None):
     result = subprocess.run(
         argv,
         input=input_text,
@@ -45,6 +46,7 @@ def invoke(argv, *, timeout, input_text=None, env=None, case=None):
         capture_output=True,
         text=True,
         timeout=timeout,
+        cwd=cwd,
     )
     if case is not None:
         (case / "stdout.log").write_text(result.stdout, encoding="utf-8")
@@ -279,17 +281,67 @@ def require_pass_finisher(trace):
         raise ValueError(f"{trace.parent.name} did not retire the pass finisher")
 
 
+def run_linxcore_model(tool, elf, address, size, case, timeout):
+    case.mkdir()
+    result = case / "result.bin"
+    stdout = invoke(
+        [
+            tool,
+            "-f",
+            elf,
+            "--result_address",
+            str(address),
+            "--result_size",
+            str(size),
+            "--result_file",
+            result,
+        ],
+        timeout=timeout,
+        case=case,
+        cwd=case,
+    )
+    if (
+        "linx_test_finisher write addr=0x10009000 val=0x5555 pass"
+        not in stdout.splitlines()
+    ):
+        raise ValueError(f"{case.name} did not report the pass finisher")
+    data = result.read_bytes()
+    if len(data) != size:
+        raise ValueError(
+            f"{case.name} exported {len(data)} result bytes, expected {size}"
+        )
+    return data
+
+
+def compare_models(results, golden, segments):
+    comparisons = {
+        f"{model}_to_golden": compare(golden, data, segments)
+        for model, data in results.items()
+    }
+    for (left, lhs), (right, rhs) in combinations(results.items(), 2):
+        comparisons[f"{left}_to_{right}"] = compare(lhs, rhs, segments)
+    return comparisons
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--llvm-bin", required=True, type=Path)
     parser.add_argument("--qemu", required=True, type=Path)
     parser.add_argument("--linx-model", required=True, type=Path)
+    parser.add_argument("--gfrun", type=Path)
+    parser.add_argument("--gfsim", type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--timeout", default=30, type=int)
     args = parser.parse_args()
     llvm_bin = args.llvm_bin.resolve()
     tools = {name: llvm_bin / name for name in ("llvm-mc", "ld.lld", "llvm-readobj")}
     tools.update({"qemu": args.qemu.resolve(), "linx-model": args.linx_model.resolve()})
+    core_models = {
+        name: path.resolve()
+        for name, path in (("gfrun", args.gfrun), ("gfsim", args.gfsim))
+        if path is not None
+    }
+    tools.update(core_models)
     output = args.output.resolve()
     output.mkdir(parents=True)
     source, golden, segments = build_case(output)
@@ -338,6 +390,7 @@ def main():
         "qemu": tools["qemu"].parent,
         "linx-model": tools["linx-model"].parent,
     }
+    sources.update({name: path.parent for name, path in core_models.items()})
     repositories = {
         name: repo_identity(path, args.timeout) for name, path in sources.items()
     }
@@ -347,7 +400,7 @@ def main():
             "schema_version": 1,
             "artifacts": identities,
             "repositories": repositories,
-            "selected_models": ["qemu", "linx-model"],
+            "selected_models": ["qemu", "linx-model", *core_models],
             "pe_count": 1,
             "linxisa_encoding_version": "v0.59-candidate",
             "pto_isa_version": "0.59.1",
@@ -408,14 +461,23 @@ def main():
     )
     require_pass_finisher(qemu_trace)
     require_pass_finisher(model_trace)
-    qemu_bytes = (qemu_case / "result.bin").read_bytes()
-    model_bytes = (model_case / "result.bin").read_bytes()
+    results = {
+        "qemu": (qemu_case / "result.bin").read_bytes(),
+        "linx_model": (model_case / "result.bin").read_bytes(),
+    }
+    failures = {}
+    for name, tool in core_models.items():
+        try:
+            results[name] = run_linxcore_model(
+                tool, elf, address, size, output / name, args.timeout
+            )
+        except (OSError, RuntimeError, subprocess.TimeoutExpired, ValueError) as error:
+            failures[f"{name}_to_golden"] = {"pass": False, "error": str(error)}
     result = {
         "elf_sha256": identities["elf"]["sha256"],
         "carriers": len(segments),
-        "qemu_to_golden": compare(golden, qemu_bytes, segments),
-        "linx_model_to_golden": compare(golden, model_bytes, segments),
-        "qemu_to_linx_model": compare(qemu_bytes, model_bytes, segments),
+        **compare_models(results, golden, segments),
+        **failures,
     }
     if any(
         file_identity(path) != identities[name] for name, path in artifacts.items()
@@ -429,7 +491,8 @@ def main():
         if isinstance(comparison, dict) and not comparison["pass"]:
             raise SystemExit(f"{name}: {comparison}")
     print(
-        f"PASS: {len(segments)} scoped Scalar carriers, {size} result bytes per model"
+        f"PASS: {len(segments)} scoped Scalar carriers, {size} bytes across "
+        f"{len(results)} models"
     )
 
 

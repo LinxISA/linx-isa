@@ -6,12 +6,26 @@ import unittest
 from tools.bringup.check_pto_v0591_scalar_reference import (
     FINISHER_ADDRESS,
     FINISHER_PASS,
+    compare_models,
     require_pass_finisher,
     validate_cases,
 )
 
 
 class ScopedScalarReferenceTest(unittest.TestCase):
+    def test_compares_each_model_with_golden_and_every_other_model(self):
+        good = bytes(8)
+        wrong = b"\x01" + bytes(7)
+        results = compare_models(
+            {"qemu": good, "gfrun": good, "gfsim": wrong},
+            good,
+            [{"offset": 0, "form_id": "case"}],
+        )
+        self.assertEqual(len(results), 6)
+        self.assertTrue(results["qemu_to_gfrun"]["pass"])
+        self.assertFalse(results["gfsim_to_golden"]["pass"])
+        self.assertEqual(results["gfrun_to_gfsim"]["form_id"], "case")
+
     def test_complete_result_without_pass_finisher_is_rejected(self):
         record = {
             "trap_valid": 0,
