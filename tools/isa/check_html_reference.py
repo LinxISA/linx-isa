@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from html.parser import HTMLParser
 import json
 from pathlib import Path
+import posixpath
 import re
 import sys
 from urllib.parse import unquote, urlsplit
@@ -511,6 +512,11 @@ class Audit:
             self.fail(where, f"expected one form article, found {len(matches)}")
             return
         article = matches[0]
+        specs = article.find(tag="div", cls="form-spec")
+        if len(specs) != 1:
+            self.fail(where, "expected one tagged encoding record")
+            return
+        article = specs[0]
         direct_pres = [child for child in article.children if child.tag == "pre"]
         pre_codes = [c.raw_text() for pre in direct_pres for c in pre.find(tag="code")]
         if pre_codes != [row["asm"]]:
@@ -588,34 +594,13 @@ class Audit:
                     for key, value in expected_values.items():
                         if str(value) not in pairs.get(key, ""):
                             self.fail(where, f"{key} omits exact value {value!r}")
-        intros = [
-            n for n in article.children if n.tag == "p" and "intro" in n.classes()
-        ]
-        if len(intros) != 1 or not re.search(r"[一-鿿]", intros[0].text()):
-            self.fail(where, "missing Chinese instruction synopsis")
-        descriptions = article.find(cls="semantic-description")
-        if len(descriptions) > 1 or any(not n.text().strip() for n in descriptions):
-            self.fail(where, "invalid operation description")
-        semantic_nodes = intros + descriptions + article.find(cls="semantic-details")
-        semantic = " ".join(n.text() for n in semantic_nodes)
-        bad = (
-            "执行 V.X 所定义的向量操作",
-            "not implemented",
-            "TODO",
-            "当前 catalog 未提供",
-            "Vector instruction (64-bit SIMD lane-by-lane execution)",
-            "Performs the operation indicated by the mnemonic",
-        )
-        for phrase in bad:
-            if phrase.lower() in semantic.lower():
-                if (
-                    phrase == "not implemented"
-                    and semantic.startswith("Encoding only; NOT IMPLEMENTED.")
-                    and row["mnemonic"] in semantic
-                    and "must reject before operand reads" in semantic
-                ):
-                    continue
-                self.fail(where, f"generic/incorrect operation content: {phrase!r}")
+        if (
+            "NOT IMPLEMENTED" in row.get("note", "")
+            and "编码保留" not in article.text()
+        ):
+            self.fail(
+                where, "encoding-only form lacks its reject-before-effects status"
+            )
         sources = [
             child
             for child in article.children
@@ -762,11 +747,7 @@ class Audit:
                 self.fail(page, f"expected one tile-contract, found {len(contracts)}")
                 continue
             node = contracts[0]
-            mains = [
-                main
-                for main in doc.find(tag="main")
-                if main.attrs.get("id") == "content"
-            ]
+            mains = [main for main in doc.find(tag="div", cls="release-data-body")]
             page_pres = []
             if len(mains) == 1:
                 for pre in [child for child in mains[0].children if child.tag == "pre"]:
@@ -868,14 +849,14 @@ class Audit:
                         "encoding.html",
                         f"{href} values {indexed.get(href)!r} != {wanted!r}",
                     )
-        index = self.document("index.html")
+        index = self.document("mnemonics.html")
         if index is not None:
             hrefs = {n.attrs.get("href") for n in index.find(tag="a")}
             expected = {op_page(row) for row in self.catalog["instructions"]}
             missing = sorted(expected - hrefs)
             if missing:
                 self.fail(
-                    "index.html", f"missing {len(missing)} instruction page links"
+                    "mnemonics.html", f"missing {len(missing)} instruction page links"
                 )
         tile_index = self.document("tile.html")
         if tile_index is not None:
@@ -887,7 +868,7 @@ class Audit:
                 self.fail("tile.html", f"missing {len(missing)} Tile page links")
 
     def check_links_and_assets(self) -> None:
-        html_files = sorted(self.out.glob("*.html"))
+        html_files = sorted(self.out.rglob("*.html"))
         for required in (
             "index.html",
             "encoding.html",
@@ -899,17 +880,18 @@ class Audit:
         ):
             if not (self.out / required).is_file():
                 self.fail(required, "missing offline asset")
-        ids_by_file = {}
+        ids_by_file: dict[str, set[str]] = {}
         rendered_forms: list[str] = []
         for path in html_files:
-            doc = self.document(path.name)
+            relative = path.relative_to(self.out).as_posix()
+            doc = self.document(relative)
             if doc is None:
                 continue
             ids = [n.attrs["id"] for n in doc.find() if "id" in n.attrs]
             duplicates = sorted({value for value in ids if ids.count(value) > 1})
             if duplicates:
-                self.fail(path.name, f"duplicate IDs: {duplicates}")
-            ids_by_file[path.name] = set(ids)
+                self.fail(relative, f"duplicate IDs: {duplicates}")
+            ids_by_file[relative] = set(ids)
             rendered_forms.extend(
                 n.attrs.get("id", "") for n in doc.find(tag="article", cls="form")
             )
@@ -923,20 +905,39 @@ class Audit:
                 f"rendered {len(rendered_forms)} articles / {len(set(rendered_forms))} IDs, expected {len(expected_forms)}",
             )
         for path in html_files:
-            doc = self.docs.get(path.name)
+            relative = path.relative_to(self.out).as_posix()
+            doc = self.docs.get(relative)
             if doc is None:
                 continue
+            authored_text = {
+                re.sub(r"\s+", " ", text).strip()
+                for node in doc.find(cls="authored-reader")
+                for text in default_visible_text(node)
+            }
             for residual in english_visible_fragments(doc):
-                self.fail(path.name, f"default-visible English sentence: {residual!r}")
+                if residual not in authored_text:
+                    self.fail(
+                        relative, f"default-visible English sentence: {residual!r}"
+                    )
             for anchor in doc.find(tag="a"):
                 href = anchor.attrs.get("href", "")
                 parsed = urlsplit(href)
                 if parsed.scheme or parsed.netloc:
                     continue
-                target_name = unquote(parsed.path) or path.name
+                decoded = unquote(parsed.path)
+                target_name = (
+                    posixpath.normpath(
+                        posixpath.join(posixpath.dirname(relative), decoded)
+                    )
+                    if decoded
+                    else relative
+                )
+                if target_name == ".." or target_name.startswith("../"):
+                    self.fail(relative, f"href escapes offline root {href!r}")
+                    continue
                 target = self.out / target_name
                 if not target.is_file():
-                    self.fail(path.name, f"broken href {href!r}")
+                    self.fail(relative, f"broken href {href!r}")
                     continue
                 if parsed.fragment and target.suffix == ".html":
                     if target_name not in ids_by_file:
@@ -947,11 +948,26 @@ class Audit:
                             else set()
                         )
                     if unquote(parsed.fragment) not in ids_by_file[target_name]:
-                        self.fail(path.name, f"missing fragment target {href!r}")
-            for node in doc.find(tag="link") + doc.find(tag="script"):
+                        self.fail(relative, f"missing fragment target {href!r}")
+            for node in (
+                doc.find(tag="img") + doc.find(tag="link") + doc.find(tag="script")
+            ):
                 ref = node.attrs.get("href") or node.attrs.get("src")
-                if ref and not urlsplit(ref).scheme and not (self.out / ref).is_file():
-                    self.fail(path.name, f"missing offline asset {ref!r}")
+                if not ref:
+                    continue
+                parsed = urlsplit(ref)
+                if parsed.scheme or parsed.netloc:
+                    continue
+                decoded = unquote(parsed.path)
+                target_name = posixpath.normpath(
+                    posixpath.join(posixpath.dirname(relative), decoded)
+                )
+                if (
+                    target_name == ".."
+                    or target_name.startswith("../")
+                    or not (self.out / target_name).is_file()
+                ):
+                    self.fail(relative, f"missing offline asset {ref!r}")
 
     def run(self) -> list[str]:
         for row in self.catalog["instructions"]:

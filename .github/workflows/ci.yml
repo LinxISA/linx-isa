@@ -181,6 +181,8 @@ jobs:
         run: |
           python3 tools/isa/gen_html_reference.py --out "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_html_reference.py --site "$RUNNER_TEMP/linxisa-html"
+          python3 tools/isa/check_manual_structure.py --site "$RUNNER_TEMP/linxisa-html"
+          python3 tools/isa/check_manual_authored.py --site "$RUNNER_TEMP/linxisa-html"
       - name: Build normative English documentation
         run: mkdocs build --strict --site-dir "${RUNNER_TEMP}/site-en"
       - name: Build secondary Chinese documentation

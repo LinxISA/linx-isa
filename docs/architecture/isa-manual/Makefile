@@ -52,3 +52,5 @@ html-reference:
 check-html-reference:
 	python3 ../../../tools/isa/gen_html_reference.py --check --out $(BUILD_DIR)/instruction-reference
 	python3 ../../../tools/isa/check_html_reference.py --site $(BUILD_DIR)/instruction-reference
+	python3 ../../../tools/isa/check_manual_structure.py --site $(BUILD_DIR)/instruction-reference
+	python3 ../../../tools/isa/check_manual_authored.py --site $(BUILD_DIR)/instruction-reference
