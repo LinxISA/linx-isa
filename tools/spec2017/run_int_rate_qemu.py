@@ -5358,9 +5358,9 @@ def _fnv1a32(path: Path) -> tuple[int, int]:
 def _strip_async_qemu_diagnostics(text: str) -> str:
     # Kernel diagnostics can be written between individual console writes from
     # the init process, splitting one logical LINX_SPEC_HASH marker across
-    # several physical lines.  Remove only timestamped kernel records while
+    # several physical lines.  Remove timestamped Linx debug records while
     # retaining any marker fragment written before the record.
-    text = re.sub(r"\[\s*\d+\.\d+\][^\n]*(?:\n|$)", "", text)
+    text = re.sub(r"\[[ \t]*\d+\.\d+\] Linx dbg:[^\n]*(?:\n|$)", "", text)
     for marker in (
         "LINX_HEARTBEAT_STALL",
         "LINX_HEARTBEAT",

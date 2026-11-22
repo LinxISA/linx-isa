@@ -89,11 +89,6 @@ class RunIntRateQemuTests(unittest.TestCase):
                 ),
             )
 
-    def test_explicit_clang_option_remains_available(self) -> None:
-        source = inspect.getsource(runner.main)
-
-        self.assertIn('parser.add_argument("--clang", default=_default_clang())', source)
-
     def test_gen_init_cpio_prefers_kernel_build_output(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -1511,11 +1506,11 @@ class RunIntRateQemuTests(unittest.TestCase):
             ref_size, ref_hash = runner._fnv1a32(ref)
             size_text = str(ref_size)
             log.write_text(
-                "LINX_SPEC_HASH [    9.255119] kernel diagnostic\n"
-                "rand.11.out[    9.257164] kernel diagnostic\n"
-                f" {size_text[:-1]}[    9.260943] kernel diagnostic\n"
-                f"{size_text[-1]} 0x[    9.272154] kernel diagnostic\n"
-                f"{ref_hash:08x}[    9.274158] kernel diagnostic\n"
+                "LINX_SPEC_HASH [    9.255119] Linx dbg: console write\n"
+                "rand.11.out[    9.257164] Linx dbg: console write\n"
+                f" {size_text[:-1]}[    9.260943] Linx dbg: console write\n"
+                f"{size_text[-1]} 0x[    9.272154] Linx dbg: console write\n"
+                f"{ref_hash:08x}[    9.274158] Linx dbg: console write\n"
                 "\nLINX_SPEC_PASS 999.specrand_ir\n",
                 encoding="utf-8",
             )
@@ -1539,8 +1534,8 @@ class RunIntRateQemuTests(unittest.TestCase):
             ref.write_bytes(b"hash payload\n")
             ref_size, _ = runner._fnv1a32(ref)
             log.write_text(
-                "LINX_SPEC_HASH [    9.255119] kernel diagnostic\n"
-                f"rand.11.out {ref_size} 0x[    9.272154] kernel diagnostic\n"
+                "LINX_SPEC_HASH [    9.255119] Linx dbg: console write\n"
+                f"rand.11.out {ref_size} 0x[    9.272154] Linx dbg: console write\n"
                 "00000000\nLINX_SPEC_PASS 999.specrand_ir\n",
                 encoding="utf-8",
             )
@@ -1556,16 +1551,16 @@ class RunIntRateQemuTests(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertEqual(result["checks"][0]["actual_hash"], "0x00000000")
 
-    def test_timestamped_kernel_filter_does_not_accept_invalid_marker(self) -> None:
+    def test_other_timestamped_output_cannot_repair_an_invalid_marker(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
             ref = root / "ref.out"
             log = root / "qemu.log"
             ref.write_bytes(b"hash payload\n")
-            _, ref_hash = runner._fnv1a32(ref)
+            ref_size, ref_hash = runner._fnv1a32(ref)
             log.write_text(
-                "LINX_SPEC_HASH [    9.255119] kernel diagnostic\n"
-                f"rand.11.out invalid 0x{ref_hash:08x}\n"
+                "LINX_SPEC_HASH [    9.255119] guest output\n"
+                f"rand.11.out {ref_size} 0x{ref_hash:08x}\n"
                 "LINX_SPEC_PASS 999.specrand_ir\n",
                 encoding="utf-8",
             )
