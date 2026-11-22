@@ -3,8 +3,8 @@
 
 The catalog ``note`` is the primary per-form semantic summary.  A small number
 of Linx-only vector forms intentionally have no note.  This module describes
-those forms from their mnemonic, assembly template, group, and the normative
-v0.58 kernel execution model.  It deliberately does not invent pseudocode for
+those forms from their mnemonic, assembly template, group, and the tagged
+v0.59.1 Sail model.  It deliberately does not invent pseudocode for
 fields whose interpretation is selected by another architectural profile.
 """
 
@@ -17,7 +17,11 @@ import json
 from pathlib import Path
 import re
 from typing import Any, Iterable, Mapping
-from manual_tag import tagged_json
+
+try:
+    from manual_tag import tagged_json
+except ModuleNotFoundError:  # package-style unittest import
+    from tools.isa.manual_tag import tagged_json
 
 
 @dataclass(frozen=True)
@@ -51,8 +55,8 @@ _VECTOR_INTEGER = {
     "SRLI": "逐活动 lane 做立即数逻辑右移",
     "SRA": "逐活动 lane 做算术右移",
     "SRAI": "逐活动 lane 做立即数算术右移",
-    "MUL": "逐活动 lane 做整数乘法",
-    "MADD": "逐活动 lane 做整数乘加",
+    "MUL": "逐活动 lane 做无符号整数乘法并保留目的类型可表示的低位",
+    "MADD": "逐活动 lane 做无符号整数乘加并保留目的类型可表示的低位",
     "DIV": "逐活动 lane 做有符号整数除法",
     "REM": "逐活动 lane 计算有符号整数余数",
 }
@@ -65,7 +69,7 @@ _VECTOR_BITS = {
     "BXU": "无符号提取所选位域",
     "CLZ": "统计所选位域的前导零",
     "CTZ": "统计所选位域的尾随零",
-    "REV": "按 byte 反转所选位域的字节顺序",
+    "REV": "对每个 32-bit lane 执行完整 bswap32（当前 Sail 忽略位域参数）",
 }
 
 _FP = {
@@ -101,11 +105,24 @@ _COMPARE = {
     "LTUI": "无符号小于立即数",
     "GEU": "无符号大于等于",
     "GEUI": "无符号大于等于立即数",
-    "AND": "按位与结果非零",
-    "ANDI": "与立即数按位与的结果非零",
-    "OR": "按位或结果非零",
-    "ORI": "与立即数按位或的结果非零",
+    "AND": "左右操作数分别判非零后做布尔 AND",
+    "ANDI": "左操作数与有符号立即数分别判非零后做布尔 AND",
+    "OR": "左右操作数分别判非零后做布尔 OR",
+    "ORI": "左操作数与有符号立即数分别判非零后做布尔 OR",
 }
+
+_TAGGED_SAIL = "https://github.com/LinxISA/linx-isa/blob/d262515b55c727073997c8f4c95261909f2fe8d3/isa/sail/model/execute/execute.sail"
+
+
+def _logical_compare_result(operation: str, left: int, right: int) -> int:
+    """Independent executable oracle for V.CMP logical forms."""
+    lhs, rhs = left != 0, right != 0
+    if operation in {"AND", "ANDI"}:
+        return int(lhs and rhs)
+    if operation in {"OR", "ORI"}:
+        return int(lhs or rhs)
+    raise ValueError(f"not a V.CMP logical operation: {operation}")
+
 
 _FP_COMPARE = {
     "FEQ": "浮点相等比较",
@@ -289,10 +306,22 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         "操作数命名、可选修饰符与目的操作数以本页 Syntax 和 Encoding 为准。",
     ]
     issue_urls: list[str] = []
+    evidence_urls: list[str] = []
 
     if core == "CMP" and suffixes:
-        cond = _COMPARE.get(suffixes[0], suffixes[0])
+        operation = suffixes[0]
+        cond = _COMPARE.get(operation, operation)
         short = f"逐活动 lane 判断{cond}并产生比较结果"
+        if operation in {"AND", "ANDI", "OR", "ORI"}:
+            example = _logical_compare_result(operation, 1, 2)
+            details.append(
+                f"Tagged Sail 先把两个输入分别转换为非零布尔值，再做逻辑 {operation.rstrip('I')}，并写 0 或 1；判别例 (1, 2) 的结果是 {example}，不是按位运算结果。"
+            )
+            if operation.endswith("I"):
+                details.append(
+                    "立即数先从 simm12 符号扩展到 32 bit；布尔化后只有零与非零有区别。"
+                )
+            evidence_urls.append(_TAGGED_SAIL + "#L3899-L3964")
     elif core in _FP_COMPARE:
         short = f"逐活动 lane 做{_FP_COMPARE[core]}并写入布尔结果"
     elif core in _VECTOR_INTEGER:
@@ -319,6 +348,11 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         )
     elif core in {"CSEL", "PSEL"}:
         short = "逐 lane 根据条件源选择左操作数或右操作数"
+        if core == "PSEL":
+            details[0] = (
+                "当前 tagged Sail 的 V.PSEL 遍历配置的 lane 数，但不读取 EXEC mask p；每个 lane 根据 SrcP 是否非零选择 SrcL 或可选取负后的 SrcR。"
+            )
+            evidence_urls.append(_TAGGED_SAIL + "#L3966-L3986")
     elif core.startswith("RD"):
         op = core[2:]
         names = {
@@ -326,8 +360,8 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
             "AND": "按位与",
             "OR": "按位或",
             "XOR": "按位异或",
-            "MAX": "最大值",
-            "MIN": "最小值",
+            "MAX": "有符号最大值",
+            "MIN": "有符号最小值",
             "FADD": "浮点加法",
             "FMAX": "浮点最大值",
             "FMIN": "浮点最小值",
@@ -387,8 +421,8 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
             "AND": "按位与",
             "OR": "按位或",
             "XOR": "按位异或",
-            "MAX": "最大值",
-            "MIN": "最小值",
+            "MAX": "有符号最大值",
+            "MIN": "有符号最小值",
         }
         returning = core.startswith("L")
         short = f"逐活动 lane 做 {width}-bit 原子{names.get(op, op)}读改写"
@@ -400,6 +434,11 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         details.append(
             "跨 lane 序列化、ordering、inactive lane 和 fault atomicity 尚未冻结。"
         )
+        if op in {"MAX", "MIN"}:
+            details.append(
+                "当前 tagged Sail 按有符号整数顺序选择 MAX/MIN；最终芯片 lane ordering 仍受 issue #149 约束。"
+            )
+            evidence_urls.append(_TAGGED_SAIL + "#L4852-L5258")
         issue_urls.append("https://github.com/LinxISA/linx-isa/issues/149")
     else:
         short = f"执行 {mnemonic} 所定义的向量操作"
@@ -409,6 +448,16 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         details.append("Syntax 使用 uimm，立即数按无符号值解释。")
     if "simm" in asm:
         details.append("Syntax 使用 simm，立即数按有符号值解释。")
+    if core in {"SLL", "SRL", "SRA", "SLLI", "SRLI", "SRAI"}:
+        details.append(
+            "Tagged Sail 将 shift amount 对 SrcL 的有效整数位宽取模；寄存器形式从 SrcR 的类型化数值取得 shift amount，立即数形式使用无符号 shamt。"
+        )
+        evidence_urls.append(_TAGGED_SAIL + "#L5266-L5388")
+    if core in {"MUL", "MADD"}:
+        details.append(
+            "当前 tagged Sail 把类型化输入转换为无符号整数后计算乘积或乘加，再按 DstType 打包结果。"
+        )
+        evidence_urls.append(_TAGGED_SAIL + "#L4360-L4415")
 
     if core in {"QPOP", "QPUSH"}:
         details.append(
@@ -425,7 +474,7 @@ def _describe_vector(inst: Mapping[str, Any], profile: str) -> SemanticDescripti
         short=short,
         description=short + "。",
         details=tuple(details),
-        provenance=tuple((_catalog_source(inst, profile), *issue_urls)),
+        provenance=tuple((_catalog_source(inst, profile), *evidence_urls, *issue_urls)),
         confidence="derived-from-normative-fields",
     )
 

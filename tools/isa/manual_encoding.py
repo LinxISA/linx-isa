@@ -455,28 +455,76 @@ def _render_constraints(row: dict[str, Any], catalog: dict[str, Any]) -> str:
 
 def _render_field_table(row: dict[str, Any]) -> str:
     fields: dict[str, dict[str, Any]] = {}
-    for part in row["encoding"]["parts"]:
+    part_offset = 0
+    for part_index, part in enumerate(row["encoding"]["parts"]):
         for field in part.get("fields", []):
-            fields.setdefault(str(field["name"]), field)
+            name = str(field["name"])
+            entry = fields.setdefault(
+                name, {"signed": field.get("signed"), "pieces": []}
+            )
+            if entry["signed"] != field.get("signed"):
+                raise ValueError(f"{row['id']}: inconsistent signedness for {name}")
+            for piece in field["pieces"]:
+                entry["pieces"].append(
+                    {
+                        **piece,
+                        "part": part_index,
+                        "global_lsb": part_offset + int(piece["insn_lsb"]),
+                        "global_msb": part_offset + int(piece["insn_msb"]),
+                    }
+                )
+        part_offset += int(part["width_bits"])
     if not fields:
         return ""
     rows = []
     for name, field in fields.items():
-        pieces = ", ".join(
-            f"{p['insn_msb']}:{p['insn_lsb']}"
-            if p["insn_msb"] != p["insn_lsb"]
-            else str(p["insn_lsb"])
-            for p in field["pieces"]
+        pieces = field["pieces"]
+        value_bits = {
+            int(piece["value_lsb"]) + index
+            for piece in pieces
+            if "value_lsb" in piece
+            for index in range(int(piece["width"]))
+        }
+        width = (
+            len(value_bits)
+            if len(value_bits) == sum(int(p["width"]) for p in pieces)
+            else sum(int(p["width"]) for p in pieces)
         )
-        width = sum(int(p["width"]) for p in field["pieces"])
+        mappings = []
+        for piece in pieces:
+            local = (
+                str(piece["insn_lsb"])
+                if piece["insn_msb"] == piece["insn_lsb"]
+                else f"{piece['insn_msb']}:{piece['insn_lsb']}"
+            )
+            global_range = (
+                str(piece["global_lsb"])
+                if piece["global_msb"] == piece["global_lsb"]
+                else f"{piece['global_msb']}:{piece['global_lsb']}"
+            )
+            mapping = f"P{piece['part']}[{local}] / I[{global_range}]"
+            if "value_lsb" in piece:
+                value_msb = int(
+                    piece.get(
+                        "value_msb", int(piece["value_lsb"]) + int(piece["width"]) - 1
+                    )
+                )
+                value_range = (
+                    str(piece["value_lsb"])
+                    if value_msb == int(piece["value_lsb"])
+                    else f"{value_msb}:{piece['value_lsb']}"
+                )
+                mapping += f" → value[{value_range}]"
+            mappings.append(mapping)
         signed = {True: "signed", False: "unsigned", None: "encoding-defined"}.get(
             field.get("signed"), str(field.get("signed"))
         )
         rows.append(
-            f"<tr><td><code>{escape(name)}</code></td><td>{width}</td><td><code>{escape(pieces)}</code></td><td>{signed}</td></tr>"
+            f'<tr data-field="{escape(name, quote=True)}" data-width="{width}" data-signedness="{escape(signed, quote=True)}">'
+            f"<td><code>{escape(name)}</code></td><td>{width}</td><td><code>{escape(', '.join(mappings))}</code></td><td>{signed}</td></tr>"
         )
     return (
-        '<table class="encoding-operands"><thead><tr><th>Field</th><th>Width</th><th>Instruction bits</th><th>Signedness</th></tr></thead><tbody>'
+        '<table class="encoding-operands"><thead><tr><th>Field</th><th>Width</th><th>Instruction/value mapping</th><th>Signedness</th></tr></thead><tbody>'
         + "".join(rows)
         + "</tbody></table>"
     )

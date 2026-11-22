@@ -157,6 +157,105 @@ def fixed_bits(row: dict) -> tuple[int, int]:
     return mask, match
 
 
+def expected_operand_rows(row: dict) -> list[dict[str, object]]:
+    """Independently derive the complete cross-part operand table."""
+    fields: dict[str, dict[str, object]] = {}
+    offset = 0
+    for part_index, part in enumerate(row["encoding"]["parts"]):
+        for field in part.get("fields", []):
+            name = str(field["name"])
+            record = fields.setdefault(
+                name, {"signed": field.get("signed"), "pieces": []}
+            )
+            if record["signed"] != field.get("signed"):
+                raise ValueError(f"{row['id']}: inconsistent signedness for {name}")
+            for piece in field["pieces"]:
+                local_lsb, local_msb = int(piece["insn_lsb"]), int(piece["insn_msb"])
+                value_lsb = piece.get("value_lsb")
+                record["pieces"].append(
+                    {
+                        "part": part_index,
+                        "local_lsb": local_lsb,
+                        "local_msb": local_msb,
+                        "global_lsb": offset + local_lsb,
+                        "global_msb": offset + local_msb,
+                        "width": int(piece["width"]),
+                        "value_lsb": None if value_lsb is None else int(value_lsb),
+                        "value_msb": None
+                        if value_lsb is None
+                        else int(
+                            piece.get(
+                                "value_msb", int(value_lsb) + int(piece["width"]) - 1
+                            )
+                        ),
+                    }
+                )
+        offset += int(part["width_bits"])
+    out = []
+    signed_names = {True: "signed", False: "unsigned", None: "encoding-defined"}
+    for name, record in fields.items():
+        pieces = record["pieces"]
+        has_value_map = all(piece["value_lsb"] is not None for piece in pieces)
+        if has_value_map:
+            value_bits = {
+                int(piece["value_lsb"]) + index
+                for piece in pieces
+                for index in range(int(piece["width"]))
+            }
+            width = len(value_bits)
+        else:
+            width = sum(int(piece["width"]) for piece in pieces)
+        mappings = []
+        for piece in pieces:
+            local = (
+                str(piece["local_lsb"])
+                if piece["local_lsb"] == piece["local_msb"]
+                else f"{piece['local_msb']}:{piece['local_lsb']}"
+            )
+            glob = (
+                str(piece["global_lsb"])
+                if piece["global_lsb"] == piece["global_msb"]
+                else f"{piece['global_msb']}:{piece['global_lsb']}"
+            )
+            text = f"P{piece['part']}[{local}] / I[{glob}]"
+            if piece["value_lsb"] is not None:
+                value = (
+                    str(piece["value_lsb"])
+                    if piece["value_lsb"] == piece["value_msb"]
+                    else f"{piece['value_msb']}:{piece['value_lsb']}"
+                )
+                text += f" → value[{value}]"
+            mappings.append(text)
+        out.append(
+            {
+                "field": name,
+                "width": width,
+                "mapping": ", ".join(mappings),
+                "signedness": signed_names.get(record["signed"], str(record["signed"])),
+            }
+        )
+    return out
+
+
+def actual_operand_rows(table: Node) -> list[dict[str, object]]:
+    rows = []
+    for tr in table.find(tag="tr"):
+        if "data-field" not in tr.attrs:
+            continue
+        cells = [child for child in tr.children if child.tag == "td"]
+        if len(cells) != 4:
+            raise ValueError(f"malformed operand row for {tr.attrs.get('data-field')}")
+        rows.append(
+            {
+                "field": tr.attrs["data-field"],
+                "width": int(tr.attrs["data-width"]),
+                "mapping": cells[2].text(),
+                "signedness": tr.attrs["data-signedness"],
+            }
+        )
+    return rows
+
+
 def tile_predicate(op: dict, row: dict) -> str:
     mask, match = fixed_bits(row)
     if op["family"] == "TEPL":
@@ -368,6 +467,24 @@ class Audit:
                 self.fail(
                     pwhere, f"exact encoding differs: {pairs!r} != {wanted_exact!r}"
                 )
+        operand_tables = article.find(tag="table", cls="encoding-operands")
+        wanted_operands = expected_operand_rows(row)
+        if bool(operand_tables) != bool(wanted_operands) or len(operand_tables) > 1:
+            self.fail(
+                where,
+                f"operand table count {len(operand_tables)} does not match field presence",
+            )
+        elif operand_tables:
+            try:
+                actual_operands = actual_operand_rows(operand_tables[0])
+            except (KeyError, TypeError, ValueError) as exc:
+                self.fail(where, f"malformed operand table: {exc}")
+            else:
+                if actual_operands != wanted_operands:
+                    self.fail(
+                        where,
+                        f"operand table differs: {actual_operands!r} != {wanted_operands!r}",
+                    )
 
     def check_audit_json(self) -> None:
         path = self.out / "audit.json"

@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 
@@ -10,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from tools.isa.manual_semantics import (
+    _logical_compare_result,
     describe_form,
     detail,
     summary,
@@ -155,6 +157,66 @@ class ManualSemanticsTest(unittest.TestCase):
             self.assertTrue(
                 any("没有独立的 FALL 物理字段" in item for item in semantic.details)
             )
+
+    def test_vector_logical_compare_booleanizes_each_operand(self) -> None:
+        # (1 & 2) is zero, while both operands are nonzero. This distinguishes
+        # the tagged Sail boolean rule from the former bitwise interpretation.
+        self.assertEqual(1 & 2, 0)
+        self.assertEqual(_logical_compare_result("AND", 1, 2), 1)
+        self.assertEqual(_logical_compare_result("ANDI", 1, 2), 1)
+        self.assertEqual(_logical_compare_result("OR", 0, 2), 1)
+        self.assertEqual(_logical_compare_result("ORI", 0, 0), 0)
+        tagged_sail = subprocess.check_output(
+            ["git", "show", "refs/tags/v0.59.1:isa/sail/model/execute/execute.sail"],
+            cwd=ROOT,
+            text=True,
+        )
+        self.assertIn("let a = vec_get_lane32(lhs, i) != 0x0000_0000;", tagged_sail)
+        self.assertIn("let b = imm != 0x0000_0000;", tagged_sail)
+        self.assertIn("vec_bool32(a & b)", tagged_sail)
+        self.assertIn("vec_bool32(a | b)", tagged_sail)
+        for mnemonic in ("V.CMP.AND", "V.CMP.ANDI", "V.CMP.OR", "V.CMP.ORI"):
+            semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            self.assertIn("分别判非零", semantic.short)
+            self.assertNotIn("按位", semantic.short)
+            self.assertTrue(
+                any("(1, 2) 的结果是 1" in item for item in semantic.details)
+            )
+            self.assertTrue(
+                any(
+                    "execute.sail#L3899-L3964" in source
+                    for source in semantic.provenance
+                )
+            )
+        self.assertTrue(
+            any(
+                "simm12 符号扩展" in item
+                for item in describe_form(
+                    self.row("v0.59", "V.CMP.ANDI"), "v0.59"
+                ).details
+            )
+        )
+
+    def test_other_derived_vector_details_match_tagged_sail(self) -> None:
+        for mnemonic in ("V.SLL", "V.SRLI", "V.SRAI"):
+            self.assertTrue(
+                any(
+                    "有效整数位宽取模" in item
+                    for item in describe_form(
+                        self.row("v0.59", mnemonic), "v0.59"
+                    ).details
+                )
+            )
+        for mnemonic in ("V.MUL", "V.MADD"):
+            semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            self.assertIn("无符号整数", semantic.short)
+            self.assertTrue(any("无符号整数" in item for item in semantic.details))
+        psel = describe_form(self.row("v0.59", "V.PSEL"), "v0.59")
+        self.assertTrue(any("不读取 EXEC mask p" in item for item in psel.details))
+        for mnemonic in ("V.LD.MAX", "V.SW.MIN"):
+            atomic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            self.assertIn("有符号", atomic.short)
+            self.assertTrue(any("有符号整数顺序" in item for item in atomic.details))
 
     def test_detail_is_html_escaped(self) -> None:
         catalog = {"version": "0.58.7"}
