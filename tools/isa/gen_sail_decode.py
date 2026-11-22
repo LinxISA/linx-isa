@@ -803,6 +803,14 @@ def prelude_lines(inst: dict, raw_fields: dict[str, tuple[str, int]], width: int
 
 
 def branch_body(inst: dict, exec_params: dict[str, list[str]]) -> list[str]:
+    if (
+        inst.get("implementation_status") == "inactive-catalog-candidate"
+        and inst.get("decoder_dispatch") == "external-scoped-runtime-required"
+    ):
+        return [
+            f"// {inst['mnemonic']} | {inst['asm']} | external scoped runtime dispatch required",
+            "trap_illegal_inst(read_pc_or_tpc())",
+        ]
     policy_path = Path(__file__).resolve().parents[2] / "isa/sail/semantics_policy.json"
     overrides = json.loads(policy_path.read_text())["form_overrides"]
     grade = overrides.get(inst.get("id"), overrides.get(inst.get("pto_source_form_id")))

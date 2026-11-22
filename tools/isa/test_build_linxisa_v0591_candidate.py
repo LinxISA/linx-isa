@@ -179,6 +179,28 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             self.candidate["retired_encodings"],
         )
         self.assertIn("c.ldi.private [srcL, simm], ->t", sail)
+        self.assertEqual(sail.count("external scoped runtime dispatch required"), 705)
+        scoped_branch = sail.split(
+            "// C.LDI | c.ldi.private [srcL, simm], ->t | external scoped runtime dispatch required",
+            1,
+        )[1].split("else if", 1)[0]
+        self.assertIn("trap_illegal_inst(read_pc_or_tpc())", scoped_branch)
+        self.assertNotIn("exec_c_ldi", scoped_branch)
+
+    def test_split_fields_keep_full_value_ranges_for_sail(self):
+        from gen_sail_decode import aggregate_fields, bitwidth_from_field, field_expr
+
+        split = next(
+            item
+            for item in self.candidate["instructions"]
+            if item.get("pto_source_form_id") == "hl_lbi_48_250803040cc8_scoped_private"
+        )
+        field = aggregate_fields(split)["simm22"]
+        self.assertEqual(bitwidth_from_field(field), 22)
+        self.assertEqual(
+            field_expr(field, 64),
+            "part0[31..22] @ part1[31..20]",
+        )
 
 
 if __name__ == "__main__":

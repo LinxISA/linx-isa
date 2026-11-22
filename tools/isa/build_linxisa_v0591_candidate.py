@@ -81,11 +81,17 @@ def compile_fields(form: dict[str, Any], parts: list[dict[str, Any]]) -> None:
                     f"{form['form_id']}: field piece is outside encoded parts"
                 )
             for part_index, local_lsb, value_lsb, local_width in locations:
+                value_msb = value_lsb + local_width - 1
+                token = str(field["name"])
+                if value_lsb != 0 or local_width != int(field["width"]):
+                    token = f"{field['name']}[{value_msb}:{value_lsb}]"
                 pieces_by_part.setdefault(part_index, []).append(
                     {
                         "insn_lsb": local_lsb,
                         "insn_msb": local_lsb + local_width - 1,
+                        "token": token,
                         "value_lsb": value_lsb,
+                        "value_msb": value_msb,
                         "width": local_width,
                     }
                 )
@@ -243,6 +249,7 @@ def full_scoped_instruction(
                 "form_id": form["form_id"],
             },
             "implementation_status": "inactive-catalog-candidate",
+            "decoder_dispatch": "external-scoped-runtime-required",
         }
     )
     return item
