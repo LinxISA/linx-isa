@@ -25,6 +25,20 @@ def _sha256(path: Path) -> str:
 
 
 class ReportQemuExecutableCoverageTests(unittest.TestCase):
+    def test_constant_argument_rejects_arithmetic_subexpressions(self) -> None:
+        declarations = "const long expected = 0x22; const long case_id = 0x140b;"
+        for expected, test_id in (
+            ("expected + 1", "case_id"),
+            ("expected", "case_id + 1"),
+            ("0x22 + 1", "0x140b"),
+            ("0x22", "0x140b + 1"),
+        ):
+            with self.subTest(expected=expected, test_id=test_id):
+                body = f"TEST_EQ64(r, {expected}, {test_id});"
+                self.assertFalse(
+                    coverage._assertion_binds(body, declarations, 0x22, 0x140b)
+                )
+
     def test_named_test_id_and_differential_expression_bind_one_assertion(self) -> None:
         source = """
 static const uint32_t kTestId = 0x00002A01u;

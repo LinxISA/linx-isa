@@ -33,7 +33,6 @@ UART_SUCCESS_MARKERS = {
 }
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
-HEX_RE = re.compile(r"0x[0-9a-fA-F]+")
 CANONICAL_EVIDENCE_ROOT = Path("docs/bringup/gates/evidence/qemu-executable")
 
 
@@ -197,10 +196,6 @@ def _spec_forms(spec: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return forms
 
 
-def _extract_numeric_literals(text: str) -> set[int]:
-    return {int(value, 16) for value in HEX_RE.findall(text)}
-
-
 def _execution_observation(
     run_path: Path,
     run: dict[str, Any],
@@ -251,11 +246,11 @@ def _constant_binds(source: str, name: str, value: int) -> bool:
 
 
 def _argument_binds_constant(argument: str, source: str, value: int) -> bool:
-    if value in _extract_numeric_literals(argument):
-        return True
-    return any(
-        _constant_binds(source, name, value)
-        for name in re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", argument)
+    literal = re.fullmatch(r"(0[xX][0-9a-fA-F]+|0|[1-9][0-9]*)[uUlL]*", argument)
+    if literal:
+        return int(literal.group(1), 0) == value
+    return bool(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", argument)) and _constant_binds(
+        source, argument, value
     )
 
 
