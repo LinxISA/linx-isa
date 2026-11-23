@@ -527,7 +527,7 @@ def build():
                     first.get("pto_base_form_id") or first.get("pto_source_form_id"), {}
                 )
                 if source.get("agu"):
-                    short = memory_synopsis(source["agu"])
+                    short = memory_synopsis(source["agu"], explain_displacement=True)
                 else:
                     # The version box on the detail page carries spelling and compatibility notes.
                     # Curated mismatch text describes execution for these forms,

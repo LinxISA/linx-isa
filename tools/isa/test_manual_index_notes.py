@@ -25,6 +25,27 @@ class ManualIndexNotesTest(unittest.TestCase):
         self.assertIn("低、高 32 位分别符号扩展", index_note("HL.CCATW"))
         self.assertEqual(index_note({"mnemonic": "HL.CCATW"}), INDEX_NOTES["HL.CCATW"])
 
+    def test_immediate_store_scaling_is_visible(self):
+        from tools.isa.manual_prose_zh import memory_synopsis
+        from tools.isa.manual_tag import tagged_json
+
+        forms = {
+            f["mnemonic"]: f
+            for f in tagged_json("isa/v0.59/state/pto_scalar_forms.json")["forms"]
+        }
+        for name, factor in (("HL.SDI", 8), ("HL.SWI", 4), ("HL.SHI", 2)):
+            for suffix, unscaled in (("", ".U"), (".PR", ".UPR"), (".PO", ".UPO")):
+                scaled_note = memory_synopsis(
+                    forms[name + suffix]["agu"], explain_displacement=True
+                )
+                raw_note = memory_synopsis(
+                    forms[name + unscaled]["agu"], explain_displacement=True
+                )
+                self.assertIn(f"立即数乘 {factor}", scaled_note)
+                self.assertIn("不缩放", raw_note)
+        for name in ("BSTART.MPAR", "BSTART.MSEQ", "BSTART.VPAR", "BSTART.VSEQ"):
+            self.assertIn("寄存器档位", index_note(name))
+
     def test_noncovered_mnemonic_has_no_override(self):
         self.assertIsNone(index_note("ADD"))
 
