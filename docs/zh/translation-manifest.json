@@ -1319,11 +1319,11 @@
     },
     "isa/header/tileblock/MGATHER.md": {
       "source_sha256": "194eb7489222723a0d5b3216d61d2d490239b0a40134e161a1c00050b55cc69f",
-      "translation_sha256": "2489c903b3a8e0657ba829bf439639f9d7ca1ec85e8fa2dbd7d2b6e7d0975416"
+      "translation_sha256": "4e5957c4ecd02981ff7b44d2e9862b051ae5714c5c1e2f04079af2e6a970ac1c"
     },
     "isa/header/tileblock/MSCATTER.md": {
       "source_sha256": "572147a2673f37f919c1b544fd3915ba8b6e6975ad3199d4de7fdf07ae681356",
-      "translation_sha256": "e5b977e9cea80d64f2371174f9c8859331a22ef9640c64a46e4522d89b30973e"
+      "translation_sha256": "0044a30e971d37cfbe00fdc132384d78811d2a116f35b1b451c3b3b5558efde8"
     },
     "isa/header/tileblock/TABS.md": {
       "source_sha256": "220c21c7b06963a0d3872bdfc8a3b0d4cf70c634a6f4916997c7b4149d9c0101",

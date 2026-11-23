@@ -26,6 +26,12 @@ MSCATTER <Col, ValidRow=1, ValidCol=Col, DataType, Layout?, PEMask=AllPE>, [Base
 
 普通传输也支持 E2M1X2、E1M2X2、HiF4X2、S4X2 与 U4X2。使用四位打包类型时，每个索引地址对应数据 Tile 中相邻的两个逻辑半字节，因而数据 Tile 的有效列数必须是索引 Tile 的两倍。
 
+## 索引范围
+
+B.IOR 的 RegSrc0 给出本 PE 的 BaseGPR。若同时声明索引范围，RegSrc1、RegSrc2 分别给出 MinIndex 和 MaxIndex，均为相对基址的有符号 64 位字节位移。普通基址记录中，这两个选择子同时为零表示省略范围。范围和 GPR 执行掩码同时使用时，先给出基址和上下界，再紧接一条带 ExecMaskPresent 的掩码记录。
+
+若 MinIndex 大于 MaxIndex，本次请求在产生访存或目标 Tile 效果前触发 Fault_TileLegality。已提交的其他 PE 效果保留。软件须保证每个参与访问的起始字节在闭区间内，且整个地址区间不会在 64 位地址空间中回绕；硬件不会逐项比较索引与这对界限。
+
 ## 执行方式
 
 模型先为所有活动通道完成地址预检，并在此阶段快照要写入的原始位。只要一个通道发生对齐、转换或权限故障，整个操作都不会产生存储事件。全部预检通过后，才按实现选择的通道顺序写入 GM。
