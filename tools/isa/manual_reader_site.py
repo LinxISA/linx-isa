@@ -84,9 +84,9 @@ class ArticleLibrary:
         return body
 
 
-def authored_synopsis(article, default):
+def authored_synopsis(article):
     if not article or not article.intro:
-        return default
+        return ""
     # Preserve the source wording. Stop before any pseudocode or figures that
     # happen to share the explanation section on a Tile page.
     # Titles often have an English long name in parentheses, followed by the
@@ -107,4 +107,4 @@ def authored_synopsis(article, default):
 
     for marker in ("实现伪代码", "实现示意图", "![", "```", " { width="):
         text = text.split(marker, 1)[0].strip()
-    return text + "。" if text else default
+    return text + "。" if text else ""

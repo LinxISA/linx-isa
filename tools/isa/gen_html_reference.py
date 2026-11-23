@@ -41,6 +41,10 @@ from manual_supplements import instruction_supplement, tile_supplement
 from manual_markdown import render_markdown_text
 from manual_version_notes import indexed_transfer_note, release_constraints
 from manual_authored import authored_for, authored_tile
+from manual_index_families import family_index_synopsis
+from manual_index_notes import index_note
+from manual_tile_index_notes import command_index_notes, tile_index_note
+from manual_prose_zh import memory_synopsis
 from manual_reader_site import ArticleLibrary, authored_synopsis
 from manual_navigation import BY_KEY, cat_file, category_links, index_pages
 from manual_diagrams import make_diagrams
@@ -438,6 +442,7 @@ def build():
     supplement_audit = {}
     carrier_ops = defaultdict(list)
     bodies, entries, tile_list, audit = {}, [], [], []
+    tile_by_command = command_index_notes()
     for op in direct_ops:
         name, carrier = op["name"], op["command_mnemonic"]
         if carrier not in forms:
@@ -446,11 +451,14 @@ def build():
         owner = tile_owners[name]
         url = tile_page(name)
         article = articles[url][1]
-        desc = (
-            authored_synopsis(article, "")
-            if article
-            else supplement_excerpt(tile_supplement(op))
-        )
+        if name.startswith(("MGATHER", "MSCATTER")) or (
+            article and article.title != name
+        ):
+            desc = tile_index_note(op)
+        elif article:
+            desc = authored_synopsis(article) or tile_index_note(op)
+        else:
+            desc = supplement_excerpt(tile_supplement(op))
         tile_list.append((name, url, desc, op["engine"], carrier))
         family_context = ""
         if article and article.title.upper() != name.upper():
@@ -508,16 +516,40 @@ def build():
         article = articles[url][1]
         scope = first.get("pto_scope")
         conflict = bool(article and article.classification == "conflicting-current")
-        missing = f"{base} 的中文增补说明与发布版编码。"
-        short = (
-            authored_synopsis(article, missing)
-            if article
-            else supplement_excerpt(instruction_supplement(first))
-        )
-        if conflict:
-            short = "；".join(article.current_view) or f"当前汇编为 {first['asm']}。"
+        if not article:
+            short = supplement_excerpt(instruction_supplement(first))
+        else:
+            short = index_note(base) or family_index_synopsis(base)
+            if not short and base in tile_by_command and article.title != base:
+                short = "启动块，执行以下操作：" + tile_by_command[base]
+            if not short and conflict:
+                source = source_forms.get(
+                    first.get("pto_base_form_id") or first.get("pto_source_form_id"), {}
+                )
+                if source.get("agu"):
+                    short = memory_synopsis(source["agu"])
+                else:
+                    # The version box on the detail page carries spelling and compatibility notes.
+                    # Curated mismatch text describes execution for these forms,
+                    # while the generic conflict fallback only repeats assembly.
+                    short = " ".join(article.current_view)
+                    if not short or short.startswith("当前规范汇编"):
+                        raise ValueError(
+                            f"{name}: missing a synopsis for its version difference"
+                        )
+            if not short:
+                short = authored_synopsis(article)
+        if not short or short == "。":
+            raise ValueError(
+                f"{name}: no instruction purpose available for the mnemonic index"
+            )
         if scope:
-            short = f"{name} 是 {base} 的 {scope} 作用域形式。" + short
+            scope_label = {
+                "Private": "私有",
+                "IntraCore": "核内共享",
+                "InterCore": "跨核共享",
+            }[scope]
+            short += f"访存请求使用{scope_label}属性。"
         terms = " ".join([*(r["asm"] for r in variants), *(r["id"] for r in variants)])
         entries.append((name, url, short, key, terms))
         written = first["asm"].split()[0].upper()
@@ -528,7 +560,13 @@ def build():
             and written not in forms
         ):
             entries.append(
-                (written, url + "#" + first["id"], f"目录名为 {name}。", key, name)
+                (
+                    written,
+                    url + "#" + first["id"],
+                    f"{short}（目录名 {name}）",
+                    key,
+                    name,
+                )
             )
         sizes = "、".join(str(n) for n in sorted({r["length_bits"] for r in variants}))
         body = f'<p class="meta">{link(cat_file(key), BY_KEY[key][0] + " · " + BY_KEY[key][1])} · {sizes} 位</p>'

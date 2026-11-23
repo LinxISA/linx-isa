@@ -415,6 +415,25 @@ def tile_predicate(op: dict, row: dict) -> str:
     return f"(word & 0x{mask:0{width // 4}x}) == 0x{match:0{width // 4}x}"
 
 
+def informative_synopsis(text: str) -> bool:
+    return bool(re.search(r"[一-鿿]", text)) and not (
+        any(
+            fragment in text
+            for fragment in (
+                "中文增补说明与发布版编码",
+                "当前规范汇编：",
+                "本地中文站没有",
+                "目录形式与来源",
+                "无独立说明",
+                "<br",
+                "{ width=",
+                "```",
+            )
+        )
+        or text.startswith(("目录名为 ", "当前汇编为 ", "参见本页", "本页介绍"))
+    )
+
+
 class Audit:
     def __init__(self, out: Path, catalog: dict, tiles: dict) -> None:
         self.out, self.catalog, self.tiles = out, catalog, tiles
@@ -824,6 +843,28 @@ class Audit:
                 self.fail(page, "missing pinned ASL source")
 
     def check_indexes(self) -> None:
+        # Audit displayed synopsis cells, including class/engine indexes and
+        # scoped spellings. A valid link alone does not explain an operation.
+        for path in sorted(self.out.glob("*.html")):
+            if path.name not in {"tile.html", "mnemonics.html"} and not (
+                path.name.startswith("class-") or path.name.startswith("tiles-")
+            ):
+                continue
+            doc = self.document(path.name)
+            if doc is None:
+                continue
+            for row in doc.find(tag="li"):
+                if "data-search" not in row.attrs:
+                    continue
+                columns = [c for c in row.children if c.tag == "span"]
+                if len(columns) != 2:
+                    self.fail(path.name, "invalid mnemonic index row")
+                    continue
+                name, synopsis = (column.text() for column in columns)
+                if not informative_synopsis(synopsis):
+                    self.fail(
+                        path.name, f"{name}: missing instruction purpose: {synopsis}"
+                    )
         encoding = self.document("encoding.html")
         if encoding is not None:
             indexed = {}

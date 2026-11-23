@@ -31,6 +31,15 @@ except ModuleNotFoundError:
         verified_tag_commit,
     )
 
+try:
+    from manual_index_notes import index_note
+    from manual_index_families import family_index_synopsis
+    from manual_reader import _plain_markdown
+except ModuleNotFoundError:
+    from tools.isa.manual_index_notes import index_note
+    from tools.isa.manual_index_families import family_index_synopsis
+    from tools.isa.manual_reader import _plain_markdown
+
 ROOT = "docs/zh/isa/inst/"
 FENCE = re.compile(r"```[^\n]*\n(.*?)```", re.DOTALL)
 HEADING = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
@@ -133,18 +142,33 @@ def _parse(markdown: str) -> tuple[str, tuple[AuthoredSection, ...], tuple[str, 
     return title, tuple(sections), tuple(headings)
 
 
-def _plain_intro(sections: tuple[AuthoredSection, ...]) -> str:
+def _plain_intro(sections: tuple[AuthoredSection, ...], markdown: str) -> str:
     section = next(
         (item for item in sections if item.heading in {"说明", "简介", "功能说明"}),
         None,
     )
-    if section is None:
-        return ""
-    text = FENCE.sub("", section.markdown)
-    text = re.sub(r"!\[[^]]*\]\([^)]*\)", "", text)
-    text = re.sub(r"\[([^]]+)\]\([^)]*\)", r"\1", text)
-    text = re.sub(r"[*_`]+", "", text)
-    return re.sub(r"\s+", " ", text).strip()
+    if section is not None:
+        prose = section.markdown
+    else:
+        # Some authored articles begin their explanation immediately after H1
+        # (HL.CCAT is one); their first H2 already starts the assembly syntax.
+        lines = markdown.splitlines()
+        title = next((i for i, line in enumerate(lines) if line.startswith("# ")), None)
+        if title is None:
+            return ""
+        end = next(
+            (i for i in range(title + 1, len(lines)) if lines[i].startswith("#")),
+            len(lines),
+        )
+        prose = "\n".join(lines[title + 1 : end])
+        if any(
+            term in prose
+            for term in ("非规范导航页", "英文原页", "机器生成附录", "本文档介绍了")
+        ):
+            return ""
+    prose = FENCE.sub("", prose)
+    prose = re.sub(r"!\[[^]]*\]\([^)]*\)(?:\{[^}]*\})?", "", prose)
+    return _plain_markdown(prose)
 
 
 def _assembly(section: AuthoredSection | None) -> str:
@@ -293,6 +317,12 @@ def _classify(
     if extra and source_stem == row["mnemonic"]:
         reasons.append("原文汇编含有当前编码不存在的操作数：" + ", ".join(extra))
         return "conflicting-current", tuple(reasons)
+    if row["mnemonic"] in {"HL.SETC.LTI", "HL.SETC.ORI", "V.LD.MIN"}:
+        return "conflicting-current", ("中文原页的比较条件或运算名称与发布定义不同。",)
+    if row["mnemonic"] in {"HL.CCAT", "HL.CCATW"}:
+        return "conflicting-current", (
+            "中文原页写成循环左移，两个目标的高低顺序也与发布版相反。",
+        )
     if row["mnemonic"] in {"V.CMP.AND", "V.CMP.ANDI"}:
         reasons.extend(
             (
@@ -330,6 +360,10 @@ def _current_view(row: Mapping[str, Any], classification: str) -> tuple[str, ...
             "当前形式没有 SrcL 或其他显式操作数；旧文中的寄存器语法和示例不可用于当前编码。",
             "该指令仅在系统块内合法，成功时记录 Maintenance_DC_IALL、递增数据缓存维护计数并令 TPC 前进 4 字节。",
         )
+    if row["mnemonic"] in {"HL.SETC.LTI", "HL.SETC.ORI", "V.LD.MIN"}:
+        return (family_index_synopsis(row["mnemonic"]),)
+    if row["mnemonic"] in {"HL.CCAT", "HL.CCATW"}:
+        return (index_note(row),)
     if row["mnemonic"] in {"V.CMP.AND", "V.CMP.ANDI"}:
         right = "符号扩展后的 simm12" if row["mnemonic"].endswith("ANDI") else "SrcR"
         return (
@@ -385,7 +419,7 @@ def _article_for_mnemonic(mnemonic: str, row_id: str) -> AuthoredArticle | None:
         source_url=f"https://github.com/LinxISA/linx-isa/blob/{REVIEWED_COMMIT}/{path}",
         title=title,
         sections=sections,
-        intro=_plain_intro(sections),
+        intro=_plain_intro(sections, markdown),
         examples=examples,
         headings=headings,
         associated_form_ids=tuple(str(item["id"]) for item in rows),
@@ -444,7 +478,8 @@ def authored_tile(name: str) -> AuthoredArticle | None:
     if op is None or stem is None:
         return None
     path = _tile_path_by_stem()[stem]
-    title, sections, headings = _parse(tagged_bytes(path).decode("utf-8"))
+    markdown = tagged_bytes(path).decode("utf-8")
+    title, sections, headings = _parse(markdown)
     example_section = next(
         (
             section
@@ -471,7 +506,7 @@ def authored_tile(name: str) -> AuthoredArticle | None:
         source_url=f"https://github.com/LinxISA/linx-isa/blob/{REVIEWED_COMMIT}/{path}",
         title=title,
         sections=sections,
-        intro=_plain_intro(sections),
+        intro=_plain_intro(sections, markdown),
         examples=examples,
         headings=headings,
         associated_form_ids=(
