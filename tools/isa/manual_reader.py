@@ -71,7 +71,7 @@ def _plain_markdown(value: str) -> str:
     # Preserve architectural placeholders such as <dst>, register operands
     # such as [SrcL], and identifier underscores. Only remove known HTML tags.
     text = re.sub(
-        r"</?(?:em|strong|code|br|span|p|sub|sup)(?:\s+[^>]*)?>",
+        r"</?(?:em|strong|code|br|span|p|sub|sup)(?:\s+[^>]*)?\s*/?>",
         "",
         text,
         flags=re.IGNORECASE,

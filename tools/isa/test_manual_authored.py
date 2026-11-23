@@ -92,6 +92,15 @@ class ManualAuthoredTest(unittest.TestCase):
         self.assertIn("Maintenance_DC_IALL", current)
         self.assertIn("TPC 前进 4 字节", current)
 
+    def test_ccat_authored_preamble_and_release_difference(self):
+        for name in ("HL.CCAT", "HL.CCATW"):
+            article = authored_for(self.row(name))
+            self.assertIn("拼接", article.intro)
+            self.assertEqual(article.classification, "conflicting-current")
+            self.assertIn("逻辑右移", " ".join(article.current_view))
+            self.assertIn("循环左移", " ".join(article.reasons))
+        self.assertNotIn("<br", authored_for(self.row("V.ADD")).intro.lower())
+
     def test_known_vector_semantic_conflicts_are_scoped(self):
         for mnemonic in ("V.CMP.AND", "V.CMP.ANDI"):
             article = authored_for(self.row(mnemonic))
@@ -208,9 +217,9 @@ class ManualAuthoredTest(unittest.TestCase):
         self.assertEqual(
             report["classification_counts"],
             {
-                "conflicting-current": 31,
-                "contextual-original": 416,
-                "syntax-compatible-original": 340,
+                "conflicting-current": 36,
+                "contextual-original": 414,
+                "syntax-compatible-original": 337,
             },
         )
         self.assertEqual(report["tile_source_articles"], 89)

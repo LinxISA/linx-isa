@@ -95,7 +95,7 @@ _ADDRESS = {
 }
 
 
-def memory_synopsis(agu):
+def memory_synopsis(agu, *, explain_displacement=False):
     n = agu["size_bytes"]
     action = agu["action"]
     if action == "Prefetch":
@@ -112,6 +112,13 @@ def memory_synopsis(agu):
         "PreIndex": "先计算新基址，用新地址访问内存。",
         "PostIndex": "本次访问使用原基址，完成后更新基址。",
     }
+    if explain_displacement and agu["address_kind"] == "Immediate":
+        scale = agu["offset_scale"]
+        sentence += (
+            f"字节位移为立即数乘 {1 << scale}。"
+            if scale
+            else "立即数直接表示字节位移，不缩放。"
+        )
     return sentence + update[agu["update_mode"]]
 
 

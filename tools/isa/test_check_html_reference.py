@@ -17,6 +17,7 @@ from check_html_reference import (
     english_visible_fragments,
     expected_fields,
     fixed_bits,
+    informative_synopsis,
     hex_value,
     tile_predicate,
 )
@@ -27,6 +28,20 @@ class HtmlReferenceValidatorTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.catalog = json.loads((ROOT / "isa/v0.59/linxisa-v0.59.json").read_text())
+
+    def test_index_entries_explain_an_operation(self):
+        for text in (
+            "HL.CCAT 的中文增补说明与发布版编码。",
+            "当前规范汇编：dc.iall",
+            "目录名为 C.EBREAK。",
+            "<br> 将两个源值相加。",
+            "",
+        ):
+            with self.subTest(text=text):
+                self.assertFalse(informative_synopsis(text))
+        self.assertTrue(
+            informative_synopsis("拼接两个源值后逻辑右移，低半部写入 Dst0。")
+        )
 
     def test_parser_preserves_ids_links_and_text(self):
         parser = Parser()
