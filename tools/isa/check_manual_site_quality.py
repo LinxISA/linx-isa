@@ -248,34 +248,29 @@ def _check_supplements(site: Path, errors: list[str], pto_root: Path | None):
 
 
 def _check_mgather(site: Path, errors: list[str]):
-    base = (site / "tile-mgather.html").read_text(encoding="utf-8")
-    for literal in (
-        "S32、U32、S64 或 U64",
-        "字节位移",
-        "不再按传输元素大小缩放",
-        "MinIndex 和 MaxIndex",
-        "有符号的相对字节界限",
-    ):
-        if literal not in base:
-            errors.append(
-                f"tile-mgather.html: missing default-visible correction {literal!r}"
-            )
+    from html import unescape
+
+    def reader(name):
+        filename = "tile-" + name.lower().replace("_", "-") + ".html"
+        _, body = extract_authored((site / filename).read_text(encoding="utf-8"))
+        return unescape(re.sub(r"<[^>]+>", "", body))
+
+    base = reader("MGATHER")
+    for fact in ("S32", "U32", "S64", "U64", "字节", "MinIndex", "MaxIndex"):
+        if fact not in base:
+            errors.append(f"tile-mgather.html: missing indexed-transfer rule {fact!r}")
     atomic = ("ADD", "AND", "CAS", "DEC", "EXCH", "INC", "MAX", "MIN", "OR", "XOR")
     for suffix in atomic:
-        name = f"MGATHER_{suffix}"
-        path = site / f"tile-{name.lower().replace('_', '-')}.html"
-        text = path.read_text(encoding="utf-8") if path.is_file() else ""
-        if (
-            name not in text
-            or "原子" not in text
-            or "不能代替本形式的原子操作" not in text
-        ):
-            errors.append(f"{path.name}: distinct atomic clarification missing")
+        name = "MGATHER_" + suffix
+        body = reader(name)
+        if name not in body or "原子" not in body or "旧值" not in body:
+            errors.append(
+                f"{name}: missing atomic read/modify/write and returned old value"
+            )
     for name in ("MGATHER_MASK", "MSCATTER_MASK"):
-        path = site / f"tile-{name.lower().replace('_', '-')}.html"
-        text = path.read_text(encoding="utf-8") if path.is_file() else ""
-        if name not in text or "按掩码选择" not in text or "没有掩码步骤" not in text:
-            errors.append(f"{path.name}: distinct masked clarification missing")
+        body = reader(name)
+        if name not in body or "掩码" not in body or "地址" not in body:
+            errors.append(f"{name}: missing masked address behavior")
 
 
 def _check_editorial(site: Path, errors: list[str]):

@@ -2,125 +2,22 @@
 
 ## 说明
 
-位域插入(*Bit Field Insert*)  
-从右源寄存器中取出低 **N** 位，替换掉左源寄存器值的第 **M** 位至第 **M+N-1** 位，结果写到目的寄存器中。
+以 SrcL 为底，从 SrcR 的最低位开始，将各位依次填入指定区间，区间外的位保留。
 
 ## 汇编语法
 
 ```asm
-    hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}
+hl.bfi SrcL, SrcR, M, N, ->{t, u, Rd}
 ```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **M**：从左源寄存器中开始替换的起始位，范围为：0-63。该参数编码于imms字段。
-- **N**：从右源寄存器中连续截取的位数，范围为：1-64。该参数减1后编码于imml字段。
-- **{t,u,Rd}**：表示三种可选的目的寄存器，编码于RegDst域。其中：
-    - **t,u**：分别表示块内的T和U寄存器队列。
-    - **Rd**：可以索引全局寄存器R1-R23。
 
 ## 编码格式
 
-- 低16bit编码：
-
-![HL.BFI](../../../figs/bitfield/svg/Instruction_48bit_16/HL.BFI.svg)
-
-- 高32bit编码：
-
-![HL.BFI](../../../figs/bitfield/svg/Instruction_48bit_32/HL.BFI.svg)
+第 1 段（48 位），从高位到低位依次为 `7'b0000000`（47:41）、`SrcR`（40:36）、`SrcL`（35:31）、`3'b010`（30:28）、`RegDst`（27:23）、`7'b1001101`（22:16）、`imms`（15:10）、`immr`（9:4）、`4'b1110`（3:0）。
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
+immr 和 imms 分别编码目的区间的起点和终点，两个端点都在 0 至 63 之间，并且都包含在区间中。起点和终点相同时只替换一位。终点小于起点时，经过第 63 位后从第 0 位继续填入。
 
-```c
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
-    integer M = UInt(imms);
-    integer N = UInt(imml) + 1;
+## 示例
 
-    bits(64) operand1 = R[m, 64];
-    bits(64) operand2 = R[n, 64];
-    bits(128) result = 0;
-
-    result[63:0] = operand1[63:0];
-    result[M+N-1 : M] = operand2[N-1 : 0];
-
-    /* M+N > 64 时出现卷绕 */
-    if M+N > 64 then result[M+N-65 : 0] = result[M+N-1 : 64];
-
-    R[d, 64] = result[63:0];
-```
-
-当 `M+N <= 64` 时：
-
-![HL.BFI](../../../figs/isa/inst/bfi1.png){ width="800" }
-
-当 `M+N > 64` 时：
-
-![HL.BFI](../../../figs/isa/inst/bfi2.png){ width="800" }
-
-当 `N == 64` 时：
-
-![HL.BFI](../../../figs/isa/inst/bfi3.png){ width="800" }
-
-此时，可以看到该指令对源操作数实现了循环移位效果。因此，bfi指令可以用于对数据进行循环移位。
-
-## 使用方法
-
-假如要修改变量A中区间[M, M+N-1]修改为变量B的低 N bits，那么需要如下汇编操作：
-
-```
-hl.bfi A, B, M, N     ;将B的低N bits截取出来，并和A的M bit以及高位合并
-```
-
-## 汇编索引模式
-
-- 指令输出到块内t寄存器
-
-```asm
-hl.bfi a1, a2, m, n,   ->t             /* 双寄存器绝对索引 */
-hl.bfi a1, t#2, m, n,  ->t             /* 双寄存器混合索引 */
-hl.bfi a1, u#2, m, n,  ->t             /* 双寄存器混合索引 */
-hl.bfi t#1, a2, m, n,  ->t             /* 双寄存器混合索引 */
-hl.bfi t#1, t#2, m, n, ->t             /* 双寄存器相对索引 */
-hl.bfi t#1, u#2, m, n, ->t             /* 双寄存器相对索引 */
-hl.bfi u#1, a2, m, n,  ->t             /* 双寄存器混合索引 */
-hl.bfi u#1, t#2, m, n, ->t             /* 双寄存器相对索引 */
-hl.bfi u#1, u#2, m, n, ->t             /* 双寄存器相对索引 */
-```
-
-- 指令输出到块内u寄存器
-
-```asm
-hl.bfi a1, a2, m, n,   ->u             /* 双寄存器绝对索引 */
-hl.bfi a1, t#2, m, n,  ->u             /* 双寄存器混合索引 */
-hl.bfi a1, u#2, m, n,  ->u             /* 双寄存器混合索引 */
-hl.bfi t#1, a2, m, n,  ->u             /* 双寄存器混合索引 */
-hl.bfi t#1, t#2, m, n, ->u             /* 双寄存器相对索引 */
-hl.bfi t#1, u#2, m, n, ->u             /* 双寄存器相对索引 */
-hl.bfi u#1, a2, m, n,  ->u             /* 双寄存器混合索引 */
-hl.bfi u#1, t#2, m, n, ->u             /* 双寄存器相对索引 */
-hl.bfi u#1, u#2, m, n, ->u             /* 双寄存器相对索引 */
-```
-
-- 指令输出到全局寄存器R1-R23
-
-```asm
-hl.bfi a1, a2, m, n,   ->a3             /* 双寄存器绝对索引 */
-hl.bfi a1, t#2, m, n,  ->a3             /* 双寄存器混合索引 */
-hl.bfi a1, u#2, m, n,  ->a3             /* 双寄存器混合索引 */
-hl.bfi t#1, a2, m, n,  ->a3             /* 双寄存器混合索引 */
-hl.bfi t#1, t#2, m, n, ->a3             /* 双寄存器相对索引 */
-hl.bfi t#1, u#2, m, n, ->a3             /* 双寄存器相对索引 */
-hl.bfi u#1, a2, m, n,  ->a3             /* 双寄存器混合索引 */
-hl.bfi u#1, t#2, m, n, ->a3             /* 双寄存器相对索引 */
-hl.bfi u#1, u#2, m, n, ->a3             /* 双寄存器相对索引 */
-```
-
-## 备注
-
-本指令属于[增强指令扩展](../../instset/haflLongInstrs.md)，且**仅允许在标量块内使用**。
+`hl.bfi a0, a1, 63, 0, ->a2` 把 a1 的第 0 位填到 a0 的第 63 位，再把 a1 的第 1 位填到 a0 的第 0 位。若 a0 为零、a1 为 3，a2 得到 `0x8000000000000001`。

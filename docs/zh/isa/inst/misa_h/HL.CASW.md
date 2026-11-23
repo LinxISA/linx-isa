@@ -2,112 +2,53 @@
 
 ## 说明
 
-原子比较交换·字(*Compare and Swap Word*)  
-本指令执行如下的原子操作：从寄存器SrcL指定的内存位置加载`32位`数据，与寄存器SrcR的`低32位`进行比较，如果相同的话，把寄存器SrcD`低32位`的值存入原内存中。不管前面比较的结果如何，都将从内存读取的`32位`数据无符号扩展后写入目的寄存器中。
+原子比较交换·字（*Compare and Swap Word*）
+
+`HL.CASW` 原子读取 `SrcL` 指定地址处的 32 位字，将它与 `SrcR` 的低 32 位比较。相等时，把 `SrcD` 的低 32 位写回该地址；不相等时，内存保持不变。两种无故障结果都会把原来的字**符号扩展到 64 位**后写入目的寄存器。
 
 ## 汇编语法
 
 ```asm
-    hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
+hl.casw<.{aq, rl, f, aqrl, aqf, rlf, aqrlf}> [SrcL], SrcR, SrcD, ->{t, u, Rd}
 ```
-
-## 汇编符号
-
-- **SrcL**：源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcD**：源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **->**：用于指示目的寄存器。
-- **{t,u,Rd}**：表示三种可选的目的寄存器，编码于RegDst域。其中：
-    - **t,u**：分别表示块内的T和U寄存器队列。
-    - **Rd**：可以索引全局寄存器R1-R23。
-- **.aq,.rl**：内存访问限制，详见[原子指令](../../blockIntro/sys_block/atomic.md)
-- **.f**：指令可选后缀，表示内存访问发生在远端Cache中。
 
 ## 编码格式
 
-- 低16bit编码：
+- 低 16 位
 
 ![HL.CASW](../../../figs/bitfield/svg/Instruction_48bit_16/HL.CASW.svg)
 
-- 高32bit编码：
+- 高 32 位
 
 ![HL.CASW](../../../figs/bitfield/svg/Instruction_48bit_32/HL.CASW.svg)
 
+## 操作数
+
+| 操作数 | 作用 |
+| --- | --- |
+| `SrcL` | 4 字节对齐的原子访问地址 |
+| `SrcR` | 期望值；只比较低 32 位 |
+| `SrcD` | 比较成功时写入的新值；只使用低 32 位 |
+| `RegDst` | 比较前的旧字，符号扩展到 64 位 |
+
+比较本身按 32 位原始位进行。`SrcR = 0xdeadbeef80000001` 与内存字 `0x80000001` 能够匹配，因为高 32 位不参与比较。`.aq`、`.rl` 和 `.f` 的含义与其他标量原子指令相同。
+
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
-- 将数据无符号扩展：[ZeroExtend()](../LibPseudoCode.md)
+模型先对同一 4 字节地址完成读、写预检，并要求两次访问得到相同的转换后地址。随后读取旧字、比较低 32 位，并按比较结果决定是否写入。无论比较是否成功，都会记录一个原子事件并发布旧值；事件中的 `write_performed` 表示是否发生写入。
 
-```c
-    integer d = UInt(RegDst);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
-    integer p = UInt(SrcD);
+预检失败时不写内存、不发布目的、不记录原子事件，也不推进 TPC。成功的写入若与本地 64 字节保留粒度重叠，会使该保留失效。
 
-    Atomic {
-        bits(64) address  = R[m, 64];
-        bits(32) cmpvalue = R[n, 32];
-        bits(32) newvalue = R[p, 32];
-        bits(32) oldvalue = Mem[address];
+## 示例
 
-        if oldvalue == cmpvalue then
-            Mem[address] = newvalue;
-        R[d, 64] = ZeroExtend(oldvalue);
-    }
-```
+内存字为 `0x80000001`，a1 的低字也是 `0x80000001`，a2 的低字为 `0x55667788`。
 
-## 汇编索引模式
-
-指令输出到块内t寄存器:
 ```asm
-hl.casw   [a1], a2, a3,          ->t            /*三寄存器绝对索引*/
-hl.casw   [a1], t#2, u#3,        ->t            /*三寄存器混合索引*/
-hl.casw   [a1], u#2, t#3,        ->t            /*三寄存器混合索引*/
-hl.casw   [t#1], a2, u#3,        ->t            /*三寄存器混合索引*/
-hl.casw   [t#1], u#2, a3,        ->t            /*三寄存器混合索引*/
-hl.casw   [t#1], t#2, t#3,       ->t            /*三寄存器相对索引*/
-hl.casw   [u#1], a2, t#3,        ->t            /*三寄存器混合索引*/
-hl.casw   [u#1], t#2, a3,        ->t            /*三寄存器混合索引*/
-hl.casw   [u#1], u#2, u#3,       ->t            /*三寄存器相对索引*/
-hl.casw.aq   [a1], t#2, u#3,     ->t            /*可选择.aq, .rl或.f的内存访问限制*/
-hl.casw.aq   [t#1], a2, u#3,     ->t            /*可选择.aq, .rl或.f的内存访问限制*/
-hl.casw.aq   [u#1], a2, t#3,     ->t            /*可选择.aq, .rl或.f的内存访问限制*/
+hl.casw.aqrlf [a0], a1, a2, ->a3
 ```
 
-指令输出到块内u寄存器:
-```asm
-hl.casw   [a1], a2, a3,          ->u            /*三寄存器绝对索引*/
-hl.casw   [a1], t#2, u#3,        ->u            /*三寄存器混合索引*/
-hl.casw   [a1], u#2, t#3,        ->u            /*三寄存器混合索引*/
-hl.casw   [t#1], a2, u#3,        ->u            /*三寄存器混合索引*/
-hl.casw   [t#1], u#2, a3,        ->u            /*三寄存器混合索引*/
-hl.casw   [t#1], t#2, t#3,       ->u            /*三寄存器相对索引*/
-hl.casw   [u#1], a2, t#3,        ->u            /*三寄存器混合索引*/
-hl.casw   [u#1], t#2, a3,        ->u            /*三寄存器混合索引*/
-hl.casw   [u#1], u#2, u#3,       ->u            /*三寄存器相对索引*/
-hl.casw.aq   [a1], t#2, u#3,     ->u            /*可选择.aq, .rl或.f的内存访问限制*/
-hl.casw.aq   [t#1], a2, u#3,     ->u            /*可选择.aq, .rl或.f的内存访问限制*/
-hl.casw.aq   [u#1], a2, t#3,     ->u            /*可选择.aq, .rl或.f的内存访问限制*/
-```
-
-指令输出到全局R1-R23寄存器:
-```asm
-hl.casw   [a1], a2, a3,          ->a4            /*三寄存器绝对索引*/
-hl.casw   [a1], t#2, u#3,        ->a4            /*三寄存器混合索引*/
-hl.casw   [a1], u#2, t#3,        ->a4            /*三寄存器混合索引*/
-hl.casw   [t#1], a2, u#3,        ->a4            /*三寄存器混合索引*/
-hl.casw   [t#1], u#2, a3,        ->a4            /*三寄存器混合索引*/
-hl.casw   [t#1], t#2, t#3,       ->a4            /*三寄存器相对索引*/
-hl.casw   [u#1], a2, t#3,        ->a4            /*三寄存器混合索引*/
-hl.casw   [u#1], t#2, a3,        ->a4            /*三寄存器混合索引*/
-hl.casw   [u#1], u#2, u#3,       ->a4            /*三寄存器相对索引*/
-hl.casw.aq   [a1], t#2, u#3,     ->a4            /*可选择.aq, .rl或.f的内存访问限制*/
-hl.casw.aq   [t#1], a2, u#3,     ->a4            /*可选择.aq, .rl或.f的内存访问限制*/
-hl.casw.aq   [u#1], a2, t#3,     ->a4            /*可选择.aq, .rl或.f的内存访问限制*/
-```
+比较成功后，内存变为 `0x55667788`，a3 得到 `0xffffffff80000001`。若 a1 的低字改为 2，内存保持 `0x80000001`，a3 仍得到 `0xffffffff80000001`。
 
 ## 约束
 
-- 本指令要求**内存访问地址必须4字节对齐**，否则触发地址不对齐异常。
-- 本指令属于[增强指令扩展](../../instset/haflLongInstrs.md)，且**仅允许在系统块内使用**。
+地址必须按 4 字节对齐。该指令长度为 6 字节，成功执行后 TPC 前进 6 字节；发生故障时停在本条指令。它属于增强指令扩展，只允许在系统块中执行。

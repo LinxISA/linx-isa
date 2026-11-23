@@ -2,23 +2,13 @@
 
 ## 说明
 
-无符号乘·字(*Multiply Word，Unsigned*)  
-无符号计算左源操作数的低32位乘以右源操作数的低32位，结果取`低32位`无符号扩展后写到目的寄存器。
+将两个源寄存器的低 32 位相乘。取乘积的低 32 位，符号扩展至 64 位后写入目的寄存器。
 
 ## 汇编语法
 
+```asm
+muluw SrcL, SrcR, ->{t, u, Rd}
 ```
-    muluw SrcL, SrcR, ->{t, u, Rd}
-```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **->**：用于指示目的寄存器。
-- **{t,u,Rd}**：表示三种可选的目的寄存器，编码于RegDst域。其中：
-    - **t,u**：分别表示块内的T和U寄存器队列。
-    - **Rd**：可以索引全局寄存器R1-R23。
 
 ## 编码格式
 
@@ -26,64 +16,16 @@
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
-- 对数据零扩展：[ZeroExtend()](../LibPseudoCode.md)
+两个输入按无符号数解释。截断乘积后，用结果的第 31 位填满高 32 位。
 
-```c
-    integer d = UInt(RegDst);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
-    integer datawidth = 32;
+## 示例
 
-    bits(32) operand1 = R[m, 32];
-    bits(32) operand2 = R[n, 32];
-    bits(64) result = operand1 *(u) operand2;
-    
-    R[d, datawidth] = ZeroExtend(result[31:0]);
-```
+a0 为 `0x40000000`、a1 为 2 时，`muluw a0, a1, ->a2` 写入 `0xffffffff80000000`。
 
 ## 汇编索引模式
 
-指令输出到块内t寄存器:
 ```asm
-muluw a1, a2,           ->t             /* 双寄存器绝对索引 */
-muluw a1, t#2,          ->t             /* 双寄存器混合索引 */
-muluw a1, u#2,          ->t             /* 双寄存器混合索引 */
-muluw t#1, a2,          ->t             /* 双寄存器混合索引 */
-muluw t#1, t#2,         ->t             /* 双寄存器相对索引 */
-muluw t#1, u#2,         ->t             /* 双寄存器相对索引 */
-muluw u#1, a2,          ->t             /* 双寄存器混合索引 */
-muluw u#1, t#2,         ->t             /* 双寄存器相对索引 */
-muluw u#1, u#2,         ->t             /* 双寄存器相对索引 */
+muluw a1, a2,           ->t
+muluw t#1, t#2,         ->u
+muluw u#1, u#2,         ->a3
 ```
-
-指令输出到块内u寄存器：
-```asm
-muluw a1, a2,           ->u             /* 双寄存器绝对索引 */
-muluw a1, t#2,          ->u             /* 双寄存器混合索引 */
-muluw a1, u#2,          ->u             /* 双寄存器混合索引 */
-muluw t#1, a2,          ->u             /* 双寄存器混合索引 */
-muluw t#1, t#2,         ->u             /* 双寄存器相对索引 */
-muluw t#1, u#2,         ->u             /* 双寄存器相对索引 */
-muluw u#1, a2,          ->u             /* 双寄存器混合索引 */
-muluw u#1, t#2,         ->u             /* 双寄存器相对索引 */
-muluw u#1, u#2,         ->u             /* 双寄存器相对索引 */
-```
-
-指令输出到全局寄存器R1-R23：
-```asm
-muluw a1, a2,           ->a3             /* 双寄存器绝对索引 */
-muluw a1, t#2,          ->a3             /* 双寄存器混合索引 */
-muluw a1, u#2,          ->a3             /* 双寄存器混合索引 */
-muluw t#1, a2,          ->a3             /* 双寄存器混合索引 */
-muluw t#1, t#2,         ->a3             /* 双寄存器相对索引 */
-muluw t#1, u#2,         ->a3             /* 双寄存器相对索引 */
-muluw u#1, a2,          ->a3             /* 双寄存器混合索引 */
-muluw u#1, t#2,         ->a3             /* 双寄存器相对索引 */
-muluw u#1, u#2,         ->a3             /* 双寄存器相对索引 */
-```
-
-## 备注
-
-本指令属于[基础指令集](../../instset/baseInstrs.md)，可用于任意类型的块指令块体中。

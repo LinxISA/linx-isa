@@ -32,12 +32,14 @@
 
 |  SrcRType  |  汇编标识  |  解释                       |
 |-----------|-----------|-----------------------------|
-|  00  |   无   |  无格式转换   |
-|  01  |  .sw   |  signed extended word，截取操作数的低32bit做有符号扩展  |
-|  10  |  .uw   |  unsigned extended word，截取操作数的低32bit做无符号扩展  |
-|  11  |  .not  |  not，对操作数按位取反  |
+| 00 | .sw | 低 32 位符号扩展到 64 位 |
+| 01 | .uw | 低 32 位零扩展到 64 位 |
+| 10 | .not | 按位取反 |
+| 11 | 省略 | 使用右源原值 |
 
 ## 执行方式
+
+SrcRType 取 00 或 01 时，将右源的低 32 位分别作符号扩展或零扩展。取 10 时，对整个右源按位取反。取 11 时直接使用原值，省略后缀就采用此编码。
 
 - 转换为十进制数：[UInt()](../LibPseudoCode.md)
 - 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
@@ -55,10 +57,10 @@
     bits(datawidth) operand2 = R[n, datawidth];
 
     case SrcRType of:
-        when 2b00 then No operation;
-        when 2b01 then operand2 = SignExtend(operand2[31:0]);
-        when 2b10 then operand2 = ZeroExtend(operand2[31:0]);
-        when 2b11 then operand2 = Not(operand2);
+        when 2b00 then operand2 = SignExtend(operand2[31:0]);
+        when 2b01 then operand2 = ZeroExtend(operand2[31:0]);
+        when 2b10 then operand2 = Not(operand2);
+        when 2b11 then No operation;
 
     bits(datawidth) result = operand1 & (operand2 << shamt);
     R[d, datawidth] = result;

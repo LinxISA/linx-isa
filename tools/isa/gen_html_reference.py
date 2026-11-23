@@ -39,7 +39,8 @@ from manual_editorial import (
 )
 from manual_supplements import instruction_supplement, tile_supplement
 from manual_markdown import render_markdown_text
-from manual_version_notes import indexed_transfer_note, release_constraints
+from manual_version_notes import release_constraints
+from manual_detail import instruction_body, operation_body, revised_intro
 from manual_authored import authored_for, authored_tile
 from manual_index_families import family_index_synopsis
 from manual_index_notes import index_note
@@ -432,7 +433,20 @@ def build():
     example = articles[op_page("C.MOVR")][1]
     if not example or example.source_path != "docs/zh/isa/inst/misa_c/C.MOVR.md":
         raise ValueError("the tagged Chinese instruction source tree is missing")
-    library = ArticleLibrary(articles, architecture_routes())
+    revisions = {}
+    for name, variants in forms.items():
+        first = variants[0]
+        url = op_page(name)
+        revisions[url] = instruction_body(
+            variants,
+            base_by_id,
+            articles[url][1],
+            diagram_audit["forms"][first["id"]]["parts"],
+        )
+    for op in direct_ops:
+        url = tile_page(op["name"])
+        revisions[url] = operation_body(op, articles[url][1])
+    library = ArticleLibrary(articles, architecture_routes(), revisions=revisions)
     zh_common = json.loads((ASSETS / "data/manual-semantics-zh.json").read_text())[
         "forms"
     ]
@@ -459,14 +473,9 @@ def build():
             desc = authored_synopsis(article) or tile_index_note(op)
         else:
             desc = supplement_excerpt(tile_supplement(op))
+        desc = revised_intro(revisions[url]) or desc
         tile_list.append((name, url, desc, op["engine"], carrier))
-        family_context = ""
-        if article and article.title.upper() != name.upper():
-            family_context = (
-                f"本地中文站以《{article.title}》介绍该操作族。下文保留这篇原页，"
-                f"其中示例使用原页的操作名。{name} 的独立选择器见本页 0.59.1 命令编码。"
-            )
-        reader = library.render(url, source_context=family_context)
+        reader = library.render(url)
         if not reader:
             supplement = tile_supplement(op)
             reader = supplement_reader(supplement, url, library)
@@ -494,7 +503,6 @@ def build():
                 "tiles-" + op["engine"].lower() + ".html", op["engine"] + " 操作索引"
             )
             + "</p>"
-            + indexed_transfer_note(op, tile_owners)
             + reader
             + '<details class="release-data"'
             + ("" if article else " open")
@@ -543,6 +551,9 @@ def build():
             raise ValueError(
                 f"{name}: no instruction purpose available for the mnemonic index"
             )
+        base_intro = revised_intro(revisions.get(op_page(base)))
+        if base_intro:
+            short = base_intro
         if scope:
             scope_label = {
                 "Private": "私有",
@@ -577,25 +588,7 @@ def build():
                 + " · ".join(link(op_page(n), n) for n in related)
                 + "</p>"
             )
-        context = ""
-        if scope:
-            context = f"以下是基础指令 {base} 的中文站原文。{name} 是 64 位封装，原页的基础指令位图不能用于译码此封装。"
-        elif article and len(variants) > 1:
-            context = f"《{article.title}》按中文站原页展示。本版共有 {len(variants)} 个编码形式，各形式分别列在原文之后。"
-        elif article and article.classification == "contextual-original":
-            context = f"下文为中文站的《{article.title}》。原文示例与原图按原页版本阅读，0.59.1 的各编码形式另列。"
-        elif article and not all(
-            p["source"] == "tagged-original-wavedrom-svg"
-            for p in diagram_audit["forms"][first["id"]]["parts"]
-        ):
-            context = "本节沿用中文站原文和原图；本版译码请查阅 0.59.1 的编码位图。"
-        if (
-            not context
-            and article
-            and article.classification == "syntax-compatible-original"
-        ):
-            context = "原页的汇编写法已与本版目录对照；完整编码与使用条件见本页的 0.59.1 记录。"
-        reader = library.render(url, source_context=context, conflict=conflict)
+        reader = library.render(url)
         multiple = len(variants) > 1
         if multiple and reader:
             body += reader
@@ -609,21 +602,17 @@ def build():
                 body += f'<details class="variant"{" open" if sequence == 1 else ""}><summary>形式 {sequence}　<code>{escape(row["asm"])}</code>{qualifier}</summary>'
             form_id = escape(row["id"])
             body += f'<article class="form" id="{form_id}">'
-            if not multiple and reader and not conflict:
+            if not multiple and reader:
                 body += reader
             if not reader:
                 supplement = instruction_supplement(row)
                 body += supplement_reader(supplement, url, library)
                 supplement_audit[url] = Path(supplement).relative_to(ROOT).as_posix()
-            if conflict:
-                body += (
-                    '<p class="version-context"><strong>0.59.1 版本差异</strong>　'
-                    + escape(" ".join(article.reasons + article.current_view))
-                    + "</p>"
-                )
             source_id = row.get("pto_base_form_id") or row.get("pto_source_form_id")
             owner = asl_owners.get(source_id, {}).get("source_path", "")
-            expand = " open" if conflict or not reader or multiple or scope else ""
+            expand = (
+                " open" if revisions.get(url) or not reader or multiple or scope else ""
+            )
             note = (
                 "编码保留；执行必须在读取操作数或产生架构效果之前拒绝。"
                 if "NOT IMPLEMENTED" in row.get("note", "")
@@ -652,8 +641,6 @@ def build():
                 + form_provenance(row, commit, common_paths)
                 + "</div></details>"
             )
-            if conflict and not multiple:
-                body += reader
             body += "</article>"
             if multiple:
                 body += "</details>"
@@ -760,9 +747,12 @@ def build():
     title, source_body = bodies["sources.html"]
     bodies["sources.html"] = (
         title,
-        "<h2>中文站原文</h2><p>指令说明、汇编示例与原图读取自发布标签中的 "
-        "<code>docs/zh/isa</code> 和 <code>docs/zh/figs</code>。关联原文按原页展示；有版本差异时，"
-        "本版编码单独列出。原始 Markdown 可从文章上方的“中文站原文”链接打开。</p>"
+        "<h2>中文说明与编码</h2><p>指令说明沿用本地中文站的写法。汇编、操作数和执行结果按 "
+        "0.59.1 的指令目录与模型核对。每个编码形式单列位图和字段，本页中文稿可在正文末尾下载。</p>"
+        + '<p><a href="detail-audit.json">逐页来源清单</a>列出每篇正文对应的助记符、编码形式和语义定义。</p>'
+        + "<p>寄存器偏移的三条向量存储在汇编目录与 Sail 中使用了不同的移位量。"
+        + "、".join(link(op_page(n), n) for n in ("V.SH.BRG", "V.SW.BRG", "V.SD.BRG"))
+        + " 的正文列出了各自的地址公式。</p>"
         + "<details><summary>另有 0.59.1 中文增补页的条目</summary><ul>"
         + "".join(
             "<li>" + link(filename, name) + "</li>"
@@ -814,7 +804,10 @@ def build():
             or chapter_audit.get(filename, {}).get("source_path")
             or library.support_sources.get(filename)
         )
-        if source:
+        if library.revisions.get(filename) is not None:
+            edits = {}
+            origin = "release-reviewed-article"
+        elif source:
             edits = dict(edit_article(source)[1])
             origin = "tagged-chinese-source"
         elif filename in supplement_audit:
@@ -873,6 +866,35 @@ def build():
         {a["id"] for a in audit}
     ) != len(audit):
         raise ValueError("form ID coverage mismatch")
+    detail_audit = {}
+    for url, (name, article) in articles.items():
+        is_tile = url.startswith("tile-")
+        record = library.audit.get(url, {})
+        source_path = record.get("source_path") or supplement_audit[url]
+        identifiers = [name] if is_tile else [r["id"] for r in forms[name]]
+        if is_tile:
+            owners = [tile_owners[name]["source_path"]]
+        else:
+            owners = []
+            for r in forms[name]:
+                sid = r.get("pto_base_form_id") or r.get("pto_source_form_id")
+                owner = (
+                    asl_owners[sid]["source_path"]
+                    if sid in asl_owners
+                    else "sail/model/decode/decode.sail"
+                )
+                if owner not in owners:
+                    owners.append(owner)
+        detail_audit[url] = {
+            "mnemonic": name,
+            "forms": identifiers,
+            "semantic_sources": owners,
+            "chinese_source": source_path,
+            "reader": record.get("reader", "release-supplement"),
+        }
+    files["detail-audit.json"] = json.dumps(
+        detail_audit, ensure_ascii=False, indent=2
+    ).encode()
     files["audit.json"] = (
         json.dumps(
             {

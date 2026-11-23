@@ -24,11 +24,23 @@ class CheckManualSiteQualityTest(unittest.TestCase):
             parser.rows, {"base:TIME:0x0010": ("TIME", "0x0010", "RO", "base", "—")}
         )
 
-    def test_mgather_current_and_variant_notes_are_distinct(self):
+    def test_mgather_current_and_variant_bodies_are_distinct(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            base = "S32、U32、S64 或 U64 字节位移，不再按传输元素大小缩放。MinIndex 和 MaxIndex 是有符号的相对字节界限。"
-            (root / "tile-mgather.html").write_text(base)
+
+            def put(name, text):
+                path = root / f"tile-{name.lower().replace('_', '-')}.html"
+                path.write_text(
+                    '<section class="authored-reader" data-source-path="source.md">'
+                    + "<!-- authored:start --><p>"
+                    + text
+                    + "</p><!-- authored:end --></section>"
+                )
+
+            put(
+                "MGATHER",
+                "S32、U32、S64 或 U64 的字节位移，MinIndex 和 MaxIndex 给出界限。",
+            )
             for suffix in (
                 "ADD",
                 "AND",
@@ -41,17 +53,16 @@ class CheckManualSiteQualityTest(unittest.TestCase):
                 "OR",
                 "XOR",
             ):
-                name = f"MGATHER_{suffix}"
-                (root / f"tile-{name.lower().replace('_', '-')}.html").write_text(
-                    f"{name} 原子操作；普通搬运循环只解释寻址，不能代替本形式的原子操作"
-                )
+                name = "MGATHER_" + suffix
+                put(name, name + " 对选定地址执行原子更新，并返回旧值。")
             for name in ("MGATHER_MASK", "MSCATTER_MASK"):
-                (root / f"tile-{name.lower().replace('_', '-')}.html").write_text(
-                    f"{name} 按掩码选择参与访问的元素；原页没有掩码步骤"
-                )
+                put(name, name + " 只为掩码启用的元素计算地址。")
             errors = []
             _check_mgather(root, errors)
             self.assertEqual(errors, [])
+            put("MGATHER_ADD", "普通聚集读取连续的数据。")
+            _check_mgather(root, errors)
+            self.assertTrue(any("MGATHER_ADD" in error for error in errors))
 
     def test_canvas_manifest_binds_hash_sources_and_consumers(self):
         with tempfile.TemporaryDirectory() as tmp:

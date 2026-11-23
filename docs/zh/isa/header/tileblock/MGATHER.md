@@ -4,70 +4,55 @@
 
 **内存聚集（Gather from Memory to Tile）**
 
-`MGATHER` 是一条基于间接寻址的数据聚集指令。它以基地址寄存器
-（`RegSrc`）为内存起始地址，以输入 Tile（`SrcTile`）中存储的一组偏移量
-（offset）为索引，从离散的内存位置逐一读取数据元素，并按 offset 在
-`SrcTile` 中的行列顺序连续写入输出 Tile（`DstTile`）的对应位置，从而将
-稀疏分布的内存数据聚合为稠密的二维 Tile 数据块。
+`MGATHER` 以 GPR 中的基址为起点，把索引 Tile 的每个有效元素解释成**字节位移**，从离散的全局内存地址读取数据，并按索引 Tile 的行列顺序写入新的 Local 目标 Tile。
 
-该指令只对 `[0, validRow) x [0, validCol)` 的有效区域执行访存；超出有效
-区域的输出位置写入 `PadValue`。
+地址计算为 `BaseGPR + ByteDisplacement`。S32 索引先符号扩展，U32 索引先零扩展，S64 与 U64 直接使用。位移不会乘以传输元素的字节数，因此软件若持有元素下标，需要先把它换算成字节位移。
 
 ## 汇编语法
 
 ```asm
-MGATHER <LB0:validCol, LB1:validRow, LB2:Col, DataType, PadValue>, SrcTile<.reuse>, [RegSrc], ->DstTile<Size>
+MGATHER <Col, ValidRow=1, ValidCol=Col, DataType, PadValue?, Layout?, PEMask=AllPE>, [BaseGPR], IndexTile, ->DstTile<Size>
 ```
 
-## 汇编符号
+## 操作数
 
-| 参数 | 说明 | 是否可选 |
-|------|-----|-----------|
-| **validCol** | 有效列数，表示输出 Tile 中有效数据的列数，也是输入 Tile 中有效 offset 的列数。该值通过 `LB0` 传入。 | 否 |
-| **validRow** | 有效行数，表示输出 Tile 中有效数据的行数，也是输入 Tile 中有效 offset 的行数。该值通过 `LB1` 传入。 | 是，默认为 1 |
-| **Col** | 输出 Tile 每行的物理列数（包含填充列）。该值通过 `LB2` 传入。 | 是，默认等于 `validCol` |
-| **Row** | 输出 Tile 的物理行数（包含填充行）。硬件通过 `Size / (Col * sizeof(DataType))` 自动推导。 | 否（硬件推导） |
-| **DataType** | 从内存中收集的元素的数据类型/格式。 | 否 |
-| **PadValue** | DstTile 中位于有效区域之外的填充值。可选值为 `Null`、`Zero`、`Max`、`Min`。 | 是，默认 `Null` |
-| **RegSrc** | 输入全局寄存器 GGPR，用于存储收集数据的内存基地址 `baseAddress`。 | 否 |
-| **SrcTile** | 输入 Tile 寄存器，用于存储一组基于 `baseAddress` 的偏移量。 | 否 |
-| **DstTile** | 输出 Tile 寄存器，用于存储聚集得到的数据。 | 否 |
-| **Size** | 输出 Tile 的大小，必须等于 `Row * Col * sizeof(DataType)`。 | 否 |
+| 操作数 | 作用 |
+| --- | --- |
+| `BaseGPR` | 每个 PE 的 GM 基地址 |
+| `IndexTile` | S32、U32、S64 或 U64 字节位移；保持不变 |
+| `DstTile` | 新分配的 Local 目标 Tile，接收读到的元素 |
 
-`SrcTile` 中 offset 的位宽由写入该 Tile 时使用的元素位宽决定，规范形式
-支持 `u16`、`u32` 和 `u64`。
+目标采用块头的 `DataType`、`Layout` 和 B.DIM 形状。RowMajor、CUBE_M16 与 CUBE_M32 可用，CUBE_N8 非法。
 
-## 编码格式
+普通传输支持非四位类型，也支持 E2M1X2、E1M2X2、HiF4X2、S4X2 与 U4X2。使用这些四位打包类型时，一个索引指向一个字节，该字节同时承载两个相邻的逻辑半字节，所以目标有效列数必须是索引有效列数的两倍。
 
-该 TileOp 编码为以下指令：
+## 执行方式
 
-- [BSTART.MGATHER](../../blockIntro/tlsu_block/header.md) `DataType`
-- [B.DATR](../../header/B.DATR.md) `PadValue` *（可选）*
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` *（`validCol`）*
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` *（`validRow`）*
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2` *（`Col`，可选）*
-- [B.IOT](../../header/B.IOT.md) `SrcTile<.reuse>, last, ->DstTile<Size>`
-- [B.IOR](../../header/B.IOR.md) `RegSrc`
+执行分为预检和发布两阶段。模型先为每个活动索引计算地址，完成对齐、转换和权限检查。任一通道失败时，不读取数据，也不发布部分目标。全部地址通过后，才读取各通道并一次性发布目标 Tile。
 
-## 执行模型
+下面的伪代码描述普通非打包类型的逻辑坐标。CUBE 布局仍按布局映射寻址，四位打包类型按上面的“一字节两个逻辑元素”规则处理。
 
 ```c
-void MGATHER(Tile dst, Scalar base, Tile src) {
-  for (int i = 0; i < Row; ++i) {
-    for (int j = 0; j < Col; ++j) {
-      if (i < validRow && j < validCol) {
-        offset_t offset = src[i][j];
-        dst[i][j] = Memory[base + offset];
-      } else {
-        dst[i][j] = PadValue;
-      }
-    }
+for (int r = 0; r < ValidRow; ++r) {
+  for (int c = 0; c < ValidCol; ++c) {
+    byte_offset = IndexTile[r][c];
+    DstTile[r][c] = Memory[BaseGPR + byte_offset];
   }
 }
 ```
 
-## 注意事项
+有效区域之外的物理目标元素接收 `PadValue`。省略 B.DATR 时，本操作把这些位置定义为零位。存在执行掩码时，未启用坐标不生成地址，也不做转换、权限检查或内存读取。
 
-- `validCol <= Col`，`validRow <= Row`。
-- `Size` 必须是 `Col * sizeof(DataType)` 的整数倍。
-- 超出有效区域的位置不产生访存，直接写入 `PadValue`。
+## 示例
+
+取一个 `1 × 4` 的 U32 索引 Tile，内容为 `[8, 0, 8, 4]`，a0 中的基址为 `0x1000`。GM 在 `0x1000`、`0x1004`、`0x1008`、`0x100c` 处依次存放 U32 值 `1、2、3、4`。
+
+```asm
+MGATHER <Col=4, U32>, [a0], T#1, ->T<128B>
+```
+
+四个地址依次是 `0x1008、0x1000、0x1008、0x1004`，所以目标有效区域得到 `[3, 1, 3, 2]`。目标共有 32 个 U32 物理元素，其余 28 个元素由默认填充值定义为零。
+
+## 相关形式
+
+`MGATHER_MASK`、`MGATHER_CAS`、`MGATHER_EXCH`、`MGATHER_MAX/MIN/ADD/INC/DEC/AND/OR/XOR` 都有独立操作数和效果。掩码形式会抑制未选通道的地址生成；原子形式会更新 GM，并把每个通道观察到的旧值返回到目标 Tile。它们不能按本页的普通读取伪代码解释。

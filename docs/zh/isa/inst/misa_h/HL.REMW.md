@@ -2,82 +2,24 @@
 
 ## 说明
 
-求余数字(*Remainder Word*)  
-有符号计算左源操作数`低32位`除以右源操作数`低32位`，向 0 舍入，`余数`符号扩展后写入第一个目的寄存器，`商数`符号扩展后写入第二个目的寄存器中。
+取两个源寄存器的低 32 位，按有符号整数相除。商向零取整。先将余数写入 Dst0，再将商写入 Dst1。
 
 ## 汇编语法
 
 ```asm
-    hl.remw SrcL, SrcR, ->Dst0, Dst1
+hl.remw SrcL, SrcR, ->Dst0, Dst1
 ```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **->**：用于指示目的寄存器。
-- **Dst0**：第一个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
-- **Dst1**：第二个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
 
 ## 编码格式
 
-- 低16bit编码：
-
-![HL.REMW](../../../figs/bitfield/svg/Instruction_48bit_16/HL.REMW.svg)
-
-- 高32bit编码：
-
-![HL.REMW](../../../figs/bitfield/svg/Instruction_48bit_32/HL.REMW.svg)
+第 1 段（48 位），从高位到低位依次为 `7'b0000000`（47:41）、`SrcR`（40:36）、`SrcL`（35:31）、`3'b110`（30:28）、`RegDst0`（27:23）、`7'b1010111`（22:16）、`RegDst1`（15:11）、`11'b00000001110`（10:0）。
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
-- 对数据符号扩展：[SignExtend()](../LibPseudoCode.md)
+余数等于被除数减去商与除数的乘积。除数为零时，商为零，余数为被除数。最小的 32 位有符号整数除以 −1 时，商为该最小值，余数为零。每个写回结果都从 32 位符号扩展到 64 位。
 
-```c
-    integer d0 = UInt(RegDst0);
-    integer d1 = UInt(RegDst1);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
+两个源操作数都在写回前读取。两个目标为同一通用寄存器时，保留第二次写入的值。两个目标为同一临时队列时，第二项成为最新一项。
 
-    bits(32) operand1 = R[m, 32];
-    bits(32) operand2 = R[n, 32];
-    bits(32) quotient, remainder;
+## 示例
 
-    if operand2 != 0 then
-        remainder = operand1 %(s) operand2;
-        quotient = operand1 /(s) operand2;
-    else
-        remainder = operand1;
-        quotient = -1;
-
-    R[d0, 32] = SignExtend(remainder[31:0]);
-    R[d1, 32] = SignExtend(quotient[31:0]);
-```
-
-## 汇编索引模式
-
-输入输出可选组合如下：
-
-| 输入组合 | 输出组合 |
-|---------|-----------|
-| **a1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **a1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **a1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-
-## 注意事项
-
-- 余数的符号与被除数的符号相同。  
-- 如果发生除法溢出情况，余数等于"0"。  
-- 如果出现除以零的情况，余数等于被除数。
-
-## 备注
-
-本指令属于[增强指令扩展](../../instset/haflLongInstrs.md)，可用于任意类型的块指令块体中。
+若两个操作数分别为 17 和 5，商为 3，余数为 2。Dst0 得到 2，Dst1 得到 3。
