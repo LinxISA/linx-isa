@@ -54,4 +54,5 @@ check-html-reference:
 	python3 ../../../tools/isa/check_html_reference.py --site $(BUILD_DIR)/instruction-reference
 	python3 ../../../tools/isa/check_manual_structure.py --site $(BUILD_DIR)/instruction-reference
 	python3 ../../../tools/isa/check_manual_authored.py --site $(BUILD_DIR)/instruction-reference
+	python3 ../../../tools/isa/check_manual_detail_semantics.py --site $(BUILD_DIR)/instruction-reference
 	python3 ../../../tools/isa/check_manual_site_quality.py --site $(BUILD_DIR)/instruction-reference

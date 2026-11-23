@@ -2,60 +2,36 @@
 
 ## 说明
 
-立即数或置位提交(*Set Commit Argument by Or Immediate*)  
-有符号比较源操作数和立即数，如果源操作数大于等于立即数，在本块指令提交时，跳转到指定BPC。
+立即数或置位提交（*Set Commit Argument by Or Immediate*）。读取 `SrcL`，把 24 位有符号立即数符号扩展为 64 位，再左移 `shamt` 位；随后对两者按位或。按位或结果非零时向当前条件指令束提交 1，结果为零时提交 0。
+
+本指令不写通用寄存器、向量寄存器或内存。立即数为零时，它等价于对 `SrcL` 做非零判定。
 
 ## 汇编语法
 
 ```asm
-    hl.setc.ori SrcL, simm
+hl.setc.ori SrcL, simm
 ```
 
-## 汇编符号
+## 操作数
 
-- **SrcL**：源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **simm**：有符号立即数，编码于(simm12<< shamt)。
+- `SrcL` 是标量源寄存器。
+- `simm24` 是 24 位有符号立即数字段。
+- `shamt` 是 5 位移位量，作用于符号扩展后的立即数。
 
 ## 编码格式
 
-- 低16bit编码：
+低 16 位：
 
 ![HL.SETC.ORI](../../../figs/bitfield/svg/Instruction_48bit_16/HL.SETC.ORI.svg)
 
-- 高32bit编码：
+高 32 位：
 
 ![HL.SETC.ORI](../../../figs/bitfield/svg/Instruction_48bit_32/HL.SETC.ORI.svg)
 
-## 执行方式
+## 例子
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
-- 对数据符号扩展：[SignExtend()](../LibPseudoCode.md)
+`SrcL = 0`、`simm24 = 0`、`shamt = 0` 时提交 0；把 `simm24` 改为 1 后提交 1。
 
-```c
-    integer d = UInt(RegDst);
-    integer s = UInt(SrcL);
+## 使用约束
 
-    bits(64) operand = R[s, 64];
-    bits(64) simm = SignExtend(simm12);
-    simm = simm << shamt;
-    BARG.TAKEN = ((operand | simm) != 0 ? 1 : 0);
-```
-
-## 汇编索引模式
-
-```asm
-hl.setc.ori a1, simm     /* 单寄存器绝对索引 */
-hl.setc.ori t#1, simm    /* 单寄存器相对索引 */
-hl.setc.ori u#1, simm    /* 单寄存器相对索引 */
-```
-
-## 注意事项
-
-1. 本指令不占块内私有寄存器槽位。
-2. 本指令在一个块内只能执行一次。
-3. 本指令仅在条件跳转COND块内有效。
-
-## 备注
-
-本指令属于[增强指令扩展](../../instset/haflLongInstrs.md)，可用于任意类型的块指令块体中。
+本指令只在活动的条件指令束尚未设置条件时适用。它不占用块内私有寄存器槽位。

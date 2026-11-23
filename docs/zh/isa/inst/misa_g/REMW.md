@@ -2,23 +2,13 @@
 
 ## 说明
 
-求余数字(*Remainder Word*)  
-有符号计算左源操作数`低32位`除以右源操作数`低32位`，向 0 舍入，余数符号位扩展后写入目的寄存器中。
+取两个源寄存器的低 32 位，按有符号整数相除。商向零取整。将余数写入目的寄存器。
 
 ## 汇编语法
 
+```asm
+remw SrcL, SrcR, ->{t, u, Rd}
 ```
-    remw SrcL, SrcR, ->{t, u, Rd}
-```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **->**：用于指示目的寄存器。
-- **{t,u,Rd}**：表示三种可选的目的寄存器，编码于RegDst域。其中：
-    - **t,u**：分别表示块内的T和U寄存器队列。
-    - **Rd**：可以索引全局寄存器R1-R23。
 
 ## 编码格式
 
@@ -26,75 +16,16 @@
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
-- 对数据符号扩展：[SignExtend()](../LibPseudoCode.md)
+余数等于被除数减去商与除数的乘积。除数为零时，商为零，余数为被除数。最小的 32 位有符号整数除以 −1 时，商为该最小值，余数为零。每个写回结果都从 32 位符号扩展到 64 位。
 
-```c
-    integer d = UInt(RegDst);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
-    integer datawidth = 32;
+## 示例
 
-    bits(datawidth) operand1 = R[m, datawidth];
-    bits(datawidth) operand2 = R[n, datawidth];
-    bits(datawidth) result;
-
-    if operand2 != 0 then
-        result = operand1 %(s) operand2;
-    else
-        result = operand1;
-
-    R[d, datawidth] = SignExtend(result[31:0]);
-```
+若两个操作数分别为 17 和 5，商为 3，余数为 2。因此本指令写入 2。
 
 ## 汇编索引模式
 
-指令输出到块内t寄存器:
 ```asm
-remw a1, a2,           ->t             /* 双寄存器绝对索引 */
-remw a1, t#2,          ->t             /* 双寄存器混合索引 */
-remw a1, u#2,          ->t             /* 双寄存器混合索引 */
-remw t#1, a2,          ->t             /* 双寄存器混合索引 */
-remw t#1, t#2,         ->t             /* 双寄存器相对索引 */
-remw t#1, u#2,         ->t             /* 双寄存器相对索引 */
-remw u#1, a2,          ->t             /* 双寄存器混合索引 */
-remw u#1, t#2,         ->t             /* 双寄存器相对索引 */
-remw u#1, u#2,         ->t             /* 双寄存器相对索引 */
+remw a1, a2,           ->t
+remw t#1, t#2,         ->u
+remw u#1, u#2,         ->a3
 ```
-
-指令输出到块内u寄存器：
-```asm
-remw a1, a2,           ->u             /* 双寄存器绝对索引 */
-remw a1, t#2,          ->u             /* 双寄存器混合索引 */
-remw a1, u#2,          ->u             /* 双寄存器混合索引 */
-remw t#1, a2,          ->u             /* 双寄存器混合索引 */
-remw t#1, t#2,         ->u             /* 双寄存器相对索引 */
-remw t#1, u#2,         ->u             /* 双寄存器相对索引 */
-remw u#1, a2,          ->u             /* 双寄存器混合索引 */
-remw u#1, t#2,         ->u             /* 双寄存器相对索引 */
-remw u#1, u#2,         ->u             /* 双寄存器相对索引 */
-```
-
-指令输出到全局寄存器R1-R23：
-```asm
-remw a1, a2,           ->a3             /* 双寄存器绝对索引 */
-remw a1, t#2,          ->a3             /* 双寄存器混合索引 */
-remw a1, u#2,          ->a3             /* 双寄存器混合索引 */
-remw t#1, a2,          ->a3             /* 双寄存器混合索引 */
-remw t#1, t#2,         ->a3             /* 双寄存器相对索引 */
-remw t#1, u#2,         ->a3             /* 双寄存器相对索引 */
-remw u#1, a2,          ->a3             /* 双寄存器混合索引 */
-remw u#1, t#2,         ->a3             /* 双寄存器相对索引 */
-remw u#1, u#2,         ->a3             /* 双寄存器相对索引 */
-```
-
-!!! note "注意"
-
-    余数的符号与被除数的符号相同。  
-    如果发生除法溢出情况，余数等于"0"。  
-    如果出现除以零的情况，余数等于被除数。
-
-## 备注
-
-本指令属于[基础指令扩展](../../instset/baseExtInstrs.md)，可用于任意类型的块指令块体中。

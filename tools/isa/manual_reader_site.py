@@ -9,13 +9,20 @@ from pathlib import PurePosixPath
 import re
 
 from manual_editorial import edit_article
-from manual_markdown import build_support_bundle, render_article, support_asset_path
+from manual_markdown import (
+    build_support_bundle,
+    render_article,
+    render_markdown_text,
+    support_asset_path,
+)
 from manual_tag import tagged_bytes
 
 
 class ArticleLibrary:
-    def __init__(self, articles, chapter_routes=None):
+    def __init__(self, articles, chapter_routes=None, *, revisions=None):
         self.articles = articles
+        self.revisions = revisions or {}
+        self.revised_fragments = {}
         destinations = defaultdict(list)
         for name, (mnemonic, article) in articles.items():
             if article is not None:
@@ -37,6 +44,20 @@ class ArticleLibrary:
             dependencies.update(fragment.documents)
             for asset in fragment.assets:
                 self.files[support_asset_path(asset)] = tagged_bytes(asset)
+        for filename, markdown in self.revisions.items():
+            if markdown is None:
+                continue
+            article = articles[filename][1]
+            fragment = render_markdown_text(
+                article.source_path,
+                markdown,
+                current_page=filename,
+                document_routes=self.routes,
+            )
+            self.revised_fragments[filename] = fragment.html
+            dependencies.update(fragment.documents)
+            for asset in fragment.assets:
+                self.files[support_asset_path(asset)] = tagged_bytes(asset)
         support = build_support_bundle(
             sorted(dependencies - self.routes.keys()), document_routes=self.routes
         )
@@ -44,44 +65,33 @@ class ArticleLibrary:
         self.support = support.fragments
         self.support_sources = support.source_paths
 
-    def render(self, filename, *, source_context="", conflict=False):
+    def render(self, filename):
         item = self.articles.get(filename)
         if not item or not item[1]:
             return ""
         _, article = item
         path = article.source_path
-        fragment = self.fragments[path]
-        source = tagged_bytes(path)
+        original = tagged_bytes(path)
+        revised = self.revisions.get(filename)
+        source = revised.encode() if revised is not None else original
+        fragment = self.revised_fragments.get(filename, self.fragments[path])
         digest = sha256(source).hexdigest()
         raw = f"article-source/{digest}.md"
         self.files[raw] = source
         self.audit[filename] = {
             "source_path": path,
-            "source_sha256": digest,
-            "classification": "conflicting-current"
-            if conflict
-            else article.classification,
+            "source_sha256": sha256(original).hexdigest(),
+            "classification": article.classification,
+            "reader": "release-revision" if revised is not None else "authored",
+            "reader_sha256": digest,
             "rendered_sha256": sha256(fragment.encode()).hexdigest(),
             "source_asset": raw,
-            "prose_edits": dict(edit_article(path)[1]),
         }
-        label = f'<p class="article-source">中文站正文 · <a href="{raw}">查看《{escape(article.title)}》原稿</a></p>'
-        context = (
-            f'<p class="version-context">{escape(source_context)}</p>'
-            if source_context
-            else ""
-        )
-        body = (
-            f'<section class="authored-reader" data-source-path="{escape(path)}">{label}{context}'
+        return (
+            f'<section class="authored-reader" data-source-path="{escape(path)}">'
             "<!-- authored:start -->" + fragment + "<!-- authored:end --></section>"
+            f'<p class="article-source"><a href="{raw}">本页中文稿</a></p>'
         )
-        if conflict:
-            return (
-                '<details class="historical-article"><summary>对照中文站原页（含旧版汇编和编码）</summary>'
-                + body
-                + "</details>"
-            )
-        return body
 
 
 def authored_synopsis(article):

@@ -17,7 +17,8 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 from manual_authored import authored_for, authored_tile
-from manual_markdown import render_article
+from manual_detail import instruction_body, operation_body
+from manual_markdown import render_article, render_markdown_text
 from manual_tag import tagged_bytes, tagged_json
 
 START = "<!-- authored:start -->"
@@ -180,6 +181,28 @@ def check_site(site: Path) -> list[str]:
             errors.append(
                 f"authored audit has {len(extra)} unexpected pages: {extra[:8]}"
             )
+    rows_by_page = {}
+    base_rows = {}
+    for row in catalog["instructions"]:
+        rows_by_page.setdefault(op_page(row), []).append(row)
+        if row.get("pto_source_form_id") and not row.get("pto_scope"):
+            base_rows[row["pto_source_form_id"]] = row
+    operations = {tile_page(op["name"]): op for op in tiles["operations"]}
+    diagrams = json.loads((site / "diagram-audit.json").read_text())["forms"]
+    detail = json.loads((site / "detail-audit.json").read_text())
+    if detail.keys() != rows_by_page.keys() | operations.keys():
+        errors.append("detail-audit.json: incomplete detail-page inventory")
+    for filename, record in detail.items():
+        rows = rows_by_page.get(filename, [])
+        ids = (
+            [r["id"] for r in rows]
+            if rows
+            else [operations[filename]["name"]]
+            if filename in operations
+            else []
+        )
+        if record["forms"] != ids or not record["semantic_sources"]:
+            errors.append(f"{filename}: incomplete detail-page form/source coverage")
     for filename, article in expected.items():
         where = filename
         record = audit.get(filename)
@@ -194,9 +217,25 @@ def check_site(site: Path) -> list[str]:
             errors.append(f"{where}: source path differs")
         if record.get("source_sha256") != sha256(source_bytes).hexdigest():
             errors.append(f"{where}: source SHA-256 differs")
+        if filename in rows_by_page:
+            rows = rows_by_page[filename]
+            revision = instruction_body(
+                rows, base_rows, article, diagrams[rows[0]["id"]]["parts"]
+            )
+        else:
+            revision = operation_body(operations[filename], article)
+        current_bytes = source_bytes if revision is None else revision.encode()
         source_asset = site / str(record.get("source_asset", ""))
-        if not source_asset.is_file() or source_asset.read_bytes() != source_bytes:
-            errors.append(f"{where}: offline authored source asset differs from tag")
+        if not source_asset.is_file() or source_asset.read_bytes() != current_bytes:
+            errors.append(
+                f"{where}: offline Chinese manuscript differs from the reviewed body"
+            )
+        if (
+            record.get("reader")
+            != ("authored" if revision is None else "release-revision")
+            or record.get("reader_sha256") != sha256(current_bytes).hexdigest()
+        ):
+            errors.append(f"{where}: incorrect reader provenance")
         if record.get("classification") != article.classification:
             errors.append(f"{where}: classification differs")
         try:
@@ -213,13 +252,24 @@ def check_site(site: Path) -> list[str]:
             != sha256(embedded.encode("utf-8")).hexdigest()
         ):
             errors.append(f"{where}: rendered SHA-256 differs")
-        rendered = render_article(
-            article.source_path,
-            current_page=filename,
-            document_routes=routes,
-        ).html
+        if revision is None:
+            rendered = render_article(
+                article.source_path, current_page=filename, document_routes=routes
+            ).html
+        else:
+            rendered = render_markdown_text(
+                article.source_path,
+                revision,
+                current_page=filename,
+                document_routes=routes,
+            ).html
         if _normalize_local_targets(embedded) != _normalize_local_targets(rendered):
-            errors.append(f"{where}: embedded article differs from tag re-render")
+            errors.append(
+                f"{where}: displayed body differs from its reviewed manuscript"
+            )
+        page = page_path.read_text()
+        if "historical-article" in page or "0.59.1 版本差异" in page:
+            errors.append(f"{where}: detail page still embeds a historical explanation")
     # Deep regression for the complete first authored instruction article.
     filename = "op-c-movr.html"
     if filename in expected and (site / filename).is_file():
@@ -272,31 +322,6 @@ def check_site(site: Path) -> list[str]:
                 errors.append(f"{filename}: accessible 注意 admonition is missing")
         except ValueError as exc:
             errors.append(f"{filename}: {exc}")
-    # MGATHER is a Tile operation, distinct from the BSTART.MGATHER command.
-    # Validate the original data-flow explanation, parameter table and source
-    # program in addition to the generic byte-level article comparison.
-    name = "tile-mgather.html"
-    if name in expected and (site / name).is_file():
-        page = (site / name).read_text(encoding="utf-8")
-        source_html = page.split(START, 1)[-1].split(END, 1)[0]
-        from html import unescape
-
-        plain = unescape(re.sub(r"<[^>]+>", "", source_html))
-        for literal in (
-            "基于间接寻址",
-            "执行模型",
-            "offset_t offset = src[i][j];",
-            "dst[i][j] = Memory[base + offset];",
-            "dst[i][j] = PadValue;",
-        ):
-            if literal not in plain:
-                errors.append(f"{name}: missing original MGATHER content {literal!r}")
-        if "<table" not in source_html or not (
-            0 <= page.find(START) < page.find('class="release-data"')
-        ):
-            errors.append(
-                f"{name}: authored table and original reader must precede release details"
-            )
     return errors
 
 
@@ -313,7 +338,9 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 1
-    print("OK: embedded authored Chinese articles match the reviewed tag")
+    print(
+        "OK: every Chinese instruction and Tile article matches its reviewed manuscript"
+    )
     return 0
 
 

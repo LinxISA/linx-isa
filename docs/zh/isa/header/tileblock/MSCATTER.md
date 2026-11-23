@@ -4,61 +4,61 @@
 
 **内存分散（Scatter from Tile to Memory）**
 
-`MSCATTER` 是 `MGATHER` 的逆操作，基于间接寻址将稠密的二维 Tile 数据分散
-写入离散的内存位置。它以基地址寄存器（`RegSrc`）为内存起始地址，以
-偏移量 Tile（`SrcTile1`）中的 offset 为索引，将数据 Tile（`SrcTile0`）
-中的元素写入 `baseAddress + offset`。
+`MSCATTER` 读取一个数据 Tile 和一个索引 Tile。索引 Tile 的每个有效元素都是相对于 GPR 基址的**字节位移**，同一坐标的数据元素写到 `BaseGPR + ByteDisplacement`。本操作只改变全局内存，不分配或发布目标 Tile。
 
-该指令只对 `[0, validRow) x [0, validCol)` 的有效区域执行写入。
+S32 索引先符号扩展，U32 索引先零扩展，S64 与 U64 直接使用。位移不会乘以数据元素的字节数。
 
 ## 汇编语法
 
 ```asm
-MSCATTER <LB0:validCol, LB1:validRow, LB2:Col, DataType>, SrcTile0<.reuse>, SrcTile1<.reuse>, [RegSrc]
+MSCATTER <Col, ValidRow=1, ValidCol=Col, DataType, Layout?, PEMask=AllPE>, [BaseGPR], DataTile, IndexTile
 ```
 
-## 汇编符号
+## 操作数
 
-| 参数 | 说明 | 是否可选 |
-|------|------|------------|
-| **validCol** | 有效列数，表示输入数据 Tile 和 offset Tile 的有效列数。该值通过 `LB0` 传入。 | 否 |
-| **validRow** | 有效行数，表示输入数据 Tile 和 offset Tile 的有效行数。该值通过 `LB1` 传入。 | 是，默认为 1 |
-| **Col** | 输入 Tile 每行的物理列数（包含无效列）。该值通过 `LB2` 传入。 | 是，默认等于 `validCol` |
-| **Row** | 输入 Tile 的物理行数（包含无效行）。硬件通过 `SrcTile0.Size / (Col * sizeof(DataType))` 自动推导。 | 否（硬件推导） |
-| **DataType** | 向内存中写入的元素的数据类型/格式。 | 否 |
-| **RegSrc**   | 输入全局寄存器 GGPR，用于存储分散数据的内存基地址 `baseAddress`。 | 否 |
-| **SrcTile0** | 第一个输入 Tile 寄存器，用于存储源数据。 | 否 |
-| **SrcTile1** | 第二个输入 Tile 寄存器，用于存储偏移量（offset）。 | 否 |
+| 操作数 | 作用 |
+| --- | --- |
+| `BaseGPR` | 每个 PE 的 GM 基地址 |
+| `DataTile` | 要写入 GM 的数据；保持不变 |
+| `IndexTile` | S32、U32、S64 或 U64 字节位移；保持不变 |
 
-`SrcTile1` 中 offset 的位宽由写入该 Tile 时使用的元素位宽决定，规范形式
-支持 `u16`、`u32` 和 `u64`。
+两个源都必须是 Local Tile，采用同一受支持布局并具有匹配的有效形状。RowMajor、CUBE_M16 与 CUBE_M32 可用，CUBE_N8 非法。
 
-## 编码格式
+普通传输也支持 E2M1X2、E1M2X2、HiF4X2、S4X2 与 U4X2。使用四位打包类型时，每个索引地址对应数据 Tile 中相邻的两个逻辑半字节，因而数据 Tile 的有效列数必须是索引 Tile 的两倍。
 
-该 TileOp 编码为以下指令：
+## 索引范围
 
-- [BSTART.MSCATTER](../../blockIntro/tlsu_block/header.md) `DataType`
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB0` *（`validCol`）*
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB1` *（`validRow`）*
-- [B.DIM](../../header/B.DIM.md) `reg, imm, ->LB2` *（`Col`，可选）*
-- [B.IOT](../../header/B.IOT.md) `SrcTile0<.reuse>, SrcTile1<.reuse>, last`
-- [B.IOR](../../header/B.IOR.md) `RegSrc`
+B.IOR 的 RegSrc0 给出本 PE 的 BaseGPR。若同时声明索引范围，RegSrc1、RegSrc2 分别给出 MinIndex 和 MaxIndex，均为相对基址的有符号 64 位字节位移。普通基址记录中，这两个选择子同时为零表示省略范围。范围和 GPR 执行掩码同时使用时，先给出基址和上下界，再紧接一条带 ExecMaskPresent 的掩码记录。
 
-## 执行模型
+若 MinIndex 大于 MaxIndex，本次请求在产生访存或目标 Tile 效果前触发 Fault_TileLegality。已提交的其他 PE 效果保留。软件须保证每个参与访问的起始字节在闭区间内，且整个地址区间不会在 64 位地址空间中回绕；硬件不会逐项比较索引与这对界限。
+
+## 执行方式
+
+模型先为所有活动通道完成地址预检，并在此阶段快照要写入的原始位。只要一个通道发生对齐、转换或权限故障，整个操作都不会产生存储事件。全部预检通过后，才按实现选择的通道顺序写入 GM。
+
+下面的伪代码描述普通非打包类型的逻辑坐标。
 
 ```c
-void MSCATTER(Tile src0, Scalar base, Tile src1) {
-  for (int i = 0; i < validRow; ++i) {
-    for (int j = 0; j < validCol; ++j) {
-      offset_t offset = src1[i][j];
-      Memory[base + offset] = src0[i][j];
-    }
+for (int r = 0; r < ValidRow; ++r) {
+  for (int c = 0; c < ValidCol; ++c) {
+    byte_offset = IndexTile[r][c];
+    Memory[BaseGPR + byte_offset] = DataTile[r][c];
   }
 }
 ```
 
-## 注意事项
+多个活动通道可以指向同一地址。每个通道都产生一次存储，最终留下哪个值取决于实现选择的通道顺序。存在执行掩码时，未启用坐标不生成地址，也不做转换、权限检查、存储或事件记录。
 
-- `validCol <= Col`，`validRow <= Row`。
-- `SrcTile0.Size` 必须是 `Col * sizeof(DataType)` 的整数倍。
-- 如果多个有效元素映射到同一目标地址，最终值由实现定义。
+## 示例
+
+取 U32 数据 Tile `[10, 20, 30]`，U32 索引 Tile `[8, 0, 4]`，a0 中的基址为 `0x1000`。
+
+```asm
+MSCATTER <Col=4, ValidCol=3, U32>, [a0], T#1, T#2
+```
+
+执行后，`0x1008` 保存 10，`0x1000` 保存 20，`0x1004` 保存 30。索引是字节位移，所以这里使用 `8、0、4`，无需由硬件再乘以 4。
+
+## 相关形式
+
+`MSCATTER_MASK` 由谓词 Tile 决定哪些通道产生地址和存储。`MSCATTER_MAX/MIN/ADD/INC/DEC/AND/OR/XOR/POPC` 是索引原子归约，每个通道执行原子读改写，不返回旧值。它们不能按本页的普通覆盖存储解释。

@@ -2,58 +2,20 @@
 
 ## 说明
 
-立即数相与·比较(*Compare by And Immediate*)<br>
-对源寄存器中指定数据类型的操作数和有符号立即数执行按位与运算，若结果为`非0`则将`1`写入目的寄存器，否则写入`0`。
+逐活动通道执行布尔与比较。先判断 `SrcL` 的 32 位通道值是否非零，再判断符号扩展后的 12 位立即数是否非零，最后对两个真值执行 AND；两者都非零时写入 1，否则写入 0。这不是先做按位与再判断结果是否非零。
 
-如果目的寄存器是P寄存器，本指令是一条向量指令，每个lane写P寄存器中对应的1bit。
+P 掩码为 0 的通道结果未指定，软件不能假定它被写成 0 或保留原值。
 
 ## 汇编语法
 
 ```asm
-    v.cmp.andi SrcL<.reuse>.{T}, simm, ->RegDst.{W}
+v.cmp.andi SrcL, simm, ->Dst
 ```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引的寄存器类型请见[向量指令介绍](../../blockIntro/vecinstrs/instIntro.md)。
-- **reuse**：当源寄存器为向量寄存器时可增加本后缀，用于指示当前指令提交后本寄存器不允许被释放。如无此标识，则表示允许硬件释放本寄存器。
-- **T**：指定操作数的数据类型，可选类型包括sb,sh,sw,sd,ub,uh,uw,ud等。
-- **simm**：12位有符号立即数，编码于simm12字段。
-- **->**：用于指示目的寄存器。
-- **RegDst**: 目的寄存器，可以索引的寄存器类型请见[向量指令介绍](../../blockIntro/vecinstrs/instIntro.md)。
-- **W**：目的寄存器的位宽标识，包括b,h,w,d等。
 
 ## 编码格式
 
 ![V.CMP.ANDI](../../../figs/bitfield/svg/Instruction_64bit/V.CMP.ANDI.svg)
 
-## 执行方式
+## 例子
 
-- 解码输入参数：[DecodeINT](../LibPseudoCode.md#locationL)
-- 通用寄存器读写：[V\[\]](../LibPseudoCode.md#locationB)
-- 将数据符号扩展：[SignExtend()](../LibPseudoCode.md#locationF)
-
-```c
-bits(64) pmask = P;   // lane掩码
-// lanenum表示当前Group内lane的数量
-for (laneid = 0; laneid < lanenum; laneid++)
-{
-    integer {m, srctype}  = DecodeINT(SrcL);
-    integer {d, dstwidth} = DecodeDst(RegDst); 
-
-    if (pmask[laneid] == 1) {
-        bits(64) operand = V[m, srctype, laneid];
-        bits(64) simm = SignExtend(simm12);
-        bits(64) result = ((operand & simm) != 0 ? 1 : 0);
-
-        V[d, dstwidth, laneid] = result;  // 根据输出寄存器位宽对结果进行截断
-    }
-    else {
-        V[d, dstwidth, laneid] = 0;  // 无效lane中默认写0
-    }
-}
-```
-
-## 备注
-
-本指令属于[超长指令扩展](../../instset/longInstrs.md)，可用于向量数据块或访存数据块中。
+活动通道的 `SrcL = 1`、立即数为 2 时，两个输入都非零，因此结果为 1。立即数为 0 时结果为 0。

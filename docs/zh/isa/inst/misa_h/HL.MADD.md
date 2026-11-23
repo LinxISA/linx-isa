@@ -2,88 +2,22 @@
 
 ## 说明
 
-乘加(*Multiply and Add*)  
-有符号计算第一个源操作数乘以第二个源操作数，再加上第三个源操作数，将结果的`低64位`写入第一个目的寄存器，结果的`高64位`写入第二个目的寄存器。
+按有符号整数计算 SrcL 与 SrcR 的乘积，再加上 SrcD。将结果的低 64 位写到 Dst0，再将高 64 位写到 Dst1。
 
 ## 汇编语法
 
 ```asm
-    hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1
+hl.madd SrcL, SrcR, SrcD, ->Dst0, Dst1
 ```
-
-## 汇编符号
-
-- **SrcL**：第一个源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：第二个源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcD**：第三个源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **->**：用于指示目的寄存器，两个目的寄存器分别编码于RegDst0和RegDst1字段。
-- **Dst0**：第一个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
-- **Dst1**：第二个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
 
 ## 编码格式
 
-- 低16bit编码：
-
-![HL.MADD](../../../figs/bitfield/svg/Instruction_48bit_16/HL.MADD.svg)
-
-- 高32bit编码：
-
-![HL.MADD](../../../figs/bitfield/svg/Instruction_48bit_32/HL.MADD.svg)
+第 1 段（48 位），从高位到低位依次为 `SrcD`（47:43）、`2'b00`（42:41）、`SrcR`（40:36）、`SrcL`（35:31）、`3'b110`（30:28）、`RegDst0`（27:23）、`7'b1000111`（22:16）、`RegDst1`（15:11）、`11'b00000001110`（10:0）。
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
+先读取全部源操作数。计算保留 128 位结果。两个目标为同一通用寄存器时，保留第二次写入的值。两个目标为同一临时队列时，第二项成为最新一项。
 
-```c
-    integer d0 = UInt(RegDst0);
-    integer d1 = UInt(RegDst1);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
-    integer k = UInt(SrcD);
+## 示例
 
-    bits(64) operand1 = R[m, 64];
-    bits(64) operand2 = R[n, 64];
-    bits(64) operand3 = R[k, 64];
-    bits(128) result = operand1 *(s) operand2 +(s) operand3;
-
-    R[d0, 64] = result[63:0];
-    R[d1, 64] = result[127:64];
-```
-
-## 汇编索引模式
-
-| 输入<br>组合 | 输出<br>组合1 | 输出<br>组合2 | 输出<br>组合3 | 输出<br>组合4 | 输出<br>组合5 | 输出<br>组合6 | 输出<br>组合7 | 输出<br>组合8 | 输出<br>组合9 |
-|-------------|---------------|--------------|--------------|--------------|---------------|--------------|--------------|---------------|--------------|
-| a1,  a2,  a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  t#2, a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  u#2, a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, a2,  a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, t#2, a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, u#2, a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, a2,  a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, t#2, a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, u#2, a3  | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  a2,  t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  t#2, t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  u#2, t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, a2,  t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, t#2, t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, u#2, t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, a2,  t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, t#2, t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, u#2, t#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  a2,  u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  t#2, u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| a1,  u#2, u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, a2,  u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, t#2, u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| t#1, u#2, u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, a2,  u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, t#2, u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-| u#1, u#2, u#3 | t, t | t, u | t, a4 | u, t | u, u | u, a4 | a4, t | a4, u | a4, a5 |
-
-
-## 备注
-
-本指令属于[扩展指令集](../../instset/haflLongInstrs.md)，可用于任意类型的块指令块体中。
+若 SrcL 为 3、SrcR 为 5、SrcD 为 2，则 Dst0 得到 17，Dst1 得到 0。

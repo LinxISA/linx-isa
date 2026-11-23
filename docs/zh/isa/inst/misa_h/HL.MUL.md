@@ -2,74 +2,22 @@
 
 ## 说明
 
-乘(*Multiply*)  
-有符号计算左源操作数乘以右源操作数，将结果的`低64位`写入第一个目的寄存器，结果的`高64位`写入第二个目的寄存器。
-
-本指令标准版本请见[MUL](../misa_g/MUL.md)。
+按有符号整数计算 SrcL 与 SrcR 的乘积。将结果的低 64 位写到 Dst0，再将高 64 位写到 Dst1。
 
 ## 汇编语法
 
 ```asm
-    hl.mul SrcL, SrcR, ->Dst0, Dst1
+hl.mul SrcL, SrcR, ->Dst0, Dst1
 ```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **->**：用于指示目的寄存器，两个目的寄存器分别编码于RegDst0和RegDst1字段。
-- **Dst0**：第一个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
-- **Dst1**：第二个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
 
 ## 编码格式
 
-- 低16bit编码：
-
-![HL.MUL](../../../figs/bitfield/svg/Instruction_48bit_16/HL.MUL.svg)
-
-- 高32bit编码：
-
-![HL.MUL](../../../figs/bitfield/svg/Instruction_48bit_32/HL.MUL.svg)
+第 1 段（48 位），从高位到低位依次为 `7'b0000000`（47:41）、`SrcR`（40:36）、`SrcL`（35:31）、`3'b000`（30:28）、`RegDst0`（27:23）、`7'b1000111`（22:16）、`RegDst1`（15:11）、`11'b00000001110`（10:0）。
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
+先读取全部源操作数。计算保留 128 位结果。两个目标为同一通用寄存器时，保留第二次写入的值。两个目标为同一临时队列时，第二项成为最新一项。
 
-```c
-    integer d0 = UInt(RegDst0);
-    integer d1 = UInt(RegDst1);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
+## 示例
 
-    bits(64) operand1 = R[m, 64];
-    bits(64) operand2 = R[n, 64];
-    bits(128) result = operand1 *(s) operand2;
-
-    R[d0, 64] = result[63:0];
-    R[d1, 64] = result[127:64];
-```
-
-## 汇编索引模式
-
-输入输出可选组合如下：
-
-| 输入组合 | 输出组合 |
-|---------|-----------|
-| **a1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **a1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **a1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-
-## 注意事项
-
-如果两个目的寄存器相同，硬件执行结果不可知。
-
-## 备注
-
-本指令属于[增强指令扩展](../../instset/haflLongInstrs.md)，可用于任意类型的块指令块体中。
+若 SrcL 为 3、SrcR 为 5，则 Dst0 得到 15，Dst1 得到 0。

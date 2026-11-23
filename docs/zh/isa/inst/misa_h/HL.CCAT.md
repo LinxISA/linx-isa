@@ -1,102 +1,23 @@
 # HL.CCAT
 
-拼接(*Concatenate*)  
-左源操作数左移64位与右源操作数相加，然后循环左移 `shamt` 位后将结果的`高64位`写到第一个目的寄存器，`低64位`写到第二个目的寄存器。
+## 说明
+
+将 SrcL 放在高 64 位，SrcR 放在低 64 位，拼成一个 128 位值。逻辑右移 shamt 位后，先把结果的低 64 位写入 Dst0，再把高 64 位写入 Dst1。
 
 ## 汇编语法
 
 ```asm
-    hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1
+hl.ccat SrcL, SrcR, shamt, ->Dst0, Dst1
 ```
-
-## 汇编符号
-
-- **SrcL**：左源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **SrcR**：右源寄存器，可以索引全局寄存器R0-R23和前序1-4条输出至T队列或U队列的指令结果。
-- **shamt**：对操作数左移位数，范围[0, 127]。
-- **->**：用于指示目的寄存器。
-- **Dst0**：第一个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
-- **Dst1**：第二个目的寄存器，可以索引块内T队列和U队列寄存器或者全局寄存器R1-R23。
 
 ## 编码格式
 
-- 低16bit编码：
-
-![HL.CCAT](../../../figs/bitfield/svg/Instruction_48bit_16/HL.CCAT.svg)
-
-- 高32bit编码：
-
-![HL.CCAT](../../../figs/bitfield/svg/Instruction_48bit_32/HL.CCAT.svg)
+第 1 段（48 位），从高位到低位依次为 `shamt`（47:41）、`SrcR`（40:36）、`SrcL`（35:31）、`3'b001`（30:28）、`RegDst0`（27:23）、`7'b1011101`（22:16）、`RegDst1`（15:11）、`11'b00000001110`（10:0）。
 
 ## 执行方式
 
-- 转换为十进制数：[UInt()](../LibPseudoCode.md)
-- 通用寄存器读写：[R\[\]](../LibPseudoCode.md)
+shamt 的范围是 0 至 127。右移时在高位补零，移出最低位的比特丢弃。两个源操作数都在写回前读取。两个目标为同一通用寄存器时，保留第二次写入的值。两个目标为同一临时队列时，第二项成为最新一项。
 
-```c
-    integer d0 = UInt(RegDst0);
-    integer d1 = UInt(RegDst1);
-    integer m = UInt(SrcL);
-    integer n = UInt(SrcR);
-    integer shrt = 128 - shamt;
+## 示例
 
-    bits(64) operand1 = R[m, 64];
-    bits(64) operand2 = R[n, 64];
-
-    bits(128) data = (operand1 << 64) | operand2;
-    bits(128) result = (data << shamt) | (data >>(u) shrt);
-
-    R[d0, 64] = result[127:64];
-    R[d1, 64] = result[63:0];
-```
-
-shamt小于64：
-
-![concat1](../../../figs/isa/inst/concat1.png){ width="500" }
-
-shamt大于64：
-
-![concat2](../../../figs/isa/inst/concat2.png){ width="500" }
-
-## 汇编示例
-
-当两个源寄存器相同，hl.ccat指令相当于对源操作数做了循环移位。
-
-hl.ccat指令实现循环移位的方式如下：
-
-- **实现循环左移16位**
-```c
-hl.ccat a0, a0, 16, ->t, u
-```
-此时需将 shamt 设置为循环左移的位数。
-
-- **实现循环右移16位**
-```c
-hl.ccat a0, a0, 48, ->t, u
-```
-此时需将 shamt 设置为XLEN(即64)减去循环右移位数后的值。
-
-## 汇编索引模式
-
-输入输出可选组合如下：
-
-| 输入组合 | 输出组合 |
-|---------|-----------|
-| **a1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **a1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **a1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **t#1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, a2**  | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, t#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-| **u#1, u#2** | t, t；t, u；t, a3；u, t；u, u；u, a3；a3, t；a3, u；a3, a4 |
-
-## 注意事项
-
-- 如果两个目的寄存器相同，那么执行结果不可知（硬件决定保留哪个结果）。
-- 本指令允许只有一个目的寄存器，此时输出为第一个目的寄存器的结果。
-
-## 备注
-
-本指令属于[增强指令扩展](../../instset/haflLongInstrs.md)，且**仅允许在标量块内使用**。
+若 a0 为 1、a1 为 2，执行 `hl.ccat a0, a1, 1, ->a2, a3` 后，a2 为 `0x8000000000000001`，a3 为 0。
