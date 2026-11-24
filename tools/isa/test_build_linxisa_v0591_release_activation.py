@@ -14,9 +14,10 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/isa"))
 
-from build_linxisa_v0591_release_activation import build, render
+from build_linxisa_v0591_release_activation import build
 from export_linxisa_v0591_sail import check as check_sail_export
 from export_linxisa_v0591_sail import export as export_sail
+from check_linxisa_v0591_release_compat import check as check_release_compat
 
 
 class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
@@ -75,15 +76,7 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         )
 
     def test_checked_files_match_builder(self):
-        selection, package = build()
-        self.assertEqual(
-            (ROOT / "isa/profile-selection.json").read_text(encoding="utf-8"),
-            render(selection),
-        )
-        self.assertEqual(
-            (ROOT / "isa/v0.59/release_package.json").read_text(encoding="utf-8"),
-            render(package),
-        )
+        self.assertEqual(check_release_compat(), [])
 
     def test_sail_export_materializes_canonical_entry_and_decoder(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -122,6 +115,36 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             text=True,
         )
         self.assertTrue(json.loads(qualified.stdout)["release_qualified"])
+
+    def test_legacy_activation_cli_preserves_extended_registry_and_package(self):
+        command = [
+            sys.executable,
+            "tools/isa/build_linxisa_v0591_release_activation.py",
+        ]
+        before_selection = (ROOT / "isa/profile-selection.json").read_bytes()
+        before_package = (ROOT / "isa/v0.59/release_package.json").read_bytes()
+        checked = subprocess.run(
+            [*command, "--check"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn("immutable release", checked.stdout)
+        preserved = subprocess.run(
+            command,
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertIn("preserved immutable v0.59.1 package", preserved.stdout)
+        self.assertEqual(
+            (ROOT / "isa/profile-selection.json").read_bytes(), before_selection
+        )
+        self.assertEqual(
+            (ROOT / "isa/v0.59/release_package.json").read_bytes(), before_package
+        )
 
 
 if __name__ == "__main__":

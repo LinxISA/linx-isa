@@ -1068,7 +1068,7 @@ def _canonical_json(obj: Any) -> str:
 
 
 def _profile_defaults(profile: str | None = None) -> Tuple[str, str]:
-    if profile is None or profile in {"v0.58", "v0.59"}:
+    if profile is None or profile in {"v0.58", "v0.59", "v0.59.2"}:
         from select_linxisa_profile import resolve_profile
 
         selected = resolve_profile(
@@ -1082,7 +1082,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57", "v0.58", "v0.59"],
+        choices=["v0.57", "v0.58", "v0.59", "v0.59.2"],
         default=None,
         help="ISA profile; omitted uses isa/profile-selection.json",
     )
@@ -1107,6 +1107,14 @@ def main() -> int:
 
         built = build_v0591()
         rendered_v0591 = render_v0591(built)
+    elif selected_profile == "v0.59.2":
+        if args.in_dir is not None:
+            ap.error("v0.59.2 uses its deterministic catalog builder and does not accept --in")
+        from build_linxisa_v0592_catalog import build as build_v0592
+        from build_linxisa_v0592_catalog import render as render_v0592
+
+        built = build_v0592()
+        rendered_v0591 = render_v0592(built)
     else:
         built = build(in_dir)
         rendered_v0591 = None
