@@ -10,8 +10,8 @@
       "translation_sha256": "79cfe927ec89e29d0559d0621303dcc74df1b1f8de9b7ba6d8f1a5110e57e0f4"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "19dbf01818f88106e43c63980f910afb2a36075d94f8773df46a5035704fe4e6",
-      "translation_sha256": "83434d0e8cc53d0bef8dabc2d0d24e6a0236e0d0a213681079fa37c2d26af684"
+      "source_sha256": "4729f9214f3fd59a90f4fd7a3e3f2dc3a369825261205e60389887545b8301b0",
+      "translation_sha256": "0f0a8105b746d1a59d322daf22ea72d933e3a190bcaecd8ed25dbd0d059b4d59"
     },
     "architecture/linx-two-level-block-obsolescence.md": {
       "source_sha256": "e6b385ce7bc344a4ef4d41b5373d90c0e9c419e8687fd539ed8d26c6d845492c",
@@ -8114,8 +8114,8 @@
       "translation_sha256": "a5c057730c8dfef458f6fd8682bb06cbf05c0ac6555f666bbf51d82bb74d6a2e"
     },
     "releases/v0.59.2.md": {
-      "source_sha256": "84ee2fbcd3fa8f493143a2f16446687983238d43b7bf29603100cde9388dcf42",
-      "translation_sha256": "f63259357995fe9e98181ece494e39c19c2b31dfef829547b9112144f8c1a392"
+      "source_sha256": "42bd884dee98482fcb57fe21327e6348073ae01943b0aa14de342f57ef8ca5e7",
+      "translation_sha256": "f4f8be320fd286b6b9d0223dd8f0fd5389afac86aebe347cf27feb3abe018d03"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",

@@ -272,6 +272,12 @@ def _generated_part(row: dict[str, Any], part_index: int) -> bytes:
 
 def make_diagrams(
     catalog: dict[str, Any],
+    *,
+    selected_rows=None,
+    release_tag=RELEASE_TAG,
+    source_commit=REVIEWED_COMMIT,
+    catalog_path=CATALOG_PATH,
+    catalog_sha256=None,
 ) -> tuple[dict[str, str], dict[str, bytes], dict[str, Any]]:
     """Return per-form HTML, offline SVG assets, and a tag-bound audit."""
     tagged_rows = _tagged_catalog_rows()
@@ -282,6 +288,9 @@ def make_diagrams(
     assets: dict[str, bytes] = {}
     form_audit: dict[str, Any] = {}
     source_counts: Counter[str] = Counter()
+    if selected_rows is not None:
+        rows = selected_rows
+    catalog_sha256 = catalog_sha256 or _sha(tagged_bytes(CATALOG_PATH))
     for row in rows:
         form_id = str(row["id"])
         _validate_row(row, tagged_rows[form_id])
@@ -301,8 +310,8 @@ def make_diagrams(
                     "generator_sha256": _sha(
                         tagged_bytes("tools/isa/gen_encoding_svg.py")
                     ),
-                    "catalog_path": CATALOG_PATH,
-                    "catalog_sha256": _sha(tagged_bytes(CATALOG_PATH)),
+                    "catalog_path": catalog_path,
+                    "catalog_sha256": catalog_sha256,
                     "svg_sha256": _sha(data),
                 }
             if relative in assets:
@@ -323,7 +332,7 @@ def make_diagrams(
                 f'<img src="{escape(relative, quote=True)}" '
                 f'alt="{escape(str(row["mnemonic"]))} 第 {part_index} 段编码位图">'
                 f"<figcaption>第 {part_index} 段（Part {part_index}），{int(part['width_bits'])} 位。"
-                f"来源：LinxISA {RELEASE_TAG} 固定快照。"
+                f"来源：LinxISA {release_tag} 固定快照。"
                 + (
                     f"原图上半部留白，指令实际为 {int(part['width_bits'])} 位。"
                     if int(record.get("padded_blank_bits", 0))
@@ -343,10 +352,10 @@ def make_diagrams(
         }
     audit = {
         "schema": "linxisa.manual.encoding-diagrams.v1",
-        "release_tag": RELEASE_TAG,
-        "source_commit": REVIEWED_COMMIT,
-        "catalog_path": CATALOG_PATH,
-        "catalog_sha256": _sha(tagged_bytes(CATALOG_PATH)),
+        "release_tag": release_tag,
+        "source_commit": source_commit,
+        "catalog_path": catalog_path,
+        "catalog_sha256": catalog_sha256,
         "form_count": len(form_audit),
         "asset_count": len(assets),
         "source_counts": dict(sorted(source_counts.items())),
