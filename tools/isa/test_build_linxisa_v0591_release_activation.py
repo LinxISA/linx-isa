@@ -46,6 +46,11 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         self.assertTrue(package["approval_gates"]["release_action_permitted"])
         self.assertTrue(package["approval_gates"]["operator_publication_required"])
         self.assertNotIn("github_release_published", package["approval_gates"])
+        self.assertNotIn("html_validation_passed", package["approval_gates"])
+        self.assertEqual(
+            package["approval_gates"]["manual_asset_validation"]["tracking"],
+            "external",
+        )
         self.assertTrue(package["activation_policy"]["explicit_profile_ready"])
         self.assertTrue(
             package["activation_policy"][

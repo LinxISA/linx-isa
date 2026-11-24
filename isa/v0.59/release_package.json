@@ -70,7 +70,7 @@
     "tools/isa/build_linxisa_v0591_candidate.py": "949fe537185908fdaf11b4a54a19f44a0c585fd889240e2d90175db0b692c4aa",
     "tools/isa/build_pto_v0591_candidate.py": "14ff70f4169b4d98ae1acdcc17368b5ca1eaff933b55874c669b5150b7dc9d9d",
     "tools/isa/build_linxisa_v0591_release_prep.py": "b229e633c659b382a16c9f8dbaa53d3843249748385897cea13d1aad4cca64a3",
-    "tools/isa/build_linxisa_v0591_release_activation.py": "67801bea4af003f355119fedaad240c54b732d0455bc23100a139718e688fac3",
+    "tools/isa/build_linxisa_v0591_release_activation.py": "cfe50f429113085dcfed996a80074d98023a5bf88e2d2584dc308cebb45212b3",
     "tools/isa/build_golden.py": "bece6ae505f68331df872c20f20f515d24aa1078ebb2efa5be4bd5991f6ce416",
     "tools/isa/export_linxisa_v0591_sail.py": "3d2083884a7b0d3904a40bf9539c9e06b16e734b6f0d7a1fad192fdfda80cfc1",
     "tools/isa/gen_sail_decode.py": "65ebeff252093a9a3a205e3a2de3b7f57ab4b06107eb6929cbceb8474afe056e",
@@ -103,7 +103,7 @@
     "isa/v0.59/sail/model/state/state.sail": "a6a2004894c231da4668e9e3fc026edc081295cd78a34770d90c99e4dd2f304a",
     "isa/v0.59/sail/v0591_candidate_dispatch_tests.sail": "904d7738590efa155dd6669774ee520bd1a8be9b96fe5ed404f85cf28a465d75"
   },
-  "inputs_sha256": "b937b29e53e94eafc7193b262ff43369b5407e43b727ea9b2fe073bbd117a453",
+  "inputs_sha256": "87c9333146d8cb3b07cce3ef662d083417825140aa1c7d1fc569bd12f2a9cd76",
   "upstream_source_hashes": {
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
@@ -381,9 +381,12 @@
     "state": "release-ready",
     "validated_scope_approved": true,
     "sail_input_hashes_locked": true,
-    "html_validation_passed": true,
     "release_action_permitted": true,
-    "operator_publication_required": true
+    "operator_publication_required": true,
+    "manual_asset_validation": {
+      "tracking": "external",
+      "state_source": "release-asset-validation-record"
+    }
   },
   "required_checks": [
     "python3 tools/isa/build_golden.py --profile v0.59 --check",

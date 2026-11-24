@@ -242,9 +242,12 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "state": "release-ready",
             "validated_scope_approved": True,
             "sail_input_hashes_locked": True,
-            "html_validation_passed": True,
             "release_action_permitted": True,
             "operator_publication_required": True,
+            "manual_asset_validation": {
+                "tracking": "external",
+                "state_source": "release-asset-validation-record",
+            },
         },
         "required_checks": [
             "python3 tools/isa/build_golden.py --profile v0.59 --check",
