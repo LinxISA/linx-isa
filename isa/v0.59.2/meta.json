@@ -1,0 +1,68 @@
+{
+  "isa": "LinxISA",
+  "version": "0.59.2",
+  "status": "published-specification",
+  "instruction_lengths_bits": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "cardinality": {
+    "instructions": 1499,
+    "common_forms": 578,
+    "linx_only_forms": 216,
+    "scoped_forms": 705,
+    "linx_only_obsolete_forms": 193,
+    "linx_only_retained_forms": 19,
+    "linx_only_reserved-unimplemented_forms": 4
+  },
+  "authoritative_sources": {
+    "tile_operations": {
+      "path": "isa/v0.59/state/pto_tile_operations.json",
+      "sha256": "01c2900497d48b33fcfa54814db3f1ed12955dfd538adf3d7ea418c7fd2bf906",
+      "count": 119,
+      "upstream_path": "spec/catalog/tile-operations.json",
+      "upstream_sha256": "29f1ffe575c701b416b9205ff9377f92f72b5d48a091c1aa3f9c9fc7e0d49033",
+      "precedence": "overrides-archival-catalog-state.pto_ops"
+    },
+    "system_registers": {
+      "path": "isa/v0.59/state/pto_system_registers.json",
+      "sha256": "308456fe28ce4dab1b90e802f316c8b8d65fe5afcd86a672dcf3804bf73fc668",
+      "count": 100,
+      "upstream_path": "spec/catalog/system-registers.json",
+      "upstream_sha256": "5694af24779c48bd81e87b0304ad97c9cb6bab8d4a11498c2ba5c5bb628171a2"
+    },
+    "hardware_conformance_profile": {
+      "path": "isa/v0.59/state/pto_hardware_conformance_profile.json",
+      "sha256": "fafba0b567012d727fb435fde668333ba6711870def1a4e17e95e896c6e614b0",
+      "profile_id": "pto-hardware-numeric-0.59.1-ieee-v1",
+      "upstream_path": "spec/hardware-conformance-profile.json",
+      "upstream_sha256": "843d4c2c76823af57dc80f4b134c00e0166c0ba262f6924585854bdc44214325"
+    },
+    "numeric_conformance_vectors": {
+      "path": "isa/v0.59/state/pto_hardware_numeric_vectors.json",
+      "sha256": "6708e3dc3642c405b21cdbcfc9cd403cfb7c63f2a537a0d8c6a7523b1cddf88b",
+      "upstream_path": "spec/evidence/pto-isa-0591-hardware-numeric-vectors.json",
+      "upstream_sha256": "09a9b243ffcf801c2d05436507508ad5e1af919baa127b787eb485cd3ee4018f"
+    },
+    "catalog": {
+      "path": "isa/v0.59.2/linxisa-v0.59.2.json",
+      "sha256": "1a5a03168a7c9af5b6d47aed20eff65acab902973c3477e1268618881a16ac82"
+    },
+    "pto_lock": {
+      "path": "isa/v0.59/pto-spec.lock.json",
+      "sha256": "a526f6dbbddfe67d349640f19e904c1148a24178b0ec697f4dc360ddac624f34"
+    },
+    "pto_reservations": {
+      "path": "isa/v0.59/state/extension_encoding_reservations.json",
+      "sha256": "819a00b7e7dc748239ec2cfb698f373c0212fc21d3ac2ea68e100c26ee0bc101",
+      "count": 50
+    },
+    "architecture_decision": {
+      "path": "docs/architecture/linx-two-level-block-obsolescence.md",
+      "sha256": "e6b385ce7bc344a4ef4d41b5373d90c0e9c419e8687fd539ed8d26c6d845492c"
+    }
+  },
+  "catalog": "isa/v0.59.2/linxisa-v0.59.2.json"
+}
