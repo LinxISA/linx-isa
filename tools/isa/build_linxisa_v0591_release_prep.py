@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build LinxISA v0.59.1 specification publication metadata."""
+"""Build metadata for the local, unreleased LinxISA v0.59.1 working spec."""
 
 from __future__ import annotations
 
@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from build_linxisa_v0591_candidate import PUBLICATION_REVISION
+from build_linxisa_v0591_candidate import SIGNED_BASELINE
 from build_linxisa_v0591_candidate import build as build_catalog
 
 
@@ -24,6 +26,7 @@ TILE_OPERATIONS = PROFILE / "state/pto_tile_operations.json"
 SYSTEM_REGISTERS = PROFILE / "state/pto_system_registers.json"
 HARDWARE_PROFILE = PROFILE / "state/pto_hardware_conformance_profile.json"
 NUMERIC_VECTORS = PROFILE / "state/pto_hardware_numeric_vectors.json"
+LINX_EXTENSIONS = PROFILE / "state/linx_extension_forms.json"
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -44,13 +47,13 @@ def sha256(path: Path) -> str:
 def build() -> tuple[dict[str, Any], dict[str, Any]]:
     catalog = build_catalog()
     if catalog != load(CATALOG):
-        raise ValueError("canonical v0.59.1 published catalog is stale")
+        raise ValueError("canonical v0.59.1 working catalog is stale")
     lock = load(LOCK)
     bindings = load(BINDINGS)
     counts = catalog["release_status"]["counts"]
-    expected_counts = {"common": 578, "linx_only": 216, "scoped": 705}
-    if counts != expected_counts or catalog["instruction_count"] != 1499:
-        raise ValueError("v0.59.1 catalog cardinality differs from 578+216+705")
+    expected_counts = {"common": 578, "linx_only": 23, "scoped": 705}
+    if counts != expected_counts or catalog["instruction_count"] != 1306:
+        raise ValueError("v0.59.1 catalog cardinality differs from 578+23+705")
     binding_sha = sha256(BINDINGS)
     if binding_sha != catalog["release_status"]["source_bindings_sha256"]:
         raise ValueError("catalog source binding hash differs from the frozen file")
@@ -62,22 +65,30 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
     meta = {
         "isa": "LinxISA",
         "version": "0.59.1",
-        "status": "published-specification",
+        "status": "release-candidate",
+        "publication_revision": PUBLICATION_REVISION,
+        "signed_baseline": SIGNED_BASELINE,
         "instruction_lengths_bits": [16, 32, 48, 64],
         "cardinality": {
-            "instructions": 1499,
+            "instructions": 1306,
             "common_forms": counts["common"],
             "linx_only_forms": counts["linx_only"],
             "scoped_forms": counts["scoped"],
         },
         "authoritative_sources": {
+            "linx_extension_forms": {
+                "path": "isa/v0.59/state/linx_extension_forms.json",
+                "sha256": sha256(LINX_EXTENSIONS),
+                "count": 23,
+                "ownership": "v0.59-positive-definitions",
+            },
             "tile_operations": {
                 "path": "isa/v0.59/state/pto_tile_operations.json",
                 "sha256": sha256(TILE_OPERATIONS),
                 "count": 119,
                 "upstream_path": lock["catalogs"]["tile_operations"]["path"],
                 "upstream_sha256": lock["catalogs"]["tile_operations"]["sha256"],
-                "precedence": "overrides-archival-catalog-state.pto_ops",
+                "precedence": "authoritative-v0.59-owner",
             },
             "system_registers": {
                 "path": "isa/v0.59/state/pto_system_registers.json",
@@ -102,18 +113,18 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         },
         "catalog": "isa/v0.59/linxisa-v0.59.json",
         "release_activation": {
-            "state": "published-explicit-profile",
+            "state": "release-candidate-explicit-profile",
             "profile_selection": "isa/profile-selection.json",
-            "package": "isa/v0.59/release_package.json",
             "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
             "sail_entry": "model/linxisa_v0591.sail",
             "default_profile_changed": False,
         },
         "notes": [
-            "LinxISA 0.59.1 is the published architecture, encoding, and Sail-package profile; v0.58 remains the default platform profile.",
-            "The 578 common and 705 scoped forms come from the exact frozen PTO ISA 0.59.1 lock; 216 Linx-only rows are preserved from v0.58.",
-            "Only the catalog instruction rows and the pto_* v0.59 state projections are normative for common/scoped 0.59.1 behavior; inherited v0.58 state views are archival schema context.",
-            "Specification publication does not claim Linux, component-leaf, RTL, system-runtime, or default-platform qualification.",
+            "LinxISA 0.59.1 is a local unreleased working specification; v0.58 remains the default platform profile.",
+            "The 578 common and 705 scoped forms come from the exact frozen PTO ISA 0.59.1 lock; the 23 Linx-only rows are owned by the v0.59 positive-definition source.",
+            "The 193 removed two-level execution forms are absent from the working catalog while their ten PTO encoding reservations remain in force.",
+            "Revision 1 qualifies the source, architecture specification, encoding, and Sail-package scope only.",
+            "Linux, component leaves, RTL, full-system runtime, and the default platform remain unqualified.",
         ],
     }
     manifest = {
@@ -128,12 +139,14 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         },
         "policy": {
             "pto_spec_is_sole_source_for_common_and_scoped_forms": True,
-            "linx_only_rows_are_preserved_from_v0.58": True,
+            "linx_only_rows_are_owned_by_v0.59_positive_source": True,
             "legacy_decode_allowed": False,
+            "removed_execution_encoding_ranges_hard_rejected": True,
+            "removed_execution_encoding_reservation_count": 10,
             "default_profile_changed": False,
         },
         "cardinality": {
-            "instructions": 1499,
+            "instructions": 1306,
             "common_forms": counts["common"],
             "linx_only_forms": counts["linx_only"],
             "scoped_forms": counts["scoped"],
@@ -158,18 +171,20 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "schema": bindings["schema"],
         },
         "elf_identity": load(V058_MANIFEST)["elf_identity"],
-        "status": "published-specification",
+        "status": "release-candidate",
+        "publication_revision": PUBLICATION_REVISION,
+        "signed_baseline": SIGNED_BASELINE,
         "identity": identity,
         "publication": {
+            "state": "unreleased-working",
+            "published": False,
             "version": "0.59.1",
-            "date": "2026-11-22",
-            "scope": ["architecture-specification", "encoding", "sail-package"],
+            "revision": PUBLICATION_REVISION,
             "profile_selection": "explicit-v0.59",
         },
         "release_activation": {
-            "state": "published-explicit-profile",
+            "state": "release-candidate-explicit-profile",
             "profile_selection": "isa/profile-selection.json",
-            "package": "isa/v0.59/release_package.json",
             "catalog": "isa/v0.59/linxisa-v0.59.json",
             "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
             "sail_entry": "model/linxisa_v0591.sail",
@@ -177,10 +192,17 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         },
         "qualification": {
             "release_qualified": True,
-            "qualification_scope": ["architecture-specification", "encoding", "sail-package"],
+            "qualification_scope": [
+                "source",
+                "architecture-specification",
+                "encoding",
+                "sail-package",
+            ],
+            "source_qualified": True,
             "specification_qualified": True,
             "encoding_qualified": True,
             "sail_package_qualified": True,
+            "rtl_qualified": False,
             "linux_qualified": False,
             "leaf_components_qualified": False,
             "system_runtime_qualified": False,
@@ -214,7 +236,7 @@ def main() -> int:
         ]
         if stale:
             raise SystemExit(f"stale LinxISA v0.59.1 release preparation: {stale}")
-        print("LinxISA v0.59.1 specification publication metadata is current")
+        print("LinxISA v0.59.1 unreleased working metadata is current")
         return 0
     for path, content in outputs:
         path.write_text(content, encoding="utf-8")

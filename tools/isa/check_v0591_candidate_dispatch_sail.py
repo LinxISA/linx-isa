@@ -64,6 +64,7 @@ def main() -> int:
         check_export(sail_tree)
         entry = sail_tree / "model/linxisa_v0591.sail"
         directed_path = sail_tree / "tests/v0591_candidate_dispatch_tests.sail"
+        hard_break_path = sail_tree / "tests/v0591_hard_break_tests.sail"
         memo = output / "z3-memo"
         run([sail, "--memo-z3-path", str(memo), "--just-check", str(entry)])
         run(
@@ -91,6 +92,20 @@ def main() -> int:
         )
         if "Result = ()" not in directed:
             raise RuntimeError("candidate dispatch directed tests did not complete")
+        hard_break = run(
+            [
+                sail,
+                "--memo-z3-path",
+                str(memo),
+                "--no-color",
+                "--no-warn",
+                "-i",
+                str(hard_break_path),
+            ],
+            input_text="main()\n:run\n",
+        )
+        if "Result = ()" not in hard_break:
+            raise RuntimeError("v0.59.1 hard-break directed tests did not complete")
     print(
         f"OK: assembled v0.59.1 catalog and scoped dispatch passed Sail {expected} "
         "parser, directed tests and C backend"

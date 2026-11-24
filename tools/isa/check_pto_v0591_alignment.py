@@ -124,7 +124,7 @@ def main() -> int:
         raise SystemExit("\n".join(errors))
     print(
         f"PTO v0.59.1 encoding alignment passed for {counts['common']} common forms "
-        f"and {counts['scoped']} scoped forms against {counts['linx_64_bit']} Linx 64-bit forms"
+        f"and {counts['scoped']} scoped forms against {counts['linx_64_bit']} 64-bit forms in the v0.58 comparison baseline"
     )
     return 0
 

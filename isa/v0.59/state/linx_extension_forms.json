@@ -1,0 +1,2728 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/linx_extension_forms.v1.json",
+  "schema_version": "linxisa.linx-extension-forms.v1",
+  "isa": "LinxISA",
+  "version": "0.59.1",
+  "status": "unreleased-working",
+  "source_reference": {
+    "tag": "v0.59.1",
+    "commit": "d262515b55c727073997c8f4c95261909f2fe8d3",
+    "catalog_path": "isa/v0.59/linxisa-v0.59.json",
+    "catalog_sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c"
+  },
+  "form_count": 23,
+  "form_ids": [
+    "dma_free_l_32_5af48f644596",
+    "dma_free_s_32_5de9a6bba806",
+    "hl_bstart_call_48_d71cee46ab50",
+    "hl_bstart_fp_48_0368fb7424f4",
+    "hl_bstart_fp_48_9955c1f823f6",
+    "hl_bstart_fp_48_9a0544563449",
+    "hl_bstart_fp_48_f074f1e2c089",
+    "hl_bstart_std_48_170d04be4f7e",
+    "hl_bstart_std_48_436ff4a95f39",
+    "hl_bstart_std_48_4eff98193028",
+    "hl_bstart_std_48_c970f578674f",
+    "hl_bstart_sys_48_54ff489122fe",
+    "l_bstart_fp_64_52a1fd45d908",
+    "l_bstart_fp_64_59792b6f0002",
+    "l_bstart_fp_64_9673fedb498b",
+    "l_bstart_fp_64_b27a4726298b",
+    "l_bstart_std_64_40bf385dbbff",
+    "l_bstart_std_64_49b7cf990e62",
+    "l_bstart_std_64_9a6081ab8f08",
+    "l_bstart_std_64_ed61315d3418",
+    "l_bstart_sys_64_3e3b45c148bc",
+    "mcopy_dl_32_d6af61213c20",
+    "mcopy_ds_32_e7a90ccbe4db"
+  ],
+  "forms": [
+    {
+      "asm": "dma.free.l [SrcL]",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "SrcL",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 19,
+                    "token": "SrcL",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0xfff07fff",
+            "match": "0x0600700b",
+            "pattern": "000001100000.....111000000001011",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "AMO",
+      "id": "dma_free_l_32_5af48f644596",
+      "length_bits": 32,
+      "mnemonic": "DMA.FREE.L",
+      "note": "Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.L. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "const": {
+                "value": 3,
+                "width": 7
+              },
+              "lsb": 25,
+              "msb": 31,
+              "token": "7'b000_0011",
+              "width": 7
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 5
+              },
+              "lsb": 20,
+              "msb": 24,
+              "token": "5'b0_0000",
+              "width": 5
+            },
+            {
+              "lsb": 15,
+              "msb": 19,
+              "token": "SrcL",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 7,
+                "width": 3
+              },
+              "lsb": 12,
+              "msb": 14,
+              "token": "3'b111",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 5
+              },
+              "lsb": 7,
+              "msb": 11,
+              "token": "5'b0_0000",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 3
+              },
+              "lsb": 4,
+              "msb": 6,
+              "token": "3'b000",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 5,
+                "width": 3
+              },
+              "lsb": 1,
+              "msb": 3,
+              "token": "3'b101",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 1
+              },
+              "lsb": 0,
+              "msb": 0,
+              "token": "1",
+              "width": 1
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 25
+      },
+      "uid": "5af48f644596",
+      "uop_big_kind": "AMO",
+      "uop_class": {
+        "amo_kind": "DMA",
+        "note": "v0.58 DMA free resource-release variant",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "uop_group": "AMO"
+    },
+    {
+      "asm": "dma.free.s [SrcL]",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "SrcL",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 19,
+                    "token": "SrcL",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0xfff07fff",
+            "match": "0x0400700b",
+            "pattern": "000001000000.....111000000001011",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "AMO",
+      "id": "dma_free_s_32_5de9a6bba806",
+      "length_bits": 32,
+      "mnemonic": "DMA.FREE.S",
+      "note": "Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for DMA.FREE.S. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "const": {
+                "value": 2,
+                "width": 7
+              },
+              "lsb": 25,
+              "msb": 31,
+              "token": "7'b000_0010",
+              "width": 7
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 5
+              },
+              "lsb": 20,
+              "msb": 24,
+              "token": "5'b0_0000",
+              "width": 5
+            },
+            {
+              "lsb": 15,
+              "msb": 19,
+              "token": "SrcL",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 7,
+                "width": 3
+              },
+              "lsb": 12,
+              "msb": 14,
+              "token": "3'b111",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 5
+              },
+              "lsb": 7,
+              "msb": 11,
+              "token": "5'b0_0000",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 3
+              },
+              "lsb": 4,
+              "msb": 6,
+              "token": "3'b000",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 5,
+                "width": 3
+              },
+              "lsb": 1,
+              "msb": 3,
+              "token": "3'b101",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 1
+              },
+              "lsb": 0,
+              "msb": 0,
+              "token": "1",
+              "width": 1
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 26
+      },
+      "uid": "5de9a6bba806",
+      "uop_big_kind": "AMO",
+      "uop_class": {
+        "amo_kind": "DMA",
+        "note": "v0.58 DMA free resource-release variant",
+        "source": "group_rule",
+        "uop_kind": "AMO"
+      },
+      "uop_group": "AMO"
+    },
+    {
+      "asm": "HL.BSTART.CALL <br_label>, <rt_label>, ->ra",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm25",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm25",
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              },
+              {
+                "name": "uimm5",
+                "pieces": [
+                  {
+                    "insn_lsb": 38,
+                    "insn_msb": 42,
+                    "token": "uimm5",
+                    "width": 5
+                  }
+                ],
+                "signed": false
+              }
+            ],
+            "index": 0,
+            "mask": "0xf83f0000007f",
+            "match": "0x501600000011",
+            "pattern": "01010.....010110.........................0010001",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "exact_relocations": [
+        {
+          "field": "simm25",
+          "name": "B25_PCREL"
+        },
+        {
+          "field": "uimm5",
+          "name": "CSETRET5_PCREL"
+        }
+      ],
+      "group": "BSTART",
+      "id": "hl_bstart_call_48_d71cee46ab50",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART CALL",
+      "note": "Atomic fused CALL: call_target = P + (SignExtend(simm25) << 1); ra = (P + 4) + (ZeroExtend(uimm5) << 1). Both labels are explicit and independently relocatable.",
+      "operand_roles": [
+        {
+          "field": "simm25",
+          "pc_base": "P",
+          "role": "call_target",
+          "scale_bytes": 2,
+          "signed": true,
+          "syntax": "<br_label>"
+        },
+        {
+          "field": "uimm5",
+          "pc_base": "P+4",
+          "role": "return_target",
+          "scale_bytes": 2,
+          "signed": false,
+          "syntax": "<rt_label>"
+        },
+        {
+          "field": null,
+          "role": "link_destination",
+          "syntax": "->ra"
+        }
+      ],
+      "parts": [
+        {
+          "segments": [
+            {
+              "const": {
+                "value": 10,
+                "width": 5
+              },
+              "lsb": 43,
+              "msb": 47,
+              "token": "5'b01010",
+              "width": 5
+            },
+            {
+              "lsb": 38,
+              "msb": 42,
+              "token": "uimm5",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 22,
+                "width": 6
+              },
+              "lsb": 32,
+              "msb": 37,
+              "token": "6'b010110",
+              "width": 6
+            },
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm25",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 17,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0010001",
+              "width": 7
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "semantic_contract": {
+        "atomic": true,
+        "call_target": "P + (SignExtend(simm25) << 1)",
+        "link_write": "ra = (P + 4) + (ZeroExtend(uimm5) << 1)",
+        "transfer": "CALL"
+      },
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 12
+      },
+      "uid": "d71cee46ab50",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.FP FALL<, fixup_label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00001101000e",
+            "pattern": ".................001000100000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_fp_48_0368fb7424f4",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 4353,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b001000100000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 14
+      },
+      "uid": "0368fb7424f4",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.FP CALL, <label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00004101000e",
+            "pattern": ".................100000100000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_fp_48_9955c1f823f6",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 16641,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b100000100000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 15
+      },
+      "uid": "9955c1f823f6",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.FP DIRECT, <label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00002101000e",
+            "pattern": ".................010000100000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_fp_48_9a0544563449",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 8449,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b010000100000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 16
+      },
+      "uid": "9a0544563449",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.FP COND, <label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00003101000e",
+            "pattern": ".................011000100000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_fp_48_f074f1e2c089",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 12545,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b011000100000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 13
+      },
+      "uid": "f074f1e2c089",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.STD FALL<, fixup_label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00001001000e",
+            "pattern": ".................001000000000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_std_48_170d04be4f7e",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 4097,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b001000000000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 18
+      },
+      "uid": "170d04be4f7e",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.STD COND, <label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00003001000e",
+            "pattern": ".................011000000000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_std_48_436ff4a95f39",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 12289,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b011000000000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 19
+      },
+      "uid": "436ff4a95f39",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.STD CALL, <label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00004001000e",
+            "pattern": ".................100000000000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_std_48_4eff98193028",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 16385,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b100000000000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 17
+      },
+      "uid": "4eff98193028",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.STD DIRECT, <label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00002001000e",
+            "pattern": ".................010000000000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_std_48_c970f578674f",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 8193,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b010000000000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 20
+      },
+      "uid": "c970f578674f",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "HL.BSTART.SYS FALL<, fixup_label>",
+      "encoding": {
+        "length_bits": 48,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 31,
+                    "insn_msb": 47,
+                    "token": "simm[17:1]",
+                    "value_lsb": 1,
+                    "value_msb": 17,
+                    "width": 17
+                  },
+                  {
+                    "insn_lsb": 4,
+                    "insn_msb": 15,
+                    "token": "simm[29:18]",
+                    "value_lsb": 18,
+                    "value_msb": 29,
+                    "width": 12
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x00007fff000f",
+            "match": "0x00001081000e",
+            "pattern": ".................001000010000001............1110",
+            "width_bits": 48
+          }
+        ]
+      },
+      "encoding_kind": "HL48",
+      "group": "BSTART",
+      "id": "hl_bstart_sys_48_54ff489122fe",
+      "length_bits": 48,
+      "mnemonic": "HL.BSTART.SYS",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 31,
+              "msb": 47,
+              "token": "simm[17:1]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 4225,
+                "width": 15
+              },
+              "lsb": 16,
+              "msb": 30,
+              "token": "15'b001000010000001",
+              "width": 15
+            },
+            {
+              "lsb": 4,
+              "msb": 15,
+              "token": "simm[29:18]",
+              "width": 12
+            },
+            {
+              "const": {
+                "value": 14,
+                "width": 4
+              },
+              "lsb": 0,
+              "msb": 3,
+              "token": "4'b1110",
+              "width": 4
+            }
+          ],
+          "width_bits": 48
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_hl48.opc",
+        "line": 21
+      },
+      "uid": "54ff489122fe",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "User confirmed A",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.FP DIRECT, <label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00002081",
+            "pattern": ".................010000010000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_fp_64_52a1fd45d908",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 8321,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b010000010000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 198
+      },
+      "uid": "52a1fd45d908",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.FP FALL<, fixup_label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00001081",
+            "pattern": ".................001000010000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_fp_64_59792b6f0002",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 4225,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b001000010000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 200
+      },
+      "uid": "59792b6f0002",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.FP CALL, <label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00004081",
+            "pattern": ".................100000010000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_fp_64_9673fedb498b",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "note": "Bare L.BSTART.FP CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 16513,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b100000010000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 199
+      },
+      "uid": "9673fedb498b",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.FP COND, <label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00003081",
+            "pattern": ".................011000010000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_fp_64_b27a4726298b",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.FP",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 12417,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b011000010000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 197
+      },
+      "uid": "b27a4726298b",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.STD COND, <label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00003001",
+            "pattern": ".................011000000000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_std_64_40bf385dbbff",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 12289,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b011000000000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 203
+      },
+      "uid": "40bf385dbbff",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.STD DIRECT, <label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00002001",
+            "pattern": ".................010000000000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_std_64_49b7cf990e62",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 8193,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b010000000000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 201
+      },
+      "uid": "49b7cf990e62",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.STD CALL, <label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00004001",
+            "pattern": ".................100000000000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_std_64_9a6081ab8f08",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "note": "Bare L.BSTART.STD CALL preserves ra. A returning call must be preceded by SETRET or C.SETRET with an explicit return label.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 16385,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b100000000000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 202
+      },
+      "uid": "9a6081ab8f08",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.STD FALL<, fixup_label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00001001",
+            "pattern": ".................001000000000001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_std_64_ed61315d3418",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.STD",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 4097,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b001000000000001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 204
+      },
+      "uid": "ed61315d3418",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "L.BSTART.SYS FALL<, fixup_label>",
+      "encoding": {
+        "length_bits": 64,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 31,
+                    "token": "simm[24:0]",
+                    "value_lsb": 0,
+                    "value_msb": 24,
+                    "width": 25
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000000f",
+            "pattern": ".........................0001111",
+            "width_bits": 32
+          },
+          {
+            "fields": [
+              {
+                "name": "simm",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 31,
+                    "token": "simm[41:25]",
+                    "value_lsb": 25,
+                    "value_msb": 41,
+                    "width": 17
+                  }
+                ],
+                "signed": true
+              }
+            ],
+            "index": 1,
+            "mask": "0x00007fff",
+            "match": "0x00001011",
+            "pattern": ".................001000000010001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L64",
+      "group": "BSTART",
+      "id": "l_bstart_sys_64_3e3b45c148bc",
+      "length_bits": 64,
+      "mnemonic": "L.BSTART.SYS",
+      "note": "Closes the current bundle, initializes the next bundle descriptor, and selects its transfer and execution kind.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 7,
+              "msb": 31,
+              "token": "simm[24:0]",
+              "width": 25
+            },
+            {
+              "const": {
+                "value": 15,
+                "width": 7
+              },
+              "lsb": 0,
+              "msb": 6,
+              "token": "7'b0001111",
+              "width": 7
+            }
+          ],
+          "width_bits": 32
+        },
+        {
+          "segments": [
+            {
+              "lsb": 15,
+              "msb": 31,
+              "token": "simm[41:25]",
+              "width": 17
+            },
+            {
+              "const": {
+                "value": 4113,
+                "width": 15
+              },
+              "lsb": 0,
+              "msb": 14,
+              "token": "15'b001000000010001",
+              "width": 15
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_64_prefix.opc",
+        "line": 205
+      },
+      "uid": "3e3b45c148bc",
+      "uop_big_kind": "BBD",
+      "uop_class": {
+        "bbd_kind": "BSTART",
+        "note": "Canonical 64-bit long-range block start",
+        "source": "group_rule",
+        "uop_kind": "BBD"
+      },
+      "uop_group": "BBD"
+    },
+    {
+      "asm": "MCOPY.DL [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "RegDst",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 11,
+                    "token": "RegDst",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc0",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 19,
+                    "token": "RegSrc0",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc1",
+                "pieces": [
+                  {
+                    "insn_lsb": 20,
+                    "insn_msb": 24,
+                    "token": "RegSrc1",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc2",
+                "pieces": [
+                  {
+                    "insn_lsb": 27,
+                    "insn_msb": 31,
+                    "token": "RegSrc2",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0x0600707f",
+            "match": "0x06001031",
+            "pattern": ".....11..........001.....0110001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Split",
+      "id": "mcopy_dl_32_d6af61213c20",
+      "length_bits": 32,
+      "mnemonic": "MCOPY.DL",
+      "note": "Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DL. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 27,
+              "msb": 31,
+              "token": "RegSrc2",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 3,
+                "width": 2
+              },
+              "lsb": 25,
+              "msb": 26,
+              "token": "2'b11",
+              "width": 2
+            },
+            {
+              "lsb": 20,
+              "msb": 24,
+              "token": "RegSrc1",
+              "width": 5
+            },
+            {
+              "lsb": 15,
+              "msb": 19,
+              "token": "RegSrc0",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 3
+              },
+              "lsb": 12,
+              "msb": 14,
+              "token": "3'b001",
+              "width": 3
+            },
+            {
+              "lsb": 7,
+              "msb": 11,
+              "token": "RegDst",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 3,
+                "width": 3
+              },
+              "lsb": 4,
+              "msb": 6,
+              "token": "3'b011",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 3
+              },
+              "lsb": 1,
+              "msb": 3,
+              "token": "3'b000",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 1
+              },
+              "lsb": 0,
+              "msb": 0,
+              "token": "1",
+              "width": 1
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 28
+      },
+      "uid": "d6af61213c20",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "User corrected to A",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    },
+    {
+      "asm": "MCOPY.DS [RegSrc0, RegSrc1, RegSrc2], ->{t, u, Rd}",
+      "encoding": {
+        "length_bits": 32,
+        "parts": [
+          {
+            "fields": [
+              {
+                "name": "RegDst",
+                "pieces": [
+                  {
+                    "insn_lsb": 7,
+                    "insn_msb": 11,
+                    "token": "RegDst",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc0",
+                "pieces": [
+                  {
+                    "insn_lsb": 15,
+                    "insn_msb": 19,
+                    "token": "RegSrc0",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc1",
+                "pieces": [
+                  {
+                    "insn_lsb": 20,
+                    "insn_msb": 24,
+                    "token": "RegSrc1",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              },
+              {
+                "name": "RegSrc2",
+                "pieces": [
+                  {
+                    "insn_lsb": 27,
+                    "insn_msb": 31,
+                    "token": "RegSrc2",
+                    "width": 5
+                  }
+                ],
+                "signed": null
+              }
+            ],
+            "index": 0,
+            "mask": "0x0600707f",
+            "match": "0x02001031",
+            "pattern": ".....01..........001.....0110001",
+            "width_bits": 32
+          }
+        ]
+      },
+      "encoding_kind": "L32",
+      "group": "Bundle Split",
+      "id": "mcopy_ds_32_e7a90ccbe4db",
+      "length_bits": 32,
+      "mnemonic": "MCOPY.DS",
+      "note": "Encoding only; NOT IMPLEMENTED. The encoding and operand fields are reserved for MCOPY.DS. Execution is unsupported and must reject before operand reads or architectural effects. No copy, replica allocation, release, return-address, or completion semantics are implemented.",
+      "parts": [
+        {
+          "segments": [
+            {
+              "lsb": 27,
+              "msb": 31,
+              "token": "RegSrc2",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 2
+              },
+              "lsb": 25,
+              "msb": 26,
+              "token": "2'b01",
+              "width": 2
+            },
+            {
+              "lsb": 20,
+              "msb": 24,
+              "token": "RegSrc1",
+              "width": 5
+            },
+            {
+              "lsb": 15,
+              "msb": 19,
+              "token": "RegSrc0",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 3
+              },
+              "lsb": 12,
+              "msb": 14,
+              "token": "3'b001",
+              "width": 3
+            },
+            {
+              "lsb": 7,
+              "msb": 11,
+              "token": "RegDst",
+              "width": 5
+            },
+            {
+              "const": {
+                "value": 3,
+                "width": 3
+              },
+              "lsb": 4,
+              "msb": 6,
+              "token": "3'b011",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 0,
+                "width": 3
+              },
+              "lsb": 1,
+              "msb": 3,
+              "token": "3'b000",
+              "width": 3
+            },
+            {
+              "const": {
+                "value": 1,
+                "width": 1
+              },
+              "lsb": 0,
+              "msb": 0,
+              "token": "1",
+              "width": 1
+            }
+          ],
+          "width_bits": 32
+        }
+      ],
+      "pto_source_constraints": [],
+      "source": {
+        "file": "opcodes/lx_32.opc",
+        "line": 27
+      },
+      "uid": "e7a90ccbe4db",
+      "uop_big_kind": "CMD",
+      "uop_class": {
+        "cmd_kind": "BLOCK_SPLIT",
+        "note": "User corrected to A",
+        "source": "group_rule",
+        "uop_kind": "CMD"
+      },
+      "uop_group": "CMD"
+    }
+  ]
+}

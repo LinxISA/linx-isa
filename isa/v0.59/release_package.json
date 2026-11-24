@@ -2,12 +2,18 @@
   "schema": "linxisa.release-package.v1",
   "profile": "v0.59",
   "version": "0.59.1",
-  "state": "published-specification",
-  "publication_allowed": true,
+  "publication_revision": 1,
+  "signed_baseline": {
+    "tag": "v0.59.1",
+    "commit": "d262515b55c727073997c8f4c95261909f2fe8d3",
+    "catalog_sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c"
+  },
+  "state": "release-candidate",
+  "publication_allowed": false,
   "default_profile": "v0.58",
   "profile_selection": {
     "path": "isa/profile-selection.json",
-    "sha256": "9f8f0df0225105e8c40af4e54d504ea042bcbbe78eb5c8fc7b298632d4e32e7f"
+    "sha256": "b27f1555fb6861bde2ea709394ad854a9d5a792c6ee5221b5adf2f2a29759fa5"
   },
   "identity": {
     "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
@@ -16,71 +22,83 @@
   },
   "catalog": {
     "path": "isa/v0.59/linxisa-v0.59.json",
-    "sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c",
+    "sha256": "df31df4594ef1257caf63bd605f34c32166975aa1eb2d1c90be64d4b35d51071",
     "schema": "linxisa.catalog.v0",
-    "status": "published-specification-catalog",
-    "instruction_count": 1499,
+    "status": "unreleased-working",
+    "instruction_count": 1306,
     "counts": {
       "common": 578,
-      "linx_only": 216,
+      "linx_only": 23,
       "scoped": 705
     }
   },
   "sail": {
     "entry": "model/linxisa_v0591.sail",
     "exporter": "tools/isa/export_linxisa_v0591_sail.py",
-    "source_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+    "source_entry": "isa/v0.59/sail/model/linxisa_v0591.sail",
     "dispatch": "isa/sail/model/execute/v0591_candidate_dispatch.sail",
-    "directed_tests": "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
+    "directed_tests": "isa/v0.59/sail/v0591_candidate_dispatch_tests.sail",
+    "release_readme": "isa/v0.59/sail/README.md",
     "toolchain": {
       "ocaml_version": "4.14.3",
       "sail_version": "0.20.2",
       "schema_version": "linx-sail-toolchain-v1"
     },
-    "state": "published-catalog-and-scoped-dispatch"
+    "state": "qualified-hard-break-package",
+    "files_sha256": "83f90e721adb06b03f83aaaaa5f746697c36bf287bccc0b86db71bb6b5c16a36",
+    "hard_break": {
+      "obsolete_forms_removed": 193,
+      "reserved_encoding_records": 10,
+      "legacy_vector_state_present": false
+    }
   },
   "inputs": {
-    "isa/v0.59/linxisa-v0.59.json": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c",
+    "isa/v0.59/linxisa-v0.59.json": "df31df4594ef1257caf63bd605f34c32166975aa1eb2d1c90be64d4b35d51071",
     "isa/v0.59/pto-v0591-candidate.json": "d9e98932c47fb591d74d0a6688b678a2ca3204de9d93608b52d9695966fff4f5",
     "isa/v0.59/pto-spec.lock.json": "a526f6dbbddfe67d349640f19e904c1148a24178b0ec697f4dc360ddac624f34",
-    "isa/v0.59/state/pto_tile_operations.json": "01c2900497d48b33fcfa54814db3f1ed12955dfd538adf3d7ea418c7fd2bf906",
-    "isa/v0.59/state/pto_system_registers.json": "308456fe28ce4dab1b90e802f316c8b8d65fe5afcd86a672dcf3804bf73fc668",
+    "isa/v0.59/meta.json": "7f243b3dde3a5c378f4f4ae463991ed59441c7cb2bce8957fb68426c5c5fbaad",
+    "isa/v0.59/release_manifest.json": "bb2f1c4f99bcfb1ae5aabccd6841a7596c7bd1e49e06c5daf89cf6f2187f7ee7",
+    "isa/v0.59/sail/v0591_hard_break_tests.sail": "6d9eb47944dc16e8e3b3e0b1ad55da20cb06bf9d3b26fe7ace0815698976d46d",
+    "isa/v0.59/sail/README.md": "7bec72fd6886be85a8fad281fcb7c8ce8fad0b357783265c970524fca4346e1b",
+    "isa/sail/model/execute/v0591_candidate_dispatch.sail": "e28580b278333f10aa3e755af6e7307aaa28391564f7d1e9fca6c10af48e74f6",
+    "isa/sail/toolchain.json": "97d2fde2c646fac908d94e3e4f39ceed13bc89d481692000720d76714afe0513",
+    "tools/isa/build_linxisa_v0591_candidate.py": "01322e451b0e60bbdb756eaedc92d6f1557de4343b161ee8374c989ebb1ac3b9",
+    "tools/isa/build_pto_v0591_candidate.py": "14ff70f4169b4d98ae1acdcc17368b5ca1eaff933b55874c669b5150b7dc9d9d",
+    "tools/isa/build_linxisa_v0591_release_prep.py": "24914ade90fd321f279f31bfc54540fd879287733cbaa0522431946d04cb2149",
+    "tools/isa/build_linxisa_v0591_release_activation.py": "fe793622b726928b55346caae520c0b5af8bcd6398ecaafd5c6c0c0644c2e3a4",
+    "tools/isa/build_golden.py": "bece6ae505f68331df872c20f20f515d24aa1078ebb2efa5be4bd5991f6ce416",
+    "tools/isa/export_linxisa_v0591_sail.py": "3d2083884a7b0d3904a40bf9539c9e06b16e734b6f0d7a1fad192fdfda80cfc1",
+    "tools/isa/gen_sail_decode.py": "65ebeff252093a9a3a205e3a2de3b7f57ab4b06107eb6929cbceb8474afe056e",
+    "tools/isa/check_v0591_candidate_dispatch_sail.py": "808ae9c79ca43e1b14f0ad92c2f03094911aef97f0aaab3a9f326cf967b94da3",
+    "tools/isa/test_v0591_sail_hard_break.py": "05270ac4abcbce57d98dd6ca320d98684e3864f21890696808f31d76bb471d3b",
+    "tools/isa/v0591_sail_hard_break.py": "05b5dacdf99ea9981bcfaee1a9d01ecfad659ea73c994e882d1acb8af3c5d695",
+    "tools/isa/select_linxisa_profile.py": "bb88bde640536c958387663b228b728e12cac6eeee2acdb80d7af08196c72101",
+    "tools/isa/validate_spec.py": "3c7521ef58eaf98e85deb2ffb85ae79669ea154791e983b9c101825ae5cf2db7",
+    "isa/v0.59/state/extension_encoding_reservations.json": "819a00b7e7dc748239ec2cfb698f373c0212fc21d3ac2ea68e100c26ee0bc101",
+    "isa/v0.59/state/linx_extension_forms.json": "a6212c5d8cad0204162bb7bc6ef1f983679f0b22de0736031720cd587a68069c",
+    "isa/v0.59/state/pto_command_forms.json": "2787c57752a59e003424605c99173718bb984355df6214957556a0394e00c15b",
     "isa/v0.59/state/pto_hardware_conformance_profile.json": "fafba0b567012d727fb435fde668333ba6711870def1a4e17e95e896c6e614b0",
     "isa/v0.59/state/pto_hardware_numeric_vectors.json": "6708e3dc3642c405b21cdbcfc9cd403cfb7c63f2a537a0d8c6a7523b1cddf88b",
-    "isa/v0.59/meta.json": "21d2d15cff0161b2191d6c8876bf9464717ad0e7590e178e995db8b07edbfbb4",
-    "isa/v0.59/release_manifest.json": "923defa70f930c1b73bbbebdbb0c7d0cef8f8f645538cc54023921638847d5be",
-    "isa/sail/model/linxisa_v0591_candidate.sail": "e17afe81480dc08c8a2e5907cd1d5f2150a66b178dc22bbc3477ea1272a70d53",
-    "isa/sail/model/execute/v0591_candidate_dispatch.sail": "e28580b278333f10aa3e755af6e7307aaa28391564f7d1e9fca6c10af48e74f6",
-    "isa/sail/tests/v0591_candidate_dispatch_tests.sail": "b857ced3c07d1f670976af65b70daac39b0ea0fde344f2040bc3fb7dc30cc6b9",
-    "isa/sail/toolchain.json": "97d2fde2c646fac908d94e3e4f39ceed13bc89d481692000720d76714afe0513",
-    "tools/isa/build_linxisa_v0591_candidate.py": "f8b7dd24cdf4b60250d915c94fa84e08525d9f5f28971cf5c7770290aaadd104",
-    "tools/isa/build_pto_v0591_candidate.py": "14ff70f4169b4d98ae1acdcc17368b5ca1eaff933b55874c669b5150b7dc9d9d",
-    "tools/isa/build_linxisa_v0591_release_prep.py": "194f9bbf1a3fe151bf1b97f85bd71c02e830560d2a63353997cf6af2b35a5efb",
-    "tools/isa/build_linxisa_v0591_release_activation.py": "139788e4780fd53a838ab6af179f5cf91fbb79b19742b127874d250a64c9fe7a",
-    "tools/isa/build_golden.py": "bece6ae505f68331df872c20f20f515d24aa1078ebb2efa5be4bd5991f6ce416",
-    "tools/isa/export_linxisa_v0591_sail.py": "1492c0fbf7ace30915b8564144ede9954157e746ad36a7fc6766b376fb4251fa",
-    "tools/isa/gen_sail_decode.py": "65ebeff252093a9a3a205e3a2de3b7f57ab4b06107eb6929cbceb8474afe056e",
-    "tools/isa/check_v0591_candidate_dispatch_sail.py": "dfc4aa9b1ee6504b8e6f9480de58ea6eb229f4beddc34fce3b12fb3f075ebfe8",
-    "tools/isa/select_linxisa_profile.py": "bb88bde640536c958387663b228b728e12cac6eeee2acdb80d7af08196c72101",
-    "tools/isa/validate_spec.py": "ff4d39e423a7eb5659847d955df106bcd02d1bad1c23b57a813e3220937b927b",
-    "isa/sail/model/decode/decode.sail": "f758ee029a4b895f9d48b8a91ec0c83e87b12d8bce68cb57ed7ffa0622e84d81",
+    "isa/v0.59/state/pto_scalar_forms.json": "0f9ab05d6a7547d970b8f2a21b158a5b993527df42445ab494ed8acea0462c16",
+    "isa/v0.59/state/pto_system_registers.json": "308456fe28ce4dab1b90e802f316c8b8d65fe5afcd86a672dcf3804bf73fc668",
+    "isa/v0.59/state/pto_tile_operations.json": "01c2900497d48b33fcfa54814db3f1ed12955dfd538adf3d7ea418c7fd2bf906",
     "isa/sail/model/decode/scoped_scalar.sail": "4e9ca04bbd54294a0c8c5001002fed447cb001fb12f491e8c3d4c630e0da12b9",
-    "isa/sail/model/execute/execute.sail": "add95680420831a2874f8e3910a40228244f6cd8f1e64459dc7b5bb84dadd84d",
     "isa/sail/model/execute/scoped_scalar.sail": "af3225e7579db974484dfee109a5a89bd12cb827c968e8c2979c40e651e26eed",
     "isa/sail/model/execute/scoped_scalar_agu.sail": "999516b8ccde973aeacbe7af84233b704fbe41f5bd35bb3966379981ce2e1e23",
     "isa/sail/model/execute/scoped_scalar_atomic.sail": "c12d04e65843d3437ec3730786a0b5afd23aca99f968578d5c9099481c23f4c5",
     "isa/sail/model/execute/scoped_scalar_queues.sail": "b8387227c6418fac9b868a68b7e2ed3ac3a5809cf3ac0dfdd433ae0ad8e4ac74",
     "isa/sail/model/lib/common.sail": "9e63adae8e841fd3315ea5c92922707d59f13235cc4b6d4317e1614a9c7dcc46",
-    "isa/sail/model/linxisa.sail": "e53531fd13ee9fe456cefa4c837a223602f849ff7a701c88e45283c109fd2616",
-    "isa/sail/model/linxisa.sail_project": "55cb31aba733b491eaa837f730aa44005548e409ad116e424560f36f12e7c03c",
     "isa/sail/model/state/hscb_dispatch.sail": "20098c69c20b9450f9907e8cffa2847f71cf6f222a8d7af468cd1c219e599d99",
     "isa/sail/model/state/msgb_bse.sail": "406f9307d568071183d4fd36503135943a79d876787f0587b321846bd3ba8d0e",
     "isa/sail/model/state/msgb_receive.sail": "fd318a86921499b04e41d46bfbe9ba8d321507e1f02b4fbde4a39e0ec10ee1f7",
     "isa/sail/model/state/msgb_registers.sail": "7531202259ed0e249d01449aae976a2d73e11c39c628de641f2021e5f12425fb",
     "isa/sail/model/state/msgb_transport.sail": "db8ad2af9e3f52166783a73d88971ca5a65a3ea74aff5727797036f001db4077",
-    "isa/sail/model/state/state.sail": "4de171b2dcd92ccd267fe4a32fb2501f7920d1cf7b275d2cb36188d3b8f72c5f"
+    "isa/v0.59/sail/model/execute/execute.sail": "1615c30eb9b52c18b65e64ee55ce0d350b4f754a140ad64dd3c22a307459f4f3",
+    "isa/v0.59/sail/model/linxisa_v0591.sail": "41cd4ce3a9239ec7441a6855f0fbe8288b485620e9ba129c50bd81a97dfbd267",
+    "isa/v0.59/sail/model/state/state.sail": "a6a2004894c231da4668e9e3fc026edc081295cd78a34770d90c99e4dd2f304a",
+    "isa/v0.59/sail/v0591_candidate_dispatch_tests.sail": "904d7738590efa155dd6669774ee520bd1a8be9b96fe5ed404f85cf28a465d75"
   },
-  "inputs_sha256": "23ce99854b0b1a96cacded05c098641df8c0a67ecf54477af506fca8b51f602a",
+  "inputs_sha256": "818d94b24c904a8d8b3607e6239163b5c353e4b912505f026bc35e021889db25",
   "upstream_source_hashes": {
     "tile_operations": {
       "path": "spec/catalog/tile-operations.json",
@@ -105,14 +123,17 @@
   "qualification": {
     "release_qualified": true,
     "qualification_scope": [
+      "source",
       "architecture-specification",
       "encoding",
       "sail-package"
     ],
+    "source_qualified": true,
     "specification_qualified": true,
     "encoding_qualified": true,
     "sail_package_qualified": true,
     "component_pins_qualified": false,
+    "rtl_qualified": false,
     "linux_qualified": false,
     "system_runtime_qualified": false,
     "platform_qualified": false,
@@ -133,10 +154,235 @@
     "published_default_switch_requires_platform_qualification": true,
     "default_switch_requested": false
   },
+  "hard_reject_reserved_encodings": {
+    "count": 10,
+    "decode_policy": "hard-reject-before-operand-read-or-architectural-effect",
+    "reallocation_allowed": false,
+    "ranges": [
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0xf9ffffff",
+            "match": "0x00021181",
+            "width_bits": 32
+          }
+        ],
+        "fields": [
+          {
+            "name": "Mode",
+            "pieces": [
+              {
+                "instruction_lsb": 25,
+                "part_index": 0,
+                "value_lsb": 0,
+                "width": 2
+              }
+            ],
+            "width": 2
+          }
+        ],
+        "length_bits": 32,
+        "mnemonic": "BSTART.VPAR",
+        "owner": "PTO reserved two-level vector extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0xf9ffffff",
+            "match": "0x00029181",
+            "width_bits": 32
+          }
+        ],
+        "fields": [
+          {
+            "name": "Mode",
+            "pieces": [
+              {
+                "instruction_lsb": 25,
+                "part_index": 0,
+                "value_lsb": 0,
+                "width": 2
+              }
+            ],
+            "width": 2
+          }
+        ],
+        "length_bits": 32,
+        "mnemonic": "BSTART.VSEQ",
+        "owner": "PTO reserved two-level vector extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0x0000ffff",
+            "match": "0x000088c0",
+            "width_bits": 16
+          }
+        ],
+        "fields": [],
+        "length_bits": 16,
+        "mnemonic": "C.BSTART.VPAR",
+        "owner": "PTO reserved two-level vector extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0x0000ffff",
+            "match": "0x0000c8c0",
+            "width_bits": 16
+          }
+        ],
+        "fields": [],
+        "length_bits": 16,
+        "mnemonic": "C.BSTART.VSEQ",
+        "owner": "PTO reserved two-level vector extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x00000003",
+            "width_bits": 32
+          }
+        ],
+        "fields": [],
+        "length_bits": 32,
+        "mnemonic": "B.TEXT",
+        "owner": "PTO reserved two-level out-of-line block extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0x0000007f",
+            "match": "0x0000007f",
+            "width_bits": 32
+          },
+          {
+            "index": 1,
+            "mask": "0x00000000",
+            "match": "0x00000000",
+            "width_bits": 32
+          }
+        ],
+        "fields": [],
+        "length_bits": 64,
+        "mnemonic": "V.*",
+        "owner": "PTO reserved two-level vector extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0xf9ffffff",
+            "match": "0x00001181",
+            "width_bits": 32
+          }
+        ],
+        "fields": [
+          {
+            "name": "Mode",
+            "pieces": [
+              {
+                "instruction_lsb": 25,
+                "part_index": 0,
+                "value_lsb": 0,
+                "width": 2
+              }
+            ],
+            "width": 2
+          }
+        ],
+        "length_bits": 32,
+        "mnemonic": "BSTART.MPAR",
+        "owner": "PTO reserved two-level machine-block extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0xf9ffffff",
+            "match": "0x00009181",
+            "width_bits": 32
+          }
+        ],
+        "fields": [
+          {
+            "name": "Mode",
+            "pieces": [
+              {
+                "instruction_lsb": 25,
+                "part_index": 0,
+                "value_lsb": 0,
+                "width": 2
+              }
+            ],
+            "width": 2
+          }
+        ],
+        "length_bits": 32,
+        "mnemonic": "BSTART.MSEQ",
+        "owner": "PTO reserved two-level machine-block extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0x0000ffff",
+            "match": "0x000008c0",
+            "width_bits": 16
+          }
+        ],
+        "fields": [],
+        "length_bits": 16,
+        "mnemonic": "C.BSTART.MPAR",
+        "owner": "PTO reserved two-level machine-block extension space",
+        "status": "reserved-in-pto"
+      },
+      {
+        "encoding": [
+          {
+            "index": 0,
+            "mask": "0x0000ffff",
+            "match": "0x000048c0",
+            "width_bits": 16
+          }
+        ],
+        "fields": [],
+        "length_bits": 16,
+        "mnemonic": "C.BSTART.MSEQ",
+        "owner": "PTO reserved two-level machine-block extension space",
+        "status": "reserved-in-pto"
+      }
+    ]
+  },
+  "approval_gates": {
+    "state": "awaiting-final-publication-approval",
+    "publication_approved": false,
+    "sail_input_hashes_locked": true,
+    "html_validation_required": true,
+    "release_action_permitted": false
+  },
   "required_checks": [
     "python3 tools/isa/build_golden.py --profile v0.59 --check",
     "python3 tools/isa/validate_spec.py --profile v0.59",
-    "python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
+    "opam exec -- python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
+    "python3 -m unittest tools.isa.test_v0591_sail_hard_break",
+    "python3 tools/isa/export_linxisa_v0591_sail.py --check <release-sail-directory>",
+    "python3 tools/isa/check_html_reference.py --site docs/architecture/isa-manual/build/instruction-reference",
     "python3 tools/isa/build_linxisa_v0591_release_activation.py --check"
   ]
 }

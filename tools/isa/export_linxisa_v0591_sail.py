@@ -12,17 +12,53 @@ import subprocess
 import sys
 import tempfile
 
+try:
+    from v0591_sail_hard_break import harden_decoder
+    from v0591_sail_hard_break import validate_catalog
+    from v0591_sail_hard_break import verify_hardened_tree
+except ModuleNotFoundError:
+    from tools.isa.v0591_sail_hard_break import harden_decoder
+    from tools.isa.v0591_sail_hard_break import validate_catalog
+    from tools.isa.v0591_sail_hard_break import verify_hardened_tree
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "isa/sail"
 SPEC = ROOT / "isa/v0.59/linxisa-v0.59.json"
-ENTRY_TEXT = """// Generated LinxISA v0.59.1 published specification entry.
-// The package exporter replaces decode/decode.sail from the canonical catalog.
-
-$include "linxisa.sail"
-$include "execute/v0591_candidate_dispatch.sail"
-"""
+PROFILE_SOURCE = ROOT / "isa/v0.59/sail"
+ENTRY = "model/linxisa_v0591.sail"
 MANIFEST = "linxisa-v0591-sail-package.json"
+
+# Only model components actually included by the 0.59.1 entry belong in its package.
+SHARED_FILES = (
+    "toolchain.json",
+    "model/lib/common.sail",
+    "model/decode/scoped_scalar.sail",
+    "model/execute/scoped_scalar.sail",
+    "model/execute/scoped_scalar_agu.sail",
+    "model/execute/scoped_scalar_atomic.sail",
+    "model/execute/scoped_scalar_queues.sail",
+    "model/execute/v0591_candidate_dispatch.sail",
+    "model/state/hscb_dispatch.sail",
+    "model/state/msgb_bse.sail",
+    "model/state/msgb_receive.sail",
+    "model/state/msgb_registers.sail",
+    "model/state/msgb_transport.sail",
+)
+
+
+def package_sources() -> dict[str, Path]:
+    sources = {name: SOURCE / name for name in SHARED_FILES}
+    for name in (
+        ENTRY,
+        "model/state/state.sail",
+        "model/execute/execute.sail",
+        "README.md",
+    ):
+        sources[name] = PROFILE_SOURCE / name
+    for name in ("v0591_candidate_dispatch_tests.sail", "v0591_hard_break_tests.sail"):
+        sources["tests/" + name] = PROFILE_SOURCE / name
+    return sources
 
 
 def sha256(path: Path) -> str:
@@ -50,6 +86,8 @@ def run_generator(output: Path) -> None:
             str(ROOT / "tools/isa/gen_sail_decode.py"),
             "--spec",
             str(SPEC),
+            "--execute",
+            str(output / "model/execute/execute.sail"),
             "--out",
             str(output / "model/decode/decode.sail"),
         ],
@@ -59,23 +97,38 @@ def run_generator(output: Path) -> None:
         check=False,
     )
     if result.returncode:
-        raise ValueError(result.stderr or result.stdout or "Sail decoder generation failed")
+        raise ValueError(
+            result.stderr or result.stdout or "Sail decoder generation failed"
+        )
 
 
 def export(output: Path) -> dict:
     if output.exists():
         raise ValueError(f"output already exists: {output}")
-    shutil.copytree(SOURCE, output)
-    run_generator(output)
-    entry = output / "model/linxisa_v0591.sail"
-    entry.write_text(ENTRY_TEXT, encoding="utf-8")
-    files = package_files(output)
     spec = json.loads(SPEC.read_text(encoding="utf-8"))
+    validate_catalog(spec)
+    output.mkdir(parents=True)
+    for name, source in package_sources().items():
+        target = output / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    run_generator(output)
+    decoder = output / "model/decode/decode.sail"
+    decoder.write_text(
+        harden_decoder(decoder.read_text(encoding="utf-8")), encoding="utf-8"
+    )
+    verify_hardened_tree(output)
+    files = package_files(output)
     package = {
         "schema": "linxisa.sail-package.v1",
         "profile": "v0.59",
         "version": "0.59.1",
-        "state": "published-specification",
+        "state": spec["release_status"]["state"],
+        "hard_break": {
+            "obsolete_forms_removed": 193,
+            "reserved_encoding_records": 10,
+            "legacy_vector_state_present": False,
+        },
         "entry": "model/linxisa_v0591.sail",
         "catalog": {
             "path": "isa/v0.59/linxisa-v0.59.json",
@@ -105,21 +158,29 @@ def check(output: Path) -> None:
         raise ValueError("Sail package has the wrong schema")
     if package.get("entry") != "model/linxisa_v0591.sail":
         raise ValueError("Sail package has the wrong canonical entry")
-    if (output / package["entry"]).read_text(encoding="utf-8") != ENTRY_TEXT:
+    if (output / package["entry"]).read_text(encoding="utf-8") != (
+        PROFILE_SOURCE / ENTRY
+    ).read_text(encoding="utf-8"):
         raise ValueError("Sail package entry is stale")
+    verify_hardened_tree(output)
     files = package_files(output)
-    if package.get("files") != files or package.get("files_sha256") != canonical_sha256(files):
+    if package.get("files") != files or package.get("files_sha256") != canonical_sha256(
+        files
+    ):
         raise ValueError("Sail package file hashes are stale")
     expected_sums = (
         "\n".join(f"{digest}  {path}" for path, digest in files.items()) + "\n"
     )
     if (output / "SHA256SUMS").read_text(encoding="utf-8") != expected_sums:
         raise ValueError("Sail package checksums are stale")
-    with tempfile.TemporaryDirectory(prefix="linx-sail-v0591-export-check-") as directory:
+    with tempfile.TemporaryDirectory(
+        prefix="linx-sail-v0591-export-check-"
+    ) as directory:
         expected = Path(directory) / "sail"
         export(expected)
         expected_files = package_files(expected)
-    if files != expected_files:
+        expected_package = json.loads((expected / MANIFEST).read_text())
+    if package != expected_package or files != expected_files:
         raise ValueError("Sail package differs from a fresh export")
 
 
@@ -132,7 +193,11 @@ def main() -> int:
     try:
         if args.output is not None:
             package = export(args.output.resolve())
-            print(json.dumps({"output": str(args.output.resolve()), **package}, sort_keys=True))
+            print(
+                json.dumps(
+                    {"output": str(args.output.resolve()), **package}, sort_keys=True
+                )
+            )
         else:
             check(args.check.resolve())
             print(f"LinxISA v0.59.1 Sail package is current: {args.check.resolve()}")

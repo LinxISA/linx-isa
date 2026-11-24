@@ -15,14 +15,16 @@
   },
   "policy": {
     "pto_spec_is_sole_source_for_common_and_scoped_forms": true,
-    "linx_only_rows_are_preserved_from_v0.58": true,
+    "linx_only_rows_are_owned_by_v0.59_positive_source": true,
     "legacy_decode_allowed": false,
+    "removed_execution_encoding_ranges_hard_rejected": true,
+    "removed_execution_encoding_reservation_count": 10,
     "default_profile_changed": false
   },
   "cardinality": {
-    "instructions": 1499,
+    "instructions": 1306,
     "common_forms": 578,
-    "linx_only_forms": 216,
+    "linx_only_forms": 23,
     "scoped_forms": 705,
     "scalar_forms": 473,
     "command_forms": 105,
@@ -31,13 +33,19 @@
     "extension_encoding_reservations": 50
   },
   "authoritative_sources": {
+    "linx_extension_forms": {
+      "path": "isa/v0.59/state/linx_extension_forms.json",
+      "sha256": "a6212c5d8cad0204162bb7bc6ef1f983679f0b22de0736031720cd587a68069c",
+      "count": 23,
+      "ownership": "v0.59-positive-definitions"
+    },
     "tile_operations": {
       "path": "isa/v0.59/state/pto_tile_operations.json",
       "sha256": "01c2900497d48b33fcfa54814db3f1ed12955dfd538adf3d7ea418c7fd2bf906",
       "count": 119,
       "upstream_path": "spec/catalog/tile-operations.json",
       "upstream_sha256": "29f1ffe575c701b416b9205ff9377f92f72b5d48a091c1aa3f9c9fc7e0d49033",
-      "precedence": "overrides-archival-catalog-state.pto_ops"
+      "precedence": "authoritative-v0.59-owner"
     },
     "system_registers": {
       "path": "isa/v0.59/state/pto_system_registers.json",
@@ -62,9 +70,9 @@
   },
   "catalog": {
     "path": "isa/v0.59/linxisa-v0.59.json",
-    "sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c",
+    "sha256": "df31df4594ef1257caf63bd605f34c32166975aa1eb2d1c90be64d4b35d51071",
     "schema": "linxisa.catalog.v0",
-    "status": "published-specification-catalog"
+    "status": "unreleased-working"
   },
   "frozen_bindings": {
     "path": "isa/v0.59/pto-v0591-candidate.json",
@@ -88,26 +96,28 @@
     "note_type_value": 1,
     "section": ".note.pto.isa"
   },
-  "status": "published-specification",
+  "status": "release-candidate",
+  "publication_revision": 1,
+  "signed_baseline": {
+    "tag": "v0.59.1",
+    "commit": "d262515b55c727073997c8f4c95261909f2fe8d3",
+    "catalog_sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c"
+  },
   "identity": {
     "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
     "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
     "release": "0.59.1"
   },
   "publication": {
+    "state": "unreleased-working",
+    "published": false,
     "version": "0.59.1",
-    "date": "2026-11-22",
-    "scope": [
-      "architecture-specification",
-      "encoding",
-      "sail-package"
-    ],
+    "revision": 1,
     "profile_selection": "explicit-v0.59"
   },
   "release_activation": {
-    "state": "published-explicit-profile",
+    "state": "release-candidate-explicit-profile",
     "profile_selection": "isa/profile-selection.json",
-    "package": "isa/v0.59/release_package.json",
     "catalog": "isa/v0.59/linxisa-v0.59.json",
     "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
     "sail_entry": "model/linxisa_v0591.sail",
@@ -116,13 +126,16 @@
   "qualification": {
     "release_qualified": true,
     "qualification_scope": [
+      "source",
       "architecture-specification",
       "encoding",
       "sail-package"
     ],
+    "source_qualified": true,
     "specification_qualified": true,
     "encoding_qualified": true,
     "sail_package_qualified": true,
+    "rtl_qualified": false,
     "linux_qualified": false,
     "leaf_components_qualified": false,
     "system_runtime_qualified": false,

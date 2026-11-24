@@ -7,10 +7,15 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import tempfile
 from typing import Any
 
+from build_linxisa_v0591_candidate import PUBLICATION_REVISION
+from build_linxisa_v0591_candidate import REMOVED_BLOCK_MNEMONICS
+from build_linxisa_v0591_candidate import SIGNED_BASELINE
 from build_linxisa_v0591_candidate import build as build_catalog
 from build_linxisa_v0591_release_prep import build as build_release_prep
+from export_linxisa_v0591_sail import export as export_sail, package_sources
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -20,20 +25,17 @@ CATALOG = ROOT / "isa/v0.59/linxisa-v0.59.json"
 LOCK = ROOT / "isa/v0.59/pto-spec.lock.json"
 META = ROOT / "isa/v0.59/meta.json"
 MANIFEST = ROOT / "isa/v0.59/release_manifest.json"
+RESERVATIONS = ROOT / "isa/v0.59/state/extension_encoding_reservations.json"
 
 PACKAGE_INPUTS = (
     "isa/v0.59/linxisa-v0.59.json",
     "isa/v0.59/pto-v0591-candidate.json",
     "isa/v0.59/pto-spec.lock.json",
-    "isa/v0.59/state/pto_tile_operations.json",
-    "isa/v0.59/state/pto_system_registers.json",
-    "isa/v0.59/state/pto_hardware_conformance_profile.json",
-    "isa/v0.59/state/pto_hardware_numeric_vectors.json",
     "isa/v0.59/meta.json",
     "isa/v0.59/release_manifest.json",
-    "isa/sail/model/linxisa_v0591_candidate.sail",
+    "isa/v0.59/sail/v0591_hard_break_tests.sail",
+    "isa/v0.59/sail/README.md",
     "isa/sail/model/execute/v0591_candidate_dispatch.sail",
-    "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
     "isa/sail/toolchain.json",
     "tools/isa/build_linxisa_v0591_candidate.py",
     "tools/isa/build_pto_v0591_candidate.py",
@@ -43,18 +45,36 @@ PACKAGE_INPUTS = (
     "tools/isa/export_linxisa_v0591_sail.py",
     "tools/isa/gen_sail_decode.py",
     "tools/isa/check_v0591_candidate_dispatch_sail.py",
+    "tools/isa/test_v0591_sail_hard_break.py",
+    "tools/isa/v0591_sail_hard_break.py",
     "tools/isa/select_linxisa_profile.py",
     "tools/isa/validate_spec.py",
 )
 
 
 def package_inputs() -> tuple[str, ...]:
-    sail_sources = tuple(
+    state_sources = tuple(
         path.relative_to(ROOT).as_posix()
-        for path in sorted((ROOT / "isa/sail/model").rglob("*"))
-        if path.is_file() and path.suffix in {".sail", ".sail_project"}
+        for path in sorted((ROOT / "isa/v0.59/state").glob("*.json"))
     )
-    return tuple(dict.fromkeys((*PACKAGE_INPUTS, *sail_sources)))
+    sail_sources = tuple(
+        path.relative_to(ROOT).as_posix() for path in sorted(package_sources().values())
+    )
+    return tuple(dict.fromkeys((*PACKAGE_INPUTS, *state_sources, *sail_sources)))
+
+
+def hard_reject_reservations() -> list[dict[str, Any]]:
+    names = {"V.*", *REMOVED_BLOCK_MNEMONICS}
+    rows = [
+        row
+        for row in load(RESERVATIONS)["reservations"]
+        if row.get("mnemonic") in names
+    ]
+    if len(rows) != 10 or {row["mnemonic"] for row in rows} != names:
+        raise ValueError("the ten removed execution encoding ranges are not reserved")
+    if any(row.get("status") != "reserved-in-pto" for row in rows):
+        raise ValueError("a removed execution encoding range is not reserved in PTO")
+    return rows
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -85,15 +105,18 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
     meta, manifest = build_release_prep()
     if meta != load(META) or manifest != load(MANIFEST):
         raise ValueError("v0.59 publication metadata or manifest is stale")
-    if catalog.get("instruction_count") != 1499:
-        raise ValueError("v0.59 release package requires all 1499 catalog rows")
+    if catalog.get("instruction_count") != 1306:
+        raise ValueError("v0.59 release package requires exactly 1306 catalog rows")
     status = catalog.get("release_status", {})
-    if status.get("state") != "published-specification-catalog":
-        raise ValueError("v0.59 catalog is not the published specification catalog")
-    if status.get("counts") != {"common": 578, "linx_only": 216, "scoped": 705}:
-        raise ValueError("v0.59 catalog cardinality is not 578+216+705")
+    if status.get("state") != "unreleased-working":
+        raise ValueError("v0.59 catalog is not the unreleased working specification")
+    if status.get("counts") != {"common": 578, "linx_only": 23, "scoped": 705}:
+        raise ValueError("v0.59 catalog cardinality is not 578+23+705")
     lock = load(LOCK)
     toolchain = load(ROOT / "isa/sail/toolchain.json")
+    hard_reject = hard_reject_reservations()
+    with tempfile.TemporaryDirectory(prefix="linx-v0591-release-sail-") as directory:
+        sail_package = export_sail(Path(directory) / "sail")
 
     selection = {
         "schema": "linxisa.profile-selection.v1",
@@ -112,8 +135,9 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
                 "release_manifest": "isa/v0.58/release_manifest.json",
             },
             "v0.59": {
-                "state": "published-explicit-profile",
+                "state": "release-candidate-explicit-profile",
                 "version": "0.59.1",
+                "publication_revision": PUBLICATION_REVISION,
                 "catalog": "isa/v0.59/linxisa-v0.59.json",
                 "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
                 "sail_entry": "model/linxisa_v0591.sail",
@@ -121,6 +145,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
                 "package": "isa/v0.59/release_package.json",
                 "release_qualified": True,
                 "qualification_scope": [
+                    "source",
                     "architecture-specification",
                     "encoding",
                     "sail-package",
@@ -129,15 +154,15 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             },
         },
     }
-    input_hashes = {
-        relative: sha256(ROOT / relative) for relative in package_inputs()
-    }
+    input_hashes = {relative: sha256(ROOT / relative) for relative in package_inputs()}
     package = {
         "schema": "linxisa.release-package.v1",
         "profile": "v0.59",
         "version": "0.59.1",
-        "state": "published-specification",
-        "publication_allowed": True,
+        "publication_revision": PUBLICATION_REVISION,
+        "signed_baseline": SIGNED_BASELINE,
+        "state": "release-candidate",
+        "publication_allowed": False,
         "default_profile": "v0.58",
         "profile_selection": {
             "path": "isa/profile-selection.json",
@@ -152,11 +177,14 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "sail": {
             "entry": "model/linxisa_v0591.sail",
             "exporter": "tools/isa/export_linxisa_v0591_sail.py",
-            "source_entry": "isa/sail/model/linxisa_v0591_candidate.sail",
+            "source_entry": "isa/v0.59/sail/model/linxisa_v0591.sail",
             "dispatch": "isa/sail/model/execute/v0591_candidate_dispatch.sail",
-            "directed_tests": "isa/sail/tests/v0591_candidate_dispatch_tests.sail",
+            "directed_tests": "isa/v0.59/sail/v0591_candidate_dispatch_tests.sail",
+            "release_readme": "isa/v0.59/sail/README.md",
             "toolchain": toolchain,
-            "state": "published-catalog-and-scoped-dispatch",
+            "state": "qualified-hard-break-package",
+            "files_sha256": sail_package["files_sha256"],
+            "hard_break": sail_package["hard_break"],
         },
         "inputs": input_hashes,
         "inputs_sha256": canonical_sha256(input_hashes),
@@ -169,14 +197,17 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "qualification": {
             "release_qualified": True,
             "qualification_scope": [
+                "source",
                 "architecture-specification",
                 "encoding",
                 "sail-package",
             ],
+            "source_qualified": True,
             "specification_qualified": True,
             "encoding_qualified": True,
             "sail_package_qualified": True,
             "component_pins_qualified": False,
+            "rtl_qualified": False,
             "linux_qualified": False,
             "system_runtime_qualified": False,
             "platform_qualified": False,
@@ -194,10 +225,26 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "published_default_switch_requires_platform_qualification": True,
             "default_switch_requested": False,
         },
+        "hard_reject_reserved_encodings": {
+            "count": 10,
+            "decode_policy": "hard-reject-before-operand-read-or-architectural-effect",
+            "reallocation_allowed": False,
+            "ranges": hard_reject,
+        },
+        "approval_gates": {
+            "state": "awaiting-final-publication-approval",
+            "publication_approved": False,
+            "sail_input_hashes_locked": True,
+            "html_validation_required": True,
+            "release_action_permitted": False,
+        },
         "required_checks": [
             "python3 tools/isa/build_golden.py --profile v0.59 --check",
             "python3 tools/isa/validate_spec.py --profile v0.59",
-            "python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
+            "opam exec -- python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
+            "python3 -m unittest tools.isa.test_v0591_sail_hard_break",
+            "python3 tools/isa/export_linxisa_v0591_sail.py --check <release-sail-directory>",
+            "python3 tools/isa/check_html_reference.py --site docs/architecture/isa-manual/build/instruction-reference",
             "python3 tools/isa/build_linxisa_v0591_release_activation.py --check",
         ],
     }

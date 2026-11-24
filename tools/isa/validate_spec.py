@@ -1254,6 +1254,28 @@ def _validate_first_use_semantics_contract(
         errors.append(f"v0.58: engine CUBE count must be 12, got {cube_count!r}")
 
 
+def _validate_v0591_sources(spec: Dict[str, Any], errors: List[str]) -> None:
+    """v0.59.1 owns its extension set; v0.58 first-use tables are not its source."""
+    from build_linxisa_v0591_candidate import build
+    from v0591_sail_hard_break import reservations
+
+    expected = build()
+    if spec != expected:
+        errors.append("v0.59.1: catalog differs from its PTO and Linx definition sources")
+
+    reserved = reservations()
+    for row in spec.get("instructions", []):
+        parts = row["encoding"]["parts"]
+        for region in reserved:
+            if row["length_bits"] != region["length_bits"] or len(parts) != len(region["parts"]):
+                continue
+            if all(
+                not ((int(p["match"], 0) ^ r["match"]) & int(p["mask"], 0) & r["mask"])
+                for p, r in zip(parts, region["parts"])
+            ):
+                errors.append(f"{row['id']}: assigned bits intersect {region['mnemonic']} PTO reservation")
+
+
 def validate(path: str) -> List[str]:
     with open(path, "r", encoding="utf-8") as f:
         spec = json.load(f)
@@ -1298,8 +1320,11 @@ def validate(path: str) -> List[str]:
             if not isinstance(ebarg, dict):
                 errors.append("v0.2: system_registers.ebarg_group missing/invalid")
 
-    _validate_first_use_register_contract(spec, errors)
-    _validate_first_use_semantics_contract(spec, errors)
+    if version == "0.59.1":
+        _validate_v0591_sources(spec, errors)
+    else:
+        _validate_first_use_register_contract(spec, errors)
+        _validate_first_use_semantics_contract(spec, errors)
 
     _validate_engine_ops(spec, errors)
 

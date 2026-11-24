@@ -6,6 +6,7 @@ from __future__ import annotations
 import copy
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -30,9 +31,15 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         cls.baseline = json.loads(
             (ROOT / "isa/v0.58/linxisa-v0.58.json").read_text(encoding="utf-8")
         )
+        cls.reference = json.loads(
+            subprocess.check_output(
+                ["git", "show", "v0.59.1:isa/v0.59/linxisa-v0.59.json"],
+                cwd=ROOT,
+            )
+        )
         cls.candidate = build()
 
-    def test_counts_identity_and_linx_only_preservation(self):
+    def test_counts_identity_and_v059_owned_linx_extensions(self):
         instructions = self.candidate["instructions"]
         common = [
             item
@@ -43,7 +50,7 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         linx_only = [
             item for item in instructions if not item.get("pto_source_form_id")
         ]
-        self.assertEqual((len(common), len(linx_only), len(scoped)), (578, 216, 705))
+        self.assertEqual((len(common), len(linx_only), len(scoped)), (578, 23, 705))
         old_common = {
             item["pto_source_form_id"]: (item["id"], item["uid"])
             for item in self.baseline["instructions"]
@@ -53,14 +60,21 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             {item["pto_source_form_id"]: (item["id"], item["uid"]) for item in common},
             old_common,
         )
-        old_linx = {
-            item["id"]: item
-            for item in self.baseline["instructions"]
-            if not item.get("pto_source_form_id")
-        }
-        self.assertEqual({item["id"]: item for item in linx_only}, old_linx)
+        source = json.loads(candidate_builder.LINX_EXTENSIONS.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {item["id"]: item for item in linx_only},
+            {item["id"]: item for item in source["forms"]},
+        )
+        self.assertEqual(set(source["form_ids"]), candidate_builder.EXPECTED_LINX_EXTENSION_IDS)
 
-    def test_state_uses_frozen_v0591_projections_and_preserves_linx_ssr(self):
+    def test_every_retained_row_is_exactly_the_v0591_reference_row(self):
+        reference = {item["id"]: item for item in self.reference["instructions"]}
+        self.assertEqual(
+            {item["id"]: item for item in self.candidate["instructions"]},
+            {item["id"]: reference[item["id"]] for item in self.candidate["instructions"]},
+        )
+
+    def test_state_contains_only_current_v059_owned_projections(self):
         state = self.candidate["state"]
         for key, relative in {
             "pto_scalar_forms": "pto_scalar_forms.json",
@@ -73,16 +87,16 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             )
             self.assertEqual(state[key], expected)
         self.assertEqual(
-            state["system_registers"], self.baseline["state"]["system_registers"]
+            set(state),
+            {
+                "pto_scalar_forms",
+                "pto_command_forms",
+                "extension_encoding_reservations",
+                "pto_system_registers",
+            },
         )
-        inherited = self.candidate["release_status"]["inherited_v058_views"]
-        self.assertEqual(
-            inherited["status"],
-            "archival-schema-view-non-normative-for-v0.59",
-        )
-        self.assertIn("state.engine_ops", inherited["paths"])
-        self.assertIn("state.pto_binder_contracts", inherited["paths"])
-        self.assertIn("semantics_conventions", inherited["paths"])
+        self.assertNotIn("block_legality", self.candidate["semantics_conventions"])
+        self.assertNotIn("extension_first_use", self.candidate["semantics_conventions"])
         self.assertEqual(
             self.candidate["release_status"]["authoritative_v059_paths"],
             [
@@ -94,21 +108,26 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            self.candidate["release_status"]["linx_only_inheritance"],
-            {
-                "status": "published-linx-specific-rows",
-                "row_count": 216,
-                "verification": "byte-identical-to-v0.58-catalog-rows",
-            },
+            self.candidate["release_status"]["linx_extension_source"]["row_count"],
+            23,
         )
         self.assertEqual(
             self.candidate["release_status"]["external_authoritative_v059_files"]
             ["tile_operations"],
             {
                 "path": "isa/v0.59/state/pto_tile_operations.json",
-                "precedence": "overrides-archival-state.pto_ops",
+                "precedence": "authoritative-v0.59-owner",
             },
         )
+
+    def test_removed_forms_are_absent_and_ten_reservations_remain(self):
+        mnemonics = {item["mnemonic"] for item in self.candidate["instructions"]}
+        self.assertFalse(any(name.startswith("V.") for name in mnemonics))
+        self.assertTrue(candidate_builder.REMOVED_BLOCK_MNEMONICS.isdisjoint(mnemonics))
+        reservations = self.candidate["state"]["extension_encoding_reservations"]
+        reserved = {row["mnemonic"] for row in reservations["reservations"]}
+        self.assertTrue(candidate_builder.REMOVED_BLOCK_MNEMONICS <= reserved)
+        self.assertIn("V.*", reserved)
 
     def test_binding_hash_is_for_the_payload_used_by_the_builder(self):
         expected = candidate_builder.hashlib.sha256(
@@ -124,21 +143,50 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "differ from rebuilt bindings"):
                     candidate_builder.frozen_bindings()
 
-    def test_full_schema_is_deterministic_and_has_unique_rows(self):
-        from validate_spec import V058_DERIVED_VERSIONS, V058_FIRST_USE_VERSIONS
+    def test_linx_extension_source_fails_closed_on_removed_mnemonic(self):
+        source = json.loads(candidate_builder.LINX_EXTENSIONS.read_text(encoding="utf-8"))
+        source["forms"][0]["mnemonic"] = "V.REVIVED"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "linx_extension_forms.json"
+            path.write_text(render(source), encoding="utf-8")
+            with mock.patch.object(candidate_builder, "LINX_EXTENSIONS", path):
+                with self.assertRaisesRegex(ValueError, "removed execution form"):
+                    candidate_builder.linx_extension_forms()
 
-        self.assertIn("0.58.0", V058_DERIVED_VERSIONS)
-        self.assertNotIn("0.58.0", V058_FIRST_USE_VERSIONS)
-        self.assertIn("0.59.1", V058_FIRST_USE_VERSIONS)
+    def test_full_schema_is_deterministic_and_has_unique_rows(self):
         self.assertEqual(render(self.candidate), render(build()))
         self.assertEqual(self.candidate["schema"], "linxisa.catalog.v0")
-        self.assertEqual(self.candidate["instruction_count"], 1499)
+        self.assertEqual(self.candidate["version"], "0.59.1")
+        self.assertEqual(self.candidate["release_status"]["state"], "unreleased-working")
+        self.assertEqual(self.candidate["release_status"]["publication_revision"], 1)
+        self.assertEqual(
+            self.candidate["release_status"]["signed_baseline"]["commit"],
+            "d262515b55c727073997c8f4c95261909f2fe8d3",
+        )
+        self.assertEqual(self.candidate["instruction_count"], 1306)
         ids = [item["id"] for item in self.candidate["instructions"]]
         uids = [item["uid"] for item in self.candidate["instructions"]]
         self.assertEqual(len(ids), len(set(ids)))
         self.assertEqual(len(uids), len(set(uids)))
         for item in self.candidate["instructions"]:
             self.assertEqual(len(item["parts"]), len(item["encoding"]["parts"]))
+
+    def test_field_definitions_are_derived_from_active_rows(self):
+        observed = {
+            field["name"]
+            for item in self.candidate["instructions"]
+            for part in item["encoding"]["parts"]
+            for field in part.get("fields", [])
+        }
+        definitions = self.candidate["field_definitions"]["fields"]
+        documented_only = {
+            name
+            for name, definition in definitions.items()
+            if definition.get("documented_only") is True
+        }
+        self.assertEqual(set(definitions), observed | documented_only)
+        self.assertNotIn("C", definitions)
+        self.assertNotIn("rd", definitions)
 
     def test_released_encodings_and_constraints_are_applied(self):
         scalar = json.loads(
@@ -191,13 +239,13 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         from report_encoding_space import _build_instructions, _extract_patterns
 
         header, source = _emit_tables(self.candidate, "candidate.json")
-        self.assertIn("linxisa_inst_forms_count = 1499", source)
+        self.assertIn("linxisa_inst_forms_count = 1306", source)
         self.assertIn("linxisa_inst_form", header)
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "candidate.json"
             path.write_text(render(self.candidate), encoding="utf-8")
             decoded = _build_instructions(_extract_patterns(path))
-        self.assertEqual(len(decoded), 1499)
+        self.assertEqual(len(decoded), 1306)
         sail = render_sail_decode(
             self.candidate,
             (ROOT / "isa/sail/model/execute/execute.sail").read_text(encoding="utf-8"),

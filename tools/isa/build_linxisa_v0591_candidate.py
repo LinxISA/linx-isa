@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the published LinxISA v0.59.1 architecture catalog."""
+"""Build the local, unreleased LinxISA v0.59.1 working catalog."""
 
 from __future__ import annotations
 
@@ -30,6 +30,54 @@ SCALARS = PROFILE / "state/pto_scalar_forms.json"
 COMMANDS = PROFILE / "state/pto_command_forms.json"
 RESERVATIONS = PROFILE / "state/extension_encoding_reservations.json"
 PTO_SYSTEM_REGISTERS = PROFILE / "state/pto_system_registers.json"
+LINX_EXTENSIONS = PROFILE / "state/linx_extension_forms.json"
+PUBLICATION_REVISION = 1
+SIGNED_BASELINE = {
+    "tag": "v0.59.1",
+    "commit": "d262515b55c727073997c8f4c95261909f2fe8d3",
+    "catalog_sha256": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c",
+}
+
+EXPECTED_LINX_EXTENSION_IDS = frozenset(
+    {
+        "dma_free_l_32_5af48f644596",
+        "dma_free_s_32_5de9a6bba806",
+        "hl_bstart_call_48_d71cee46ab50",
+        "hl_bstart_fp_48_0368fb7424f4",
+        "hl_bstart_fp_48_9955c1f823f6",
+        "hl_bstart_fp_48_9a0544563449",
+        "hl_bstart_fp_48_f074f1e2c089",
+        "hl_bstart_std_48_170d04be4f7e",
+        "hl_bstart_std_48_436ff4a95f39",
+        "hl_bstart_std_48_4eff98193028",
+        "hl_bstart_std_48_c970f578674f",
+        "hl_bstart_sys_48_54ff489122fe",
+        "l_bstart_fp_64_52a1fd45d908",
+        "l_bstart_fp_64_59792b6f0002",
+        "l_bstart_fp_64_9673fedb498b",
+        "l_bstart_fp_64_b27a4726298b",
+        "l_bstart_std_64_40bf385dbbff",
+        "l_bstart_std_64_49b7cf990e62",
+        "l_bstart_std_64_9a6081ab8f08",
+        "l_bstart_std_64_ed61315d3418",
+        "l_bstart_sys_64_3e3b45c148bc",
+        "mcopy_dl_32_d6af61213c20",
+        "mcopy_ds_32_e7a90ccbe4db",
+    }
+)
+REMOVED_BLOCK_MNEMONICS = frozenset(
+    {
+        "B.TEXT",
+        "BSTART.MPAR",
+        "BSTART.MSEQ",
+        "BSTART.VPAR",
+        "BSTART.VSEQ",
+        "C.BSTART.MPAR",
+        "C.BSTART.MSEQ",
+        "C.BSTART.VPAR",
+        "C.BSTART.VSEQ",
+    }
+)
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -300,7 +348,13 @@ def complete_field_definitions(document: dict[str, Any]) -> None:
                 if field.get("signed") is not None:
                     entry["signed"].add(bool(field["signed"]))
 
-    definitions = document["field_definitions"]["fields"]
+    source_definitions = document["field_definitions"]["fields"]
+    definitions = {
+        name: copy.deepcopy(definition)
+        for name, definition in source_definitions.items()
+        if name in observed or definition.get("documented_only") is True
+    }
+    document["field_definitions"]["fields"] = definitions
     for name, entry in observed.items():
         definition = definitions.get(name)
         if definition is None:
@@ -329,6 +383,32 @@ def frozen_bindings() -> tuple[dict[str, Any], str]:
     if on_disk != rebuilt_text:
         raise ValueError("on-disk PTO v0.59.1 bindings differ from rebuilt bindings")
     return rebuilt, hashlib.sha256(rebuilt_text.encode("utf-8")).hexdigest()
+
+
+def linx_extension_forms() -> list[dict[str, Any]]:
+    document = load(LINX_EXTENSIONS)
+    if document.get("version") != "0.59.1":
+        raise ValueError("Linx extension source must describe v0.59.1")
+    forms = document.get("forms")
+    if not isinstance(forms, list):
+        raise ValueError("Linx extension source forms must be an array")
+    form_ids = [form.get("id") for form in forms]
+    if (
+        document.get("form_count") != 23
+        or document.get("form_ids") != form_ids
+        or len(form_ids) != len(set(form_ids))
+        or set(form_ids) != EXPECTED_LINX_EXTENSION_IDS
+    ):
+        raise ValueError("Linx extension source must contain exactly the 23 retained forms")
+    if any(form.get("pto_source_form_id") for form in forms):
+        raise ValueError("Linx extension source contains a PTO-owned form")
+    if any(
+        str(form.get("mnemonic", "")).startswith("V.")
+        or form.get("mnemonic") in REMOVED_BLOCK_MNEMONICS
+        for form in forms
+    ):
+        raise ValueError("Linx extension source contains a removed execution form")
+    return copy.deepcopy(forms)
 
 
 def build() -> dict[str, Any]:
@@ -376,15 +456,7 @@ def build() -> dict[str, Any]:
         )
         common.append(item)
 
-    linx_only = [
-        copy.deepcopy(item)
-        for item in baseline["instructions"]
-        if not item.get("pto_source_form_id")
-    ]
-    if len(linx_only) != 216:
-        raise ValueError(
-            f"expected 216 preserved Linx-only rows, found {len(linx_only)}"
-        )
+    linx_only = linx_extension_forms()
 
     scoped_source = {form["form_id"]: form for form in scalar["scoped_forms"]}
     frozen_scoped = {
@@ -418,38 +490,31 @@ def build() -> dict[str, Any]:
     if len(ids) != len(set(ids)) or len(uids) != len(set(uids)):
         raise ValueError("candidate instruction IDs or UIDs collide")
 
-    state = copy.deepcopy(baseline["state"])
-    state["pto_scalar_forms"] = copy.deepcopy(scalar)
-    state["pto_command_forms"] = copy.deepcopy(command)
-    state["extension_encoding_reservations"] = load(RESERVATIONS)
-    state["pto_system_registers"] = load(PTO_SYSTEM_REGISTERS)
-    inherited_v058_views = [
-        "semantics_conventions",
-        "state.architectural_state",
-        "state.engine_ops",
-        "state.kernel_execution",
-        "state.memory_model",
-        "state.pto_binder_contracts",
-        "state.pto_encoding_map",
-        "state.pto_ops",
-        "state.rendering_profile",
-        "state.shared_tile_registers",
-        "state.system_registers",
-    ]
+    state = {
+        "pto_scalar_forms": copy.deepcopy(scalar),
+        "pto_command_forms": copy.deepcopy(command),
+        "extension_encoding_reservations": load(RESERVATIONS),
+        "pto_system_registers": load(PTO_SYSTEM_REGISTERS),
+    }
+    semantics_conventions = copy.deepcopy(baseline["semantics_conventions"])
+    semantics_conventions.pop("block_legality", None)
+    semantics_conventions.pop("extension_first_use", None)
     document = {
         "schema": baseline["schema"],
         "isa": baseline["isa"],
         "version": "0.59.1",
         "release_status": {
-            "state": "published-specification-catalog",
+            "state": "unreleased-working",
+            "publication_revision": PUBLICATION_REVISION,
+            "signed_baseline": copy.deepcopy(SIGNED_BASELINE),
             "selection": "explicit-v0.59-profile",
             "default_profile": "v0.58",
-            "publication_allowed": True,
-            "qualification_scope": ["architecture-specification", "encoding", "sail-package"],
+            "publication_allowed": False,
+            "qualification_scope": [],
             "platform_qualified": False,
             "source_bindings": "isa/v0.59/pto-v0591-candidate.json",
             "source_bindings_sha256": bindings_sha256,
-            "counts": {"common": 578, "linx_only": 216, "scoped": 705},
+            "counts": {"common": 578, "linx_only": 23, "scoped": 705},
             "authoritative_v059_paths": [
                 "instructions",
                 "state.pto_scalar_forms",
@@ -460,7 +525,7 @@ def build() -> dict[str, Any]:
             "external_authoritative_v059_files": {
                 "tile_operations": {
                     "path": "isa/v0.59/state/pto_tile_operations.json",
-                    "precedence": "overrides-archival-state.pto_ops",
+                    "precedence": "authoritative-v0.59-owner",
                 },
                 "hardware_conformance_profile": {
                     "path": "isa/v0.59/state/pto_hardware_conformance_profile.json"
@@ -469,27 +534,24 @@ def build() -> dict[str, Any]:
                     "path": "isa/v0.59/state/pto_hardware_numeric_vectors.json"
                 },
             },
-            "linx_only_inheritance": {
-                "status": "published-linx-specific-rows",
-                "row_count": 216,
-                "verification": "byte-identical-to-v0.58-catalog-rows",
-            },
-            "inherited_v058_views": {
-                "status": "archival-schema-view-non-normative-for-v0.59",
-                "paths": inherited_v058_views,
+            "linx_extension_source": {
+                "status": "v0.59-owned-positive-definitions",
+                "path": "isa/v0.59/state/linx_extension_forms.json",
+                "row_count": 23,
+                "verification": "exact-row-identity-with-v0.59.1-reference-tag",
             },
         },
         "instruction_count": len(instructions),
         "instructions": instructions,
         "registers": copy.deepcopy(baseline["registers"]),
         "field_definitions": copy.deepcopy(baseline["field_definitions"]),
-        "semantics_conventions": copy.deepcopy(baseline["semantics_conventions"]),
+        "semantics_conventions": semantics_conventions,
         "retired_encodings": copy.deepcopy(baseline["retired_encodings"]),
         "state": state,
     }
     complete_field_definitions(document)
-    if document["instruction_count"] != 1499:
-        raise ValueError(f"expected 1499 published rows, found {len(instructions)}")
+    if document["instruction_count"] != 1306:
+        raise ValueError(f"expected 1306 working rows, found {len(instructions)}")
     check_collisions(document)
     return document
 
