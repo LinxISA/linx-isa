@@ -48,14 +48,8 @@ make gen
 
 注意：`build/` 被 gitignored；本地构建输出不会提交到存储库。
 
-## 0.59.1 离线中文指令手册
+## 0.59.2 离线 HTML 手册
 
-从 [0.59.1 正式发行页](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1) 下载 HTML 压缩包，解压后打开 `index.html`。首页按 ALU、BBD、BRU、LSU 等功能分类；每类都有独立的助记符索引。进入指令页后可直接阅读本仓库中文站原有的说明、示例和原图，另可展开发布版位图和编码表。版本与来源页列出发布提交和目录文件的校验摘要。
+解压后打开 `index.html`，从八个功能分类、助记符或编码索引查找指令。本版收录 1,306 个编码形式和 119 个 Tile 操作。四个只预留编码的形式在正文中单独标注。[下载中文 HTML 手册](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip)
 
-在仓库的 `docs/architecture/isa-manual` 目录执行 `make html-reference check-html-reference` 可重新生成并核对。生成器读取正式 tag，并逐项对照 578 个公共形式、705 个 scoped 形式和 216 个 Linx 专有形式。浅克隆需先获取 `v0.59.1` 标签。
-
-生成中文原文页使用仓库现有的 MkDocs 文档依赖。分类与单页的设计依据见[参考站组织结构分析](arm64-reference-organization.md)。
-
-架构状态、执行模型和异常说明同样取自发布标签的中文源文件。系统寄存器表单独列出本版的 100 项定义。22 个无独立原页的条目标为“0.59.1 增补”。从仓库根目录运行 `python3 -m pip install -r docs/architecture/isa-manual/reference/requirements.txt` 即可安装与发布包相同版本的 Markdown 和代码高亮组件。
-
-[独立审阅记录](reader-quality-review.md)列出影响芯片实现的版本差异及修正。
+在本目录运行 `make html-reference check-html-reference` 可重建和核验。检出环境需要 v0.59.2 发布标签和 v0.59.1 的原始中文资料标签。Markdown 依赖列在 `reference/requirements.txt` 中。

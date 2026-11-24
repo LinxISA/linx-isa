@@ -22,21 +22,32 @@ def cat_file(key):
     return "class-" + BY_KEY[key][0].lower() + ".html"
 
 
-def category_links(prefix=""):
+def _selected_categories(active_keys=None):
+    if active_keys is None:
+        return CATEGORIES
+    active = frozenset(active_keys)
+    unknown = active - set(BY_KEY)
+    if unknown:
+        raise ValueError(f"unknown functional classes: {sorted(unknown)}")
+    return tuple(item for item in CATEGORIES if item[1] in active)
+
+
+def category_links(prefix="", active_keys=None):
     return "".join(
         f'<a href="{prefix}{cat_file(key)}">{name}</a>'
-        for name, key, _, _ in CATEGORIES
+        for name, key, _, _ in _selected_categories(active_keys)
     )
 
 
-def index_pages(rows, entries, alpha_index, tile_count):
+def index_pages(rows, entries, alpha_index, tile_count, active_keys=None):
     counts = Counter(row["uop_big_kind"] for row in rows)
-    if set(counts) != set(BY_KEY):
+    expected = set(BY_KEY) if active_keys is None else set(active_keys)
+    if set(counts) != expected:
         raise ValueError("functional class mapping differs from the release catalog")
     by_name = {e[0]: e for e in entries}
     table = []
     result = {}
-    for name, key, label, description in CATEGORIES:
+    for name, key, label, description in _selected_categories(expected):
         mnemonics = sorted({r["mnemonic"] for r in rows if r["uop_big_kind"] == key})
         url = cat_file(key)
         intro = f"<p>{escape(description)} 本类收录 {len(mnemonics)} 个目录助记符、{counts[key]} 个编码形式。</p>"

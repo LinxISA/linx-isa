@@ -23,7 +23,7 @@
 
 This repository serves as the **superproject** that pins together all ecosystem components: compiler (LLVM), emulator (QEMU), Linux kernel, RTL (LinxCore), and standard libraries (glibc, musl).
 
-The [LinxISA 0.59.2 specification release](docs/releases/v0.59.2.md) publishes the machine-readable instruction status, encodings and Sail model. [Download the 0.59.1 offline HTML instruction reference](https://github.com/LinxISA/linx-isa/releases/download/v0.59.1/linxisa-0.59.1-html.zip). The platform bring-up default is
+The [LinxISA 0.59.2 specification release](docs/releases/v0.59.2.md) publishes the machine-readable instruction status, encodings and Sail model. [Download the 0.59.2 offline HTML instruction reference](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip). The platform bring-up default is
 `isa/v0.58/linxisa-v0.58.json`. Historical profiles and archives do not define
 current encodings or semantics.
 

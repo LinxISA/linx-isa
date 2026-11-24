@@ -344,6 +344,7 @@ def build_support_bundle(
     entries: list[str] | tuple[str, ...],
     *,
     max_documents: int | None = None,
+    source_text: Callable[[str], str | None] | None = None,
     follow_document: Callable[[str, str], bool] | None = None,
     document_routes: Mapping[str, str] | None = None,
 ) -> SupportBundle:
@@ -359,8 +360,12 @@ def build_support_bundle(
             continue
         if max_documents is not None and len(seen) >= max_documents:
             raise ValueError(f"support document graph exceeds {max_documents} files")
-        f = render_tagged_markdown(
+        markdown = source_text(path) if source_text else edit_article(path)[0]
+        if markdown is None:
+            continue
+        f = render_markdown_text(
             path,
+            markdown,
             current_page=support_document_path(path),
             follow_document=follow_document,
             document_routes=document_routes,
