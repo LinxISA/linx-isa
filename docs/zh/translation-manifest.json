@@ -674,8 +674,8 @@
       "translation_sha256": "16bb434410d480303055fd4b6fee8c27336ebdc108dd697b0ab272dfc3aec335"
     },
     "index.md": {
-      "source_sha256": "5358205180b7b96272a6ee1a379b16c70266bf0dd701930c312ee4544b0aaaef",
-      "translation_sha256": "903e08d08ee843850e4c0afc1b5ec86f6b11824e0d65d205e9eec75e26fb61ae"
+      "source_sha256": "30c428266081223ad6970c75f8abb622328b12c43ce76ea8453dff89009c7e76",
+      "translation_sha256": "a904f3512a43a4ea2cbcfb78dd6f283025749dfe3029e2f05be6928dc11c455b"
     },
     "isa/arch/acr.md": {
       "source_sha256": "2b88fbd40860e1ae6902022669ed0f6564dbe3f50e77bdad795196449cb18321",
@@ -8112,6 +8112,10 @@
     "releases/v0.59.1.md": {
       "source_sha256": "f7c1b8700adf16b8ec06164765f33de8efe9b4dc913ea7997ccf18c7c01ef028",
       "translation_sha256": "a5c057730c8dfef458f6fd8682bb06cbf05c0ac6555f666bbf51d82bb74d6a2e"
+    },
+    "releases/v0.59.2.md": {
+      "source_sha256": "84ee2fbcd3fa8f493143a2f16446687983238d43b7bf29603100cde9388dcf42",
+      "translation_sha256": "f63259357995fe9e98181ece494e39c19c2b31dfef829547b9112144f8c1a392"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",

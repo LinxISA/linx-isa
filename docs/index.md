@@ -7,7 +7,9 @@
 
 **Linx** is a modern, GPU-like instruction set architecture designed for rendering and compute workloads. This is the canonical reference documentation site, built from the [linx-isa](https://github.com/LinxISA/linx-isa) superproject.
 
-### Architecture at a Glance
+The [v0.59.2 specification](releases/v0.59.2.md) publishes per-form obsolescence and encoding reservations.
+
+### Platform bring-up profile
 
 | | |
 |---|---|
