@@ -3,7 +3,7 @@
   "schema_version": "linxisa.linx-extension-forms.v1",
   "isa": "LinxISA",
   "version": "0.59.1",
-  "status": "unreleased-working",
+  "status": "release-ready",
   "source_reference": {
     "tag": "v0.59.1",
     "commit": "d262515b55c727073997c8f4c95261909f2fe8d3",

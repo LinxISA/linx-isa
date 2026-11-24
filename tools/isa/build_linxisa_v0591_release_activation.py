@@ -108,8 +108,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
     if catalog.get("instruction_count") != 1306:
         raise ValueError("v0.59 release package requires exactly 1306 catalog rows")
     status = catalog.get("release_status", {})
-    if status.get("state") != "unreleased-working":
-        raise ValueError("v0.59 catalog is not the unreleased working specification")
+    if status.get("state") != "local-release-ready":
+        raise ValueError("v0.59 catalog is not locally release-ready")
     if status.get("counts") != {"common": 578, "linx_only": 23, "scoped": 705}:
         raise ValueError("v0.59 catalog cardinality is not 578+23+705")
     lock = load(LOCK)
@@ -135,7 +135,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
                 "release_manifest": "isa/v0.58/release_manifest.json",
             },
             "v0.59": {
-                "state": "release-candidate-explicit-profile",
+                "state": "release-ready-explicit-profile",
                 "version": "0.59.1",
                 "publication_revision": PUBLICATION_REVISION,
                 "catalog": "isa/v0.59/linxisa-v0.59.json",
@@ -161,8 +161,13 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "version": "0.59.1",
         "publication_revision": PUBLICATION_REVISION,
         "signed_baseline": SIGNED_BASELINE,
-        "state": "release-candidate",
-        "publication_allowed": False,
+        "state": "local-release-ready",
+        "publication_allowed": True,
+        "external_publication_record": {
+            "kind": "github-release-url",
+            "tracking": "external",
+            "embedded_value": None,
+        },
         "default_profile": "v0.58",
         "profile_selection": {
             "path": "isa/profile-selection.json",
@@ -206,6 +211,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "specification_qualified": True,
             "encoding_qualified": True,
             "sail_package_qualified": True,
+            "compiler_qualified": False,
             "component_pins_qualified": False,
             "rtl_qualified": False,
             "linux_qualified": False,
@@ -222,6 +228,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         },
         "activation_policy": {
             "explicit_profile_ready": True,
+            "release_ready": True,
             "published_default_switch_requires_platform_qualification": True,
             "default_switch_requested": False,
         },
@@ -232,11 +239,12 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "ranges": hard_reject,
         },
         "approval_gates": {
-            "state": "awaiting-final-publication-approval",
-            "publication_approved": False,
+            "state": "release-ready",
+            "validated_scope_approved": True,
             "sail_input_hashes_locked": True,
-            "html_validation_required": True,
-            "release_action_permitted": False,
+            "html_validation_passed": True,
+            "release_action_permitted": True,
+            "operator_publication_required": True,
         },
         "required_checks": [
             "python3 tools/isa/build_golden.py --profile v0.59 --check",
@@ -244,7 +252,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "opam exec -- python3 tools/isa/check_v0591_candidate_dispatch_sail.py",
             "python3 -m unittest tools.isa.test_v0591_sail_hard_break",
             "python3 tools/isa/export_linxisa_v0591_sail.py --check <release-sail-directory>",
-            "python3 tools/isa/check_html_reference.py --site docs/architecture/isa-manual/build/instruction-reference",
+            "make -C docs/architecture/isa-manual check-html-reference",
             "python3 tools/isa/build_linxisa_v0591_release_activation.py --check",
         ],
     }
@@ -268,7 +276,7 @@ def main() -> int:
         ]
         if stale:
             raise SystemExit(f"stale v0.59.1 release activation: {stale}")
-        print("LinxISA v0.59.1 release activation package is current")
+        print("LinxISA v0.59.1 local release-ready package is current")
         return 0
     for path, content in outputs:
         path.parent.mkdir(parents=True, exist_ok=True)

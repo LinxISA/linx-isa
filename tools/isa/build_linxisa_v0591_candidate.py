@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the local, unreleased LinxISA v0.59.1 working catalog."""
+"""Build the local release-ready LinxISA v0.59.1 revision-1 catalog."""
 
 from __future__ import annotations
 
@@ -389,6 +389,8 @@ def linx_extension_forms() -> list[dict[str, Any]]:
     document = load(LINX_EXTENSIONS)
     if document.get("version") != "0.59.1":
         raise ValueError("Linx extension source must describe v0.59.1")
+    if document.get("status") != "release-ready":
+        raise ValueError("Linx extension source is not release-ready")
     forms = document.get("forms")
     if not isinstance(forms, list):
         raise ValueError("Linx extension source forms must be an array")
@@ -399,7 +401,9 @@ def linx_extension_forms() -> list[dict[str, Any]]:
         or len(form_ids) != len(set(form_ids))
         or set(form_ids) != EXPECTED_LINX_EXTENSION_IDS
     ):
-        raise ValueError("Linx extension source must contain exactly the 23 retained forms")
+        raise ValueError(
+            "Linx extension source must contain exactly the 23 retained forms"
+        )
     if any(form.get("pto_source_form_id") for form in forms):
         raise ValueError("Linx extension source contains a PTO-owned form")
     if any(
@@ -504,13 +508,19 @@ def build() -> dict[str, Any]:
         "isa": baseline["isa"],
         "version": "0.59.1",
         "release_status": {
-            "state": "unreleased-working",
+            "state": "local-release-ready",
             "publication_revision": PUBLICATION_REVISION,
             "signed_baseline": copy.deepcopy(SIGNED_BASELINE),
             "selection": "explicit-v0.59-profile",
             "default_profile": "v0.58",
-            "publication_allowed": False,
-            "qualification_scope": [],
+            "publication_allowed": True,
+            "release_qualified": True,
+            "qualification_scope": [
+                "source",
+                "architecture-specification",
+                "encoding",
+                "sail-package",
+            ],
             "platform_qualified": False,
             "source_bindings": "isa/v0.59/pto-v0591-candidate.json",
             "source_bindings_sha256": bindings_sha256,

@@ -20,21 +20,32 @@ from export_linxisa_v0591_sail import export as export_sail
 
 
 class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
-    def test_package_is_deterministic_release_candidate(self):
+    def test_package_is_deterministic_and_locally_release_ready(self):
         selection, package = build()
         self.assertEqual((selection, package), build())
         self.assertEqual(selection["default_profile"], "v0.58")
         self.assertEqual(
             selection["profiles"]["v0.59"]["state"],
-            "release-candidate-explicit-profile",
+            "release-ready-explicit-profile",
         )
         self.assertTrue(selection["profiles"]["v0.59"]["release_qualified"])
         self.assertFalse(selection["profiles"]["v0.59"]["platform_qualified"])
-        self.assertEqual(package["state"], "release-candidate")
+        self.assertEqual(package["state"], "local-release-ready")
         self.assertEqual(package["publication_revision"], 1)
-        self.assertFalse(package["publication_allowed"])
-        self.assertFalse(package["approval_gates"]["publication_approved"])
-        self.assertFalse(package["approval_gates"]["release_action_permitted"])
+        self.assertTrue(package["publication_allowed"])
+        self.assertNotIn("published", package)
+        self.assertEqual(
+            package["external_publication_record"],
+            {
+                "kind": "github-release-url",
+                "tracking": "external",
+                "embedded_value": None,
+            },
+        )
+        self.assertEqual(package["approval_gates"]["state"], "release-ready")
+        self.assertTrue(package["approval_gates"]["release_action_permitted"])
+        self.assertTrue(package["approval_gates"]["operator_publication_required"])
+        self.assertNotIn("github_release_published", package["approval_gates"])
         self.assertTrue(package["activation_policy"]["explicit_profile_ready"])
         self.assertTrue(
             package["activation_policy"][
@@ -44,6 +55,7 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         self.assertTrue(package["qualification"]["release_qualified"])
         self.assertTrue(package["qualification"]["source_qualified"])
         self.assertTrue(package["qualification"]["specification_qualified"])
+        self.assertFalse(package["qualification"]["compiler_qualified"])
         self.assertFalse(package["qualification"]["rtl_qualified"])
         self.assertFalse(package["qualification"]["linux_qualified"])
         self.assertFalse(package["qualification"]["system_runtime_qualified"])
@@ -74,9 +86,7 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         self.assertIn("isa/v0.59/sail/model/execute/execute.sail", package["inputs"])
         self.assertIn("isa/v0.59/sail/model/linxisa_v0591.sail", package["inputs"])
         self.assertIn("tools/isa/test_v0591_sail_hard_break.py", package["inputs"])
-        self.assertIn(
-            "isa/v0.59/sail/v0591_hard_break_tests.sail", package["inputs"]
-        )
+        self.assertIn("isa/v0.59/sail/v0591_hard_break_tests.sail", package["inputs"])
         self.assertIn("isa/v0.59/sail/README.md", package["inputs"])
         self.assertIn(
             "isa/v0.59/sail/v0591_candidate_dispatch_tests.sail", package["inputs"]
@@ -87,7 +97,10 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
             package["hard_reject_reserved_encodings"]["reallocation_allowed"]
         )
         self.assertEqual(
-            {row["mnemonic"] for row in package["hard_reject_reserved_encodings"]["ranges"]},
+            {
+                row["mnemonic"]
+                for row in package["hard_reject_reserved_encodings"]["ranges"]
+            },
             {
                 "V.*",
                 "B.TEXT",
@@ -149,7 +162,7 @@ class LinxISAV0591ReleaseActivationTest(unittest.TestCase):
         )
         self.assertEqual(
             json.loads(selected.stdout)["state"],
-            "release-candidate-explicit-profile",
+            "release-ready-explicit-profile",
         )
         qualified = subprocess.run(
             [

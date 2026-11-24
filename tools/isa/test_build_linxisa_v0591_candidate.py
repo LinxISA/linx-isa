@@ -60,18 +60,26 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             {item["pto_source_form_id"]: (item["id"], item["uid"]) for item in common},
             old_common,
         )
-        source = json.loads(candidate_builder.LINX_EXTENSIONS.read_text(encoding="utf-8"))
+        source = json.loads(
+            candidate_builder.LINX_EXTENSIONS.read_text(encoding="utf-8")
+        )
+        self.assertEqual(source["status"], "release-ready")
         self.assertEqual(
             {item["id"]: item for item in linx_only},
             {item["id"]: item for item in source["forms"]},
         )
-        self.assertEqual(set(source["form_ids"]), candidate_builder.EXPECTED_LINX_EXTENSION_IDS)
+        self.assertEqual(
+            set(source["form_ids"]), candidate_builder.EXPECTED_LINX_EXTENSION_IDS
+        )
 
     def test_every_retained_row_is_exactly_the_v0591_reference_row(self):
         reference = {item["id"]: item for item in self.reference["instructions"]}
         self.assertEqual(
             {item["id"]: item for item in self.candidate["instructions"]},
-            {item["id"]: reference[item["id"]] for item in self.candidate["instructions"]},
+            {
+                item["id"]: reference[item["id"]]
+                for item in self.candidate["instructions"]
+            },
         )
 
     def test_state_contains_only_current_v059_owned_projections(self):
@@ -112,8 +120,9 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
             23,
         )
         self.assertEqual(
-            self.candidate["release_status"]["external_authoritative_v059_files"]
-            ["tile_operations"],
+            self.candidate["release_status"]["external_authoritative_v059_files"][
+                "tile_operations"
+            ],
             {
                 "path": "isa/v0.59/state/pto_tile_operations.json",
                 "precedence": "authoritative-v0.59-owner",
@@ -144,7 +153,9 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
                     candidate_builder.frozen_bindings()
 
     def test_linx_extension_source_fails_closed_on_removed_mnemonic(self):
-        source = json.loads(candidate_builder.LINX_EXTENSIONS.read_text(encoding="utf-8"))
+        source = json.loads(
+            candidate_builder.LINX_EXTENSIONS.read_text(encoding="utf-8")
+        )
         source["forms"][0]["mnemonic"] = "V.REVIVED"
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "linx_extension_forms.json"
@@ -157,7 +168,16 @@ class LinxISAV0591CandidateTest(unittest.TestCase):
         self.assertEqual(render(self.candidate), render(build()))
         self.assertEqual(self.candidate["schema"], "linxisa.catalog.v0")
         self.assertEqual(self.candidate["version"], "0.59.1")
-        self.assertEqual(self.candidate["release_status"]["state"], "unreleased-working")
+        self.assertEqual(
+            self.candidate["release_status"]["state"], "local-release-ready"
+        )
+        self.assertTrue(self.candidate["release_status"]["publication_allowed"])
+        self.assertTrue(self.candidate["release_status"]["release_qualified"])
+        self.assertEqual(
+            self.candidate["release_status"]["qualification_scope"],
+            ["source", "architecture-specification", "encoding", "sail-package"],
+        )
+        self.assertFalse(self.candidate["release_status"]["platform_qualified"])
         self.assertEqual(self.candidate["release_status"]["publication_revision"], 1)
         self.assertEqual(
             self.candidate["release_status"]["signed_baseline"]["commit"],

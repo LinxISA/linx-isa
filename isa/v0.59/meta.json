@@ -1,7 +1,7 @@
 {
   "isa": "LinxISA",
   "version": "0.59.1",
-  "status": "release-candidate",
+  "status": "local-release-ready",
   "publication_revision": 1,
   "signed_baseline": {
     "tag": "v0.59.1",
@@ -23,7 +23,7 @@
   "authoritative_sources": {
     "linx_extension_forms": {
       "path": "isa/v0.59/state/linx_extension_forms.json",
-      "sha256": "a6212c5d8cad0204162bb7bc6ef1f983679f0b22de0736031720cd587a68069c",
+      "sha256": "5d89782362cb9fff6397adcf0eb4497dd94d78144636c696677488167f963e75",
       "count": 23,
       "ownership": "v0.59-positive-definitions"
     },
@@ -58,14 +58,14 @@
   },
   "catalog": "isa/v0.59/linxisa-v0.59.json",
   "release_activation": {
-    "state": "release-candidate-explicit-profile",
+    "state": "release-ready-explicit-profile",
     "profile_selection": "isa/profile-selection.json",
     "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
     "sail_entry": "model/linxisa_v0591.sail",
     "default_profile_changed": false
   },
   "notes": [
-    "LinxISA 0.59.1 is a local unreleased working specification; v0.58 remains the default platform profile.",
+    "LinxISA 0.59.1 revision 1 is locally release-ready for its validated specification scope; this does not claim that the revision has been published to GitHub.",
     "The 578 common and 705 scoped forms come from the exact frozen PTO ISA 0.59.1 lock; the 23 Linx-only rows are owned by the v0.59 positive-definition source.",
     "The 193 removed two-level execution forms are absent from the working catalog while their ten PTO encoding reservations remain in force.",
     "Revision 1 qualifies the source, architecture specification, encoding, and Sail-package scope only.",

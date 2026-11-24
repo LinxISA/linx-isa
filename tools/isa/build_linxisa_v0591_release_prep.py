@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build metadata for the local, unreleased LinxISA v0.59.1 working spec."""
+"""Build local release-ready metadata for LinxISA v0.59.1 revision 1."""
 
 from __future__ import annotations
 
@@ -65,7 +65,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
     meta = {
         "isa": "LinxISA",
         "version": "0.59.1",
-        "status": "release-candidate",
+        "status": "local-release-ready",
         "publication_revision": PUBLICATION_REVISION,
         "signed_baseline": SIGNED_BASELINE,
         "instruction_lengths_bits": [16, 32, 48, 64],
@@ -113,14 +113,14 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         },
         "catalog": "isa/v0.59/linxisa-v0.59.json",
         "release_activation": {
-            "state": "release-candidate-explicit-profile",
+            "state": "release-ready-explicit-profile",
             "profile_selection": "isa/profile-selection.json",
             "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
             "sail_entry": "model/linxisa_v0591.sail",
             "default_profile_changed": False,
         },
         "notes": [
-            "LinxISA 0.59.1 is a local unreleased working specification; v0.58 remains the default platform profile.",
+            "LinxISA 0.59.1 revision 1 is locally release-ready for its validated specification scope; this does not claim that the revision has been published to GitHub.",
             "The 578 common and 705 scoped forms come from the exact frozen PTO ISA 0.59.1 lock; the 23 Linx-only rows are owned by the v0.59 positive-definition source.",
             "The 193 removed two-level execution forms are absent from the working catalog while their ten PTO encoding reservations remain in force.",
             "Revision 1 qualifies the source, architecture specification, encoding, and Sail-package scope only.",
@@ -171,19 +171,24 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "schema": bindings["schema"],
         },
         "elf_identity": load(V058_MANIFEST)["elf_identity"],
-        "status": "release-candidate",
+        "status": "local-release-ready",
         "publication_revision": PUBLICATION_REVISION,
         "signed_baseline": SIGNED_BASELINE,
         "identity": identity,
         "publication": {
-            "state": "unreleased-working",
-            "published": False,
+            "state": "local-release-ready",
+            "publication_ready": True,
             "version": "0.59.1",
             "revision": PUBLICATION_REVISION,
             "profile_selection": "explicit-v0.59",
+            "external_publication_record": {
+                "kind": "github-release-url",
+                "tracking": "external",
+                "embedded_value": None,
+            },
         },
         "release_activation": {
-            "state": "release-candidate-explicit-profile",
+            "state": "release-ready-explicit-profile",
             "profile_selection": "isa/profile-selection.json",
             "catalog": "isa/v0.59/linxisa-v0.59.json",
             "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
@@ -202,11 +207,13 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "specification_qualified": True,
             "encoding_qualified": True,
             "sail_package_qualified": True,
+            "compiler_qualified": False,
             "rtl_qualified": False,
             "linux_qualified": False,
             "leaf_components_qualified": False,
             "system_runtime_qualified": False,
             "remaining_platform_qualification": [
+                "complete compiler code generation, assembler/linker, and runtime qualification for revision 1",
                 "promote exact reviewed component pins in the owning superproject change",
                 "complete Linux and leaf-component validation at those exact pins",
                 "qualify RTL and full system runtime against the published specification identity",
@@ -236,7 +243,7 @@ def main() -> int:
         ]
         if stale:
             raise SystemExit(f"stale LinxISA v0.59.1 release preparation: {stale}")
-        print("LinxISA v0.59.1 unreleased working metadata is current")
+        print("LinxISA v0.59.1 local release-ready metadata is current")
         return 0
     for path, content in outputs:
         path.write_text(content, encoding="utf-8")

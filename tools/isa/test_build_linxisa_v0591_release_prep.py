@@ -19,11 +19,11 @@ from build_golden import _profile_defaults
 
 
 class LinxISAV0591ReleasePrepTest(unittest.TestCase):
-    def test_manifest_is_deterministic_and_unreleased(self):
+    def test_manifest_is_deterministic_and_locally_release_ready(self):
         meta, manifest = build()
         self.assertEqual((meta, manifest), build())
-        self.assertEqual(meta["status"], "release-candidate")
-        self.assertEqual(manifest["status"], "release-candidate")
+        self.assertEqual(meta["status"], "local-release-ready")
+        self.assertEqual(manifest["status"], "local-release-ready")
         self.assertEqual(meta["publication_revision"], 1)
         self.assertEqual(manifest["publication_revision"], 1)
         self.assertEqual(
@@ -31,7 +31,16 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
             "d262515b55c727073997c8f4c95261909f2fe8d3",
         )
         self.assertEqual(manifest["publication"]["version"], "0.59.1")
-        self.assertFalse(manifest["publication"]["published"])
+        self.assertTrue(manifest["publication"]["publication_ready"])
+        self.assertNotIn("published", manifest["publication"])
+        self.assertEqual(
+            manifest["publication"]["external_publication_record"],
+            {
+                "kind": "github-release-url",
+                "tracking": "external",
+                "embedded_value": None,
+            },
+        )
         self.assertNotIn("component_pins", manifest)
         self.assertNotIn("tag", manifest)
         self.assertNotIn("package", manifest["release_activation"])
@@ -41,6 +50,7 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
         self.assertTrue(manifest["qualification"]["specification_qualified"])
         self.assertTrue(manifest["qualification"]["encoding_qualified"])
         self.assertTrue(manifest["qualification"]["sail_package_qualified"])
+        self.assertFalse(manifest["qualification"]["compiler_qualified"])
         self.assertFalse(manifest["qualification"]["rtl_qualified"])
         self.assertFalse(manifest["qualification"]["linux_qualified"])
         self.assertFalse(manifest["qualification"]["leaf_components_qualified"])
@@ -60,9 +70,7 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
             (ROOT / "isa/v0.59/pto-spec.lock.json").read_text(encoding="utf-8")
         )
         catalog = json.loads(
-            (ROOT / "isa/v0.59/linxisa-v0.59.json").read_text(
-                encoding="utf-8"
-            )
+            (ROOT / "isa/v0.59/linxisa-v0.59.json").read_text(encoding="utf-8")
         )
         self.assertEqual(manifest["identity"]["release"], lock["release"])
         self.assertEqual(
@@ -91,14 +99,18 @@ class LinxISAV0591ReleasePrepTest(unittest.TestCase):
         tile = manifest["authoritative_sources"]["tile_operations"]
         self.assertEqual(tile["path"], "isa/v0.59/state/pto_tile_operations.json")
         self.assertEqual(tile["count"], 119)
-        self.assertEqual(tile["upstream_sha256"], lock["catalogs"]["tile_operations"]["sha256"])
+        self.assertEqual(
+            tile["upstream_sha256"], lock["catalogs"]["tile_operations"]["sha256"]
+        )
         self.assertEqual(tile["precedence"], "authoritative-v0.59-owner")
         self.assertEqual(
             manifest["authoritative_sources"]["system_registers"]["upstream_sha256"],
             lock["catalogs"]["system_registers"]["sha256"],
         )
         self.assertEqual(
-            manifest["authoritative_sources"]["numeric_conformance_vectors"]["upstream_sha256"],
+            manifest["authoritative_sources"]["numeric_conformance_vectors"][
+                "upstream_sha256"
+            ],
             lock["numeric_conformance_vectors"]["sha256"],
         )
 

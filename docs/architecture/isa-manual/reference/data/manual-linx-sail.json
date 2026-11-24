@@ -1,7 +1,7 @@
 {
   "catalog": {
     "path": "isa/v0.59/linxisa-v0.59.json",
-    "sha256": "df31df4594ef1257caf63bd605f34c32166975aa1eb2d1c90be64d4b35d51071"
+    "sha256": "17d6171020b745c0d1dada635d9c6c16f05d5d1043b6fdfcb6b463247204209c"
   },
   "coverage": {
     "helper_forms": 19,

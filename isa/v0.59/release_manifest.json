@@ -35,7 +35,7 @@
   "authoritative_sources": {
     "linx_extension_forms": {
       "path": "isa/v0.59/state/linx_extension_forms.json",
-      "sha256": "a6212c5d8cad0204162bb7bc6ef1f983679f0b22de0736031720cd587a68069c",
+      "sha256": "5d89782362cb9fff6397adcf0eb4497dd94d78144636c696677488167f963e75",
       "count": 23,
       "ownership": "v0.59-positive-definitions"
     },
@@ -70,9 +70,9 @@
   },
   "catalog": {
     "path": "isa/v0.59/linxisa-v0.59.json",
-    "sha256": "df31df4594ef1257caf63bd605f34c32166975aa1eb2d1c90be64d4b35d51071",
+    "sha256": "17d6171020b745c0d1dada635d9c6c16f05d5d1043b6fdfcb6b463247204209c",
     "schema": "linxisa.catalog.v0",
-    "status": "unreleased-working"
+    "status": "local-release-ready"
   },
   "frozen_bindings": {
     "path": "isa/v0.59/pto-v0591-candidate.json",
@@ -96,7 +96,7 @@
     "note_type_value": 1,
     "section": ".note.pto.isa"
   },
-  "status": "release-candidate",
+  "status": "local-release-ready",
   "publication_revision": 1,
   "signed_baseline": {
     "tag": "v0.59.1",
@@ -109,14 +109,19 @@
     "release": "0.59.1"
   },
   "publication": {
-    "state": "unreleased-working",
-    "published": false,
+    "state": "local-release-ready",
+    "publication_ready": true,
     "version": "0.59.1",
     "revision": 1,
-    "profile_selection": "explicit-v0.59"
+    "profile_selection": "explicit-v0.59",
+    "external_publication_record": {
+      "kind": "github-release-url",
+      "tracking": "external",
+      "embedded_value": null
+    }
   },
   "release_activation": {
-    "state": "release-candidate-explicit-profile",
+    "state": "release-ready-explicit-profile",
     "profile_selection": "isa/profile-selection.json",
     "catalog": "isa/v0.59/linxisa-v0.59.json",
     "sail_exporter": "tools/isa/export_linxisa_v0591_sail.py",
@@ -135,11 +140,13 @@
     "specification_qualified": true,
     "encoding_qualified": true,
     "sail_package_qualified": true,
+    "compiler_qualified": false,
     "rtl_qualified": false,
     "linux_qualified": false,
     "leaf_components_qualified": false,
     "system_runtime_qualified": false,
     "remaining_platform_qualification": [
+      "complete compiler code generation, assembler/linker, and runtime qualification for revision 1",
       "promote exact reviewed component pins in the owning superproject change",
       "complete Linux and leaf-component validation at those exact pins",
       "qualify RTL and full system runtime against the published specification identity",
