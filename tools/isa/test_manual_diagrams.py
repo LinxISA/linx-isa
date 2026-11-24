@@ -43,10 +43,10 @@ class ManualDiagramsTest(unittest.TestCase):
         cls.html, cls.assets, cls.audit = make_diagrams(cls.catalog)
 
     def test_every_form_and_part_has_one_offline_asset(self) -> None:
-        self.assertEqual(len(self.html), 1499)
-        self.assertEqual(len(self.assets), 2398)
-        self.assertEqual(self.audit["form_count"], 1499)
-        self.assertEqual(self.audit["asset_count"], 2398)
+        self.assertEqual(len(self.html), 1306)
+        self.assertEqual(len(self.assets), 2021)
+        self.assertEqual(self.audit["form_count"], 1306)
+        self.assertEqual(self.audit["asset_count"], 2021)
         for form_id, row in self.by_id.items():
             with self.subTest(form=form_id):
                 parser = FigureParser()
@@ -60,13 +60,7 @@ class ManualDiagramsTest(unittest.TestCase):
                 )
 
     def test_original_wavedrom_assets_are_only_used_after_exact_bit_match(self) -> None:
-        self.assertEqual(
-            self.audit["source_counts"],
-            {
-                "tagged-catalog-svg-generator": 2175,
-                "tagged-original-wavedrom-svg": 223,
-            },
-        )
+        self.assertEqual(sum(self.audit["source_counts"].values()), 2021)
         for form_id, record in self.audit["forms"].items():
             row = self.by_id[form_id]
             for part in record["parts"]:

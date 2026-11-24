@@ -10,13 +10,13 @@ from html import escape
 import json
 from pathlib import Path
 import re
-import subprocess
-import sys
 import tempfile
 from typing import Any, Mapping
 
+from export_linxisa_v0591_sail import check as check_export
+from export_linxisa_v0591_sail import export as export_sail
+
 from manual_tag import (
-    REVIEWED_COMMIT,
     RELEASE_TAG,
     REPO_ROOT,
     tagged_bytes,
@@ -27,7 +27,7 @@ from manual_tag import (
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "docs/architecture/isa-manual/reference/data/manual-linx-sail.json"
 CATALOG_PATH = "isa/v0.59/linxisa-v0.59.json"
-DECODE_PACKAGE_PATH = "sail/model/decode/decode.sail"
+DECODE_PACKAGE_PATH = "model/decode/decode.sail"
 GENERATOR_PATH = "tools/isa/gen_sail_decode.py"
 
 
@@ -74,65 +74,25 @@ def _function_block(source: bytes, name: str) -> tuple[int, int, str]:
     raise ValueError(f"Sail helper {name} is unterminated")
 
 
+@lru_cache(maxsize=1)
+def _exported_sail_sources() -> dict[str, bytes]:
+    """Capture the hardened v0.59.1 export independently of the v0.58 model."""
+    with tempfile.TemporaryDirectory(prefix="linx-v0591-manual-export-") as directory:
+        root = Path(directory) / "sail"
+        export_sail(root)
+        return {
+            path.relative_to(root).as_posix(): path.read_bytes()
+            for path in sorted((root / "model").rglob("*.sail"))
+        }
+
+
 def _sail_sources() -> dict[str, bytes]:
-    output = subprocess.check_output(
-        [
-            "git",
-            "ls-tree",
-            "-r",
-            "--name-only",
-            REVIEWED_COMMIT,
-            "--",
-            "isa/sail/model",
-        ],
-        cwd=REPO_ROOT,
-        text=True,
-    )
-    paths = [path for path in output.splitlines() if path.endswith(".sail")]
-    return {path: tagged_bytes(path) for path in paths}
+    return _exported_sail_sources()
 
 
 def _release_decode() -> bytes:
-    """Reproduce the versioned 0.59 decoder, never the generic v0.58 file."""
-    inputs = {
-        GENERATOR_PATH: tagged_bytes(GENERATOR_PATH),
-        CATALOG_PATH: tagged_bytes(CATALOG_PATH),
-        "isa/sail/model/execute/execute.sail": tagged_bytes(
-            "isa/sail/model/execute/execute.sail"
-        ),
-        "isa/sail/semantics_policy.json": tagged_bytes(
-            "isa/sail/semantics_policy.json"
-        ),
-    }
-    with tempfile.TemporaryDirectory(prefix="linx-v0591-decode-replay-") as directory:
-        root = Path(directory)
-        for relative, content in inputs.items():
-            path = root / relative
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(content)
-        output = root / DECODE_PACKAGE_PATH
-        output.parent.mkdir(parents=True, exist_ok=True)
-        result = subprocess.run(
-            [
-                sys.executable,
-                GENERATOR_PATH,
-                "--spec",
-                CATALOG_PATH,
-                "--execute",
-                "isa/sail/model/execute/execute.sail",
-                "--out",
-                DECODE_PACKAGE_PATH,
-            ],
-            cwd=root,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode:
-            raise ValueError(
-                result.stderr or result.stdout or "tagged decoder replay failed"
-            )
-        return output.read_bytes()
+    """Return the decoder from the hardened v0.59.1 Sail export."""
+    return _exported_sail_sources()[DECODE_PACKAGE_PATH]
 
 
 def _handler_index(names: set[str]) -> dict[str, dict[str, Any]]:
@@ -157,10 +117,6 @@ def _handler_index(names: set[str]) -> dict[str, dict[str, Any]]:
             "excerpt": excerpt,
             "excerpt_sha256": _sha(excerpt.encode("utf-8")),
             "file_sha256": _sha(sources[path]),
-            "source_url": (
-                f"https://github.com/LinxISA/linx-isa/blob/{REVIEWED_COMMIT}/"
-                f"{path}#L{start}-L{end}"
-            ),
         }
     return handlers
 
@@ -214,10 +170,6 @@ def build() -> dict[str, Any]:
                 "line_end": end,
                 "excerpt": excerpt,
                 "excerpt_sha256": _sha(excerpt.encode("utf-8")),
-                "generator_url": (
-                    f"https://github.com/LinxISA/linx-isa/blob/{REVIEWED_COMMIT}/"
-                    f"{GENERATOR_PATH}"
-                ),
                 "catalog_comment_kind": (
                     "exact-source-row" if exact_hits else "unsupported-subset-row"
                 ),
@@ -225,13 +177,13 @@ def build() -> dict[str, Any]:
             "disposition": disposition,
             "helpers": helpers,
         }
-    if len(forms) != 216:
-        raise ValueError(f"expected 216 retained Linx-only forms, found {len(forms)}")
+    if len(forms) != 23:
+        raise ValueError(f"expected 23 retained Linx-only forms, found {len(forms)}")
     handlers = _handler_index(helper_names)
     return {
         "schema": "linxisa.manual.linx-only-sail.v1",
         "release_tag": RELEASE_TAG,
-        "source_commit": REVIEWED_COMMIT,
+        "source_identity": "hardened-v0.59.1-sail-export",
         "catalog": {
             "path": CATALOG_PATH,
             "sha256": _sha(tagged_bytes(CATALOG_PATH)),
@@ -279,18 +231,11 @@ def _source_matches(row: Mapping[str, Any], evidence: Mapping[str, Any]) -> bool
 
 def _source_block(title: str, record: Mapping[str, Any], css_class: str) -> str:
     start, end = int(record["line_start"]), int(record["line_end"])
-    if "source_url" in record:
-        source = (
-            f'<a href="{escape(str(record["source_url"]), quote=True)}" '
-            f'rel="noopener noreferrer">固定源第 {start}–{end} 行</a>'
-        )
-    else:
-        source = (
-            f"发布包 <code>{escape(str(record['package_path']))}</code> "
-            f"第 {start}–{end} 行 · "
-            f'<a href="{escape(str(record["generator_url"]), quote=True)}" '
-            'rel="noopener noreferrer">固定生成器</a>'
-        )
+    path = record.get("path") or record.get("package_path")
+    source = (
+        f"0.59.1 Sail 导出包 <code>{escape(str(path))}</code> "
+        f"第 {start}–{end} 行"
+    )
     return (
         f'<div class="{css_class}"><h4>{escape(title)}</h4>'
         f"<p>{source}</p>"
@@ -346,6 +291,7 @@ def main() -> int:
     expected = _render(build())
     if args.official_export is not None:
         export = _resolve_export(args.official_export)
+        check_export(export)
         exported_decode = export / DECODE_PACKAGE_PATH
         if exported_decode.read_bytes() != _release_decode():
             raise SystemExit(
@@ -354,7 +300,7 @@ def main() -> int:
     if args.check:
         if DATA.read_text(encoding="utf-8") != expected:
             raise SystemExit(f"stale Linx-only Sail evidence: {DATA}")
-        print("Linx-only Sail evidence is current: 216 forms")
+        print("Linx-only Sail evidence is current: 23 forms")
         return 0
     DATA.parent.mkdir(parents=True, exist_ok=True)
     DATA.write_text(expected, encoding="utf-8")

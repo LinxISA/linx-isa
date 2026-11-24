@@ -37,8 +37,8 @@ class CheckManualAuthoredTest(unittest.TestCase):
         catalog = tagged_json("isa/v0.59/linxisa-v0.59.json")
         tiles = tagged_json("isa/v0.59/state/pto_tile_operations.json")
         expected = _expected_pages(catalog, tiles)
-        self.assertEqual(len(expected), 1556)
-        self.assertEqual(sum(name.startswith("op-") for name in expected), 1452)
+        self.assertEqual(len(expected), 1363)
+        self.assertEqual(sum(name.startswith("op-") for name in expected), 1259)
         self.assertEqual(sum(name.startswith("tile-") for name in expected), 104)
         scoped = next(
             row

@@ -92,6 +92,18 @@ class HtmlReferenceValidatorTest(unittest.TestCase):
                 missing.append((row["id"], source_id))
         self.assertEqual(missing, [])
 
+    def test_linx_forms_are_owned_by_the_positive_v059_source(self):
+        source = json.loads(
+            (ROOT / "isa/v0.59/state/linx_extension_forms.json").read_text()
+        )
+        rows = {
+            row["id"]: row
+            for row in self.catalog["instructions"]
+            if not row.get("pto_source_form_id")
+        }
+        self.assertEqual(len(rows), 23)
+        self.assertEqual(rows, {row["id"]: row for row in source["forms"]})
+
     def test_tile_predicates_and_blocks_are_nonempty(self):
         tiles = json.loads(
             (ROOT / "isa/v0.59/state/pto_tile_operations.json").read_text()

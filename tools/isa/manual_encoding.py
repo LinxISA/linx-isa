@@ -333,7 +333,7 @@ def validate_catalog(
             if r.get("encoding_kind") != "SCOPED64" and not r.get("pto_source_form_id")
         ],
     }
-    expected = {"scoped": 705, "pto": 578, "linx": 216}
+    expected = {"scoped": 705, "pto": 578, "linx": 23}
     for kind, count in expected.items():
         if len(classes[kind]) != count:
             errors.append(f"{kind} count {len(classes[kind])} != {count}")

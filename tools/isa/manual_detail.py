@@ -9,7 +9,6 @@ from functools import lru_cache
 from manual_detail_atomic import atomic_body
 from manual_detail_scalar import scalar_body
 from manual_detail_tile import tile_body, tile_command_body
-from manual_detail_vector import vector_body
 from manual_editorial import edit_article
 from manual_authored import authored_for
 from manual_tag import REPO_ROOT, tagged_json
@@ -31,6 +30,8 @@ REVISED_ALU = {
     "CSEL",
     "CTZ",
     "HL.BFI",
+    "HL.SETC.LTI",
+    "HL.SETC.ORI",
     "HL.CCAT",
     "HL.CCATW",
     "HL.MADD",
@@ -104,7 +105,6 @@ def _base_revision(base, article):
         return (REPO_ROOT / article.source_path).read_text(encoding="utf-8")
     revised = (
         tile_command_body(base, source, article)
-        or vector_body(base, source, article)
         or atomic_body(base, source, article)
         or scalar_body(base, source, article)
     )

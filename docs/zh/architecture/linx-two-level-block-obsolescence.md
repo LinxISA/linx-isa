@@ -1,16 +1,16 @@
 # 架构决策：废弃 Linx 两级执行扩展的 193 个编码形式
 
-**已采纳 · 2026-11-24 · 适用于下一版 LinxISA 架构规范。** 以 LinxISA `v0.59.1` 的发布目录为基线，将 A–E 共 193 个形式标为 `obsolete`。这些形式占用的编码按 PTO-SPEC 继续预留，禁止重新分配。
+**已采纳 · 2026-11-24 · 适用于 LinxISA v0.59.1 修订稿。** 以 LinxISA `v0.59.1` 的发布目录为基线，从有效指令集合删除 A–E 共 193 个形式。这些形式占用的编码按 PTO-SPEC 继续预留，禁止重新分配。
 
 ## 裁决范围
 
 | 组 | 发布目录中的形式 | 数量 | 架构状态 |
 | --- | --- | ---: | --- |
-| A | 全部以 `V.` 开头的助记符，逐条见附录 | 184 | obsolete |
-| B | `BSTART.MSEQ`、`BSTART.MPAR` | 2 | obsolete |
-| C | `C.BSTART.MSEQ`、`C.BSTART.MPAR` | 2 | obsolete |
-| D | `BSTART.VSEQ`、`BSTART.VPAR`、`C.BSTART.VSEQ`、`C.BSTART.VPAR` | 4 | obsolete |
-| E | `B.TEXT` | 1 | obsolete |
+| A | 全部以 `V.` 开头的助记符，逐条见附录 | 184 | 删除，编码预留 |
+| B | `BSTART.MSEQ`、`BSTART.MPAR` | 2 | 删除，编码预留 |
+| C | `C.BSTART.MSEQ`、`C.BSTART.MPAR` | 2 | 删除，编码预留 |
+| D | `BSTART.VSEQ`、`BSTART.VPAR`、`C.BSTART.VSEQ`、`C.BSTART.VPAR` | 4 | 删除，编码预留 |
+| E | `B.TEXT` | 1 | 删除，编码预留 |
 | F | `HL.BSTART.CALL` | 1 | 沿用现行定义 |
 | G | `HL.BSTART.FP`、`HL.BSTART.STD` 各 4 个形式，`HL.BSTART.SYS` 1 个形式 | 9 | 沿用现行定义 |
 | H | `L.BSTART.FP`、`L.BSTART.STD` 各 4 个形式，`L.BSTART.SYS` 1 个形式 | 9 | 沿用现行定义 |
@@ -18,11 +18,11 @@
 
 A–E 一并覆盖旧向量块体指令、顺序和并行分离块的普通与压缩入口，以及指定块外地址的 `B.TEXT`。A 按助记符前缀选取，包含 VEC 类的 182 条，以及归入 CMD 类的 `V.QPUSH`、`V.QPOP`。PTO 的 Tile VEC 引擎、`TADD` 等 Tile 操作和承载它们的 `BSTART.TEPL` 有各自的发布定义。
 
-F–H 共 19 个形式继续采用 Linx 定义。I 组的 4 个形式只占用码位，执行须在读取操作数或产生架构效果前拒绝。三类合计覆盖 216 个 Linx 独有形式（193 + 19 + 4）。A–E 的 `obsolete` 标记与旧二进制的执行策略是两项决策；本次只确定架构状态和编码归属。
+F–H 共 19 个形式继续采用 Linx 定义。I 组的 4 个形式只占用码位，执行须在读取操作数或产生架构效果前拒绝。三类合计覆盖 216 个 Linx 独有形式（193 + 19 + 4）。本次采用硬断开策略：落入这十个预留范围的机器字必须在读取操作数或产生架构效果之前被拒绝，包括 V.* 预留区内从未分配给助记符的机器字。
 
 ## 编码归属
 
-LinxISA `v0.59.1` 锁定 PTO 发布标签 `v0.59.1.0`（提交 `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`）。A 组的 184 个 64 位形式均落在同一条 `V.*` 预留记录内；B–E 的 9 个形式各有一条具名预留记录。因此 193 个形式对应 **10 条 PTO 预留记录**。预留覆盖整个匹配范围，包括尚无 Linx 助记符的取值。[Linx 发布目录](../../../isa/v0.59/linxisa-v0.59.json) · [PTO 锁定记录](../../../isa/v0.59/pto-spec.lock.json) · [PTO 原始编码预留表](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
+LinxISA `v0.59.1` 锁定 PTO 发布标签 `v0.59.1.0`（提交 `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`）。A 组的 184 个 64 位形式均落在同一条 `V.*` 预留记录内；B–E 的 9 个形式各有一条具名预留记录。因此 193 个形式对应 **10 条 PTO 预留记录**。预留覆盖整个匹配范围，包括尚无 Linx 助记符的取值。仓库来源为 `isa/v0.59/linxisa-v0.59.json` 和 `isa/v0.59/pto-spec.lock.json`。[PTO 原始编码预留表](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
 
 | 助记符 | 位宽 | Mask | Match |
 | --- | ---: | --- | --- |

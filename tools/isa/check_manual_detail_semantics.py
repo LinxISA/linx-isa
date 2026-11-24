@@ -282,7 +282,6 @@ def check_site(site: Path) -> list[str]:
         _check_scalar_results,
         _check_ccat,
         _check_scalar_fp,
-        _check_vector,
         _check_bstart_examples,
         _check_tile_accumulators,
         _check_scopes,

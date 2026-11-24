@@ -67,9 +67,12 @@ def include_canvas(bodies, folder: Path):
         for target in view["pages"]:
             title, body = bodies[target]
             end = "<!-- authored:end --></section>"
-            if end not in body:
-                raise ValueError(f"{target}: missing expected authored chapter")
-            bodies[target] = title, body.replace(end, end + html, 1)
+            if end in body:
+                bodies[target] = title, body.replace(end, end + html, 1)
+            elif '<article class="architecture-current">' in body:
+                bodies[target] = title, body + html
+            else:
+                raise ValueError(f"{target}: missing expected current chapter")
         figures.append(
             {
                 "id": item["artifact_id"],

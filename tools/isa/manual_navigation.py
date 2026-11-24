@@ -13,7 +13,6 @@ CATEGORIES = (
     ("CMD", "CMD", "块命令", "指令块的操作选择、属性设置与操作数绑定。"),
     ("FSU", "FSU", "标量浮点", "标量浮点运算、比较及数值转换。"),
     ("SYS", "SYS", "系统指令", "系统寄存器、维护操作和系统控制。"),
-    ("VEC", "VEC", "向量指令", "向量指令体中的运算、访存与跨通道操作。"),
 )
 BY_KEY = {key: (name, title) for name, key, title, _ in CATEGORIES}
 

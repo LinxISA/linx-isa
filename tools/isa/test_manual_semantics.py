@@ -52,8 +52,8 @@ class ManualSemanticsTest(unittest.TestCase):
             for row in self.catalogs["v0.59"]["instructions"]
             if not row.get("pto_scope")
         ]
-        self.assertEqual(len(rows), 794)
-        self.assertEqual(len({row["id"] for row in rows}), 794)
+        self.assertEqual(len(rows), 601)
+        self.assertEqual(len({row["id"] for row in rows}), 601)
         common = [row for row in rows if row.get("pto_source_form_id")]
         self.assertEqual(len(common), 578)
         self.assertEqual(
@@ -170,7 +170,7 @@ class ManualSemanticsTest(unittest.TestCase):
         note_rows = [
             row for row in rows if row.get("note") and not row.get("pto_source_form_id")
         ]
-        self.assertEqual(len(note_rows), 30)
+        self.assertEqual(len(note_rows), 23)
         self.assertTrue(
             all(
                 re.search(r"[\u4e00-\u9fff]", describe_form(row, "v0.59").short)
@@ -179,13 +179,13 @@ class ManualSemanticsTest(unittest.TestCase):
         )
 
     def test_vector_fallback_is_mnemonic_specific(self) -> None:
-        catalog = self.catalogs["v0.59"]
-        self.assertIn("整数加法", summary(self.row("v0.59", "V.ADD"), catalog))
+        catalog = self.catalogs["v0.58"]
+        self.assertIn("整数加法", summary(self.row("v0.58", "V.ADD"), catalog))
         self.assertIn(
-            "无符号32-bit", summary(self.row("v0.59", "V.LWUI.U.BRG"), catalog)
+            "无符号32-bit", summary(self.row("v0.58", "V.LWUI.U.BRG"), catalog)
         )
-        self.assertIn("原子加法", summary(self.row("v0.59", "V.LD.ADD"), catalog))
-        self.assertIn("归约", summary(self.row("v0.59", "V.RDADD"), catalog))
+        self.assertIn("原子加法", summary(self.row("v0.58", "V.LD.ADD"), catalog))
+        self.assertIn("归约", summary(self.row("v0.58", "V.RDADD"), catalog))
         issue_expectations = {
             "V.LW": "issues/141",
             "V.LD.ADD": "issues/149",
@@ -193,16 +193,16 @@ class ManualSemanticsTest(unittest.TestCase):
             "V.SHFL.DOWN": "issues/151",
         }
         for mnemonic, issue in issue_expectations.items():
-            semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            semantic = describe_form(self.row("v0.58", mnemonic), "v0.58")
             self.assertTrue(any(issue in source for source in semantic.provenance))
 
     def test_risky_vector_and_fall_claims_remain_bounded(self) -> None:
-        catalog = self.catalogs["v0.59"]
-        self.assertIn("有符号整数除法", summary(self.row("v0.59", "V.DIV"), catalog))
-        brg = describe_form(self.row("v0.59", "V.LW.BRG"), "v0.59")
+        catalog = self.catalogs["v0.58"]
+        self.assertIn("有符号整数除法", summary(self.row("v0.58", "V.DIV"), catalog))
+        brg = describe_form(self.row("v0.58", "V.LW.BRG"), "v0.58")
         self.assertTrue(any("通道 0" in item for item in brg.details))
         self.assertFalse(any("TSO ordering domain" in item for item in brg.details))
-        immediate = describe_form(self.row("v0.59", "V.LWI"), "v0.59")
+        immediate = describe_form(self.row("v0.58", "V.LWI"), "v0.58")
         self.assertTrue(
             any(
                 "同一地址" in item or "一个有效地址" in item
@@ -211,7 +211,7 @@ class ManualSemanticsTest(unittest.TestCase):
         )
         self.assertTrue(any("谓词位 2*i" in item for item in immediate.details))
         for mnemonic in ("C.BSTART.VPAR", "C.BSTART.VSEQ"):
-            semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            semantic = describe_form(self.row("v0.58", mnemonic), "v0.58")
             self.assertNotIn("FALL 字段", semantic.description)
             self.assertTrue(
                 any("没有独立的 FALL 物理字段" in item for item in semantic.details)
@@ -235,7 +235,7 @@ class ManualSemanticsTest(unittest.TestCase):
         self.assertIn("vec_bool32(a & b)", tagged_sail)
         self.assertIn("vec_bool32(a | b)", tagged_sail)
         for mnemonic in ("V.CMP.AND", "V.CMP.ANDI", "V.CMP.OR", "V.CMP.ORI"):
-            semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            semantic = describe_form(self.row("v0.58", mnemonic), "v0.58")
             self.assertIn("分别判非零", semantic.short)
             self.assertNotIn("按位", semantic.short)
             self.assertTrue(
@@ -251,7 +251,7 @@ class ManualSemanticsTest(unittest.TestCase):
             any(
                 "simm12 符号扩展" in item
                 for item in describe_form(
-                    self.row("v0.59", "V.CMP.ANDI"), "v0.59"
+                    self.row("v0.58", "V.CMP.ANDI"), "v0.58"
                 ).details
             )
         )
@@ -262,18 +262,18 @@ class ManualSemanticsTest(unittest.TestCase):
                 any(
                     "有效整数位宽取模" in item
                     for item in describe_form(
-                        self.row("v0.59", mnemonic), "v0.59"
+                        self.row("v0.58", mnemonic), "v0.58"
                     ).details
                 )
             )
         for mnemonic in ("V.MUL", "V.MADD"):
-            semantic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            semantic = describe_form(self.row("v0.58", mnemonic), "v0.58")
             self.assertIn("无符号整数", semantic.short)
             self.assertTrue(any("无符号整数" in item for item in semantic.details))
-        psel = describe_form(self.row("v0.59", "V.PSEL"), "v0.59")
+        psel = describe_form(self.row("v0.58", "V.PSEL"), "v0.58")
         self.assertTrue(any("不读取执行掩码 p" in item for item in psel.details))
         for mnemonic in ("V.LD.MAX", "V.SW.MIN"):
-            atomic = describe_form(self.row("v0.59", mnemonic), "v0.59")
+            atomic = describe_form(self.row("v0.58", mnemonic), "v0.58")
             self.assertIn("有符号", atomic.short)
             self.assertTrue(any("有符号整数顺序" in item for item in atomic.details))
 

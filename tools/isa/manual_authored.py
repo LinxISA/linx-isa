@@ -11,7 +11,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import lru_cache
 import re
-import subprocess
 from typing import Any, Mapping
 
 try:
@@ -20,7 +19,6 @@ try:
         REVIEWED_COMMIT,
         tagged_bytes,
         tagged_json,
-        verified_tag_commit,
     )
 except ModuleNotFoundError:
     from tools.isa.manual_tag import (
@@ -28,7 +26,6 @@ except ModuleNotFoundError:
         REVIEWED_COMMIT,
         tagged_bytes,
         tagged_json,
-        verified_tag_commit,
     )
 
 try:
@@ -92,33 +89,18 @@ class AuthoredArticle:
 
 
 def _paths() -> tuple[str, ...]:
-    verified_tag_commit()
-    result = subprocess.run(
-        ["git", "ls-tree", "-r", "--name-only", "--full-tree", REVIEWED_COMMIT, ROOT],
-        cwd=REPO_ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    paths = tuple(path for path in result.stdout.splitlines() if path.endswith(".md"))
-    if not paths:
-        raise ValueError(
-            "reviewed tag contains no human-authored instruction source inventory"
-        )
-    return paths
+    return _tree_paths(ROOT)
 
 
 def _tree_paths(root: str) -> tuple[str, ...]:
-    result = subprocess.run(
-        ["git", "ls-tree", "-r", "--name-only", "--full-tree", REVIEWED_COMMIT, root],
-        cwd=REPO_ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
+    paths = tuple(
+        sorted(
+            p.relative_to(REPO_ROOT).as_posix()
+            for p in (REPO_ROOT / root).rglob("*.md")
+        )
     )
-    paths = tuple(path for path in result.stdout.splitlines() if path.endswith(".md"))
     if not paths:
-        raise ValueError(f"reviewed tag contains no Markdown sources under {root}")
+        raise ValueError(f"no Markdown sources under {root}")
     return paths
 
 
@@ -268,10 +250,6 @@ def _source_for_mnemonic(mnemonic: str) -> tuple[str, str] | None:
         aliases[mnemonic] = "HL.BSTART"
     if mnemonic.startswith("L.BSTART."):
         aliases[mnemonic] = "L.BSTART"
-    if mnemonic in {"BSTART.MPAR", "BSTART.MSEQ", "BSTART.VPAR", "BSTART.VSEQ"}:
-        aliases[mnemonic] = "BSTART"
-    if ".U.BRG" in mnemonic:
-        aliases[mnemonic] = mnemonic.replace(".U.BRG", ".BRG")
     stem = aliases.get(mnemonic)
     if stem in _path_by_stem():
         return stem, _path_by_stem()[stem]
@@ -317,25 +295,6 @@ def _classify(
     if extra and source_stem == row["mnemonic"]:
         reasons.append("原文汇编含有当前编码不存在的操作数：" + ", ".join(extra))
         return "conflicting-current", tuple(reasons)
-    if row["mnemonic"] in {"HL.SETC.LTI", "HL.SETC.ORI", "V.LD.MIN"}:
-        return "conflicting-current", ("中文原页的比较条件或运算名称与发布定义不同。",)
-    if row["mnemonic"] in {"HL.CCAT", "HL.CCATW"}:
-        return "conflicting-current", (
-            "中文原页写成循环左移，两个目标的高低顺序也与发布版相反。",
-        )
-    if row["mnemonic"] in {"V.CMP.AND", "V.CMP.ANDI"}:
-        reasons.extend(
-            (
-                "原文先做按位 AND 再判断结果是否非零；v0.59.1 发布版 Sail 模型 先把两个输入分别判为零/非零，再做布尔 AND。输入 1 与 2 可区分两者：原文结果为 0，发布版 Sail 模型 结果为 1。",
-                "原文把非活动通道 写为 0；v0.59.1 发布版 Sail 模型 对该 lane 产生未指定值。",
-            )
-        )
-        return "conflicting-current", tuple(reasons)
-    if row["mnemonic"] == "V.REV":
-        reasons.append(
-            "原文按 M/N 描述位域内分组翻转；v0.59.1 发布版 Sail 模型 固定对每个 32 位 lane 做字节序反转，并忽略 immr/imml。"
-        )
-        return "conflicting-current", tuple(reasons)
     if title != row["mnemonic"]:
         reasons.append(f"原文 H1 为 {title}，当前目录助记符为 {row['mnemonic']}")
     if (
@@ -360,23 +319,10 @@ def _current_view(row: Mapping[str, Any], classification: str) -> tuple[str, ...
             "当前形式没有 SrcL 或其他显式操作数；旧文中的寄存器语法和示例不可用于当前编码。",
             "该指令仅在系统块内合法，成功时记录 Maintenance_DC_IALL、递增数据缓存维护计数并令 TPC 前进 4 字节。",
         )
-    if row["mnemonic"] in {"HL.SETC.LTI", "HL.SETC.ORI", "V.LD.MIN"}:
+    if row["mnemonic"] in {"HL.SETC.LTI", "HL.SETC.ORI"}:
         return (family_index_synopsis(row["mnemonic"]),)
     if row["mnemonic"] in {"HL.CCAT", "HL.CCATW"}:
         return (index_note(row),)
-    if row["mnemonic"] in {"V.CMP.AND", "V.CMP.ANDI"}:
-        right = "符号扩展后的 simm12" if row["mnemonic"].endswith("ANDI") else "SrcR"
-        return (
-            f"v0.59.1 发布版 Sail 模型 对每个活动通道 计算 (SrcL != 0) AND ({right} != 0)，并写入 0 或 1。",
-            "判别例 SrcL=1、右输入=2 的结果为 1；这与旧文的按位与结果 0 不同。",
-            "非活动通道 的结果在 发布版 Sail 模型 中未指定，不应沿用旧文的写零说明。",
-        )
-    if row["mnemonic"] == "V.REV":
-        return (
-            "v0.59.1 发布版 Sail 模型 对每个活动 32 位 lane 执行完整字节序反转（bswap32）。",
-            "当前 Sail 忽略编码中的 immr/imml；旧文的 M/N 位域翻转和合法性表仅保留为历史说明，不能作为当前模型行为。",
-            "非活动通道 的结果在 发布版 Sail 模型 中未指定。",
-        )
     if classification == "conflicting-current":
         return (f"当前规范汇编：{row['asm']}",)
     return ()

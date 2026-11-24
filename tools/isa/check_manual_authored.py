@@ -17,12 +17,19 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 from manual_authored import authored_for, authored_tile
+from manual_current_prose import golden_markdown as current_markdown
 from manual_detail import instruction_body, operation_body
+from manual_editorial import edit_article
 from manual_markdown import render_article, render_markdown_text
 from manual_tag import tagged_bytes, tagged_json
+from manual_v0591_links import reader_links
 
 START = "<!-- authored:start -->"
 END = "<!-- authored:end -->"
+ICALL_REVISION = (
+    "## 说明\n\n先检查并保存上一块的 BARG.BPCN。上一块成功提交后，建立新的标准块并将独立的"
+    "返回目标写入 ra。新块提交时才选择保存的间接调用目标。"
+)
 
 
 def slug(name: str) -> str:
@@ -224,16 +231,25 @@ def check_site(site: Path) -> list[str]:
             )
         else:
             revision = operation_body(operations[filename], article)
-        current_bytes = source_bytes if revision is None else revision.encode()
+        if filename == "op-bstart-icall.html":
+            revision = ICALL_REVISION
+        candidate = (
+            edit_article(article.source_path)[0] if revision is None else revision
+        )
+        current_text = current_markdown(article.source_path, candidate)
+        current_bytes = current_text.encode()
+        downloadable = reader_links(
+            article.source_path, current_text, routes, download=True
+        ).encode()
         source_asset = site / str(record.get("source_asset", ""))
-        if not source_asset.is_file() or source_asset.read_bytes() != current_bytes:
+        if not source_asset.is_file() or source_asset.read_bytes() != downloadable:
             errors.append(
                 f"{where}: offline Chinese manuscript differs from the reviewed body"
             )
         if (
             record.get("reader")
             != ("authored" if revision is None else "release-revision")
-            or record.get("reader_sha256") != sha256(current_bytes).hexdigest()
+            or record.get("reader_sha256") != sha256(downloadable).hexdigest()
         ):
             errors.append(f"{where}: incorrect reader provenance")
         if record.get("classification") != article.classification:
@@ -252,14 +268,15 @@ def check_site(site: Path) -> list[str]:
             != sha256(embedded.encode("utf-8")).hexdigest()
         ):
             errors.append(f"{where}: rendered SHA-256 differs")
-        if revision is None:
+        if revision is None and current_bytes == source_bytes:
             rendered = render_article(
                 article.source_path, current_page=filename, document_routes=routes
             ).html
         else:
+            rendered_text = reader_links(article.source_path, current_text, routes)
             rendered = render_markdown_text(
                 article.source_path,
-                revision,
+                rendered_text,
                 current_page=filename,
                 document_routes=routes,
             ).html

@@ -8,6 +8,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 
+from tools.isa.manual_tag import revision_commit
 from tools.isa.manual_authored import (
     authored_for,
     authored_tile,
@@ -32,13 +33,13 @@ class ManualAuthoredTest(unittest.TestCase):
     def test_tagged_instruction_inventory_and_mapping(self):
         inventory = source_inventory()
         self.assertEqual(len(inventory), 811)
-        self.assertEqual(sum(mapped for _, _, mapped in inventory), 642)
+        self.assertEqual(sum(mapped for _, _, mapped in inventory), 469)
         mapped_forms = [
             row
             for row in self.catalog["instructions"]
             if not row.get("pto_scope") and authored_for(row)
         ]
-        self.assertEqual(len(mapped_forms), 787)
+        self.assertEqual(len(mapped_forms), 594)
         missing = {
             row["mnemonic"]
             for row in self.catalog["instructions"]
@@ -95,32 +96,15 @@ class ManualAuthoredTest(unittest.TestCase):
     def test_ccat_authored_preamble_and_release_difference(self):
         for name in ("HL.CCAT", "HL.CCATW"):
             article = authored_for(self.row(name))
-            self.assertIn("拼接", article.intro)
-            self.assertEqual(article.classification, "conflicting-current")
-            self.assertIn("逻辑右移", " ".join(article.current_view))
-            self.assertIn("循环左移", " ".join(article.reasons))
-        self.assertNotIn("<br", authored_for(self.row("V.ADD")).intro.lower())
+            self.assertIn("逻辑右移", article.intro)
+            self.assertIn("Dst0", article.intro)
+            self.assertIn("Dst1", article.intro)
+            self.assertNotIn("循环左移", article.intro)
 
-    def test_known_vector_semantic_conflicts_are_scoped(self):
-        for mnemonic in ("V.CMP.AND", "V.CMP.ANDI"):
-            article = authored_for(self.row(mnemonic))
-            self.assertEqual(article.classification, "conflicting-current")
-            self.assertTrue(
-                any(
-                    "按位 AND" in reason and "布尔 AND" in reason
-                    for reason in article.reasons
-                )
-            )
-            self.assertIn("SrcL=1", " ".join(article.current_view))
-            self.assertIn("未指定", " ".join(article.current_view))
-            self.assertIn(
-                "按位与运算", " ".join(section.markdown for section in article.sections)
-            )
-        reverse = authored_for(self.row("V.REV"))
-        self.assertEqual(reverse.classification, "conflicting-current")
-        self.assertIn("bswap32", " ".join(reverse.current_view))
-        self.assertIn("忽略编码中的 immr/imml", " ".join(reverse.current_view))
-        self.assertIn("M/N 位域翻转", " ".join(reverse.current_view))
+    def test_two_level_forms_do_not_map_to_current_articles(self):
+        active = {row["mnemonic"] for row in self.catalog["instructions"]}
+        self.assertFalse(any(name.startswith("V.") for name in active))
+        self.assertFalse({"B.TEXT", "BSTART.MPAR", "C.BSTART.VSEQ"} & active)
 
     def test_scalar_cmp_and_remains_bitwise_and_c_movr_primary(self):
         scalar = authored_for(self.row("CMP.AND"))
@@ -142,8 +126,8 @@ class ManualAuthoredTest(unittest.TestCase):
     def test_bad_h1_and_historical_unmapped_docs_do_not_alias(self):
         article = authored_for(self.row("HL.DIVU"))
         self.assertEqual(article.source_path, "docs/zh/isa/inst/misa_h/HL.DIVU.md")
-        self.assertEqual(article.title, "DIVU")
-        self.assertEqual(article.classification, "contextual-original")
+        self.assertEqual(article.title, "HL.DIVU")
+        self.assertEqual(article.classification, "syntax-compatible-original")
         historical = next(
             item for item in source_inventory() if item[0].endswith("/misa_l/L.ADD.md")
         )
@@ -199,27 +183,25 @@ class ManualAuthoredTest(unittest.TestCase):
     def test_all_sources_are_exact_reviewed_tag_links(self):
         for mnemonic in ("C.MOVR", "DC.IALL", "HL.DIVU"):
             article = authored_for(self.row(mnemonic))
-            self.assertIn(
-                "/blob/d262515b55c727073997c8f4c95261909f2fe8d3/", article.source_url
-            )
+            self.assertIn(f"/blob/{revision_commit()}/", article.source_url)
         self.assertIn(
-            "/blob/d262515b55c727073997c8f4c95261909f2fe8d3/",
+            f"/blob/{revision_commit()}/",
             authored_tile("TLOAD").source_url,
         )
 
     def test_coverage_report_counts_every_source_family(self):
         report = coverage_report()
         self.assertEqual(report["instruction_source_articles"], 811)
-        self.assertEqual(report["instruction_forms"], 794)
-        self.assertEqual(report["mapped_instruction_forms"], 787)
-        self.assertEqual(report["mapped_instruction_mnemonics"], 747)
-        self.assertEqual(sum(report["classification_counts"].values()), 787)
+        self.assertEqual(report["instruction_forms"], 601)
+        self.assertEqual(report["mapped_instruction_forms"], 594)
+        self.assertEqual(report["mapped_instruction_mnemonics"], 554)
+        self.assertEqual(sum(report["classification_counts"].values()), 594)
         self.assertEqual(
             report["classification_counts"],
             {
-                "conflicting-current": 36,
-                "contextual-original": 414,
-                "syntax-compatible-original": 337,
+                "conflicting-current": 24,
+                "contextual-original": 205,
+                "syntax-compatible-original": 365,
             },
         )
         self.assertEqual(report["tile_source_articles"], 89)
@@ -239,7 +221,7 @@ class ManualAuthoredTest(unittest.TestCase):
             text=True,
         )
         report = json.loads(output)
-        self.assertEqual(report["mapped_instruction_forms"], 787)
+        self.assertEqual(report["mapped_instruction_forms"], 594)
         self.assertEqual(report["mapped_tile_operations"], 104)
         self.assertEqual(report["instruction_source_articles"], 811)
 

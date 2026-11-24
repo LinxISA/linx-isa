@@ -14,6 +14,7 @@ from urllib.parse import quote, unquote, urlsplit, urlunsplit
 import markdown
 from manual_editorial import edit_article
 from manual_tag import REPO_ROOT, REVIEWED_COMMIT, tagged_bytes
+from manual_revision import is_removed_form
 
 EXTENSIONS = [
     "admonition",
@@ -85,6 +86,7 @@ def _repository_paths() -> tuple[str, ...]:
     return tuple(output.splitlines())
 
 
+@lru_cache(maxsize=None)
 def _resolve_local(source: str, raw_path: str) -> str | None:
     target = posixpath.normpath(
         posixpath.join(posixpath.dirname(source), unquote(raw_path))
@@ -157,6 +159,23 @@ class _SafeHTML(HTMLParser):
                     f"{self.namespace}--{p.fragment}" if p.fragment else "",
                 )
             ), {}
+        candidate = posixpath.normpath(
+            posixpath.join(posixpath.dirname(self.source), unquote(p.path))
+        )
+        stem = PurePosixPath(candidate).stem.upper().replace("_", ".")
+        removed_target = (
+            not image
+            and (
+                is_removed_form(stem)
+                or candidate.endswith("/register/common/vgpr.md")
+                or "/blockIntro/vec_block/" in candidate
+            )
+        )
+        if removed_target:
+            return "", {
+                "class": "removed-local-reference",
+                "title": "该目标不属于本次 0.59.1 修订；保留引用文字。",
+            }
         target = _resolve_local(self.source, p.path)
         if target is None:
             return "", {
@@ -344,6 +363,7 @@ def build_support_bundle(
     entries: list[str] | tuple[str, ...],
     *,
     max_documents: int | None = None,
+    source_text: Callable[[str], str | None] | None = None,
     follow_document: Callable[[str, str], bool] | None = None,
     document_routes: Mapping[str, str] | None = None,
 ) -> SupportBundle:
@@ -359,13 +379,11 @@ def build_support_bundle(
             continue
         if max_documents is not None and len(seen) >= max_documents:
             raise ValueError(f"support document graph exceeds {max_documents} files")
-        f = render_tagged_markdown(
-            path,
-            current_page=support_document_path(path),
-            follow_document=follow_document,
-            document_routes=document_routes,
-            omit_title=False,
-        )
+        markdown = source_text(path) if source_text else edit_article(path)[0]
+        if markdown is None:
+            continue
+        f = render_markdown_text(path, markdown, current_page=support_document_path(path),
+                                 follow_document=follow_document, document_routes=document_routes, omit_title=False)
         seen.add(path)
         source_paths[support_document_path(path)] = path
         fragments[support_document_path(path)] = f.html

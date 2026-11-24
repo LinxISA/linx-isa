@@ -10,6 +10,7 @@ from manual_markdown import (
     support_document_path,
 )
 from manual_tag import REVIEWED_COMMIT
+from manual_reader_site import ArticleLibrary
 
 ROOT = Path(__file__).resolve().parents[2]
 MOVR = "docs/zh/isa/inst/misa_c/C.MOVR.md"
@@ -54,6 +55,46 @@ class ManualMarkdownTest(unittest.TestCase):
         )
         self.assertIn('href="op-compressed-reference.html"', result.html)
         self.assertNotIn(COMPRESS, result.documents)
+
+    def test_removed_instruction_links_keep_text_without_href(self):
+        result = render_tagged_markdown(
+            "docs/zh/isa/instset/longInstrs.md",
+            current_page="support-long-instructions.html",
+            follow_document=lambda _s, _t: False,
+        )
+        self.assertIn("V.ADD", result.html)
+        self.assertIn("removed-local-reference", result.html)
+        self.assertNotIn("misa_v/V.ADD", result.html)
+
+    def test_downloadable_markdown_uses_flat_offline_routes_and_assets(self):
+        source = "docs/zh/isa/register/common/barg.md"
+        library = ArticleLibrary.__new__(ArticleLibrary)
+        library.routes = {
+            "docs/zh/isa/inst/misa_g/SETC.TGT.md": "op-setc-tgt.html",
+            "docs/zh/isa/arch/branch.md": "arch-branch.html",
+        }
+        markdown = """[设置目标](../../inst/misa_g/SETC.TGT.md)
+[跳转方式](../../arch/branch.md#branch)
+[保留文字](../../header/DOES-NOT-EXIST.md)
+![BARG](../../../figs/bitfield/svg/Sysregs/BARG.svg)
+"""
+        rewritten = library.download_source(source, markdown)
+        self.assertIn(
+            "[设置目标](../op-setc-tgt.html)",
+            rewritten,
+        )
+        self.assertIn(
+            "[跳转方式](../arch-branch.html#"
+            + document_namespace("docs/zh/isa/arch/branch.md")
+            + "--branch)",
+            rewritten,
+        )
+        self.assertIn("保留文字", rewritten)
+        self.assertNotIn("DOES-NOT-EXIST.md", rewritten)
+        self.assertIn(
+            "![BARG](../support-assets/docs--zh--figs--bitfield--svg--Sysregs--BARG.svg)",
+            rewritten,
+        )
 
     def test_safe_raw_html_is_preserved_without_active_content(self):
         result = render_tagged_markdown(

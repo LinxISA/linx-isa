@@ -11,17 +11,30 @@ import re
 from manual_editorial import edit_article
 from manual_markdown import (
     build_support_bundle,
-    render_article,
     render_markdown_text,
     support_asset_path,
 )
+from manual_v0591_links import GLOSSARY, reader_links
 from manual_tag import tagged_bytes
 
 
 class ArticleLibrary:
-    def __init__(self, articles, chapter_routes=None, *, revisions=None):
+    def __init__(
+        self,
+        articles,
+        chapter_routes=None,
+        *,
+        revisions=None,
+        source_text=None,
+        link_routes=None,
+    ):
         self.articles = articles
         self.revisions = revisions or {}
+        self.original_source = tagged_bytes
+        self.source_text = source_text
+        self.follow = (
+            (lambda _source, target: target == GLOSSARY) if source_text else None
+        )
         self.revised_fragments = {}
         destinations = defaultdict(list)
         for name, (mnemonic, article) in articles.items():
@@ -36,9 +49,27 @@ class ArticleLibrary:
         self.files = {}
         self.audit = {}
         dependencies = set()
-        for path, destination in sorted(self.routes.items()):
-            fragment = render_article(
-                path, current_page=destination, document_routes=self.routes
+        original_paths = set((chapter_routes or {}).keys()) | {
+            a.source_path
+            for name, (_, a) in articles.items()
+            if a and self.revisions.get(name) is None
+        }
+        article_routes = dict(self.routes)
+        self.routes.update(link_routes or {})
+        for path, destination in sorted(article_routes.items()):
+            if source_text and path not in original_paths:
+                continue
+            markdown = source_text(path) if source_text else edit_article(path)[0]
+            if markdown is None:
+                raise ValueError(f"Excluded source in article routes: {path}")
+            if source_text:
+                markdown = reader_links(path, markdown, self.routes)
+            fragment = render_markdown_text(
+                path,
+                markdown,
+                current_page=destination,
+                document_routes=self.routes,
+                follow_document=self.follow,
             )
             self.fragments[path] = fragment.html
             dependencies.update(fragment.documents)
@@ -48,22 +79,32 @@ class ArticleLibrary:
             if markdown is None:
                 continue
             article = articles[filename][1]
+            if source_text:
+                markdown = reader_links(article.source_path, markdown, self.routes)
             fragment = render_markdown_text(
                 article.source_path,
                 markdown,
                 current_page=filename,
                 document_routes=self.routes,
+                follow_document=self.follow,
             )
             self.revised_fragments[filename] = fragment.html
             dependencies.update(fragment.documents)
             for asset in fragment.assets:
                 self.files[support_asset_path(asset)] = tagged_bytes(asset)
         support = build_support_bundle(
-            sorted(dependencies - self.routes.keys()), document_routes=self.routes
+            sorted(dependencies - self.routes.keys()),
+            document_routes=self.routes,
+            source_text=source_text,
+            follow_document=self.follow,
         )
         self.files.update(support.assets)
         self.support = support.fragments
         self.support_sources = support.source_paths
+
+    def download_source(self, path, markdown):
+        """Rewrite one downloadable manuscript to the flat offline site."""
+        return reader_links(path, markdown, self.routes, download=True)
 
     def render(self, filename):
         item = self.articles.get(filename)
@@ -71,10 +112,22 @@ class ArticleLibrary:
             return ""
         _, article = item
         path = article.source_path
-        original = tagged_bytes(path)
+        original = self.original_source(path)
         revised = self.revisions.get(filename)
-        source = revised.encode() if revised is not None else original
-        fragment = self.revised_fragments.get(filename, self.fragments[path])
+        source = (
+            revised.encode()
+            if revised is not None
+            else self.source_text(path).encode()
+            if self.source_text
+            else original
+        )
+        fragment = (
+            self.revised_fragments[filename]
+            if revised is not None
+            else self.fragments[path]
+        )
+        if self.source_text:
+            source = self.download_source(path, source.decode()).encode()
         digest = sha256(source).hexdigest()
         raw = f"article-source/{digest}.md"
         self.files[raw] = source

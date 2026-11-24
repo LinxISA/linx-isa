@@ -101,7 +101,7 @@ class ManualEncodingTest(unittest.TestCase):
         self.assertEqual(actual["SrcL"], expected["SrcL"])
 
     def test_chinese_encoding_ui_across_instruction_families(self):
-        for mnemonic in ("DC.IALL", "B.TEXT", "BSTART.TEPL", "CASB"):
+        for mnemonic in ("DC.IALL", "B.IOR", "BSTART.TEPL", "CASB"):
             row = next(
                 r
                 for r in self.catalog["instructions"]

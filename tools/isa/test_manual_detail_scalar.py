@@ -2,10 +2,12 @@ import unittest
 
 try:
     from manual_authored import authored_for
+    from manual_detail import instruction_body
     from manual_detail_scalar import scalar_body
     from manual_tag import tagged_json
 except ModuleNotFoundError:
     from tools.isa.manual_authored import authored_for
+    from tools.isa.manual_detail import instruction_body
     from tools.isa.manual_detail_scalar import scalar_body
     from tools.isa.manual_tag import tagged_json
 
@@ -32,6 +34,14 @@ class ScalarDetailBodyTest(unittest.TestCase):
         source = self.sources[row["pto_source_form_id"]]
         return scalar_body(row, source, authored_for(row))
 
+    def detail(self, mnemonic):
+        rows = [
+            row
+            for row in self.rows
+            if row["mnemonic"] == mnemonic and not row.get("pto_scope")
+        ]
+        return instruction_body(rows, {}, authored_for(rows[0]), [])
+
     def test_every_conflicting_non_vector_article_has_a_replacement(self):
         replaced = []
         for row in self.rows:
@@ -47,22 +57,22 @@ class ScalarDetailBodyTest(unittest.TestCase):
             self.assertIn("## 架构效果", body)
             self.assertNotIn("当前规范汇编", body)
             replaced.append(row["id"])
-        self.assertEqual(len(replaced), 28)
+        self.assertEqual(len(replaced), 24)
 
     def test_ccat_replaces_the_wrong_direction_and_destination_order(self):
-        body = self.body("HL.CCAT")
+        body = self.detail("HL.CCAT")
         self.assertIn("逻辑右移", body)
-        self.assertIn("先 Dst0", body)
-        self.assertIn("再 Dst1", body)
+        self.assertIn("先把结果的低 64 位写入 Dst0", body)
+        self.assertIn("再把高 64 位写入 Dst1", body)
         self.assertNotIn("循环左移", body)
         self.assertNotIn("先 Dst1", body)
 
     def test_ccatw_covers_word_selection_extension_and_large_shift(self):
-        body = self.body("HL.CCATW")
-        self.assertIn("SrcL 的低字", body)
-        self.assertIn("SrcR 的低字", body)
+        body = self.detail("HL.CCATW")
+        self.assertIn("从 SrcL 和 SrcR 各取低 32 位", body)
+        self.assertIn("前者放在高半部，后者放在低半部", body)
         self.assertIn("符号扩展", body)
-        self.assertIn("shamt 取 64..127 时，两个结果都为零", body)
+        self.assertIn("移位量为 64 至 127 时，两个结果都为零", body)
 
     def test_operandless_maintenance_does_not_retain_old_register_operand(self):
         for mnemonic in ("BC.IALL", "DC.IALL", "IC.IALL"):
@@ -130,29 +140,6 @@ class ScalarDetailBodyTest(unittest.TestCase):
         ):
             with self.subTest(mnemonic=mnemonic):
                 self.assertTrue(self.body(mnemonic))
-
-    def test_linx_register_mode_starts_do_not_reuse_the_generic_bstart_page(self):
-        for row in self.rows:
-            if row["mnemonic"] not in {
-                "BSTART.MPAR",
-                "BSTART.MSEQ",
-                "BSTART.VPAR",
-                "BSTART.VSEQ",
-                "C.BSTART.MPAR",
-                "C.BSTART.MSEQ",
-                "C.BSTART.VPAR",
-                "C.BSTART.VSEQ",
-            }:
-                continue
-            body = scalar_body(row, {}, authored_for(row))
-            self.assertIn("寄存器资源", body)
-            if row["mnemonic"].startswith("C."):
-                self.assertIn("固定的向量寄存器档位", body)
-            else:
-                self.assertIn("VS8 提供 2 组", body)
-                self.assertNotIn("采用 FALL", body)
-            if row["mnemonic"] in {"BSTART.VPAR", "BSTART.VSEQ"}:
-                self.assertIn("B.TEXT", body)
 
     def test_audited_compatible_pages_use_their_exact_current_form(self):
         for mnemonic in ("HL.LDI", "CMP.EQ", "DC.CIVA"):
@@ -287,7 +274,7 @@ class ScalarDetailBodyTest(unittest.TestCase):
             and row["uop_big_kind"] == "BBD"
             and not row.get("pto_source_form_id")
         ]
-        self.assertEqual(len(rows), 23)
+        self.assertEqual(len(rows), 19)
         for row in rows:
             body = scalar_body(row, {}, authored_for(row))
             self.assertTrue(body, row["id"])

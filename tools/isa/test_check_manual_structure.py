@@ -33,19 +33,18 @@ class ManualStructureTest(unittest.TestCase):
             {name: len(inventory[path]) for name, path in CLASS_FILES.items()},
             {
                 "ALU": 107,
-                "BBD": 15,
+                "BBD": 11,
                 "BRU": 58,
                 "AGU": 183,
                 "AMO": 61,
-                "CMD": 82,
+                "CMD": 75,
                 "FSU": 30,
                 "SYS": 36,
-                "VEC": 182,
             },
         )
         flattened = [name for names in inventory.values() for name in names]
-        self.assertEqual(len(flattened), 754)
-        self.assertEqual(len(set(flattened)), 754)
+        self.assertEqual(len(flattened), 561)
+        self.assertEqual(len(set(flattened)), 561)
 
     def test_alphabet_list_reads_first_mnemonic_link(self) -> None:
         parser = Parser()

@@ -14,7 +14,7 @@ import re
 import sys
 from urllib.parse import unquote, urlsplit
 
-from manual_tag import tagged_json, verified_tag_commit
+from manual_tag import revision_commit, tagged_json
 
 ROOT = Path(__file__).resolve().parents[2]
 CATALOG = ROOT / "isa/v0.59/linxisa-v0.59.json"
@@ -24,6 +24,20 @@ TILE_MANUAL = (
     ROOT / "docs/architecture/isa-manual/reference/data/pto-v0591-tile-manual.json"
 )
 READER_DATA = ROOT / "docs/architecture/isa-manual/reference/data/manual-reader-zh.json"
+FORBIDDEN_PAGES = {
+    "class-vec.html",
+    "arch-vgpr.html",
+    "arch-vector-block.html",
+    "op-b-text.html",
+    "op-bstart-mpar.html",
+    "op-bstart-mseq.html",
+    "op-bstart-vpar.html",
+    "op-bstart-vseq.html",
+    "op-c-bstart-mpar.html",
+    "op-c-bstart-mseq.html",
+    "op-c-bstart-vpar.html",
+    "op-c-bstart-vseq.html",
+}
 
 
 @dataclass
@@ -452,6 +466,15 @@ class Audit:
         self.reader_records = json.loads(READER_DATA.read_text(encoding="utf-8"))[
             "records"
         ]
+        linx_source = out / "spec/linx_extension_forms.json"
+        self.linx_forms = (
+            {
+                row["id"]: row
+                for row in json.loads(linx_source.read_text(encoding="utf-8"))["forms"]
+            }
+            if linx_source.is_file()
+            else {}
+        )
         self.scoped_owners = {
             row["form_id"]: row
             for row in tagged_json("isa/v0.59/state/pto_scalar_forms.json")[
@@ -573,6 +596,17 @@ class Audit:
                     or model[0].attrs.get("data-disposition") != evidence["disposition"]
                 ):
                     self.fail(where, "Linx-only Sail path or source text differs")
+            if "NOT IMPLEMENTED" in row.get("note", ""):
+                notices = article.find(tag="p", cls="version-context")
+                if len(notices) != 1 or not all(
+                    token in notices[0].text() for token in ("编码保留", "执行必须")
+                ):
+                    self.fail(where, "encoding-only form lacks visible rejection rule")
+                if (
+                    not evidence
+                    or evidence.get("disposition") != "traps-in-sail-executable-subset"
+                ):
+                    self.fail(where, "encoding-only form does not trap in working Sail")
         if row.get("pto_scope"):
             contracts = article.find(tag="section", cls="scoped-contract")
             if len(contracts) != 1:
@@ -637,11 +671,16 @@ class Audit:
         ):
             self.fail(where, "source trace omits exact PTO form ID")
         elif not row.get("pto_source_form_id"):
-            expected_tail = (
-                f"isa/v0.58/{row['source']['file']}#L{row['source']['line']}"
-            )
-            if expected_tail not in sources[0].find(tag="a")[0].attrs.get("href", ""):
-                self.fail(where, f"Linx source trace does not end in {expected_tail}")
+            links = sources[0].find(tag="a")
+            if (
+                self.linx_forms.get(row["id"]) != row
+                or len(links) != 1
+                or links[0].attrs.get("href") != "spec/linx_extension_forms.json"
+            ):
+                self.fail(
+                    where,
+                    "Linx source trace does not resolve to the exact v0.59 form row",
+                )
         parts = article.find(tag="section", cls="encoding-part")
         expected_parts = row["encoding"]["parts"]
         if len(parts) != len(expected_parts):
@@ -910,6 +949,15 @@ class Audit:
 
     def check_links_and_assets(self) -> None:
         html_files = sorted(self.out.rglob("*.html"))
+        forbidden_files = sorted(
+            path.relative_to(self.out).as_posix()
+            for path in html_files
+            if path.name in FORBIDDEN_PAGES or path.name.startswith("op-v-")
+        )
+        if forbidden_files:
+            self.fail(
+                "HTML inventory", f"removed pages were generated: {forbidden_files[:8]}"
+            )
         for required in (
             "index.html",
             "encoding.html",
@@ -973,6 +1021,10 @@ class Audit:
                     if decoded
                     else relative
                 )
+                target_leaf = posixpath.basename(target_name)
+                if target_leaf in FORBIDDEN_PAGES or target_leaf.startswith("op-v-"):
+                    self.fail(relative, f"href targets removed page {href!r}")
+                    continue
                 if target_name == ".." or target_name.startswith("../"):
                     self.fail(relative, f"href escapes offline root {href!r}")
                     continue
@@ -1044,7 +1096,7 @@ def main(argv: list[str] | None = None) -> int:
     errors = Audit(args.site.resolve(), catalog, tiles).run()
     if not args.catalog and not args.tiles and not errors:
         stamp = json.loads((args.site / "audit.json").read_text())
-        if stamp["commit"] != verified_tag_commit():
+        if stamp["commit"] != revision_commit():
             errors.append("audit.json: incorrect specification commit")
     if errors:
         for error in errors:

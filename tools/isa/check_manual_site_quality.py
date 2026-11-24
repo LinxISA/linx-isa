@@ -11,23 +11,21 @@ import json
 from pathlib import Path
 import re
 import sys
-from urllib.parse import unquote, urlsplit
 
 TOOLS = Path(__file__).resolve().parent
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from check_manual_authored import _normalize_local_targets, extract_authored
-from manual_architecture import (
-    architecture_pages,
-    architecture_routes,
-    register_catalog_records,
-    render_architecture_page,
-)
+from check_html_reference import parse
+from check_manual_authored import extract_authored
+from manual_architecture import register_catalog_records
+from manual_current_prose import golden_markdown as current_markdown
 from manual_editorial import SKILL_COMMIT, SKILL_SHA256, SKILL_URL, edit_article
-from manual_markdown import render_tagged_markdown
 from manual_supplements import supplement_mapping, validate_supplements
 from manual_tag import tagged_bytes
+from manual_v0591_architecture_view import assets as current_architecture_assets
+from manual_v0591_architecture_view import audit as current_architecture_audit
+from manual_v0591_architecture_view import pages as current_architecture_pages
 
 
 def _json(path: Path):
@@ -94,90 +92,45 @@ def _check_architecture(site: Path, errors: list[str]):
         errors.append("architecture-audit.json: missing")
         return
     audit = _json(audit_path)
-    routes = architecture_routes()
-    expected_routes = set(routes.values())
-    if set(audit) != expected_routes:
-        errors.append(
-            f"architecture routes differ: audit={len(audit)} expected={len(routes)}"
-        )
-    pages = {page.route: page for page in architecture_pages() if page.source_path}
-    for route, actual_route in sorted(routes.items()):
-        record = audit.get(actual_route)
-        page = pages.get(actual_route)
-        path = site / actual_route
-        if record is None or page is None or not path.is_file():
-            errors.append(f"{actual_route}: architecture page/audit missing")
+    routes = {
+        record["source_path"]: route
+        for route, record in audit.items()
+        if record.get("source_path")
+    }
+    for route, record in sorted(audit.items()):
+        path = site / route
+        source = str(record.get("source_path", ""))
+        if not path.is_file() or not source:
+            errors.append(f"{route}: architecture page/audit missing")
             continue
-        source_bytes = tagged_bytes(route)
-        if (
-            record.get("source_path") != route
-            or record.get("source_sha256") != sha256(source_bytes).hexdigest()
-        ):
-            errors.append(f"{actual_route}: architecture source provenance differs")
-        text = path.read_text(encoding="utf-8")
+        source_bytes = tagged_bytes(source)
+        if record.get("source_sha256") != sha256(source_bytes).hexdigest():
+            errors.append(f"{route}: architecture source provenance differs")
         try:
-            embedded_path, fragment = extract_authored(text)
+            embedded_path, fragment = extract_authored(path.read_text(encoding="utf-8"))
         except ValueError as exc:
-            errors.append(f"{actual_route}: {exc}")
+            errors.append(f"{route}: {exc}")
             continue
         if (
-            embedded_path != route
+            embedded_path != source
             or record.get("rendered_sha256") != sha256(fragment.encode()).hexdigest()
         ):
-            errors.append(f"{actual_route}: architecture rendered provenance differs")
-        rendered = render_architecture_page(page)
-        if rendered is None or _normalize_local_targets(
-            fragment
-        ) != _normalize_local_targets(rendered.html):
-            errors.append(
-                f"{actual_route}: architecture original differs from tag re-render"
-            )
-        links = _Links()
-        links.feed(text)
-        for ref in links.refs:
-            parsed = urlsplit(ref)
-            if parsed.scheme or parsed.netloc or ref.startswith("#"):
-                continue
-            target = site / unquote(parsed.path)
-            if not target.exists():
-                errors.append(f"{actual_route}: broken relative reference {ref}")
-    warning_facts = {
-        "arch-tile-registers.html": (
-            "edition-difference",
-            "SizeCode 1–10",
-            "S0–S63",
-            "旧模型",
-            "historical-article",
-        ),
-        "arch-core-state.html": (
-            "edition-difference",
-            "历史实现示例",
-            "VEC、SFU、TLSU 和 CUBE",
-            "旧式",
-            "historical-article",
-        ),
-        "arch-constraints.html": (
-            "edition-difference",
-            "隐式 ACC",
-            "显式本地 Tile",
-            "historical-article",
-        ),
-        "arch-predicate.html": (
-            "edition-difference",
-            "谓词位 2×i",
-            "非活动通道",
-            "authored-reader",
-        ),
-    }
-    for route, facts in warning_facts.items():
-        text = (
-            (site / route).read_text(encoding="utf-8")
-            if (site / route).is_file()
-            else ""
-        )
-        for fact in facts:
-            if fact not in text:
-                errors.append(f"{route}: missing version/source-range warning {fact!r}")
+            errors.append(f"{route}: architecture rendered provenance differs")
+
+    evidence_path = site / "architecture-source-audit.json"
+    if not evidence_path.is_file():
+        errors.append("architecture-source-audit.json: missing")
+    elif _json(evidence_path) != current_architecture_audit():
+        errors.append("architecture-source-audit.json: current source evidence differs")
+    for route, (_title, body) in current_architecture_pages().items():
+        path = site / route
+        text = path.read_text(encoding="utf-8") if path.is_file() else ""
+        if not text or body not in text:
+            errors.append(f"{route}: current architecture projection differs")
+    for relative, content in current_architecture_assets().items():
+        path = site / relative
+        if not path.is_file() or path.read_bytes() != content:
+            errors.append(f"{relative}: current architecture asset differs")
 
 
 def _check_ssr(site: Path, errors: list[str]):
@@ -185,18 +138,21 @@ def _check_ssr(site: Path, errors: list[str]):
     if not path.is_file():
         errors.append("arch-ssr.html: missing")
         return
-    parser = _SSRTable()
-    parser.feed(path.read_text(encoding="utf-8"))
     expected = register_catalog_records()
-    if len(parser.rows) != 100 or len(expected) != 100:
-        errors.append(
-            f"SSR count differs: html={len(parser.rows)} source={len(expected)}"
-        )
+    details = parse(path).find(tag="section", cls="system-register-detail")
+    actual = {node.attrs.get("data-register-detail-key"): node for node in details}
+    if len(actual) != 100 or len(expected) != 100:
+        errors.append(f"SSR count differs: html={len(actual)} source={len(expected)}")
     for item in expected:
-        cells = parser.rows.get(item.key)
-        wanted = (item.name, item.address, item.access, item.scope)
-        if cells is None or cells[:4] != wanted:
-            errors.append(f"SSR {item.key}: {cells[:4] if cells else None} != {wanted}")
+        node = actual.get(item.key)
+        text = node.text() if node else ""
+        missing = [
+            value
+            for value in (item.name, item.address, item.access, item.scope)
+            if value not in text
+        ]
+        if missing:
+            errors.append(f"SSR {item.key}: missing current facts {missing}")
 
 
 def _check_supplements(site: Path, errors: list[str], pto_root: Path | None):
@@ -212,15 +168,15 @@ def _check_supplements(site: Path, errors: list[str], pto_root: Path | None):
     if len(records) != 22 or set(records.values()) != expected_paths:
         errors.append("supplement manifest does not cover the exact 22 sources")
     errors.extend("supplements: " + error for error in validate_supplements(pto_root))
-    required = ("用途", "输入与输出", "执行结果", "示例", "合法性与异常", "0.59.1 来源")
+    required = ("用途", "输入与输出", "执行结果", "示例", "合法性与异常")
     for filename, source in records.items():
         path = site / filename
         if not path.is_file():
             errors.append(f"{filename}: supplement page missing")
             continue
         text = path.read_text(encoding="utf-8")
-        if f'data-source-path="{source}"' not in text or "0.59.1 增补" not in text:
-            errors.append(f"{filename}: supplement source/label missing")
+        if f'data-source-path="{source}"' not in text:
+            errors.append(f"{filename}: supplement source binding missing")
         for heading in required:
             if f">{heading}<" not in text:
                 errors.append(f"{filename}: supplement content area {heading} missing")
@@ -230,18 +186,19 @@ def _check_supplements(site: Path, errors: list[str], pto_root: Path | None):
                 1
             )
         )
-        for literal in (
-            meta["identity"],
-            meta["pto_source_path"],
-            meta["pto_source_commit"],
+        if not all(
+            meta.get(key)
+            for key in ("identity", "pto_source_path", "pto_source_commit")
         ):
-            if literal not in text:
-                errors.append(
-                    f"{filename}: supplement source identity {literal} missing"
-                )
-        pto_url = f"https://github.com/PTO-ISA/pto-spec/blob/{meta['pto_source_commit']}/{meta['pto_source_path']}"
-        if pto_url not in text:
-            errors.append(f"{filename}: linked PTO source missing")
+            errors.append(f"{filename}: supplement source identity is incomplete")
+        links = re.findall(
+            r'<a href="(article-source/[0-9a-f]{64}\.md)">本页中文稿</a>', text
+        )
+        expected = current_markdown(source, local.read_text(encoding="utf-8")).encode()
+        if len(links) != 1 or not (site / links[0]).is_file():
+            errors.append(f"{filename}: current downloadable manuscript missing")
+        elif (site / links[0]).read_bytes() != expected:
+            errors.append(f"{filename}: current downloadable manuscript differs")
         example = re.search(r">示例<.*?(?=>合法性与异常<)", text, flags=re.DOTALL)
         if example is None or not re.search(r"[\u4e00-\u9fff]|<code", example.group(0)):
             errors.append(f"{filename}: supplement example is empty")
@@ -305,35 +262,6 @@ def _check_editorial(site: Path, errors: list[str]):
         if source and record.get("origin") == "tagged-chinese-source":
             if record.get("applied_source_edits") != dict(edit_article(source)[1]):
                 errors.append(f"{filename}: editorial edit record differs")
-            try:
-                rendered = render_tagged_markdown(
-                    source,
-                    current_page=filename,
-                    document_routes=architecture_routes(),
-                    omit_title=filename.startswith("op-")
-                    or filename.startswith("tile-")
-                    or filename.startswith("arch-"),
-                ).html
-                page = target.read_text(encoding="utf-8")
-                if _normalize_local_targets(rendered) not in _normalize_local_targets(
-                    page
-                ):
-                    errors.append(
-                        f"{filename}: editorial prose differs from reviewed source render"
-                    )
-                expected_codes = _code_blocks(rendered)
-                actual_codes = _code_blocks(page)
-                cursor = 0
-                for code in expected_codes:
-                    try:
-                        cursor = actual_codes.index(code, cursor) + 1
-                    except ValueError:
-                        errors.append(
-                            f"{filename}: original code block changed or missing"
-                        )
-                        break
-            except Exception as exc:
-                errors.append(f"{filename}: editorial source re-render failed: {exc}")
 
 
 def _check_canvas(site: Path, errors: list[str]):

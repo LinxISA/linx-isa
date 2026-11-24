@@ -8,6 +8,8 @@ DOC ?= src/linxisa-isa-manual.adoc
 BUILD_DIR ?= build
 PDF ?= $(BUILD_DIR)/linxisa-isa-manual.pdf
 HTML ?= $(BUILD_DIR)/linxisa-isa-manual.html
+REFERENCE_SITE ?= $(BUILD_DIR)/instruction-reference
+REFERENCE_ZIP ?= $(BUILD_DIR)/linxisa-0.59.1-html.zip
 
 .PHONY: all pdf html gen check-generated clean bundle-check
 
@@ -44,15 +46,19 @@ html: bundle-check gen | $(BUILD_DIR)
 clean:
 	rm -rf $(BUILD_DIR) $(GEN_DIR) vendor/bundle .bundle
 
-.PHONY: html-reference check-html-reference
+.PHONY: html-reference html-reference-inputs check-html-reference
+
+html-reference-inputs:
+	python3 ../../../tools/isa/gen_html_reference.py --check-inputs
 
 html-reference:
-	python3 ../../../tools/isa/gen_html_reference.py --out $(BUILD_DIR)/instruction-reference --zip $(BUILD_DIR)/linxisa-0.59.1-html.zip
+	python3 ../../../tools/isa/gen_html_reference.py --out $(REFERENCE_SITE) --zip $(REFERENCE_ZIP)
 
 check-html-reference:
-	python3 ../../../tools/isa/gen_html_reference.py --check --out $(BUILD_DIR)/instruction-reference
-	python3 ../../../tools/isa/check_html_reference.py --site $(BUILD_DIR)/instruction-reference
-	python3 ../../../tools/isa/check_manual_structure.py --site $(BUILD_DIR)/instruction-reference
-	python3 ../../../tools/isa/check_manual_authored.py --site $(BUILD_DIR)/instruction-reference
-	python3 ../../../tools/isa/check_manual_detail_semantics.py --site $(BUILD_DIR)/instruction-reference
-	python3 ../../../tools/isa/check_manual_site_quality.py --site $(BUILD_DIR)/instruction-reference
+	python3 ../../../tools/isa/gen_html_reference.py --check --out $(REFERENCE_SITE)
+	python3 ../../../tools/isa/check_html_reference.py --site $(REFERENCE_SITE)
+	python3 ../../../tools/isa/check_manual_structure.py --site $(REFERENCE_SITE)
+	python3 ../../../tools/isa/check_manual_authored.py --site $(REFERENCE_SITE)
+	python3 ../../../tools/isa/check_manual_detail_semantics.py --site $(REFERENCE_SITE)
+	python3 ../../../tools/isa/check_manual_site_quality.py --site $(REFERENCE_SITE)
+	python3 ../../../tools/isa/check_v0591_revision_manual.py --site $(REFERENCE_SITE) --zip $(REFERENCE_ZIP)

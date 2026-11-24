@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Build the offline LinxISA 0.59.1 reference from the published Git tag."""
+"""Build the offline reference from the current LinxISA 0.59.1 revision."""
 
 from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from functools import lru_cache
+from dataclasses import replace
 from hashlib import sha256
 from html import escape
 from itertools import groupby
@@ -12,12 +14,13 @@ import json
 from importlib.metadata import version
 from pathlib import Path
 import re
-import subprocess
 from urllib.parse import quote
 import zipfile
 
 from manual_tag import (
     RELEASE_TAG as TAG,
+    SIGNED_TAG_COMMIT,
+    revision_commit,
     tagged_bytes,
     tagged_json,
     verified_tag_commit,
@@ -27,7 +30,14 @@ from manual_terms_zh import FILTER, group_name
 from manual_encoding import render_encoding, validate_catalog
 from manual_linx_sail import sail_detail
 from manual_reader import operation_detail
-from manual_architecture import architecture_routes
+from manual_architecture import architecture_pages
+from manual_v0591_architecture_view import (
+    pages as revision_architecture,
+    assets as architecture_assets,
+    audit as architecture_evidence,
+)
+from manual_v0591_chapters import active_markdown, obsolete_mentions
+from manual_v0591_links import GLOSSARY, GLOSSARY_TEXT
 from manual_architecture_view import architecture_bodies
 from manual_canvas_site import include_canvas
 from manual_editorial import (
@@ -40,6 +50,7 @@ from manual_editorial import (
 from manual_supplements import instruction_supplement, tile_supplement
 from manual_markdown import render_markdown_text
 from manual_version_notes import release_constraints
+from manual_current_prose import golden_markdown as current_markdown, golden_constraints
 from manual_detail import instruction_body, operation_body, revised_intro
 from manual_authored import authored_for, authored_tile
 from manual_index_families import family_index_synopsis
@@ -49,6 +60,7 @@ from manual_prose_zh import memory_synopsis
 from manual_reader_site import ArticleLibrary, authored_synopsis
 from manual_navigation import BY_KEY, cat_file, category_links, index_pages
 from manual_diagrams import make_diagrams
+from manual_revision import REMOVED_BLOCK_FORMS, is_removed_form
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -130,7 +142,7 @@ def page(title, body, commit, prefix=""):
 <a class="brand" href="{prefix}index.html">LinxISA</a><span class="edition">0.59.1 · 指令集参考手册</span>
 <nav class="class-nav" aria-label="指令类型">{category_links(prefix)}</nav><nav aria-label="手册目录">{"".join(link(prefix + url, label) for url, label in nav)}</nav></header>
 <main id="content"><h1>{escape(title)}</h1>{body}</main>
-<footer>{link(prefix + "sources.html", TAG)} · 规范提交 <code>{escape(commit[:12])}</code> · {link("#content", "回到页首")}</footer></body></html>
+<footer>{link(prefix + "sources.html", TAG + " 修订版")} · 工作树基线 <code>{escape(commit[:12])}</code> · {link("#content", "回到页首")}</footer></body></html>
 """
 
 
@@ -265,11 +277,11 @@ def unique_names(rows):
 
 
 def sources(commit, inputs, manifest, lock):
-    repo = f"https://github.com/LinxISA/linx-isa/blob/{commit}/"
     facts = [
-        ("LinxISA 标签", TAG),
-        ("规范提交", commit),
-        ("发布范围", "ISA 规范、编码与 Sail 模型"),
+        ("LinxISA 版本", TAG),
+        ("原始签名 tag 提交", SIGNED_TAG_COMMIT),
+        ("本次修订工作树基线", commit),
+        ("手册范围", "修订后的 ISA 规范、编码与 Sail 模型"),
         ("PTO 源提交", lock["source"]["commit"]),
         ("ELF 编码 ABI", manifest["identity"]["encoding_abi"]),
         ("ELF 编码投影 SHA-256", manifest["identity"]["encoding_projection_sha256"]),
@@ -289,14 +301,7 @@ def sources(commit, inputs, manifest, lock):
         "Linx 专有形式单列其依据和已知语义缺口。芯片实现还需检查操作数合法性、异常及提交时机。"
         "整机验证进度见发行说明。</p>"
     )
-    body += (
-        "<p>"
-        + link(repo + "docs/zh/releases/v0.59.1.md", "0.59.1 发行说明")
-        + " · "
-        + link("https://linxisa.github.io/", "灵犀指令集架构中文站")
-        + "</p>"
-    )
-    body += "<p>中文站可查阅指令的设计背景和早期版本的示例。编写 0.59.1 汇编或译码器时，请使用本手册列出的操作数和编码。</p>"
+    body += "<p>" + link("https://linxisa.github.io/", "灵犀指令集架构中文站") + "</p>"
     body += '<h2>离线规范文件</h2><div class="table-scroll"><table><tr><th>文件</th><th>SHA-256</th></tr>'
     for path, data in inputs.items():
         body += f"<tr><td>{link('spec/' + Path(path).name, Path(path).name)}</td><td><code>{sha256(data).hexdigest()}</code></td></tr>"
@@ -325,20 +330,85 @@ def scoped_record(row, source):
     )
 
 
-def form_provenance(row, commit, common_paths):
-    sid = row.get("pto_source_form_id")
-    if sid:
-        path = common_paths[sid]
-        line = ""
-    else:
-        path = "isa/v0.58/" + row["source"]["file"]
-        line = f"#L{row['source']['line']}"
-    url = f"https://github.com/LinxISA/linx-isa/blob/{commit}/{path}{line}"
+def form_provenance(row, common_paths):
+    source_id = row.get("pto_source_form_id")
+    source = (
+        common_paths[source_id]
+        if source_id
+        else "isa/v0.59/state/linx_extension_forms.json"
+    )
     return (
         f'<p class="source">目录形式 <code>{escape(row["id"])}</code> · '
-        + link(url, sid or (path + line))
+        + link("spec/" + Path(source).name, source_id or "Linx 扩展形式定义")
         + "</p>"
     )
+
+
+def check_inputs():
+    """Validate the revised 0.59.1 authority without rendering the site."""
+    catalog = tagged_json(CATALOG)
+    tiles = tagged_json(TILES)
+    manifest = tagged_json(MANIFEST)
+    lock = tagged_json(LOCK)
+    rows = catalog.get("instructions", [])
+    if catalog.get("version") != "0.59.1":
+        raise ValueError(f"expected LinxISA 0.59.1, found {catalog.get('version')}")
+    if catalog.get("instruction_count") != len(rows):
+        raise ValueError("catalog instruction_count differs from row count")
+    if len(rows) != 1306:
+        raise ValueError(
+            f"revised 0.59.1 requires 1306 active forms, found {len(rows)}"
+        )
+    obsolete = sorted(
+        {row["mnemonic"] for row in rows if is_removed_form(row["mnemonic"])}
+    )
+    if obsolete:
+        raise ValueError(f"obsolete forms remain active: {obsolete[:8]}")
+    linx_only = sum(not row.get("pto_source_form_id") for row in rows)
+    if linx_only != 23:
+        raise ValueError(
+            f"revised 0.59.1 requires 23 Linx-only forms, found {linx_only}"
+        )
+    if len({row["uop_big_kind"] for row in rows}) != 8:
+        raise ValueError("revised 0.59.1 requires exactly 8 instruction classes")
+    retained_prefixes = {
+        "HL.BSTART.CALL",
+        "HL.BSTART.FP",
+        "HL.BSTART.STD",
+        "HL.BSTART.SYS",
+        "L.BSTART.FP",
+        "L.BSTART.STD",
+        "L.BSTART.SYS",
+    }
+    retained = [
+        row
+        for row in rows
+        if row["mnemonic"] in retained_prefixes
+        or row["id"] == "hl_bstart_call_48_d71cee46ab50"
+    ]
+    if len(retained) != 19:
+        raise ValueError(
+            f"F-H retained inventory requires 19 forms, found {len(retained)}"
+        )
+    reserved_only = {
+        "DMA.FREE.L",
+        "DMA.FREE.S",
+        "MCOPY.DL",
+        "MCOPY.DS",
+    }
+    i_rows = [row for row in rows if row["mnemonic"] in reserved_only]
+    if {row["mnemonic"] for row in i_rows} != reserved_only or len(i_rows) != 4:
+        raise ValueError("I inventory must contain exactly four reserved-only forms")
+    if any("NOT IMPLEMENTED" not in row.get("note", "") for row in i_rows):
+        raise ValueError("I forms must remain explicitly not implemented")
+    if len(tiles.get("operations", [])) != 119:
+        raise ValueError("revised 0.59.1 requires exactly 119 Tile operations")
+    if manifest.get("cardinality", {}).get("system_registers") != 100:
+        raise ValueError("revised 0.59.1 requires exactly 100 SSR records")
+    publication = lock.get("publication", {})
+    if publication.get("version") not in {None, "0.59.1.0"}:
+        raise ValueError("unexpected PTO publication dependency")
+    return catalog, tiles, manifest, lock
 
 
 def supplement_excerpt(path):
@@ -354,7 +424,7 @@ def supplement_reader(path, url, library):
         raise ValueError(f"{url}: missing source and release supplement")
     source = Path(path)
     relative = source.relative_to(ROOT).as_posix()
-    data = source.read_bytes()
+    data = current_markdown(relative, source.read_text()).encode()
     raw = "article-source/" + sha256(data).hexdigest() + ".md"
     library.files[raw] = data
     fragment = render_markdown_text(
@@ -366,8 +436,8 @@ def supplement_reader(path, url, library):
     if fragment.documents or fragment.assets:
         raise ValueError(f"{relative}: package supplemental dependencies")
     return (
-        f'<section class="supplement-reader" data-source-path="{escape(relative)}"><p class="article-source">'
-        + link(raw, "本地增补稿")
+        f'<section class="instruction-reader" data-source-path="{escape(relative)}"><p class="article-source">'
+        + link(raw, "本页中文稿")
         + "</p>"
         + fragment.html
         + "</section>"
@@ -375,7 +445,7 @@ def supplement_reader(path, url, library):
 
 
 def build():
-    commit = verified_tag_commit()
+    commit = revision_commit()
     paths = (
         CATALOG,
         TILES,
@@ -385,13 +455,13 @@ def build():
         "isa/v0.59/state/pto_command_forms.json",
     )
     inputs = {p: tagged_bytes(p) for p in paths}
-    catalog, tiles, manifest, lock = (json.loads(inputs[p]) for p in paths[:4])
+    catalog, tiles, manifest, lock = check_inputs()
     if (
         catalog["version"] != TAG[1:]
         or manifest["publication"]["version"] != TAG[1:]
         or sha256(inputs[CATALOG]).hexdigest() != manifest["catalog"]["sha256"]
     ):
-        raise ValueError("tag, release manifest and catalog identity disagree")
+        raise ValueError("0.59.1 revision manifest and catalog identity disagree")
     for source in manifest["authoritative_sources"].values():
         path = source["path"]
         data = tagged_bytes(path)
@@ -446,7 +516,69 @@ def build():
     for op in direct_ops:
         url = tile_page(op["name"])
         revisions[url] = operation_body(op, articles[url][1])
-    library = ArticleLibrary(articles, architecture_routes(), revisions=revisions)
+    removed_names = REMOVED_BLOCK_FORMS
+    current_arch = revision_architecture()
+    article_sources = {a.source_path for _, a in articles.values() if a}
+    discarded_collections = {"implementation", "ssr", "datatype"}
+    selected_chapters = []
+    for page_item in architecture_pages():
+        if page_item.key in {"implementation-index", "ssr"}:
+            continue
+        if page_item.source_path and (
+            page_item.collection in discarded_collections
+            or page_item.route in current_arch
+        ):
+            continue
+        if page_item.source_path and page_item.source_path not in article_sources:
+            markdown = tagged_bytes(page_item.source_path).decode()
+            if active_markdown(page_item.source_path, markdown, removed_names) is None:
+                continue
+        summary = {
+            "state-index": "标量、Tile、块控制状态与系统寄存器。",
+            "ssr-index": "查阅 100 项系统寄存器的地址、权限与行为。",
+        }.get(page_item.key, page_item.summary)
+        selected_chapters.append(replace(page_item, summary=summary))
+    chapters_by_path = {
+        p.source_path: p.route for p in selected_chapters if p.source_path
+    }
+    direct_routes = {
+        p.source_path: p.route
+        for p in architecture_pages()
+        if p.source_path and p.route in current_arch
+    }
+
+    direct_routes["docs/zh/isa/header/tileblock/intro.md"] = "tile.html"
+    for chapter in architecture_pages():
+        if chapter.key == "ssr":
+            direct_routes[chapter.source_path] = "arch-ssr.html"
+
+    @lru_cache(maxsize=None)
+    def source_text(path):
+        if path == GLOSSARY:
+            return GLOSSARY_TEXT
+        if path not in article_sources and path not in chapters_by_path:
+            return None
+        text = active_markdown(path, edit_article(path)[0], removed_names)
+        return current_markdown(path, text) if text else None
+
+    revisions[op_page("BSTART.ICALL")] = (
+        "## 说明\n\n先检查并保存上一块的 BARG.BPCN。上一块成功提交后，建立新的标准块并将独立的返回目标写入 ra。新块提交时才选择保存的间接调用目标。"
+    )
+    for url, md in revisions.items():
+        if md:
+            path = articles[url][1].source_path
+            if obsolete_mentions(md, removed_names):
+                md = active_markdown(path, md, removed_names)
+                if not md:
+                    raise ValueError(f"{url}: current explanation required")
+            revisions[url] = current_markdown(path, md)
+    library = ArticleLibrary(
+        articles,
+        chapters_by_path,
+        revisions=revisions,
+        source_text=source_text,
+        link_routes=direct_routes,
+    )
     zh_common = json.loads((ASSETS / "data/manual-semantics-zh.json").read_text())[
         "forms"
     ]
@@ -509,7 +641,7 @@ def build():
             + '><summary>0.59.1 命令编码与核对资料</summary><div class="release-data-body">'
             + tile_header(op, forms[carrier][0], owner)
             + metadata
-            + release_constraints(zh_tile[name])
+            + release_constraints(zh_tile[name], current_name=name)
             + operation_detail(owner["source_path"])
             + "</div></details>",
         )
@@ -554,6 +686,8 @@ def build():
         base_intro = revised_intro(revisions.get(op_page(base)))
         if base_intro:
             short = base_intro
+        if "NOT IMPLEMENTED" in str(first.get("note", "")):
+            short = "仅预留编码；读取操作数或产生架构效果之前拒绝执行。"
         if scope:
             scope_label = {
                 "Private": "私有",
@@ -627,7 +761,9 @@ def build():
                 + render_encoding(row, catalog)
             )
             if source_id in zh_common:
-                body += release_constraints(zh_common[source_id], base=bool(scope))
+                body += release_constraints(
+                    zh_common[source_id], base=bool(scope), current_name=row["mnemonic"]
+                )
             if scope:
                 base_row = base_by_id[source_id]
                 body += (
@@ -638,7 +774,7 @@ def build():
                 body += scoped_record(row, source_forms[row["pto_source_form_id"]])
             body += (
                 (operation_detail(owner) if owner else sail_detail(row))
-                + form_provenance(row, commit, common_paths)
+                + form_provenance(row, common_paths)
                 + "</div></details>"
             )
             body += "</article>"
@@ -730,7 +866,6 @@ def build():
     bodies["sources.html"] = (
         "版本与来源",
         sources(commit, inputs, manifest, lock)
-        + '<p><a href="arm64-reference-organization.md">Arm 参考站结构与 LinxISA 分类说明</a> · <a href="reader-quality-review.md">独立审阅记录</a></p>'
         + "<h2>许可</h2><p>"
         + link("LICENSE.txt", "LinxISA")
         + " · "
@@ -739,30 +874,24 @@ def build():
         + link("PTO-SPEC-LICENSE.txt", "PTO-SPEC")
         + "</p>",
     )
-    lacking = [
-        (filename, name)
-        for filename, (name, article) in articles.items()
-        if article is None
-    ]
     title, source_body = bodies["sources.html"]
     bodies["sources.html"] = (
         title,
-        "<h2>中文说明与编码</h2><p>指令说明沿用本地中文站的写法。汇编、操作数和执行结果按 "
-        "0.59.1 的指令目录与模型核对。每个编码形式单列位图和字段，本页中文稿可在正文末尾下载。</p>"
-        + '<p><a href="detail-audit.json">逐页来源清单</a>列出每篇正文对应的助记符、编码形式和语义定义。</p>'
-        + "<p>寄存器偏移的三条向量存储在汇编目录与 Sail 中使用了不同的移位量。"
-        + "、".join(link(op_page(n), n) for n in ("V.SH.BRG", "V.SW.BRG", "V.SD.BRG"))
-        + " 的正文列出了各自的地址公式。</p>"
-        + "<details><summary>另有 0.59.1 中文增补页的条目</summary><ul>"
-        + "".join(
-            "<li>" + link(filename, name) + "</li>"
-            for filename, name in sorted(lacking)
-        )
-        + "</ul></details>"
+        "<h2>中文说明与编码</h2><p>每个编码形式列出汇编写法、位图和字段。"
+        + link("detail-audit.json", "逐页来源清单")
+        + "给出中文稿、编码形式和语义定义的对应关系。</p>"
         + source_body,
     )
-    chapters, chapter_audit = architecture_bodies(library)
+    chapters, chapter_audit = architecture_bodies(library, selected_chapters)
     bodies.update(chapters)
+    bodies.update(current_arch)
+    for index_url, link_text, target in (
+        ("architecture.html", "规范范围", "arch-overview.html"),
+        ("arch-state.html", "寄存器与块状态", "arch-registers.html"),
+        ("execution-model.html", "执行与实现边界", "arch-implementation-boundary.html"),
+    ):
+        heading, intro = bodies[index_url]
+        bodies[index_url] = (heading, intro + "<p>" + link(target, link_text) + "</p>")
     _, home_body = bodies["index.html"]
     bodies["index.html"] = (
         "LinxISA 0.59.1 芯片开发手册",
@@ -788,11 +917,8 @@ def build():
             commit,
             prefix="../",
         ).encode()
-    analysis_path = "docs/zh/architecture/isa-manual/arm64-reference-organization.md"
-    files["arm64-reference-organization.md"] = (ROOT / analysis_path).read_bytes()
-    review_path = "docs/zh/architecture/isa-manual/reader-quality-review.md"
-    files["reader-quality-review.md"] = (ROOT / review_path).read_bytes()
     files.update(library.files)
+    files.update(architecture_assets())
     files.update(diagram_assets)
     files.update(canvas_files)
     reviewed_pages = {}
@@ -915,7 +1041,42 @@ def build():
         )
         + "\n"
     ).encode()
+    files["architecture-source-audit.json"] = json.dumps(
+        architecture_evidence(), ensure_ascii=False, indent=2
+    ).encode()
     return files
+
+
+def remove_stale_outputs(out, extras, archive):
+    """Delete only unmodified files from the previous generated edition."""
+    if not extras:
+        return
+    inventory = out / "generated-files.json"
+    if inventory.is_file():
+        previous = json.loads(inventory.read_text())["files"]
+    elif archive and archive.is_file():
+        # First upgrade from an edition predating generated-files.json.
+        with zipfile.ZipFile(archive) as bundle:
+            available = set(bundle.namelist())
+            previous = {
+                name: sha256(bundle.read(name)).hexdigest()
+                for name in extras
+                if name in available
+            }
+    else:
+        previous = {}
+    for name in extras:
+        path = out / name
+        if (
+            name not in previous
+            or path.is_symlink()
+            or sha256(path.read_bytes()).hexdigest() != previous[name]
+        ):
+            raise SystemExit(
+                f"output contains an unowned or modified file: {path}; choose an empty output directory"
+            )
+    for name in extras:
+        (out / name).unlink()
 
 
 def main():
@@ -923,8 +1084,36 @@ def main():
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--zip", type=Path)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--check-inputs", action="store_true")
     args = parser.parse_args()
+    if args.check_inputs:
+        catalog, tiles, manifest, _ = check_inputs()
+        print(
+            f"OK: LinxISA 0.59.1 revision, {len(catalog['instructions'])} active forms, "
+            f"{manifest['cardinality']['linx_only_forms']} Linx-only forms, "
+            f"{len(tiles['operations'])} Tile operations"
+        )
+        return
     files = build()
+    files["generated-files.json"] = json.dumps(
+        {
+            "files": {
+                name: sha256(data).hexdigest() for name, data in sorted(files.items())
+            }
+        },
+        separators=(",", ":"),
+    ).encode()
+    expected = set(files)
+    if args.out.is_dir():
+        extras = sorted(
+            path.relative_to(args.out).as_posix()
+            for path in args.out.rglob("*")
+            if path.is_file() and path.relative_to(args.out).as_posix() not in expected
+        )
+        if args.check and extras:
+            raise SystemExit(f"stale generated file: {extras[0]}")
+        if not args.check:
+            remove_stale_outputs(args.out, extras, args.zip)
     for name, data in files.items():
         target = args.out / name
         if args.check:

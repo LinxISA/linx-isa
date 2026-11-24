@@ -26,8 +26,8 @@ class ManualArchitectureTest(unittest.TestCase):
         self.assertEqual(validate_architecture_sources(), [])
         pages = architecture_pages()
         routes = architecture_routes()
-        self.assertEqual(len(pages), 125)
-        self.assertEqual(len(routes), 118)
+        self.assertEqual(len(pages), 123)
+        self.assertEqual(len(routes), 116)
         self.assertEqual(
             {p.route for p in pages if p.collection == "index"},
             {

@@ -13,7 +13,7 @@ import re
 import sys
 from urllib.parse import unquote, urlsplit
 
-from manual_tag import RELEASE_TAG, verified_tag_commit, tagged_bytes, tagged_json
+from manual_tag import RELEASE_TAG, revision_commit, tagged_bytes, tagged_json
 
 
 CATALOG_PATH = "isa/v0.59/linxisa-v0.59.json"
@@ -26,7 +26,6 @@ CLASS_FILES = {
     "CMD": "class-cmd.html",
     "FSU": "class-fsu.html",
     "SYS": "class-sys.html",
-    "VEC": "class-vec.html",
 }
 
 
@@ -186,7 +185,7 @@ class Audit:
             self.fail("diagram-audit.json", "wrong schema")
         if value.get("release_tag") != RELEASE_TAG:
             self.fail("diagram-audit.json", "wrong release tag")
-        if value.get("source_commit") != verified_tag_commit():
+        if value.get("source_commit") != revision_commit():
             self.fail("diagram-audit.json", "wrong release commit")
         if (
             value.get("catalog_sha256")
@@ -287,11 +286,16 @@ class Audit:
                         self.fail(where, "fallback SVG generator hash differs")
                 else:
                     self.fail(where, f"unknown diagram source {part.get('source')!r}")
-        if figure_count != 2398 or len(assets_seen) != 2398:
+        expected_assets = sum(len(row["parts"]) for row in self.catalog["instructions"])
+        if figure_count != expected_assets or len(assets_seen) != expected_assets:
             self.fail(
-                "diagrams", f"figures/assets {figure_count}/{len(assets_seen)} != 2398"
+                "diagrams",
+                f"figures/assets {figure_count}/{len(assets_seen)} != {expected_assets}",
             )
-        if audit.get("form_count") != 1499 or audit.get("asset_count") != 2398:
+        if (
+            audit.get("form_count") != len(self.catalog["instructions"])
+            or audit.get("asset_count") != expected_assets
+        ):
             self.fail("diagram-audit.json", "summary counts differ")
 
     def check_classes(self) -> None:
@@ -318,8 +322,14 @@ class Audit:
             if seen & set(names):
                 self.fail(filename, "mnemonic appears in more than one class")
             seen.update(names)
-        if len(seen) != 754:
-            self.fail("class inventory", f"unique mnemonic total {len(seen)} != 754")
+        expected_mnemonics = len(
+            {row["mnemonic"] for row in self.catalog["instructions"]}
+        )
+        if len(seen) != expected_mnemonics:
+            self.fail(
+                "class inventory",
+                f"unique mnemonic total {len(seen)} != {expected_mnemonics}",
+            )
         home = self.document("index.html")
         if home is not None:
             hrefs = {node.attrs.get("href") for node in home.find(tag="a")}
@@ -347,7 +357,12 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 1
-    print("OK: 1,499 forms, 2,398 diagram Parts, 754 mnemonics, 9 classes")
+    parts = sum(len(row["parts"]) for row in catalog["instructions"])
+    mnemonics = len({row["mnemonic"] for row in catalog["instructions"]})
+    print(
+        f"OK: {len(catalog['instructions'])} forms, {parts} diagram Parts, "
+        f"{mnemonics} mnemonics, {len(CLASS_FILES)} classes"
+    )
     return 0
 
 

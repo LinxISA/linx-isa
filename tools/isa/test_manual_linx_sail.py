@@ -8,12 +8,15 @@ import json
 from pathlib import Path
 import re
 import sys
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/isa"))
 
-from manual_linx_sail import _release_decode, sail_detail
+from export_linxisa_v0591_sail import check as check_export
+from export_linxisa_v0591_sail import export as export_sail
+from manual_linx_sail import _release_decode, _sail_sources, sail_detail
 from manual_tag import tagged_bytes, tagged_json
 
 DATA = ROOT / "docs/architecture/isa-manual/reference/data/manual-linx-sail.json"
@@ -32,18 +35,28 @@ class ManualLinxSailTest(unittest.TestCase):
         self.assertEqual(
             self.data["coverage"],
             {
-                "helper_forms": 212,
-                "linx_only_forms": 216,
+                "helper_forms": 19,
+                "linx_only_forms": 23,
                 "platform_dispatch_forms": 0,
                 "trap_forms": 4,
-                "unique_helpers": 200,
+                "unique_helpers": 7,
             },
         )
         decoder = _release_decode()
-        self.assertEqual(
-            hashlib.sha256(decoder).hexdigest(),
-            "885ddbf784fcc986383285effa9b413115b8b459fadd51360891281bdc59a94e",
-        )
+        with tempfile.TemporaryDirectory() as directory:
+            exported = Path(directory) / "sail"
+            package = export_sail(exported)
+            check_export(exported)
+            release_package = json.loads(
+                (ROOT / "isa/v0.59/release_package.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                hashlib.sha256(decoder).hexdigest(),
+                package["files"]["model/decode/decode.sail"],
+            )
+            self.assertEqual(
+                package["files_sha256"], release_package["sail"]["files_sha256"]
+            )
         self.assertEqual(
             self.data["decoder"]["sha256"], hashlib.sha256(decoder).hexdigest()
         )
@@ -75,12 +88,13 @@ class ManualLinxSailTest(unittest.TestCase):
                 )
                 detail = sail_detail(row)
                 self.assertIn('class="linx-sail-evidence"', detail)
-                self.assertIn("sail/model/decode/decode.sail", detail)
+                self.assertIn("model/decode/decode.sail", detail)
 
     def test_helpers_are_exact_tagged_definitions_and_real_calls(self) -> None:
+        exported = _sail_sources()
         for name, handler in self.data["handlers"].items():
             with self.subTest(helper=name):
-                source = tagged_bytes(handler["path"])
+                source = exported[handler["path"]]
                 self.assertEqual(
                     hashlib.sha256(source).hexdigest(), handler["file_sha256"]
                 )
@@ -95,6 +109,18 @@ class ManualLinxSailTest(unittest.TestCase):
                 self.assertRegex(
                     form["decode"]["excerpt"], rf"\b{re.escape(helper)}\s*\("
                 )
+
+    def test_evidence_is_reproducible_and_matches_official_export(self) -> None:
+        self.assertNotIn("source_commit", self.data)
+        self.assertNotIn("http", json.dumps(self.data))
+        with tempfile.TemporaryDirectory() as directory:
+            exported = Path(directory) / "sail"
+            export_sail(exported)
+            check_export(exported)
+            self.assertEqual(
+                (exported / "model/decode/decode.sail").read_bytes(),
+                _release_decode(),
+            )
 
     def test_unsupported_forms_show_trap_and_platform_boundary(self) -> None:
         trapped = {

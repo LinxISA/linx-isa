@@ -134,14 +134,6 @@ _CHAPTERS = (
         "memory-block-flow",
     ),
     (
-        "vector-block",
-        "向量数据 Block",
-        "execution",
-        "说明向量 block 的 lane 状态、块头和块体执行。",
-        "docs/zh/isa/blockIntro/vec_block/intro.md",
-        "vector-block-flow",
-    ),
-    (
         "cube-block",
         "矩阵数据 Block",
         "execution",
@@ -196,14 +188,6 @@ _CHAPTERS = (
         "state",
         "说明标量执行上下文使用的寄存器状态。",
         "docs/zh/isa/register/common/sgpr.md",
-        None,
-    ),
-    (
-        "vgpr",
-        "向量寄存器 VGPR",
-        "state",
-        "说明向量载荷、lane 组织和向量操作数状态。",
-        "docs/zh/isa/register/common/vgpr.md",
         None,
     ),
     (
@@ -412,6 +396,11 @@ def _extra_pages(existing: set[str]) -> list[ArchitecturePage]:
         for path in _tagged_paths(prefix):
             if path in existing:
                 continue
+            if path in {
+                "docs/zh/isa/register/common/vgpr.md",
+                "docs/zh/isa/blockIntro/vec_block/intro.md",
+            }:
+                continue
             stem = path.rsplit("/", 1)[-1].removesuffix(".md")
             key = f"{collection}-{stem.lower().replace('_', '-')}"
             status = (
@@ -586,12 +575,12 @@ def register_catalog_records() -> tuple[SystemRegisterRecord, ...]:
     return tuple(result)
 
 
-def register_catalog_html() -> str:
+def register_catalog_html(allowed_routes=None) -> str:
     rows = []
     for item in register_catalog_records():
         old = (
             f'<a href="{escape(item.historical_route)}">历史说明</a>'
-            if item.historical_route
+            if item.historical_route and (allowed_routes is None or item.historical_route in allowed_routes)
             else "—"
         )
         rows.append(

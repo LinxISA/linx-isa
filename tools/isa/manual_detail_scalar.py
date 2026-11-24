@@ -42,16 +42,6 @@ CURRENT_COMMANDS = {
     "BSTART.STD",
     "BSTART.SYS",
 }
-REGISTER_MODE_STARTS = {
-    "BSTART.MPAR": ("并行矩阵块", True),
-    "BSTART.MSEQ": ("顺序矩阵块", True),
-    "BSTART.VPAR": ("并行 SIMT 向量块", True),
-    "BSTART.VSEQ": ("顺序 SIMT 向量块", True),
-    "C.BSTART.MPAR": ("并行矩阵块", False),
-    "C.BSTART.MSEQ": ("顺序矩阵块", False),
-    "C.BSTART.VPAR": ("并行 SIMT 向量块", False),
-    "C.BSTART.VSEQ": ("顺序 SIMT 向量块", False),
-}
 NON_TILE_STARTS = {
     "BSTART",
     "BSTART.FP",
@@ -166,38 +156,6 @@ def _render(record: Mapping[str, Any], source: Mapping[str, Any] | None) -> str:
     return "\n\n".join(sections)
 
 
-def _register_mode_start(row: Mapping[str, Any]) -> str | None:
-    item = REGISTER_MODE_STARTS.get(str(row["mnemonic"]))
-    if item is None:
-        return None
-    kind, selectable = item
-    mode = (
-        "Mode 字段选择块内向量寄存器档位：VS8 提供 2 组、每组 4 个寄存器；VS16 提供 4 组、每组 4 个寄存器。"
-        if selectable
-        else "该 16 位压缩形式使用固定的向量寄存器档位，不携带 Mode 字段。"
-    )
-    transfer = (
-        "该压缩形式在汇编中明确采用 FALL 转移。"
-        if not selectable
-        else "本形式只在发布编码中选择块种类和寄存器档位；不为未编码的转移方式附加含义。"
-    )
-    target = (
-        "VPAR/VSEQ 的分离式写法要求用 B.TEXT 给出块体目标。\n\n"
-        if row["mnemonic"] in {"BSTART.VPAR", "BSTART.VSEQ"}
-        else ""
-    )
-    return "".join(
-        (
-            f"## 汇编写法\n\n`{row['asm']}`。\n\n",
-            f"## 说明\n\n{row['mnemonic']} 结束当前指令块并开始一个{kind}。{transfer}\n\n",
-            target,
-            f"## 寄存器资源\n\n{mode}\n\n",
-            "## 架构效果\n\n该指令只建立新块的类型、执行方式和寄存器资源配置；",
-            "块体指令随后按新描述符执行。",
-        )
-    )
-
-
 def _special_bstart(row: Mapping[str, Any]) -> str | None:
     mnemonic = str(row["mnemonic"])
     asm = str(row["asm"])
@@ -277,16 +235,7 @@ def scalar_body(
     Chinese body.  Vector and Tile material is owned by their dedicated review
     paths and is never rewritten here.
     """
-    if article is None or article.classification != "conflicting-current":
-        manual = _register_mode_start(row)
-        if manual is not None:
-            return manual
     mnemonic = str(row["mnemonic"])
-    if mnemonic.startswith("V.") or row.get("uop_big_kind") == "UOP_BIG_KIND_VPU":
-        return None
-    manual = _register_mode_start(row)
-    if manual is not None:
-        return manual
     manual = _special_bstart(row)
     if manual is not None:
         return manual

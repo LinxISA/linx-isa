@@ -19,8 +19,10 @@ import re
 from typing import Any, Iterable, Mapping
 
 try:
+    from manual_revision import is_removed_form
     from manual_tag import tagged_json
 except ModuleNotFoundError:  # package-style unittest import
+    from tools.isa.manual_revision import is_removed_form
     from tools.isa.manual_tag import tagged_json
 try:
     from manual_prose_zh import polish, scalar_synopsis
@@ -310,8 +312,6 @@ def _memory_width(root: str) -> tuple[int, bool] | None:
 def _linx_note_zh(inst: Mapping[str, Any], exact: str) -> str:
     mnemonic = _clean(inst.get("mnemonic"))
     asm = _clean(inst.get("asm"))
-    if mnemonic == "B.TEXT":
-        return polish("B.TEXT 为解耦 block 设置离线 body 的入口地址。")
     if mnemonic in {"DMA.FREE.L", "DMA.FREE.S", "MCOPY.DL", "MCOPY.DS"}:
         return polish(
             f"{mnemonic} 仅保留编码，尚未实现；执行时必须在读取操作数或产生任何架构效果之前拒绝。"
@@ -319,16 +319,6 @@ def _linx_note_zh(inst: Mapping[str, Any], exact: str) -> str:
     if mnemonic == "HL.BSTART CALL":
         return polish(
             "HL.BSTART.CALL 原子地完成调用：目标为 P + (SignExtend(simm25) << 1)，ra 为 (P + 4) + (ZeroExtend(uimm5) << 1)；两个标签分别编码、分别重定位。"
-        )
-    if mnemonic in {"BSTART.MPAR", "BSTART.MSEQ"}:
-        mode = "并行" if mnemonic.endswith("MPAR") else "顺序"
-        return polish(
-            f"{mnemonic} 结束当前 block，并以所选 VS8/VS16 宽度开始新的{mode} SIMT block。"
-        )
-    if mnemonic in {"BSTART.VPAR", "BSTART.VSEQ"}:
-        mode = "并行" if mnemonic.endswith("VPAR") else "顺序"
-        return polish(
-            f"{mnemonic} 开始新的{mode} SIMT block；解耦形式必须由 B.TEXT 提供 body 入口。"
         )
     if "BSTART" in mnemonic:
         block_kind = (
@@ -548,6 +538,8 @@ def describe_form(
     """
 
     profile = profile if profile.startswith("v") else f"v{profile}"
+    if profile == "v0.59" and is_removed_form(str(inst.get("mnemonic", ""))):
+        raise ValueError("form is outside the v0.59 instruction set")
     note = _clean(inst.get("note"))
     if note:
         first = re.split(r"(?<=[.!?])\s+", note, maxsplit=1)[0]

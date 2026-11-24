@@ -3,9 +3,13 @@
 from html import escape
 
 
-def release_constraints(source, *, base=False):
+def release_constraints(source, *, base=False, current_name=None):
     roles = source.get("roles", {})
     statements = roles.get("constraints", {}).get("statements", [])
+    if current_name is not None:
+        from manual_current_prose import golden_constraints
+
+        statements = golden_constraints(current_name, statements)
     if not statements:
         return ""
     label = "基础形式的约束与异常" if base else "约束与异常"

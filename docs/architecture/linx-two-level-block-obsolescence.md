@@ -1,24 +1,24 @@
 # Architecture decision: obsolete two-level execution forms
 
-**Accepted 2026-11-24 for the next LinxISA architecture specification.** Using LinxISA `v0.59.1` as the inventory baseline, classify all 193 forms in groups A–E as `obsolete`. Keep their entire encoding spaces reserved as specified by PTO-SPEC. Future instructions must not reuse them.
+**Accepted 2026-11-24 for the LinxISA v0.59.1 revision.** Using LinxISA `v0.59.1` as the inventory baseline, remove the 193 forms in groups A–E from the active instruction set. Keep their entire encoding spaces reserved as specified by PTO-SPEC. Future instructions must not reuse them.
 
 | Group | Forms | Count | Decision |
 | --- | --- | ---: | --- |
-| A | Every mnemonic beginning with `V.`, listed in the appendix | 184 | Obsolete |
-| B | `BSTART.MSEQ`, `BSTART.MPAR` | 2 | Obsolete |
-| C | `C.BSTART.MSEQ`, `C.BSTART.MPAR` | 2 | Obsolete |
-| D | `BSTART.VSEQ`, `BSTART.VPAR`, `C.BSTART.VSEQ`, `C.BSTART.VPAR` | 4 | Obsolete |
-| E | `B.TEXT` | 1 | Obsolete |
+| A | Every mnemonic beginning with `V.`, listed in the appendix | 184 | Removed; encoding reserved |
+| B | `BSTART.MSEQ`, `BSTART.MPAR` | 2 | Removed; encoding reserved |
+| C | `C.BSTART.MSEQ`, `C.BSTART.MPAR` | 2 | Removed; encoding reserved |
+| D | `BSTART.VSEQ`, `BSTART.VPAR`, `C.BSTART.VSEQ`, `C.BSTART.VPAR` | 4 | Removed; encoding reserved |
+| E | `B.TEXT` | 1 | Removed; encoding reserved |
 | F | `HL.BSTART.CALL` | 1 | Retain current definition |
 | G | `HL.BSTART.FP` and `HL.BSTART.STD` (four forms each), `HL.BSTART.SYS` (one) | 9 | Retain current definitions |
 | H | `L.BSTART.FP` and `L.BSTART.STD` (four forms each), `L.BSTART.SYS` (one) | 9 | Retain current definitions |
 | I | `DMA.FREE.L`, `DMA.FREE.S`, `MCOPY.DL`, `MCOPY.DS` | 4 | Encoding reservations only. Execution is unimplemented and must reject before operand reads or architectural effects |
 
-This accounts for all 216 Linx-only forms: 193 obsolete, 19 retained and four encoding-only. The prefix in A includes the two CMD forms `V.QPUSH` and `V.QPOP` as well as the 182 VEC forms. Groups B–E cover the full-size and compressed block entries and their out-of-line body address. The PTO Tile VEC engine, Tile operations such as `TADD`, and the `BSTART.TEPL` carrier have their own definitions. Legacy binary execution policy for A–E remains a separate decision.
+This accounts for all 216 Linx-only forms: 193 removed, 19 retained and four encoding-only. The prefix in A includes the two CMD forms `V.QPUSH` and `V.QPOP` as well as the 182 VEC forms. Groups B–E cover the full-size and compressed block entries and their out-of-line body address. The PTO Tile VEC engine, Tile operations such as `TADD`, and the `BSTART.TEPL` carrier have their own definitions. The v0.59.1 revision rejects all ten reserved ranges before operand reads or architectural effects, including unassigned words in the reserved vector region. There is no compatibility decoder.
 
 ## Encoding ownership
 
-The Linx lock selects PTO `v0.59.1.0` at `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`. Group A occupies one reserved 64-bit region: bits 6–0 of the first 32-bit word equal `0x7f`, and the second word is unrestricted. The nine forms in B–E each have a named reservation. These ten reservations cover every matching bit pattern, including values without a Linx mnemonic. Use `(word & mask) == match` for the rows below. [Linx release catalog](../../isa/v0.59/linxisa-v0.59.json) · [PTO source lock](../../isa/v0.59/pto-spec.lock.json) · [PTO reservation table](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
+The Linx lock selects PTO `v0.59.1.0` at `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`. Group A occupies one reserved 64-bit region: bits 6–0 of the first 32-bit word equal `0x7f`, and the second word is unrestricted. The nine forms in B–E each have a named reservation. These ten reservations cover every matching bit pattern, including values without a Linx mnemonic. Use `(word & mask) == match` for the rows below. Repository sources: `isa/v0.59/linxisa-v0.59.json` and `isa/v0.59/pto-spec.lock.json`. [PTO reservation table](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
 
 | Mnemonic | Width (bits) | Mask | Match |
 | --- | ---: | --- | --- |

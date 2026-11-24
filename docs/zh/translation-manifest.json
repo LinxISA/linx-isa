@@ -14,8 +14,8 @@
       "translation_sha256": "83434d0e8cc53d0bef8dabc2d0d24e6a0236e0d0a213681079fa37c2d26af684"
     },
     "architecture/linx-two-level-block-obsolescence.md": {
-      "source_sha256": "39b570ab9e9101343ffd9bddf15857f327b600ed7edbdd15a12683ebdb04269e",
-      "translation_sha256": "2c529f4b8d4697b9485b4d319d6520185e3196c58d9d7969b53918475f1ca2ff"
+      "source_sha256": "d69d8c8f96bf196e6142b169d9dbb9c8ac3978bace9b93a6cc2ad4a7ef84671e",
+      "translation_sha256": "5ecc25ad174343c9b84391dccd5d8c41b26c2d4393561a4fdd366512e7724600"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
@@ -58,8 +58,8 @@
       "translation_sha256": "2d588dd5ab6a94ee09adbe4859711fee3889e7cb2a1f7d7efb420e0b304f894f"
     },
     "architecture/v0.59.1-pto-alignment.md": {
-      "source_sha256": "3d90b7a4e9fdad961881c4bd4985fcd63f3b0b96279ab6142d3d23b1226b6d46",
-      "translation_sha256": "faac3c36d208194526e6fdc02a2b947cee76ce8961c47f5a578cc10dbbfd3a12"
+      "source_sha256": "559e179721ad51f68ea5e2788a5348a87b72b296d78d8840e194b359387fa46b",
+      "translation_sha256": "1d6f725677a64f179e3b2f2199c2f9a8fae00714b6e1248f8119314e78862ecb"
     },
     "archive/design-updates/README.md": {
       "source_sha256": "80981e0838933412e77e97cb0abcbc7aa0c1ebff2ad11494f8328bc99139772e",
@@ -8110,8 +8110,8 @@
       "translation_sha256": "9c64d925cf0ec57f6231e00df392da8879abc611192e72af780457a2befc61d7"
     },
     "releases/v0.59.1.md": {
-      "source_sha256": "f7c1b8700adf16b8ec06164765f33de8efe9b4dc913ea7997ccf18c7c01ef028",
-      "translation_sha256": "a5c057730c8dfef458f6fd8682bb06cbf05c0ac6555f666bbf51d82bb74d6a2e"
+      "source_sha256": "23dcd4f007ded9b5138103ec14bc15c9b2b33d47d555ea3f0a282fde512bfa31",
+      "translation_sha256": "e49f23997e45f75a3ba141ea9aeb73f72a28d046cb66b80f7142e44afdc4212e"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",

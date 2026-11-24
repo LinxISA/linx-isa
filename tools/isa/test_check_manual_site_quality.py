@@ -8,13 +8,44 @@ import unittest
 
 from tools.isa.check_manual_site_quality import (
     _SSRTable,
+    _check_architecture,
     _check_canvas,
     _check_editorial,
     _check_mgather,
+    _check_ssr,
 )
+from tools.isa.manual_v0591_architecture_view import assets as architecture_assets
+from tools.isa.manual_v0591_architecture_view import audit as architecture_audit
+from tools.isa.manual_v0591_architecture_view import pages as architecture_pages
 
 
 class CheckManualSiteQualityTest(unittest.TestCase):
+    def test_current_architecture_projection_and_evidence_are_exact(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "architecture-audit.json").write_text("{}")
+            (root / "architecture-source-audit.json").write_text(
+                json.dumps(architecture_audit())
+            )
+            for route, (title, body) in architecture_pages().items():
+                (root / route).write_text(f"<h1>{title}</h1>{body}")
+            for relative, content in architecture_assets().items():
+                target = root / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(content)
+            errors = []
+            _check_architecture(root, errors)
+            self.assertEqual(errors, [])
+
+    def test_current_ssr_projection_contains_all_100_details(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _title, body = architecture_pages()["arch-ssr.html"]
+            (root / "arch-ssr.html").write_text(body)
+            errors = []
+            _check_ssr(root, errors)
+            self.assertEqual(errors, [])
+
     def test_ssr_parser_preserves_key_address_access_and_scope(self):
         parser = _SSRTable()
         parser.feed(
