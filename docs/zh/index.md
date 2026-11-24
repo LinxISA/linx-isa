@@ -6,8 +6,6 @@ title: LinxISA
     本站是英文规范文档的辅助中文翻译。发生差异时，以英文文档和
     `isa/v0.58/linxisa-v0.58.json` 为准。指令助记符、字段名、路径和代码标识符保持原文。
 
-本次发布的 [v0.59.2 架构规范](releases/v0.59.2.md) 给出了每个 Linx 扩展形式的状态与编码预留。平台 bring-up 继续使用 v0.58。
-
 <section class="linx-home-hero" markdown="1">
 <div class="linx-home-hero__copy" markdown="1">
 

@@ -10,12 +10,12 @@
       "translation_sha256": "79cfe927ec89e29d0559d0621303dcc74df1b1f8de9b7ba6d8f1a5110e57e0f4"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "4729f9214f3fd59a90f4fd7a3e3f2dc3a369825261205e60389887545b8301b0",
-      "translation_sha256": "0f0a8105b746d1a59d322daf22ea72d933e3a190bcaecd8ed25dbd0d059b4d59"
+      "source_sha256": "19dbf01818f88106e43c63980f910afb2a36075d94f8773df46a5035704fe4e6",
+      "translation_sha256": "83434d0e8cc53d0bef8dabc2d0d24e6a0236e0d0a213681079fa37c2d26af684"
     },
     "architecture/linx-two-level-block-obsolescence.md": {
-      "source_sha256": "e6b385ce7bc344a4ef4d41b5373d90c0e9c419e8687fd539ed8d26c6d845492c",
-      "translation_sha256": "1f7e1d144f2f0425d67dfe036e9ece372aea7da46f913f139ded71c92d33ebaa"
+      "source_sha256": "39b570ab9e9101343ffd9bddf15857f327b600ed7edbdd15a12683ebdb04269e",
+      "translation_sha256": "2c529f4b8d4697b9485b4d319d6520185e3196c58d9d7969b53918475f1ca2ff"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
@@ -674,8 +674,8 @@
       "translation_sha256": "16bb434410d480303055fd4b6fee8c27336ebdc108dd697b0ab272dfc3aec335"
     },
     "index.md": {
-      "source_sha256": "30c428266081223ad6970c75f8abb622328b12c43ce76ea8453dff89009c7e76",
-      "translation_sha256": "a904f3512a43a4ea2cbcfb78dd6f283025749dfe3029e2f05be6928dc11c455b"
+      "source_sha256": "5358205180b7b96272a6ee1a379b16c70266bf0dd701930c312ee4544b0aaaef",
+      "translation_sha256": "903e08d08ee843850e4c0afc1b5ec86f6b11824e0d65d205e9eec75e26fb61ae"
     },
     "isa/arch/acr.md": {
       "source_sha256": "2b88fbd40860e1ae6902022669ed0f6564dbe3f50e77bdad795196449cb18321",
@@ -8112,10 +8112,6 @@
     "releases/v0.59.1.md": {
       "source_sha256": "f7c1b8700adf16b8ec06164765f33de8efe9b4dc913ea7997ccf18c7c01ef028",
       "translation_sha256": "a5c057730c8dfef458f6fd8682bb06cbf05c0ac6555f666bbf51d82bb74d6a2e"
-    },
-    "releases/v0.59.2.md": {
-      "source_sha256": "42bd884dee98482fcb57fe21327e6348073ae01943b0aa14de342f57ef8ca5e7",
-      "translation_sha256": "f4f8be320fd286b6b9d0223dd8f0fd5389afac86aebe347cf27feb3abe018d03"
     },
     "white_paper/Chapter-2.md": {
       "source_sha256": "824f65ca55ca85eb4d4be117368520b22c23528bb45b2f07001ece73f4945f57",

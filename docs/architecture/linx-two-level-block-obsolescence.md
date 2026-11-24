@@ -1,6 +1,6 @@
 # Architecture decision: obsolete two-level execution forms
 
-**Accepted 2026-11-24 for the LinxISA v0.59.2 architecture specification.** Using LinxISA `v0.59.1` as the inventory baseline, classify all 193 forms in groups A–E as `obsolete`. Keep their entire encoding spaces reserved as specified by PTO-SPEC. Future instructions must not reuse them.
+**Accepted 2026-11-24 for the next LinxISA architecture specification.** Using LinxISA `v0.59.1` as the inventory baseline, classify all 193 forms in groups A–E as `obsolete`. Keep their entire encoding spaces reserved as specified by PTO-SPEC. Future instructions must not reuse them.
 
 | Group | Forms | Count | Decision |
 | --- | --- | ---: | --- |
@@ -18,7 +18,7 @@ This accounts for all 216 Linx-only forms: 193 obsolete, 19 retained and four en
 
 ## Encoding ownership
 
-The Linx lock selects PTO `v0.59.1.0` at `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`. Group A occupies one reserved 64-bit region: bits 6–0 of the first 32-bit word equal `0x7f`, and the second word is unrestricted. The nine forms in B–E each have a named reservation. These ten reservations cover every matching bit pattern, including values without a Linx mnemonic. Use `(word & mask) == match` for the rows below. [Linx release catalog](https://github.com/LinxISA/linx-isa/blob/v0.59.1/isa/v0.59/linxisa-v0.59.json) · [PTO source lock](https://github.com/LinxISA/linx-isa/blob/v0.59.1/isa/v0.59/pto-spec.lock.json) · [PTO reservation table](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
+The Linx lock selects PTO `v0.59.1.0` at `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`. Group A occupies one reserved 64-bit region: bits 6–0 of the first 32-bit word equal `0x7f`, and the second word is unrestricted. The nine forms in B–E each have a named reservation. These ten reservations cover every matching bit pattern, including values without a Linx mnemonic. Use `(word & mask) == match` for the rows below. [Linx release catalog](../../isa/v0.59/linxisa-v0.59.json) · [PTO source lock](../../isa/v0.59/pto-spec.lock.json) · [PTO reservation table](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
 
 | Mnemonic | Width (bits) | Mask | Match |
 | --- | ---: | --- | --- |

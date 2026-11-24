@@ -37,8 +37,12 @@ make gen
 
 Note: `build/` is gitignored; local build outputs are not committed to the repository.
 
-## 0.59.2 offline HTML instruction reference
+## 0.59.1 offline Chinese instruction reference
 
-Extract the ZIP and open `index.html`. Eight functional classes, the mnemonic index and the encoding index cover 1,306 forms. Four encoding-only entries carry an explicit status notice. The Tile index covers 119 operations. [Download the Chinese HTML manual](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip)
+Download the HTML ZIP from the [0.59.1 specification release](https://github.com/LinxISA/linx-isa/releases/tag/v0.59.1), extract it and open `index.html`. Start with a functional class, then open its alphabetic mnemonic index. The instruction pages use the Chinese MkDocs prose, examples and SVGs where they agree with the release. Corrections appear in the instruction body. Each entry in `detail-audit.json` identifies its encoding forms, Chinese source and semantic source. Local references, including the pseudocode glossary and the compressed-extension description, are included in the archive. The LSU index uses the AGU catalog key. The release commit and source catalog hashes are on the sources page.
 
-Run `make html-reference check-html-reference` in this directory with the release tags v0.59.2 and v0.59.1 available. Install the Markdown dependencies from `reference/requirements.txt`.
+Run `make html-reference check-html-reference` in this directory to build and audit the site. The generator resolves `v0.59.1` to a commit, reads the tagged catalog, and compares the 578 common, 705 scoped and 216 retained Linx forms to their sources. Use a checkout containing the generator and the tag. Fetch the tag in a shallow clone before building.
+
+The generator uses the repository’s existing MkDocs Markdown dependencies. Install the documentation environment used by CI before building the offline edition.
+
+From the repository root run `python3 -m pip install -r docs/architecture/isa-manual/reference/requirements.txt` for the pinned Markdown renderers. The navigation includes the original architecture/state/execution chapters, the released 100-entry system register table and 22 explicitly identified release supplements.

@@ -92,27 +92,12 @@ jobs:
           python3 -m unittest tools.isa.test_build_linxisa_v0591_candidate
           python3 tools/isa/build_linxisa_v0591_release_prep.py --check
           python3 -m unittest tools.isa.test_build_linxisa_v0591_release_prep
-          python3 tools/isa/check_linxisa_v0591_release_compat.py
-          python3 -m unittest \
-            tools.isa.test_check_linxisa_v0591_release_compat \
-            tools.isa.test_build_linxisa_v0591_release_activation
+          python3 tools/isa/build_linxisa_v0591_release_activation.py --check
+          python3 -m unittest tools.isa.test_build_linxisa_v0591_release_activation
           python3 tools/isa/build_golden.py --profile v0.59 --check
           python3 tools/isa/validate_spec.py --profile v0.59
           python3 tools/isa/report_encoding_space.py \
             --spec isa/v0.59/linxisa-v0.59.json --check
-      - name: Verify LinxISA 0.59.2 specification release gates
-        run: |
-          python3 tools/isa/build_linxisa_v0592_catalog.py --check
-          python3 tools/isa/build_linxisa_v0592_release_prep.py --check
-          python3 tools/isa/export_linxisa_v0592_sail.py --check-release-package
-          python3 tools/isa/build_golden.py --profile v0.59.2 --check
-          python3 tools/isa/validate_spec.py --profile v0.59.2
-          python3 tools/isa/select_linxisa_profile.py \
-            --profile v0.59.2 --require-release-qualified
-          python3 -m unittest \
-            tools.isa.test_build_linxisa_v0592_catalog \
-            tools.isa.test_export_linxisa_v0592_sail \
-            tools.isa.test_v0592_profile_entrypoints
       - name: Enforce canonical v0.58 release guard
         run: python3 tools/isa/check_canonical_v058.py --root .
       - name: Validate branch cleanup evidence schema
@@ -153,8 +138,6 @@ jobs:
         run: opam install --yes sail.0.20.2
       - name: Check assembled v0.59.1 catalog and scoped dispatch with Sail
         run: opam exec -- python3 tools/isa/check_v0591_candidate_dispatch_sail.py
-      - name: Check LinxISA 0.59.2 Sail release package
-        run: opam exec -- python3 tools/isa/check_v0592_sail.py
       - name: Run AVS contract gate
         run: python3 tools/bringup/check_avs_contract.py --matrix avs/linx_avs_v1_test_matrix.yaml
       - name: Validate Linx-TileOP-API v0.58 surface
@@ -210,16 +193,11 @@ jobs:
         run: python3 docs/check_documentation.py --root .
       - name: Build and audit the tagged instruction reference
         run: |
-          python3 tools/isa/gen_html_reference.py --release v0.59.1 --out "$RUNNER_TEMP/linxisa-html"
+          python3 tools/isa/gen_html_reference.py --out "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_html_reference.py --site "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_manual_structure.py --site "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_manual_authored.py --site "$RUNNER_TEMP/linxisa-html"
           python3 tools/isa/check_manual_site_quality.py --site "$RUNNER_TEMP/linxisa-html"
-      - name: Build and audit the v0.59.2 instruction reference
-        run: |
-          python3 -m unittest discover -s tools/isa -p 'test_check_v0592_html.py'
-          python3 tools/isa/gen_html_reference.py --release v0.59.2 --out "$RUNNER_TEMP/linxisa-html-0592"
-          python3 tools/isa/check_v0592_html.py --site "$RUNNER_TEMP/linxisa-html-0592"
       - name: Build normative English documentation
         run: mkdocs build --strict --site-dir "${RUNNER_TEMP}/site-en"
       - name: Build secondary Chinese documentation

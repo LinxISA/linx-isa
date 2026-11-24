@@ -68,7 +68,6 @@ nav:
       - Gate status: bringup/GATE_STATUS.md
   - Project:
       - Navigation contract: project/navigation.md
-      - v0.59.2 release notes: releases/v0.59.2.md
       - v0.59.1 release notes: releases/v0.59.1.md
       - v0.58.3 release notes: releases/v0.58.3.md
       - v0.58.1 release notes: releases/v0.58.1.md
