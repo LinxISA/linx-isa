@@ -66,6 +66,7 @@ V058_DERIVED_VERSIONS = {
     "0.58.6",
     "0.58.7",
     "0.59.1",
+    "0.59.2",
 }
 
 V058_FIRST_USE_VERSIONS = V058_DERIVED_VERSIONS - {"0.58.0"}
@@ -81,6 +82,28 @@ EXPECTED_V058_FIRST_USE_VECTOR_HEADERS = [
     "C.BSTART.VSEQ",
 ]
 
+V0592_OBSOLETE_BLOCKS = {
+    "BSTART.MPAR",
+    "BSTART.MSEQ",
+    "C.BSTART.MPAR",
+    "C.BSTART.MSEQ",
+    "BSTART.VPAR",
+    "BSTART.VSEQ",
+    "C.BSTART.VPAR",
+    "C.BSTART.VSEQ",
+    "B.TEXT",
+}
+V0592_ENCODING_ONLY = {"DMA.FREE.L", "DMA.FREE.S", "MCOPY.DL", "MCOPY.DS"}
+V0592_RETAINED = {
+    "HL.BSTART CALL",
+    "HL.BSTART.FP",
+    "HL.BSTART.STD",
+    "HL.BSTART.SYS",
+    "L.BSTART.FP",
+    "L.BSTART.STD",
+    "L.BSTART.SYS",
+}
+
 
 def _parse_hex(s: str) -> int:
     s = s.strip().lower()
@@ -91,6 +114,142 @@ def _parse_hex(s: str) -> int:
 
 def _mask_for_width(width_bits: int) -> int:
     return (1 << width_bits) - 1 if width_bits > 0 else 0
+
+
+def _validate_v0592_release_catalog(spec: Dict[str, Any], errors: List[str]) -> None:
+    if str(spec.get("version") or "") != "0.59.2":
+        return
+
+    root = Path(__file__).resolve().parents[2]
+    baseline_path = root / "isa/v0.59/linxisa-v0.59.json"
+    reservations_path = root / "isa/v0.59/state/extension_encoding_reservations.json"
+    try:
+        baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+        reservations = {
+            row["mnemonic"]: row
+            for row in json.loads(
+                reservations_path.read_text(encoding="utf-8")
+            )["reservations"]
+        }
+    except (KeyError, OSError, json.JSONDecodeError) as error:
+        errors.append(f"v0.59.2: unable to load frozen release inputs: {error}")
+        return
+
+    baseline_rows = {row["id"]: row for row in baseline.get("instructions", [])}
+    rows = spec.get("instructions")
+    if not isinstance(rows, list):
+        errors.append("v0.59.2: instructions must be a list")
+        return
+    current_rows = {row.get("id"): row for row in rows if isinstance(row, dict)}
+    if current_rows.keys() != baseline_rows.keys():
+        errors.append("v0.59.2: form identity set differs from the signed v0.59.1 catalog")
+
+    counts: Counter[str] = Counter()
+    obsolete_reservations: set[str] = set()
+    for identity in sorted(current_rows.keys() & baseline_rows.keys()):
+        row = current_rows[identity]
+        prior = baseline_rows[identity]
+        status = row.get("architecture_status")
+        if row.get("pto_source_form_id"):
+            if status is not None:
+                errors.append(f"{identity}: PTO-owned form must not carry Linx extension status")
+        else:
+            mnemonic = str(row.get("mnemonic") or "")
+            if mnemonic.startswith("V.") or mnemonic in V0592_OBSOLETE_BLOCKS:
+                state = "obsolete"
+            elif mnemonic in V0592_ENCODING_ONLY:
+                state = "reserved-unimplemented"
+            elif mnemonic in V0592_RETAINED:
+                state = "retained"
+            else:
+                errors.append(f"{identity}: unclassified Linx-only v0.59.2 form {mnemonic}")
+                state = ""
+            counts[state] += 1
+            expected_status: Dict[str, Any] = {
+                "state": state,
+                "encoding_ownership": "reserved-in-pto",
+            }
+            if state == "obsolete":
+                expected_status["since"] = "0.59.2"
+                expected_status["replacement"] = None
+            if state == "reserved-unimplemented":
+                expected_status["execution"] = (
+                    "reject-before-operand-read-or-architectural-effect"
+                )
+            if status != expected_status:
+                errors.append(
+                    f"{identity}: architecture_status {status!r} != {expected_status!r}"
+                )
+
+            if state in {"obsolete", "reserved-unimplemented"}:
+                reservation_name = "V.*" if mnemonic.startswith("V.") else mnemonic
+                reservation = reservations.get(reservation_name)
+                if not reservation or reservation.get("status") != "reserved-in-pto":
+                    errors.append(f"{identity}: missing PTO reservation {reservation_name}")
+                else:
+                    actual_parts = row.get("encoding", {}).get("parts", [])
+                    reserved_parts = reservation.get("encoding", [])
+                    if len(actual_parts) != len(reserved_parts):
+                        errors.append(
+                            f"{identity}: PTO reservation part count differs for {reservation_name}"
+                        )
+                    else:
+                        for index, (actual, reserved) in enumerate(
+                            zip(actual_parts, reserved_parts, strict=True)
+                        ):
+                            mask = int(reserved["mask"], 16)
+                            match = int(reserved["match"], 16)
+                            if (
+                                int(actual["width_bits"])
+                                != int(reserved["width_bits"])
+                                or int(actual["mask"], 16) & mask != mask
+                                or int(actual["match"], 16) & mask != match
+                            ):
+                                errors.append(
+                                    f"{identity}: part {index} differs from PTO reservation {reservation_name}"
+                                )
+                    if state == "obsolete":
+                        obsolete_reservations.add(reservation_name)
+
+        normalized = dict(row)
+        normalized.pop("architecture_status", None)
+        if normalized != prior:
+            errors.append(f"{identity}: released encoding or semantics changed from v0.59.1")
+
+    expected_counts = Counter(
+        {"obsolete": 193, "retained": 19, "reserved-unimplemented": 4}
+    )
+    if counts != expected_counts:
+        errors.append(f"v0.59.2: Linx-only status counts {dict(counts)} != {dict(expected_counts)}")
+    expected_reservations = {"V.*", *V0592_OBSOLETE_BLOCKS}
+    if obsolete_reservations != expected_reservations:
+        errors.append(
+            "v0.59.2: obsolete reservation set differs: "
+            f"{sorted(obsolete_reservations)}"
+        )
+
+    release_status = spec.get("release_status")
+    if not isinstance(release_status, dict):
+        errors.append("v0.59.2: release_status must be an object")
+    else:
+        if release_status.get("source_version") != "0.59.1":
+            errors.append("v0.59.2: release_status.source_version must be 0.59.1")
+        if release_status.get("linx_only_status_counts") != dict(expected_counts):
+            errors.append("v0.59.2: release_status Linx-only counts differ")
+        if set(release_status.get("obsolete_encoding_reservations", [])) != expected_reservations:
+            errors.append("v0.59.2: release_status obsolete reservations differ")
+
+    normalized_spec = dict(spec)
+    normalized_spec["version"] = baseline.get("version")
+    normalized_spec["release_status"] = baseline.get("release_status")
+    normalized_spec["instructions"] = [
+        {key: value for key, value in row.items() if key != "architecture_status"}
+        for row in rows
+    ]
+    if normalized_spec != baseline:
+        errors.append(
+            "v0.59.2: fields outside version, release_status, and architecture_status differ from v0.59.1"
+        )
 
 
 def _pattern_to_mask_match(pattern: str) -> Tuple[int, int]:
@@ -1265,6 +1424,7 @@ def validate(path: str) -> List[str]:
     # These only activate when version == "0.2" and are inert for v0.57+.
     # ---------------------------------------------------------------------
     version = str(spec.get("version", "")).strip()
+    _validate_v0592_release_catalog(spec, errors)
     if version == "0.2":
         state = spec.get("state", {})
         sysregs = state.get("system_registers")
@@ -1454,7 +1614,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--profile",
-        choices=["v0.57", "v0.58", "v0.59"],
+        choices=["v0.57", "v0.58", "v0.59", "v0.59.2"],
         default=None,
         help="ISA profile; omitted uses isa/profile-selection.json",
     )
@@ -1468,14 +1628,25 @@ def main() -> int:
     from select_linxisa_profile import resolve_profile
 
     selected_profile = args.profile or resolve_profile()["profile"]
-    if selected_profile in {"v0.58", "v0.59"}:
+    if selected_profile in {"v0.58", "v0.59", "v0.59.2"}:
         selected = resolve_profile(
             selected_profile, allow_prepublication=selected_profile == "v0.59"
         )
         default_spec = str(selected["catalog"])
     else:
         default_spec = f"isa/{selected_profile}/linxisa-{selected_profile}.json"
-    errors = validate(args.spec or default_spec)
+    spec_path = args.spec or default_spec
+    errors = validate(spec_path)
+    if selected_profile == "v0.59.2":
+        try:
+            selected_spec = json.loads(Path(spec_path).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            errors.append(f"v0.59.2: unable to read selected catalog: {error}")
+        else:
+            if selected_spec.get("version") != "0.59.2":
+                errors.append(
+                    "v0.59.2 profile requires a catalog with version 0.59.2"
+                )
     errors.extend(validate_active_surfaces(Path(".")))
     if errors:
         for e in errors[:200]:

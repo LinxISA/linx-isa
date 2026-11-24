@@ -29,6 +29,10 @@ Architecture-facing documentation lives under `docs/architecture/`.
   - `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
   - `rtl/LinxCore/docs/architecture/ifu.md`
 
+## Architecture decisions
+
+- [Obsolete two-level execution forms and PTO encoding reservations](linx-two-level-block-obsolescence.md)
+
 ## ISA manual
 
 - `docs/architecture/isa-manual/`

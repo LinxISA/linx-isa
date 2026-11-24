@@ -26,6 +26,10 @@
   - `rtl/LinxCore/docs/architecture/pipeline-stage-catalog.md`
   - `rtl/LinxCore/docs/architecture/ifu.md`
 
+## 架构决策
+
+- [废弃两级执行扩展的 193 个编码形式及其 PTO 编码预留](linx-two-level-block-obsolescence.md)
+
 ## ISA 手册
 
 - `docs/architecture/isa-manual/`

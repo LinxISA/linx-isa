@@ -1,0 +1,148 @@
+{
+  "$schema": "https://docs.openclaw.ai/schemas/linxisa/release_manifest.v1.json",
+  "profile": "v0.59.2",
+  "version": "0.59.2",
+  "source_lock": "isa/v0.59/pto-spec.lock.json",
+  "upstream_pto": {
+    "release": "0.59.1",
+    "specification_status": "draft",
+    "publication": {
+      "tag": "v0.59.1.0",
+      "tag_object": "480b4661a6ee5088c7327552b5d66f32d083c83b",
+      "version": "0.59.1.0",
+      "release_url": "https://github.com/PTO-ISA/pto-spec/releases/tag/v0.59.1.0"
+    }
+  },
+  "policy": {
+    "pto_spec_is_sole_source_for_common_and_scoped_forms": true,
+    "common_scoped_encoding_and_semantics_unchanged_from": "0.59.1",
+    "obsolete_encodings_remain_reserved": true,
+    "obsolete_form_execution": "v0.59.1-compatible-in-published-sail",
+    "default_profile_changed": false
+  },
+  "cardinality": {
+    "instructions": 1499,
+    "common_forms": 578,
+    "linx_only_forms": 216,
+    "scoped_forms": 705,
+    "linx_only_obsolete_forms": 193,
+    "linx_only_retained_forms": 19,
+    "linx_only_reserved-unimplemented_forms": 4
+  },
+  "authoritative_sources": {
+    "tile_operations": {
+      "path": "isa/v0.59/state/pto_tile_operations.json",
+      "sha256": "01c2900497d48b33fcfa54814db3f1ed12955dfd538adf3d7ea418c7fd2bf906",
+      "count": 119,
+      "upstream_path": "spec/catalog/tile-operations.json",
+      "upstream_sha256": "29f1ffe575c701b416b9205ff9377f92f72b5d48a091c1aa3f9c9fc7e0d49033",
+      "precedence": "overrides-archival-catalog-state.pto_ops"
+    },
+    "system_registers": {
+      "path": "isa/v0.59/state/pto_system_registers.json",
+      "sha256": "308456fe28ce4dab1b90e802f316c8b8d65fe5afcd86a672dcf3804bf73fc668",
+      "count": 100,
+      "upstream_path": "spec/catalog/system-registers.json",
+      "upstream_sha256": "5694af24779c48bd81e87b0304ad97c9cb6bab8d4a11498c2ba5c5bb628171a2"
+    },
+    "hardware_conformance_profile": {
+      "path": "isa/v0.59/state/pto_hardware_conformance_profile.json",
+      "sha256": "fafba0b567012d727fb435fde668333ba6711870def1a4e17e95e896c6e614b0",
+      "profile_id": "pto-hardware-numeric-0.59.1-ieee-v1",
+      "upstream_path": "spec/hardware-conformance-profile.json",
+      "upstream_sha256": "843d4c2c76823af57dc80f4b134c00e0166c0ba262f6924585854bdc44214325"
+    },
+    "numeric_conformance_vectors": {
+      "path": "isa/v0.59/state/pto_hardware_numeric_vectors.json",
+      "sha256": "6708e3dc3642c405b21cdbcfc9cd403cfb7c63f2a537a0d8c6a7523b1cddf88b",
+      "upstream_path": "spec/evidence/pto-isa-0591-hardware-numeric-vectors.json",
+      "upstream_sha256": "09a9b243ffcf801c2d05436507508ad5e1af919baa127b787eb485cd3ee4018f"
+    },
+    "catalog": {
+      "path": "isa/v0.59.2/linxisa-v0.59.2.json",
+      "sha256": "1a5a03168a7c9af5b6d47aed20eff65acab902973c3477e1268618881a16ac82"
+    },
+    "pto_lock": {
+      "path": "isa/v0.59/pto-spec.lock.json",
+      "sha256": "a526f6dbbddfe67d349640f19e904c1148a24178b0ec697f4dc360ddac624f34"
+    },
+    "pto_reservations": {
+      "path": "isa/v0.59/state/extension_encoding_reservations.json",
+      "sha256": "819a00b7e7dc748239ec2cfb698f373c0212fc21d3ac2ea68e100c26ee0bc101",
+      "count": 50
+    },
+    "architecture_decision": {
+      "path": "docs/architecture/linx-two-level-block-obsolescence.md",
+      "sha256": "e6b385ce7bc344a4ef4d41b5373d90c0e9c419e8687fd539ed8d26c6d845492c"
+    }
+  },
+  "catalog": {
+    "path": "isa/v0.59.2/linxisa-v0.59.2.json",
+    "sha256": "1a5a03168a7c9af5b6d47aed20eff65acab902973c3477e1268618881a16ac82",
+    "schema": "linxisa.catalog.v0",
+    "status": "published-specification-catalog"
+  },
+  "status": "published-specification",
+  "identity": {
+    "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
+    "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
+    "release": "0.59.1"
+  },
+  "elf_identity": {
+    "alignment_bytes": 4,
+    "descriptor_encoding": "UTF-8 JSON with lexicographically sorted keys and no insignificant whitespace",
+    "descriptor_fields": [
+      "release",
+      "encoding_abi",
+      "encoding_projection_sha256"
+    ],
+    "descriptor_nul_terminated": false,
+    "link_policy": "all input identities must be present and exactly equal",
+    "load_policy": "the image identity must exactly match the implementation identity",
+    "name_size_bytes": 4,
+    "note_name": "PTO",
+    "note_type": "PTO_NT_ISA_IDENTITY",
+    "note_type_value": 1,
+    "section": ".note.pto.isa"
+  },
+  "publication": {
+    "version": "0.59.2",
+    "date": "2026-11-24",
+    "scope": [
+      "architecture-specification",
+      "encoding",
+      "sail-package"
+    ],
+    "profile_selection": "explicit-v0.59.2"
+  },
+  "release_activation": {
+    "state": "published-explicit-profile",
+    "profile_selection": "isa/profile-selection.json",
+    "package": "isa/v0.59.2/release_package.json",
+    "catalog": "isa/v0.59.2/linxisa-v0.59.2.json",
+    "sail_exporter": "tools/isa/export_linxisa_v0592_sail.py",
+    "sail_entry": "model/linxisa_v0592.sail",
+    "default_profile": "v0.58"
+  },
+  "qualification": {
+    "release_qualified": true,
+    "qualification_scope": [
+      "architecture-specification",
+      "encoding",
+      "sail-package"
+    ],
+    "specification_qualified": true,
+    "encoding_qualified": true,
+    "sail_package_qualified": true,
+    "linux_qualified": false,
+    "leaf_components_qualified": false,
+    "system_runtime_qualified": false,
+    "platform_qualified": false,
+    "remaining_platform_qualification": [
+      "qualify downstream assembler, disassembler and emulator obsolete-form policy",
+      "qualify RTL against the published obsolete-form and encoding-reservation status",
+      "qualify Linux, leaf components and full system runtime at exact reviewed pins",
+      "switch the default platform profile only after exact platform gates pass"
+    ]
+  }
+}

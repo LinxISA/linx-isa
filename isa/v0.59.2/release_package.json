@@ -1,0 +1,128 @@
+{
+  "catalog": {
+    "instruction_count": 1499,
+    "obsolete_form_count": 193,
+    "path": "isa/v0.59.2/linxisa-v0.59.2.json",
+    "schema": "linxisa.catalog.v0",
+    "sha256": "1a5a03168a7c9af5b6d47aed20eff65acab902973c3477e1268618881a16ac82",
+    "status": "published-specification-catalog"
+  },
+  "default_profile": "v0.58",
+  "identity": {
+    "encoding_abi": "pto-isa-0.59.1-mode-function-v1",
+    "encoding_projection_sha256": "d90c881754d66f2cd26f6014d0b582cba88307e70123583d87fc59a918229c28",
+    "linxisa_release": "0.59.2",
+    "pto_release": "0.59.1"
+  },
+  "inputs": {
+    "docs/architecture/linx-two-level-block-obsolescence.md": "e6b385ce7bc344a4ef4d41b5373d90c0e9c419e8687fd539ed8d26c6d845492c",
+    "isa/sail/model/decode/decode.sail": "f758ee029a4b895f9d48b8a91ec0c83e87b12d8bce68cb57ed7ffa0622e84d81",
+    "isa/sail/model/decode/scoped_scalar.sail": "4e9ca04bbd54294a0c8c5001002fed447cb001fb12f491e8c3d4c630e0da12b9",
+    "isa/sail/model/execute/execute.sail": "add95680420831a2874f8e3910a40228244f6cd8f1e64459dc7b5bb84dadd84d",
+    "isa/sail/model/execute/scoped_scalar.sail": "af3225e7579db974484dfee109a5a89bd12cb827c968e8c2979c40e651e26eed",
+    "isa/sail/model/execute/scoped_scalar_agu.sail": "999516b8ccde973aeacbe7af84233b704fbe41f5bd35bb3966379981ce2e1e23",
+    "isa/sail/model/execute/scoped_scalar_atomic.sail": "c12d04e65843d3437ec3730786a0b5afd23aca99f968578d5c9099481c23f4c5",
+    "isa/sail/model/execute/scoped_scalar_queues.sail": "b8387227c6418fac9b868a68b7e2ed3ac3a5809cf3ac0dfdd433ae0ad8e4ac74",
+    "isa/sail/model/execute/v0591_candidate_dispatch.sail": "e28580b278333f10aa3e755af6e7307aaa28391564f7d1e9fca6c10af48e74f6",
+    "isa/sail/model/lib/common.sail": "9e63adae8e841fd3315ea5c92922707d59f13235cc4b6d4317e1614a9c7dcc46",
+    "isa/sail/model/linxisa.sail": "e53531fd13ee9fe456cefa4c837a223602f849ff7a701c88e45283c109fd2616",
+    "isa/sail/model/linxisa.sail_project": "55cb31aba733b491eaa837f730aa44005548e409ad116e424560f36f12e7c03c",
+    "isa/sail/model/linxisa_v0591_candidate.sail": "e17afe81480dc08c8a2e5907cd1d5f2150a66b178dc22bbc3477ea1272a70d53",
+    "isa/sail/model/state/hscb_dispatch.sail": "20098c69c20b9450f9907e8cffa2847f71cf6f222a8d7af468cd1c219e599d99",
+    "isa/sail/model/state/msgb_bse.sail": "406f9307d568071183d4fd36503135943a79d876787f0587b321846bd3ba8d0e",
+    "isa/sail/model/state/msgb_receive.sail": "fd318a86921499b04e41d46bfbe9ba8d321507e1f02b4fbde4a39e0ec10ee1f7",
+    "isa/sail/model/state/msgb_registers.sail": "7531202259ed0e249d01449aae976a2d73e11c39c628de641f2021e5f12425fb",
+    "isa/sail/model/state/msgb_transport.sail": "db8ad2af9e3f52166783a73d88971ca5a65a3ea74aff5727797036f001db4077",
+    "isa/sail/model/state/state.sail": "4de171b2dcd92ccd267fe4a32fb2501f7920d1cf7b275d2cb36188d3b8f72c5f",
+    "isa/sail/toolchain.json": "97d2fde2c646fac908d94e3e4f39ceed13bc89d481692000720d76714afe0513",
+    "isa/v0.59.2/linxisa-v0.59.2.json": "1a5a03168a7c9af5b6d47aed20eff65acab902973c3477e1268618881a16ac82",
+    "isa/v0.59.2/release_manifest.json": "d663323472bb6fd337c1dee55d6405aac9e03cf1424cad72f576513ae4eea20d",
+    "isa/v0.59/linxisa-v0.59.json": "490defb827d2aecd5c63fe231467d2a3416e5ce0361b65a65f507d9fab08079c",
+    "isa/v0.59/pto-spec.lock.json": "a526f6dbbddfe67d349640f19e904c1148a24178b0ec697f4dc360ddac624f34",
+    "isa/v0.59/state/extension_encoding_reservations.json": "819a00b7e7dc748239ec2cfb698f373c0212fc21d3ac2ea68e100c26ee0bc101",
+    "tools/isa/build_linxisa_v0592_catalog.py": "418d8307b1dbc9f83df1c8298c48f9500d525d7b14ee957e3bf84eb9fb09eb9a",
+    "tools/isa/build_linxisa_v0592_release_prep.py": "22fcc7d85579e1f55bcd13af19f54cfc1c4b8f6ad6ed5d3e00a22975d70118c3",
+    "tools/isa/check_v0592_sail.py": "6a7bdff1defab60496febe35a21058e487716fc5b144a4bc1342be72be0666b5",
+    "tools/isa/export_linxisa_v0592_sail.py": "f2a6c038083a5b63d017712f09d48388d1b0bc17e1aab100302f831db764338e",
+    "tools/isa/gen_sail_decode.py": "65ebeff252093a9a3a205e3a2de3b7f57ab4b06107eb6929cbceb8474afe056e"
+  },
+  "inputs_sha256": "9497334b7ac0cf898284b65d1acd377a5ac8416b65b7b88a9d34f16576b6f27a",
+  "obsolete_policy": {
+    "assembler_emission_policy": "not-defined-by-this-release",
+    "binary_trap_policy": "not-decided",
+    "encodings_remain_reserved": true,
+    "form_count": 193,
+    "sail_execution": "v0.59.1-compatible"
+  },
+  "profile": "v0.59.2",
+  "publication_allowed": true,
+  "qualification": {
+    "encoding_qualified": true,
+    "evidence": {
+      "catalog_builder": "tools/isa/build_linxisa_v0592_catalog.py --check",
+      "encoding_validator": "tools/isa/validate_spec.py --profile v0.59.2",
+      "release_package_validator": "tools/isa/export_linxisa_v0592_sail.py --check-release-package",
+      "sail_validator": "tools/isa/check_v0592_sail.py"
+    },
+    "leaf_components_qualified": false,
+    "linux_qualified": false,
+    "platform_qualified": false,
+    "release_qualified": true,
+    "remaining": [
+      "qualify downstream assembler, disassembler and emulator obsolete-form policy",
+      "qualify RTL against the published obsolete-form and encoding-reservation status",
+      "qualify Linux, leaf components and full system runtime at exact reviewed pins",
+      "switch the default platform profile only after exact platform gates pass"
+    ],
+    "sail_package_qualified": true,
+    "scope": [
+      "architecture-specification",
+      "encoding",
+      "sail-package"
+    ],
+    "specification_qualified": true,
+    "system_runtime_qualified": false
+  },
+  "required_checks": [
+    "python3 tools/isa/build_linxisa_v0592_catalog.py --check",
+    "python3 tools/isa/export_linxisa_v0592_sail.py --check-release-package",
+    "python3 tools/isa/check_v0592_sail.py"
+  ],
+  "sail": {
+    "entry": "model/linxisa_v0592.sail",
+    "exporter": "tools/isa/export_linxisa_v0592_sail.py",
+    "source_dispatch": "isa/sail/model/execute/v0591_candidate_dispatch.sail",
+    "state": "v0591-compatible-execution-with-v0592-catalog-status",
+    "toolchain": {
+      "ocaml_version": "4.14.3",
+      "sail_version": "0.20.2",
+      "schema_version": "linx-sail-toolchain-v1"
+    }
+  },
+  "schema": "linxisa.release-package.v1",
+  "state": "published-specification",
+  "upstream_source_hashes": {
+    "command_forms": {
+      "count": 105,
+      "path": "spec/catalog/command-forms.json",
+      "sha256": "d131aa62391c5e3afdfc4ab24c064d7c2daf27d27e200d8f000af26e16fde4f2"
+    },
+    "extension_encoding_reservations": {
+      "count": 50,
+      "path": "spec/catalog/extension-encoding-reservations.json",
+      "sha256": "2724ec017009507e9fcb118c93b3f3241ddaf5d744ce9a393d713a86a9248301"
+    },
+    "scalar_forms": {
+      "count": 473,
+      "path": "spec/catalog/scalar-forms.json",
+      "scoped_count": 705,
+      "sha256": "26be88e12235b31e13ab7206645fe419e708475476113835df90b9d0f2ad12ba"
+    },
+    "tile_operations": {
+      "count": 119,
+      "path": "spec/catalog/tile-operations.json",
+      "sha256": "29f1ffe575c701b416b9205ff9377f92f72b5d48a091c1aa3f9c9fc7e0d49033"
+    }
+  },
+  "version": "0.59.2"
+}
