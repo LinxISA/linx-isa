@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the exact v0.58 superproject component topology and gitlinks."""
+"""Validate the superproject component topology and exact gitlinks."""
 
 from __future__ import annotations
 
@@ -12,7 +12,10 @@ from pathlib import Path
 from typing import Any
 
 
-LOCK_PATH = Path("docs/bringup/component-lock.v0.58.json")
+LOCK_PATHS = {
+    profile: Path(f"docs/bringup/component-lock.{profile}.json")
+    for profile in ("v0.58", "v0.59")
+}
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 REQUIRED_COMPONENTS = {
     "compiler/llvm",
@@ -34,8 +37,18 @@ EXPECTED_RELEASES = {
     "workloads/pto_kernels": "0.58.3",
 }
 FORBIDDEN_COMPONENTS = {"workloads/SuperNPUBench"}
-REVIEW_ONLY_OPEN_PR_COMPONENTS = {"tools/LinxCoreModel"}
+REVIEW_TRACKED_COMPONENTS = {"tools/LinxCoreModel"}
 GITHUB_PR_URL_RE = re.compile(r"^https://github\.com/[^/]+/[^/]+/pull/[1-9][0-9]*$")
+V059_SYSTEM_COMPONENTS = {"kernel/linux", "lib/glibc", "lib/musl"}
+V059_REVIEWED_COMPONENTS = REVIEW_TRACKED_COMPONENTS | V059_SYSTEM_COMPONENTS | {
+    "compiler/llvm",
+    "emulator/qemu",
+    "tools/model",
+}
+
+
+def component_lock_profile(root: Path) -> str:
+    return "v0.59" if (root / LOCK_PATHS["v0.59"]).is_file() else "v0.58"
 
 
 def load_modules(path: Path) -> dict[str, dict[str, str]]:
@@ -75,12 +88,13 @@ def validate(
     lock: dict[str, Any],
     modules: dict[str, dict[str, str]],
     gitlinks: dict[str, str],
+    profile: str = "v0.58",
 ) -> list[str]:
     errors: list[str] = []
     if lock.get("schema_version") != 1:
         errors.append("component lock schema_version must be 1")
-    if lock.get("profile") != "v0.58":
-        errors.append("component lock profile must be v0.58")
+    if lock.get("profile") != profile:
+        errors.append(f"component lock profile must be {profile}")
 
     raw_components = lock.get("components")
     if not isinstance(raw_components, list):
@@ -104,9 +118,14 @@ def validate(
     gitlink_paths = set(gitlinks)
     for forbidden in sorted(FORBIDDEN_COMPONENTS & (locked_paths | module_paths | gitlink_paths)):
         errors.append(f"standalone SuperNPUBench component is forbidden: {forbidden}")
-    missing_required = REQUIRED_COMPONENTS - locked_paths
+    required = REQUIRED_COMPONENTS
+    reviewed = REVIEW_TRACKED_COMPONENTS
+    if profile == "v0.59":
+        required = required | V059_REVIEWED_COMPONENTS
+        reviewed = V059_REVIEWED_COMPONENTS
+    missing_required = required - locked_paths
     if missing_required:
-        errors.append(f"component lock is missing required v0.58 components: {sorted(missing_required)}")
+        errors.append(f"component lock is missing required {profile} components: {sorted(missing_required)}")
     if locked_paths != module_paths:
         errors.append(
             f"component lock/.gitmodules path mismatch: lock={sorted(locked_paths)} modules={sorted(module_paths)}"
@@ -126,19 +145,27 @@ def validate(
         if not item.get("role", "").strip():
             errors.append(f"component lock role must be non-empty for {path}")
         expected_release = EXPECTED_RELEASES.get(path)
+        if profile == "v0.59" and path in V059_SYSTEM_COMPONENTS:
+            expected_release = "0.59.1"
         if expected_release is not None:
             if item.get("release") != expected_release:
                 errors.append(
                     f"{path} must record release {expected_release}, "
                     f"got {item.get('release')!r}"
                 )
-        if path in REVIEW_ONLY_OPEN_PR_COMPONENTS:
-            if item.get("integration_status") != "review_only_open_pr":
-                errors.append(f"{path} must be recorded as a review-only open PR")
+        if path in reviewed:
+            integration_status = item.get("integration_status")
+            if profile == "v0.59":
+                if integration_status != "landed":
+                    errors.append(f"{path} must record a landed PR for {profile}")
+            elif integration_status not in {"review_only_open_pr", "merged_development"}:
+                errors.append(f"{path} must record a review-only open PR or a merged development PR")
             review_url = item.get("review_url", "")
             if not GITHUB_PR_URL_RE.fullmatch(review_url):
                 errors.append(f"{path} must record its GitHub review PR URL")
-            if item.get("release_tag", "") or item.get("release_url", ""):
+            if integration_status == "review_only_open_pr" and (
+                item.get("release_tag", "") or item.get("release_url", "")
+            ):
                 errors.append(f"{path} review-only pin must not have release metadata")
         module = modules.get(path)
         if module is None:
@@ -156,21 +183,28 @@ def validate(
     return errors
 
 
-def check_repository(root: Path) -> list[str]:
-    lock = json.loads((root / LOCK_PATH).read_text(encoding="utf-8"))
-    return validate(lock, load_modules(root / ".gitmodules"), load_gitlinks(root))
+def check_repository(root: Path, profile: str | None = None) -> list[str]:
+    profile = profile or component_lock_profile(root)
+    lock_path = root / LOCK_PATHS[profile]
+    if not lock_path.is_file():
+        return [f"component lock is missing: {lock_path}"]
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    return validate(lock, load_modules(root / ".gitmodules"), load_gitlinks(root), profile)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument("--profile", choices=LOCK_PATHS)
     args = parser.parse_args()
-    errors = check_repository(args.root.resolve())
+    root = args.root.resolve()
+    profile = args.profile or component_lock_profile(root)
+    errors = check_repository(root, profile)
     if errors:
         for error in errors:
             print(f"error: {error}")
         return 1
-    print("OK: v0.58 component lock matches .gitmodules and gitlinks")
+    print(f"OK: {profile} component lock matches .gitmodules and gitlinks")
     return 0
 
 

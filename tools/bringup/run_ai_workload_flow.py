@@ -41,6 +41,7 @@ PTO_KERNELS_REL = Path("workloads/pto_kernels")
 SUPER_NPU_REL = PTO_KERNELS_REL / "benchmarks/supernpu"
 LINX_TILEOP_API_REL = Path("tools/Linx-TileOP-API")
 COMPONENT_LOCK_REL = Path("docs/bringup/component-lock.v0.58.json")
+V059_COMPONENT_LOCK_REL = Path("docs/bringup/component-lock.v0.59.json")
 LINX_DIRECT_BOOT_LINK_SCRIPT = """ENTRY(_start)
 PHDRS {
   text PT_LOAD FLAGS(5);
@@ -313,13 +314,18 @@ def load_component_lock(lock_path: Path) -> tuple[dict[str, Any] | None, str | N
 
 
 def exact_pin_evidence(root: Path) -> dict[str, Any]:
-    lock_path = root / COMPONENT_LOCK_REL
+    lock_rel = (
+        V059_COMPONENT_LOCK_REL
+        if (root / V059_COMPONENT_LOCK_REL).is_file()
+        else COMPONENT_LOCK_REL
+    )
+    lock_path = root / lock_rel
     lock, lock_digest, lock_error = load_component_lock(lock_path)
     if lock_error:
         return {
             "superproject": checkout_revision(root),
             "component_lock": {
-                "path": COMPONENT_LOCK_REL.as_posix(),
+                "path": lock_rel.as_posix(),
                 "sha256": lock_digest,
                 "schema_version": None,
                 "profile": None,
@@ -466,7 +472,7 @@ def exact_pin_evidence(root: Path) -> dict[str, Any]:
     return {
         "superproject": superproject,
         "component_lock": {
-            "path": COMPONENT_LOCK_REL.as_posix(),
+            "path": lock_rel.as_posix(),
             "sha256": lock_digest,
             "schema_version": lock.get("schema_version"),
             "profile": lock.get("profile"),

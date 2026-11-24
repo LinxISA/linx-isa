@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "profile": "v0.59",
+  "description": "Exact merged component pins for LinxISA 0.59.1. Roles describe opt-in runtime coverage and legacy compatibility.",
+  "components": [
+    {
+      "path": "compiler/llvm",
+      "url": "https://github.com/LinxISA/llvm-project.git",
+      "branch": "main",
+      "commit": "f4a6878fba799e4a1c944168e790149006200c57",
+      "tree": "1e67609a1eb139b42c43bb87762b9599b6940d24",
+      "release": "0.58.7",
+      "role": "Linx LLVM with opt-in PTO 0.59.1 scoped Scalar, carrier-start PCR relocations, and Linux ABI fixes",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/llvm-project/pull/180"
+    },
+    {
+      "path": "compiler/ptoas",
+      "url": "https://github.com/LinxISA/ptoas.git",
+      "branch": "main",
+      "commit": "d0bb7ccf26a3c0267398ae4cba29ea4d35f15f78",
+      "tree": "02d6fca87851966d673fbd26170a60c419579d93",
+      "release": "0.58.7",
+      "role": "v0.58.7 development golden authority with explicit partial PTOAS coverage; PTOAS#10",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/PTOAS/pull/9"
+    },
+    {
+      "path": "emulator/qemu",
+      "url": "https://github.com/LinxISA/qemu.git",
+      "branch": "master",
+      "commit": "d528bcf82200c34220ec0791ee404a203ec1e026",
+      "tree": "15d59c18e72bc9f760000fd53f5b05572743aea2",
+      "release": "0.58.7",
+      "role": "QEMU emulator with opt-in PTO 0.59.1 scoped Scalar, direct scoped PCR relocations, Core4 MSGB/HSCB guest execution, and B.IOT source lifetimes",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/qemu/pull/98"
+    },
+    {
+      "path": "kernel/linux",
+      "url": "https://github.com/LinxISA/linux.git",
+      "branch": "main",
+      "commit": "aa9e4404588ca06019270530fc95fbf7f7504a68",
+      "tree": "622a0c86251338fcad4a240f7fd7b815711b6154",
+      "release": "0.59.1",
+      "role": "Linx Linux and vDSO with exact PTO 0.59.1 ELF identity and validated initramfs gates",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/linux/pull/35"
+    },
+    {
+      "path": "lib/glibc",
+      "url": "https://github.com/LinxISA/glibc.git",
+      "branch": "master",
+      "commit": "80955a23dae17a3ce102e261ac1cfbd344e04bf8",
+      "tree": "966935bce005dd63d0779e3db9c8a310f44c5b4f",
+      "release": "0.59.1",
+      "role": "GNU C library and runtime loader with exact PTO 0.59.1 ELF identity",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/glibc/pull/16"
+    },
+    {
+      "path": "lib/mesa3d",
+      "url": "https://github.com/LinxISA/mesa3d.git",
+      "branch": "main",
+      "commit": "11c1663090d31ee744059281c4fa8f347e10e023",
+      "tree": "430ece93484269dade688d173d75f10197aa837f",
+      "role": "graphics stack"
+    },
+    {
+      "path": "lib/musl",
+      "url": "https://github.com/LinxISA/musl.git",
+      "branch": "master",
+      "commit": "45f23651d91c529e9a9d0e25e7b48d8679170a9c",
+      "tree": "9e9cedf3d5c4915c0909fb2eaa3f4bca6a364db9",
+      "release": "0.59.1",
+      "role": "musl phase-b and phase-c static and dynamic runtimes with exact PTO 0.59.1 ELF identity",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/musl/pull/15"
+    },
+    {
+      "path": "rtl/LinxCore",
+      "url": "https://github.com/LinxISA/LinxCore.git",
+      "branch": "main",
+      "commit": "e3f0d93b5b093218596d64051bb9a95de2cfb413",
+      "tree": "6218500b54b9743ff515f6eb916aa1b34cd5d6bd",
+      "role": "RTL implementation"
+    },
+    {
+      "path": "skills/linx-skills",
+      "url": "https://github.com/LinxISA/linx-skills.git",
+      "branch": "main",
+      "commit": "222b009e7d37430454151013c447b077349de008",
+      "tree": "865ae6432c35bfecd27451ef6e779a0a1d5cf469",
+      "release": "0.58.3",
+      "role": "agent routing and staged v0.58 workflow skills"
+    },
+    {
+      "path": "tools/Linx-TileOP-API",
+      "url": "https://github.com/LinxISA/Linx-TileOP-API.git",
+      "branch": "linx",
+      "commit": "d6787687ce0aa8d5a91b2ab0b51aa4f267f148d2",
+      "tree": "79ccbe2b215c34141eeab59528261f9676fba5b5",
+      "release": "0.58.7",
+      "role": "v0.58.7 development TileOP API with exact golden contracts; remaining wrapper/C++ validation tracked in Linx-TileOP-API#237",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/Linx-TileOP-API/pull/280"
+    },
+    {
+      "path": "tools/LinxCoreModel",
+      "url": "https://github.com/LinxISA/LinxCoreModel.git",
+      "branch": "main",
+      "commit": "384295bf8bdd862c6c3517b9d7f735386966d674",
+      "tree": "45cb518589b8e8aad1c60a5c757b06463333e042",
+      "role": "C++ core model with the retained v0.58.1 integration and validated scoped Scalar and ADDTPC in gfrun/gfsim",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/LinxCoreModel/pull/40"
+    },
+    {
+      "path": "tools/model",
+      "url": "https://github.com/LinxISA/linx-model.git",
+      "branch": "main",
+      "commit": "f3c05078608eded133f4ab4f01374a1283532564",
+      "tree": "92acc4f21513c7e0a0ef2cc4deb8577838855087",
+      "release": "0.58.7",
+      "role": "v0.58.7 default functional reference with opt-in PTO 0.59.1 single-access immediate/PCR execution",
+      "integration_status": "landed",
+      "review_url": "https://github.com/LinxISA/linx-model/pull/26"
+    },
+    {
+      "path": "tools/pyCircuit",
+      "url": "https://github.com/LinxISA/pyCircuit.git",
+      "branch": "main",
+      "commit": "616c13befbe40cd30973a831a1506c556925a17d",
+      "tree": "460bac6b24750cd95cbe70e7aee11d0a36a4dbc8",
+      "role": "pyCircuit 6 model"
+    },
+    {
+      "path": "workloads/pto_kernels",
+      "url": "https://github.com/PTO-ISA/pto-kernels.git",
+      "branch": "main",
+      "commit": "5f5cf061c4439a2c54bb91bfa6e2205b86cc0dcd",
+      "tree": "c6008225f73a7481fe8631cd010bed80f9c5e346",
+      "release": "0.58.3",
+      "role": "PTO v0.58.3 kernels and maintained SuperNPU workloads"
+    }
+  ]
+}
