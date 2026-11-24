@@ -42,10 +42,15 @@ def projection(rows):
             "instruction_count": len(rows),
             "instructions": [
                 {
-                    key: value
-                    for key, value in row.items()
-                    if key not in {"uop_class", "source"}
+                    **row,
+                    "uop_class": {
+                        key: value
+                        for key, value in row["uop_class"].items()
+                        if key != "note"
+                    },
                 }
+                if "uop_class" in row
+                else row
                 for row in rows
             ],
         },
@@ -55,29 +60,71 @@ def projection(rows):
 
 
 def tile_projection(tiles):
-    fields = (
-        "name",
-        "engine",
-        "family",
-        "command_mnemonic",
-        "mode",
-        "function",
-        "selector",
-    )
+    # Four current comparison/selection roles call their still-assigned
+    # RowMajor packed carrier "legacy Predicate". Preserve the carrier and its
+    # alternatives, using the packing/layout name from the locked owners.
+    operations = [
+        {
+            **op,
+            "operands": [
+                {
+                    **operand,
+                    "role": operand["role"].replace(
+                        "legacy Predicate", "RowMajor packed Predicate"
+                    ),
+                }
+                for operand in op["operands"]
+            ],
+        }
+        for op in tiles["operations"]
+    ]
     return json.dumps(
         {
-            "schema": "linxisa.manual.tile-selectors.v1",
+            "schema": "linxisa.manual.tile-operations.v1",
             "version": "0.59.2",
             "source_commit": COMMIT,
-            "operation_count": len(tiles["operations"]),
-            "operations": [
-                {key: op[key] for key in fields if key in op}
-                for op in tiles["operations"]
-            ],
+            "source_catalog_sha256": sha256(
+                read("isa/v0.59/state/pto_tile_operations.json")
+            ).hexdigest(),
+            "operation_count": len(operations),
+            "operations": operations,
         },
         ensure_ascii=False,
         indent=2,
     ).encode()
+
+
+@lru_cache(maxsize=1)
+def release_decoder():
+    """Reproduce the actual tagged Sail package decoder, including its catalog identity."""
+    import tempfile
+    import sys
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory(prefix="linx-0592-manual-decode-") as tmp:
+        out = Path(tmp) / "decode.sail"
+        subprocess.run(
+            [
+                sys.executable,
+                "tools/isa/gen_sail_decode.py",
+                "--spec",
+                CATALOG,
+                "--out",
+                str(out),
+            ],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+        )
+        data = out.read_bytes()
+    if (
+        sha256(data).hexdigest()
+        != "cb7517c78a3d591008b2c3a36860147a46ec67241d13237ea4530deffbff0f7a"
+    ):
+        raise ValueError(
+            "generated decoder differs from the v0.59.2 Sail release package"
+        )
+    return data
 
 
 def install(files, dest, *, check=False):

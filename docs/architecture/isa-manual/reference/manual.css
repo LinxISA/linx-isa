@@ -163,3 +163,7 @@ main { overflow-wrap:anywhere; }
 .edition-difference li+li {margin-top:.4rem;}
 .architecture-links {padding:.5rem 0;border-bottom:1px solid var(--rule);}
 @media(max-width:600px){.chapter-index li{grid-template-columns:1fr;gap:.1rem;}}
+
+.datatype-definition figure {margin: 1rem 0; max-width: 100%; overflow-x: auto;}
+.datatype-definition figure img {display: block; width: 100%; min-width: 44rem; max-width: 70rem; height: auto;}
+.system-register-detail {scroll-margin-top: 1em; border-top: 1px solid var(--rule); padding-top: .5rem;}

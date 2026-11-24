@@ -35,6 +35,8 @@ from manual_golden_architecture import (
     REGISTER_SOURCE,
 )
 from manual_golden_links import GLOSSARY, GLOSSARY_TEXT
+from manual_golden_datatypes import datatype_assets
+from manual_golden_registers import register_evidence
 from manual_golden_prose import golden_markdown
 from manual_architecture_view import architecture_bodies
 from manual_canvas_site import include_canvas
@@ -1043,6 +1045,12 @@ def build(release=TAG):
     files["BITFIELD-LICENSE.txt"] = tagged_bytes("docs/figs/bitfield/LICENSE")
     if active:
         files.update({"spec/" + name: data for name, data in offline_inputs.items()})
+        files.update(datatype_assets())
+        files["golden-ssr-evidence.json"] = json.dumps(
+            register_evidence(json.loads(inputs[REGISTER_SOURCE])),
+            ensure_ascii=False,
+            indent=2,
+        ).encode()
     else:
         files.update({"spec/" + Path(path).name: data for path, data in inputs.items()})
     for name in ("manual.css", "index-filter.js"):

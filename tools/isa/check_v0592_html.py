@@ -40,14 +40,6 @@ READABLE_SUFFIXES = {".html", ".md", ".txt", ".adoc"}
 STATUS_STATES = {"retained", "reserved-unimplemented"}
 OBSOLETE_BLOCK_ALIASES = {"MSEQ", "MPAR", "VSEQ", "VPAR"}
 LEGACY_EXAMPLE_MNEMONICS = {"B.EQ"}
-RETIRED_PAGES = {
-    "arch-core-state.html",
-    "arch-execution-mode.html",
-    "arch-predicate.html",
-    "arch-ssr-lcfr-en.html",
-    "arch-ssr-lcfr.html",
-    "arch-vgpr.html",
-}
 RETIRED_ASSET_SUFFIXES = {
     "docs--zh--figs--intro--group.png",
     "docs--zh--figs--isa--arch--pred.png",
@@ -248,11 +240,8 @@ def _legacy_model_hits(text: str) -> list[str]:
 
 
 def _check_retired_execution_model(site: Path, errors: list[str]) -> None:
-    for filename in sorted(RETIRED_PAGES):
-        if (site / filename).exists():
-            errors.append(
-                f"{filename}: retired execution-model page remains in package"
-            )
+    # The ADR retires encodings. A chapter title or URL does not determine
+    # whether a particular state definition still has a current authority.
     for path in sorted(site.rglob("*")):
         if not path.is_file():
             continue

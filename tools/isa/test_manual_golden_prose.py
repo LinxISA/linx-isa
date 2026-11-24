@@ -28,7 +28,7 @@ class ManualGoldenProseTest(unittest.TestCase):
         self.assertIn("Fault_IllegalInstruction", actual)
         self.assertNotIn("压缩指令扩展", actual)
         self.assertNotIn("instset", actual)
-        self.assertNotIn("## 备注", actual)
+        self.assertIn("16 位压缩编码", actual)
 
     def test_keeps_useful_pseudocode_diagram_and_old_value(self):
         source = """# SWAPW
@@ -49,23 +49,16 @@ Memory[address] = new_value;
         self.assertIn("swap.svg", actual)
         self.assertIn("旧值", actual)
 
-    def test_removes_specific_version_comparison_paragraph(self):
-        source = """# TADD
+    def test_version_language_never_discards_a_design_rule(self):
+        # Unreviewed mixed prose must reach the independent publication check,
+        # which can reject it; the renderer must never silently erase its rule.
+        text = "早期版本已规定：若两个目标指向同一 GPR，第二次写入决定最终值。"
+        self.assertIn("第二次写入决定最终值", golden_markdown("HL.MUL.md", text))
 
-## 说明
-
-逐元素相加。
-
-旧版使用另一种隐式累加器，这段历史说明不适用于本版。
-
-## 示例
-
-输入 1 与 2，输出 3。
-"""
-        actual = golden_markdown("TADD.md", source)
-        self.assertIn("逐元素相加", actual)
-        self.assertIn("输入 1 与 2", actual)
-        self.assertNotIn("旧版", actual)
+    def test_preserves_applicable_tile_body_rule(self):
+        text = "本指令属于[基础指令集](../../instset/baseInstrs.md)，可用在任意类型的块体中。"
+        self.assertIn("Tile 块的标量块体", golden_markdown("ADD.md", text))
+        self.assertIn("任意类型", golden_markdown("NOT-REVIEWED.md", text))
 
     def test_supplement_becomes_current_without_source_appendix(self):
         source = """<!-- LINXISA-SUPPLEMENT: {"version":"0.59.1"} -->
@@ -198,7 +191,9 @@ address 由 B.IOR.RegSrc0 给出。B.IOR 是必需的，RegSrc1、RegSrc2 与 Re
             if item["field"].startswith("Reg")
         }
         self.assertEqual(set(constraints), {"RegDst", "RegSrc0", "RegSrc1", "RegSrc2"})
-        self.assertTrue(all(values == list(range(24)) for values in constraints.values()))
+        self.assertTrue(
+            all(values == list(range(24)) for values in constraints.values())
+        )
 
         operations = json.loads(
             (

@@ -73,6 +73,12 @@ jobs:
           path: workloads/generated/pto-v0591-release
       - name: Verify 0.59.1 reader supplements against the published PTO sources
         run: python3 tools/isa/manual_supplements.py --pto-root workloads/generated/pto-v0591-release
+      - name: Verify the retained register fields and datatype contracts against PTO
+        env:
+          PTO_SPEC_ROOT: workloads/generated/pto-v0591-release
+        run: |
+          python3 tools/isa/manual_golden_registers.py --pto-root "$PTO_SPEC_ROOT"
+          python3 -m unittest tools.isa.test_manual_golden_datatypes
       - name: Verify 0.59.1 HTML manual source projections
         env:
           PTO_SPEC_ROOT: workloads/generated/pto-v0591-release
@@ -218,6 +224,7 @@ jobs:
       - name: Build and audit the v0.59.2 instruction reference
         run: |
           python3 -m unittest discover -s tools/isa -p 'test_check_v0592_html.py'
+          python3 tools/isa/review_v0592_design_continuity.py --check
           python3 -m unittest discover -s tools/isa -p 'test_check_golden_html.py'
           python3 tools/isa/gen_html_reference.py --release v0.59.2 --out "$RUNNER_TEMP/linxisa-html-0592"
           python3 tools/isa/check_golden_html.py --site "$RUNNER_TEMP/linxisa-html-0592"

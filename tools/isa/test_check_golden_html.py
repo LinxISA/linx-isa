@@ -14,6 +14,7 @@ from check_golden_html import (
     _check_audit_prose,
     _check_b_ior_contract,
     _check_orphans,
+    _check_register_details,
     _check_ssr,
     history_hits,
 )
@@ -95,6 +96,17 @@ class GoldenHTMLCheckTest(unittest.TestCase):
                     for error in errors
                 )
             )
+
+    def test_register_details_require_current_anchors_and_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            site = Path(directory)
+            (site / "arch-ssr.html").write_text("<table></table>")
+            errors: list[str] = []
+            _check_register_details(site, errors)
+            self.assertTrue(
+                any("detail inventory differs" in error for error in errors)
+            )
+            self.assertIn("golden-ssr-evidence.json: missing", errors)
 
     def test_orphaned_downloadable_manuscript_fails(self):
         with tempfile.TemporaryDirectory() as directory:

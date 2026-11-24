@@ -8,6 +8,7 @@ diagrams and current legality notes.
 from __future__ import annotations
 
 import re
+from pathlib import PurePosixPath
 
 
 _HEADING = re.compile(r"^(#{2,6})\s+(.+?)\s*$", re.MULTILINE)
@@ -18,16 +19,39 @@ _SUPPLEMENT_BANNER = re.compile(
     re.MULTILINE,
 )
 _INSTSET_LINK = re.compile(r"\[([^]]+)\]\([^)]*(?:/|^)instset/[^)]*\)", re.IGNORECASE)
-_CLASSIFICATION = re.compile(
-    r"^(?:\s*(?:[-*+]\s*)?(?:\d+\.\s*)?)?"
-    r"(?:本指令|该指令)属于[^\n]*(?:指令集|指令扩展|扩展)[^\n]*$",
-    re.MULTILINE,
+# These applicability rules are checked against scalar/model/dispatch/top-level.asl
+# and ScalarOperationApplicable in scalar/model/sys/semantics.asl at the PTO lock.
+# Only the exact audited source notes below are rewritten.
+_BASE_ALU = frozenset(
+    "ADD ADDW SUB SUBW AND ANDW OR ORW XOR XORW ADDI ADDIW ANDI ANDIW LUI MADD MADDW MUL MULU MULW ORI ORIW SLL SLLI SLLIW SLLW SRA SRAI SRAIW SRAW SRL SRLI SRLIW SRLW SUBI SUBIW XORI XORIW".split()
 )
-_STALE_BLOCK = re.compile(
-    r"旧版|旧模型|旧中文|历史(?:说明|实现|页面|原文)|早期(?:版本|实现)|"
-    r"原页|原稿|当时尚未|迁移(?:说明|路径)|兼容拼写|待审|TODO|deprecated|legacy",
-    re.IGNORECASE,
+_LONG_ALU = frozenset(
+    "HL.ADDI HL.ADDIW HL.ANDI HL.ANDIW HL.LIS HL.LIU HL.LUI HL.MIADD HL.MISUB HL.ORI HL.ORIW HL.SUBI HL.SUBIW HL.XORI HL.XORIW".split()
 )
+_COMPRESSED = frozenset(
+    "C.ADD C.ADDI C.AND C.MOVI C.MOVR C.OR C.SETRET C.SEXT.B C.SEXT.H C.SEXT.W C.SLLI C.SRLI C.SUB C.ZEXT.B C.ZEXT.H C.ZEXT.W".split()
+)
+
+
+def _placement_notes(path: str, text: str) -> str:
+    name = PurePosixPath(path).stem
+    if name in _BASE_ALU or name in _LONG_ALU:
+        family = "基础指令集" if name in _BASE_ALU else "增强指令扩展"
+        current = "这条标量指令也可在 Tile 块的标量块体中执行。成功译码后沿用当前块类型，并按本指令的操作数规则执行。"
+        for clause in ("可用在任意类型的块体中", "可用于任意类型的块指令块体中"):
+            text = text.replace(f"本指令属于{family}，{clause}。", current)
+    elif name in _COMPRESSED:
+        for clause in ("仅在使能了压缩扩展的处理器中支持使用", "仅在使能扩展时使用"):
+            text = text.replace(
+                f"本指令属于压缩指令扩展，{clause}。", "该指令使用 16 位压缩编码。"
+            )
+    elif name in {"MIN", "MINU", "MAX", "MAXU"}:
+        text = text.replace(
+            "本指令属于标准指令扩展，只能用于浮点块指令块体中。",
+            "这是标量整数比较指令，也可在标准块的标量块体中执行。",
+        )
+    return text
+
 
 _CURRENT_WORDING = (
     ("在 0.59.1 中只保留编码和", "仅预留编码和"),
@@ -174,19 +198,6 @@ def _sections(markdown: str) -> list[tuple[str, str, str]]:
     return result
 
 
-def _drop_stale_paragraphs(value: str) -> str:
-    blocks = re.split(r"(\n\s*\n)", value)
-    kept: list[str] = []
-    for block in blocks:
-        if not block.strip() or re.fullmatch(r"\n\s*\n", block):
-            kept.append(block)
-            continue
-        if _CLASSIFICATION.search(block) or _STALE_BLOCK.search(block):
-            continue
-        kept.append(block)
-    return "".join(kept)
-
-
 def _remove_empty_sections(markdown: str) -> str:
     kept: list[str] = []
     for marks, heading, section in _sections(markdown):
@@ -223,7 +234,7 @@ def golden_markdown(path: str, markdown: str) -> str:
     markdown = _INSTSET_LINK.sub(r"\1", markdown)
     if re.search(r"(?:M|S)GATHER|MSCATTER", normalized + "\n" + markdown, re.I):
         markdown = _STALE_INDEXED_BIOR.sub(_INDEXED_BIOR, markdown)
-    markdown = _drop_stale_paragraphs(markdown)
+    markdown = _placement_notes(path, markdown)
     return _remove_empty_sections(markdown)
 
 

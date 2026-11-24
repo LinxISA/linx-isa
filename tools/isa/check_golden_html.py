@@ -34,7 +34,13 @@ from check_manual_detail_semantics import (
     _check_scopes,
     _check_tile_accumulators,
 )
-from check_v0592_html import check_site as check_v0592_site
+from check_v0592_html import (
+    RELEASE_TAG,
+    SYSTEM_REGISTERS_PATH,
+    release_inputs,
+    _git,
+    check_site as check_v0592_site,
+)
 
 
 READABLE_SUFFIXES = {".html", ".md", ".txt", ".adoc"}
@@ -248,6 +254,91 @@ def _check_ssr(site: Path, errors: list[str]) -> None:
             )
 
 
+def _ssr_anchor(name: str) -> str:
+    return "ssr-" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def _check_register_details(site: Path, errors: list[str]) -> None:
+    page = site / "arch-ssr.html"
+    if not page.is_file():
+        return
+    source = json.loads(_git("show", f"{RELEASE_TAG}:{SYSTEM_REGISTERS_PATH}"))
+    wanted = {
+        f"{row['scope']}:{row['name']}:{row.get('address', row.get('low_index'))}": row
+        for row in source["registers"]
+    }
+    raw = page.read_text(encoding="utf-8")
+    doc = parse(page)
+    sections = doc.find(tag="section", cls="system-register-detail")
+    actual = {node.attrs.get("data-register-detail-key"): node for node in sections}
+    if set(actual) != set(wanted) or len(sections) != 100:
+        errors.append(
+            f"arch-ssr.html: current detail inventory differs ({len(actual)} != 100)"
+        )
+    for key, row in wanted.items():
+        name = str(row["name"])
+        node = actual.get(key)
+        if node is None:
+            continue
+        anchor = _ssr_anchor(name)
+        text = node.text()
+        if node.attrs.get("id") != anchor:
+            errors.append(f"arch-ssr.html/{name}: wrong detail anchor")
+        for literal in (
+            str(row.get("address", row.get("low_index"))),
+            str(row["access"]),
+            str(row["scope"]),
+            "当前架构来源",
+        ):
+            if literal not in text:
+                errors.append(f"arch-ssr.html/{name}: missing current fact {literal!r}")
+        if f'href="#{anchor}"' not in raw:
+            errors.append(f"arch-ssr.html/{name}: catalog row does not link to detail")
+
+    plain = _plain_html(raw)
+    required = (
+        "CORE_STATE[3:0]",
+        "36:32",
+        "39:37",
+        "(ACR << 12) | 0xF02",
+        "TRAPNO_ACRn",
+        "RX epoch",
+        "claim sequence",
+        "SSRSWAP",
+        "MSGBACK",
+    )
+    for literal in required:
+        if literal not in plain:
+            errors.append(f"arch-ssr.html: detailed current behavior omits {literal!r}")
+
+    evidence_path = site / "golden-ssr-evidence.json"
+    if not evidence_path.is_file():
+        errors.append("golden-ssr-evidence.json: missing")
+        return
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+    records = evidence.get("registers", {})
+    if (
+        evidence.get("schema") != "linxisa.golden-ssr-evidence.v1"
+        or evidence.get("register_count") != 100
+        or set(records) != {str(row["name"]) for row in source["registers"]}
+    ):
+        errors.append("golden-ssr-evidence.json: current register evidence differs")
+    for name, record in records.items():
+        if (
+            record.get("anchor") != _ssr_anchor(name)
+            or not record.get("key")
+            or not record.get("behavior_class")
+            or not record.get("evidence")
+        ):
+            errors.append(
+                f"golden-ssr-evidence.json/{name}: incomplete current evidence"
+            )
+    if "continuity_review" in evidence:
+        errors.append(
+            "golden-ssr-evidence.json: continuity review leaked into reader package"
+        )
+
+
 def _check_instruction_semantics(site: Path, errors: list[str]) -> None:
     for check in (
         _check_modifier_tables,
@@ -353,12 +444,73 @@ def _check_orphans(site: Path, errors: list[str]) -> None:
                 errors.append(f"{relative}: orphaned packaged artifact")
 
 
+def _check_retained_designs(site: Path, errors: list[str]) -> None:
+    catalog, tiles = release_inputs()
+    expected = {
+        r["id"]: r
+        for r in catalog["instructions"]
+        if r.get("architecture_status", {}).get("state") != "obsolete"
+    }
+    try:
+        projections = json.loads((site / "spec/instruction-forms.json").read_text())
+        ops = json.loads((site / "spec/tile-operations.json").read_text())["operations"]
+    except (OSError, ValueError, KeyError) as exc:
+        errors.append(f"unreadable golden projection: {exc}")
+        return
+    for record in projections["instructions"]:
+        if record.get("id") not in expected:
+            errors.append(f"unexpected active form {record.get('id')!r}")
+            continue
+        row = expected[record["id"]].copy()
+        if "uop_class" in row:
+            row["uop_class"] = row["uop_class"].copy()
+            row["uop_class"].pop("note", None)
+        if row != record:
+            errors.append(
+                f"{row['id']}: current definition differs beyond classification commentary"
+            )
+    originals = {o["name"]: o for o in tiles["operations"]}
+    if len(ops) != 119 or {o["name"] for o in ops} != originals.keys():
+        errors.append("spec/tile-operations.json: incomplete Tile operation inventory")
+    for op in ops:
+        if op.get("name") not in originals:
+            errors.append(f"unexpected Tile operation {op.get('name')!r}")
+            continue
+        source = originals[op["name"]]
+        expected_operands = [
+            {
+                **a,
+                "role": a["role"].replace(
+                    "legacy Predicate", "RowMajor packed Predicate"
+                ),
+            }
+            for a in source["operands"]
+        ]
+        if op != {**source, "operands": expected_operands}:
+            errors.append(
+                f"{op['name']}: current Tile operand or operation field changed"
+            )
+    for filename, facts in {
+        "arch-tile-masks.html": ("RowMajor", "PredicateCell", "P0", "i mod 8"),
+        "arch-instruction-widths.html": ("HL.ADDI", "C.ADD"),
+        "arch-fixup.html": ("HL.BSTART.FP", "L.BSTART.SYS"),
+        "arch-state-lgpr.html": ("HL.QPUSH", "HL.QPOP", "T#1"),
+    }.items():
+        target = site / filename
+        text = _plain_html(target.read_text()) if target.is_file() else ""
+        for fact in facts:
+            if fact not in text:
+                errors.append(f"{filename}: missing current design detail {fact!r}")
+
+
 def check_site(site: Path) -> list[str]:
     site = site.resolve()
     errors = [f"v0.59.2/{error}" for error in check_v0592_site(site)]
     _check_reader_material(site, errors)
     _check_audit_prose(site, errors)
     _check_ssr(site, errors)
+    _check_register_details(site, errors)
+    _check_retained_designs(site, errors)
     _check_instruction_semantics(site, errors)
     _check_b_ior_contract(site, errors)
     _check_orphans(site, errors)

@@ -13,6 +13,14 @@ from manual_active_articles import ACTIVE_REPLACEMENTS
 from manual_markdown import render_markdown_text
 
 
+from manual_golden_datatypes import datatype_pages, datatype_index
+from manual_golden_execution import (
+    golden_execution_pages,
+    SAIL_EXECUTE_SOURCE,
+)
+from manual_golden_registers import register_routes, register_sections
+from manual_v0592_edition import read as release_bytes, release_decoder
+
 CATALOG_SOURCE = "isa/v0.59.2/linxisa-v0.59.2.json"
 REGISTER_SOURCE = "isa/v0.59/state/pto_system_registers.json"
 TILE_SOURCE = "isa/v0.59/state/pto_tile_operations.json"
@@ -127,6 +135,7 @@ def _render_registers(document: Mapping[str, Any]) -> str:
     if document.get("register_definition_count") != 100:
         raise ValueError("v0.59.2 golden manual requires 100 system registers")
     owners = _register_behavior(document)
+    anchors = register_routes(document)
     rows = []
     for register in document["registers"]:
         name = str(register["name"])
@@ -141,7 +150,7 @@ def _render_registers(document: Mapping[str, Any]) -> str:
         key = f"{register['scope']}:{name}:{address}"
         rows.append(
             f'<tr data-register-key="{escape(key, quote=True)}">'
-            f"<td><code>{escape(name)}</code></td><td><code>{escape(address)}</code></td>"
+            f'<td><a href="{escape(anchors[name].split("arch-ssr.html", 1)[1], quote=True)}"><code>{escape(name)}</code></a></td><td><code>{escape(address)}</code></td>'
             f"<td>{escape(str(register['access']))}</td><td>{escape(str(register['scope']))}</td>"
             f"<td>{escape(operation)}</td></tr>"
         )
@@ -172,42 +181,54 @@ def _render_traps(document: Mapping[str, Any]) -> str:
 
 
 def golden_architecture_routes() -> frozenset[str]:
-    return frozenset(
-        {
-            "architecture.html",
-            "execution-model.html",
-            "arch-state.html",
-            "arch-system.html",
-            "arch-ssr.html",
-            "arch-datatypes.html",
-            "arch-block-isa.html",
-            "arch-branch.html",
-            "arch-execution.html",
-            "arch-execution-machine.html",
-            "arch-program-order.html",
-            "arch-constraints.html",
-            "arch-std-block.html",
-            "arch-fp-block.html",
-            "arch-sys-block.html",
-            "arch-cube-block.html",
-            "arch-tlsu-block.html",
-            "arch-tepl-carrier.html",
-            "arch-register-state.html",
-            "arch-ggpr.html",
-            "arch-sgpr.html",
-            "arch-tile-registers.html",
-            "arch-barg.html",
-            "arch-bpc.html",
-            "arch-tpc.html",
-            "arch-loop.html",
-            "arch-ltar.html",
-            "arch-ssr-overview.html",
-            "arch-acr.html",
-            "arch-privilege.html",
-            "arch-exception-model.html",
-            "arch-interrupts.html",
-            "arch-timer.html",
-            "arch-memory-context.html",
+    return (
+        frozenset(
+            {
+                "architecture.html",
+                "execution-model.html",
+                "arch-state.html",
+                "arch-system.html",
+                "arch-ssr.html",
+                "arch-datatypes.html",
+                "arch-block-isa.html",
+                "arch-branch.html",
+                "arch-execution.html",
+                "arch-execution-machine.html",
+                "arch-program-order.html",
+                "arch-constraints.html",
+                "arch-std-block.html",
+                "arch-fp-block.html",
+                "arch-sys-block.html",
+                "arch-cube-block.html",
+                "arch-tlsu-block.html",
+                "arch-tepl-carrier.html",
+                "arch-register-state.html",
+                "arch-ggpr.html",
+                "arch-sgpr.html",
+                "arch-tile-registers.html",
+                "arch-barg.html",
+                "arch-bpc.html",
+                "arch-tpc.html",
+                "arch-loop.html",
+                "arch-ltar.html",
+                "arch-ssr-overview.html",
+                "arch-acr.html",
+                "arch-privilege.html",
+                "arch-exception-model.html",
+                "arch-interrupts.html",
+                "arch-timer.html",
+                "arch-memory-context.html",
+            }
+        )
+        | frozenset(datatype_pages())
+        | {
+            "arch-fixup.html",
+            "arch-xb-block.html",
+            "arch-state-lgpr.html",
+            "arch-tile-masks.html",
+            "arch-privilege-switch.html",
+            "arch-exception-overview.html",
+            "arch-instruction-widths.html",
         }
     )
 
@@ -514,8 +535,78 @@ def golden_architecture_bodies(
             '<h2 id="system-registers">系统寄存器目录</h2><p>下表列出 100 项系统寄存器。'
             "按名称查看地址、权限、作用域、复位值及读写时的架构行为。</p>"
             + _render_registers(registers)
+            + register_sections(registers)[0]
         ),
     )
+    extended, execution_audit, _ = golden_execution_pages(
+        commit,
+        catalog,
+        registers,
+        release_decoder(),
+        release_bytes(SAIL_EXECUTE_SOURCE),
+    )
+    pages.update(extended)
+    pages.update(datatype_pages())
+    pages["arch-datatypes.html"] = datatype_index()
+    format_counts = Counter(
+        row["length_bits"]
+        for row in catalog["instructions"]
+        if row.get("architecture_status", {}).get("state") != "obsolete"
+    )
+    widths = [
+        (16, "C.ADD 对两个完整源值求和并把结果压入 T 队列。", "op-c-add.html", "C.ADD"),
+        (
+            32,
+            "ADD 可先变换并移位右源，结果可写入 T、U 或通用寄存器。",
+            "op-add.html",
+            "ADD",
+        ),
+        (
+            48,
+            "HL.ADDI 对 24 位立即数作零扩展，再与源寄存器相加。",
+            "op-hl-addi.html",
+            "HL.ADDI",
+        ),
+        (
+            64,
+            "L.BSTART.STD 编码块转移；带作用域的访存形式也使用 64 位编码。",
+            "op-l-bstart-std.html",
+            "L.BSTART.STD",
+        ),
+    ]
+    width_table = "".join(
+        f"<tr><td>{width}</td><td>{format_counts[width]}</td><td>{desc} {_link(url, name)}</td></tr>"
+        for width, desc, url, name in widths
+    )
+    pages["arch-instruction-widths.html"] = (
+        "指令长度与块体适用性",
+        _article(
+            "<p>指令位宽决定一次取出的字节数。编码长度、操作数类型和允许执行的块类型分别由各形式定义。</p>"
+            '<div class="table-scroll"><table><thead><tr><th>位宽</th><th>形式数</th><th>示例</th></tr></thead><tbody>'
+            + width_table
+            + "</tbody></table></div>"
+            "<p>在已打开且尚未进入块体的 Tile 块中，标量指令译码成功后先进入块体，然后检查该操作是否适用以及操作数是否合法。"
+            "后续的标量故障保留已经进入块体的状态和原块类型。系统块的专用操作仍要满足自己的适用条件。</p>"
+            + _link("encoding.html", "查阅所有编码形式")
+        ),
+    )
+    for index, links in {
+        "execution-model.html": (
+            "arch-instruction-widths.html",
+            "arch-fixup.html",
+            "arch-xb-block.html",
+        ),
+        "arch-state.html": ("arch-state-lgpr.html", "arch-tile-masks.html"),
+        "arch-system.html": (
+            "arch-privilege-switch.html",
+            "arch-exception-overview.html",
+        ),
+    }.items():
+        title, body = pages[index]
+        pages[index] = (
+            title,
+            body + _list([(route, pages[route][0]) for route in links]),
+        )
     if set(pages) != golden_architecture_routes():
         raise ValueError("golden architecture route inventory differs")
 
@@ -549,6 +640,8 @@ def golden_architecture_bodies(
         }
         for route, (_, body) in pages.items()
     }
+    for route, record in execution_audit.items():
+        audit[route]["sources"].update(record.get("sources", {}))
     return pages, audit
 
 

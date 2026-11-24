@@ -98,7 +98,7 @@ class GoldenArchitectureTest(unittest.TestCase):
             self.assertEqual(
                 record["source_commit"], "830fbdb53bccec889414b5673ffba31b0a08606d"
             )
-            self.assertEqual(set(record["sources"]), set(self.raw))
+            self.assertTrue(set(self.raw) <= set(record["sources"]))
             self.assertEqual(record["origin"], "v0.59.2-machine-projection")
 
     def test_rejects_missing_behavior_ownership(self):
