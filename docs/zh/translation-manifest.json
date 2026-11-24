@@ -6,12 +6,16 @@
   "normative_language": "en",
   "pages": {
     "architecture/README.md": {
-      "source_sha256": "a963b859984d57324d0ad2c8966dbfebd26dada628148ed7fffa5b5866bbb075",
-      "translation_sha256": "7defca9868f7f21c95537828137f69e58f4734085e7735da5d919fedf8a8c31b"
+      "source_sha256": "c882849ec1b889371936ddfc38ce310c6a794ccb1a8a4092a22ad550e0a788af",
+      "translation_sha256": "79cfe927ec89e29d0559d0621303dcc74df1b1f8de9b7ba6d8f1a5110e57e0f4"
     },
     "architecture/isa-manual/README.md": {
       "source_sha256": "19dbf01818f88106e43c63980f910afb2a36075d94f8773df46a5035704fe4e6",
       "translation_sha256": "83434d0e8cc53d0bef8dabc2d0d24e6a0236e0d0a213681079fa37c2d26af684"
+    },
+    "architecture/linx-two-level-block-obsolescence.md": {
+      "source_sha256": "39b570ab9e9101343ffd9bddf15857f327b600ed7edbdd15a12683ebdb04269e",
+      "translation_sha256": "2c529f4b8d4697b9485b4d319d6520185e3196c58d9d7969b53918475f1ca2ff"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",
