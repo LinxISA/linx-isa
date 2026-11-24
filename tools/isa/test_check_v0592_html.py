@@ -76,7 +76,10 @@ class V0592HTMLCheckTest(unittest.TestCase):
         self.assertIsNotNone(pattern.search("b.eq u#1, 0, 2f"))
 
     def test_old_execution_model_is_distinct_from_current_tile_state(self):
-        current = "Tile VEC 引擎采用执行掩码；CORE_STATE 是当前 100 个 SSR 之一。"
+        current = (
+            "Tile VEC 引擎采用执行掩码；CORE_STATE 是当前 100 个 SSR 之一；"
+            "矩阵运算不存在隐式 ACC→Tile 通路。"
+        )
         self.assertEqual(_legacy_model_hits(current), [])
         legacy = (
             "执行组（Group）包含执行通道（Lane），LaneNumber 由 LCFR 给出；"

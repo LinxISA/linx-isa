@@ -68,7 +68,7 @@ LEGACY_MODEL_PATTERNS = {
         re.IGNORECASE,
     ),
     "retired LCFR state": re.compile(r"\bLCFR(?:_EN)?\b"),
-    "historical Janus core state": re.compile(r"Janus\s+Core|隐式\s*ACC"),
+    "historical Janus core state": re.compile(r"Janus\s+Core"),
 }
 
 
@@ -276,7 +276,8 @@ def _check_current_system_state(site: Path, errors: list[str]) -> None:
         return
     source = json.loads(_git("show", f"{RELEASE_TAG}:{SYSTEM_REGISTERS_PATH}"))
     wanted = {
-        f"{row['scope']}:{row['name']}:{row['address']}" for row in source["registers"]
+        f"{row['scope']}:{row['name']}:{row.get('address', row.get('low_index'))}"
+        for row in source["registers"]
     }
     doc = parse(path)
     actual = {
