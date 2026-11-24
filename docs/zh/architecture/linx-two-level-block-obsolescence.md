@@ -22,7 +22,7 @@ F–H 共 19 个形式继续采用 Linx 定义。I 组的 4 个形式只占用�
 
 ## 编码归属
 
-LinxISA `v0.59.1` 锁定 PTO 发布标签 `v0.59.1.0`（提交 `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`）。A 组的 184 个 64 位形式均落在同一条 `V.*` 预留记录内；B–E 的 9 个形式各有一条具名预留记录。因此 193 个形式对应 **10 条 PTO 预留记录**。预留覆盖整个匹配范围，包括尚无 Linx 助记符的取值。[Linx 发布目录](../../../isa/v0.59/linxisa-v0.59.json) · [PTO 锁定记录](../../../isa/v0.59/pto-spec.lock.json) · [PTO 原始编码预留表](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
+LinxISA `v0.59.1` 锁定 PTO 发布标签 `v0.59.1.0`（提交 `a89a53d48f5708328be609fe2e6296ac8bdb4bc2`）。A 组的 184 个 64 位形式均落在同一条 `V.*` 预留记录内；B–E 的 9 个形式各有一条具名预留记录。因此 193 个形式对应 **10 条 PTO 预留记录**。预留覆盖整个匹配范围，包括尚无 Linx 助记符的取值。[Linx 发布目录](https://github.com/LinxISA/linx-isa/blob/v0.59.1/isa/v0.59/linxisa-v0.59.json) · [PTO 锁定记录](https://github.com/LinxISA/linx-isa/blob/v0.59.1/isa/v0.59/pto-spec.lock.json) · [PTO 原始编码预留表](https://github.com/PTO-ISA/pto-spec/blob/a89a53d48f5708328be609fe2e6296ac8bdb4bc2/spec/catalog/extension-encoding-reservations.json)
 
 | 助记符 | 位宽 | Mask | Match |
 | --- | ---: | --- | --- |
