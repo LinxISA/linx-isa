@@ -39,6 +39,6 @@ Note: `build/` is gitignored; local build outputs are not committed to the repos
 
 ## 0.59.2 offline HTML instruction reference
 
-Extract the ZIP and open `index.html`. Eight functional classes, the mnemonic index and the encoding index cover 1,306 forms. Four encoding-only entries carry an explicit status notice. The Tile index covers 119 operations. [Download the Chinese HTML manual](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip)
+Extract the ZIP and open `index.html`. Eight functional classes, the mnemonic index and the encoding index cover 1,306 forms. Four encoding-only entries carry an explicit status notice. The Tile index covers 119 operations. The register table derives read, write, reset and side-effect behavior from the published catalog for all 100 system registers. The golden check covers rendered pages, expandable content and offline assets. [Download the Chinese HTML manual](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip)
 
 Run `make html-reference check-html-reference` in this directory with the release tags v0.59.2 and v0.59.1 available. Install the Markdown dependencies from `reference/requirements.txt`.

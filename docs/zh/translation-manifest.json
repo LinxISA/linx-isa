@@ -10,8 +10,8 @@
       "translation_sha256": "79cfe927ec89e29d0559d0621303dcc74df1b1f8de9b7ba6d8f1a5110e57e0f4"
     },
     "architecture/isa-manual/README.md": {
-      "source_sha256": "4729f9214f3fd59a90f4fd7a3e3f2dc3a369825261205e60389887545b8301b0",
-      "translation_sha256": "0f0a8105b746d1a59d322daf22ea72d933e3a190bcaecd8ed25dbd0d059b4d59"
+      "source_sha256": "6cbc5e17d8802924e777ca86eca34e06336666b5a2a1687eb389e49dcb805a3e",
+      "translation_sha256": "f0fc7e2ce37785ec3ec3396494658eee786702f58491f5abaf43a9660fc29f4e"
     },
     "architecture/linx-two-level-block-obsolescence.md": {
       "source_sha256": "e6b385ce7bc344a4ef4d41b5373d90c0e9c419e8687fd539ed8d26c6d845492c",

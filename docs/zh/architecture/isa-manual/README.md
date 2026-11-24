@@ -50,6 +50,6 @@ make gen
 
 ## 0.59.2 离线 HTML 手册
 
-解压后打开 `index.html`，从八个功能分类、助记符或编码索引查找指令。本版收录 1,306 个编码形式和 119 个 Tile 操作。四个只预留编码的形式在正文中单独标注。[下载中文 HTML 手册](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip)
+解压后打开 `index.html`，从八个功能分类、助记符或编码索引查找指令。本版收录 1,306 个编码形式和 119 个 Tile 操作。四个只预留编码的形式在正文中单独标注。系统寄存器表按发布目录列出 100 项寄存器的读写、复位及副作用。构建检查同时覆盖页面、折叠资料和离线附件。[下载中文 HTML 手册](https://github.com/LinxISA/linx-isa/releases/download/v0.59.2/linxisa-0.59.2-html.zip)
 
 在本目录运行 `make html-reference check-html-reference` 可重建和核验。检出环境需要 v0.59.2 发布标签和 v0.59.1 的原始中文资料标签。Markdown 依赖列在 `reference/requirements.txt` 中。

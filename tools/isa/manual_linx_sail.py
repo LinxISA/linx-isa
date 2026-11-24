@@ -298,7 +298,7 @@ def _source_block(title: str, record: Mapping[str, Any], css_class: str) -> str:
     )
 
 
-def sail_detail(row: Mapping[str, Any]) -> str:
+def sail_detail(row: Mapping[str, Any], *, release="v0.59.1") -> str:
     """Render exact tagged Sail evidence for one retained Linx-only row."""
     form_id = str(row.get("id", ""))
     evidence = _offline().get("forms", {}).get(form_id)
@@ -318,13 +318,26 @@ def sail_detail(row: Mapping[str, Any]) -> str:
         body.append(
             '<p class="linx-sail-result">官方 Sail 可执行子集在该译码分支调用 '
             "<code>trap_illegal_inst</code>，与 catalog 的 encoding-only 契约一致。"
-            "LinxISA 0.59.1 不读取这些形式的操作数，不执行数据移动，也不产生架构结果或副作用。</p>"
+            f"LinxISA {release[1:]} 不读取这些形式的操作数，不执行数据移动，也不产生架构结果或副作用。</p>"
         )
     else:
         body.append(
             '<p class="linx-sail-result">该分支未调用已收录的规范执行函数；'
             "结果需由平台实现/译码路径提供。</p>"
         )
+    if release == "v0.59.2":
+        from manual_v0592_edition import COMMIT, read
+
+        for path in [
+            GENERATOR_PATH,
+            *(_offline()["handlers"][h]["path"] for h in evidence["helpers"]),
+        ]:
+            if read(path) != tagged_bytes(path):
+                raise ValueError(f"v0.59.2 Sail excerpt requires review: {path}")
+        body = [
+            section.replace(f"/blob/{REVIEWED_COMMIT}/", f"/blob/{COMMIT}/")
+            for section in body
+        ]
     return (
         '<details class="linx-sail-evidence" data-disposition="'
         f'{escape(disposition, quote=True)}"><summary>发布版 Sail 模型 · '

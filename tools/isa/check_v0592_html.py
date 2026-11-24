@@ -408,17 +408,24 @@ def _check_audits_and_assets(
         ):
             errors.append(f"detail-audit.json/{filename}: contains removed form IDs")
 
-    for filename in ("authored-audit.json", "editorial-audit.json"):
-        document = _load_json(site / filename, errors)
-        pages = document.get("pages", document)
-        if not isinstance(pages, dict):
-            errors.append(f"{filename}: malformed page inventory")
-            continue
-        leftovers = sorted(set(pages) & {op_page(row) for row in obsolete})
-        if leftovers:
+        manuscript = record.get("chinese_source", "")
+        digest = record.get("reader_sha256")
+        if not digest or manuscript != f"article-source/{digest}.md":
             errors.append(
-                f"{filename}: contains {len(leftovers)} obsolete instruction pages"
+                f"detail-audit.json/{filename}: missing current manuscript identity"
             )
+        else:
+            asset = site / manuscript
+            if not asset.is_file() or sha256(asset.read_bytes()).hexdigest() != digest:
+                errors.append(
+                    f"detail-audit.json/{filename}: current manuscript differs"
+                )
+            page_path = site / filename
+            if (
+                not page_path.is_file()
+                or f'href="{manuscript}"' not in page_path.read_text()
+            ):
+                errors.append(f"{filename}: missing link to its checked manuscript")
 
     diagrams = _load_json(site / "diagram-audit.json", errors)
     diagram_rows = diagrams.get("forms", {})

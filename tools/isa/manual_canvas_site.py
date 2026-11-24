@@ -24,10 +24,14 @@ VIEWS = {
 }
 
 
-def include_canvas(bodies, folder: Path):
+def include_canvas(bodies, folder: Path, *, final_images_only=False):
     provenance_file = "silicon-canvas-provenance.json"
     provenance = json.loads((folder / provenance_file).read_bytes())
-    files = {"figures/" + provenance_file: (folder / provenance_file).read_bytes()}
+    files = (
+        {}
+        if final_images_only
+        else {"figures/" + provenance_file: (folder / provenance_file).read_bytes()}
+    )
     figures = []
     for item in provenance["figures"]:
         name = item["name"]
@@ -52,13 +56,15 @@ def include_canvas(bodies, folder: Path):
             ):
                 raise ValueError(f"{name}: {role} asset digest mismatch")
             names.append(record["path"])
-        for asset in names + [image]:
+        for asset in [image] if final_images_only else names + [image]:
             files["figures/" + asset] = (folder / asset).read_bytes()
         details = (
             f"<details><summary>图源与核对记录</summary><p>"
             f'<a href="figures/{item["source"]}">可编辑的 Silicon Canvas 场景</a> · '
             f'<a href="figures/{review_file}">成图审阅记录</a></p></details>'
         )
+        if final_images_only:
+            details = ""
         html = (
             f'<figure class="canvas-figure"><img class="canvas-figure-image" src="figures/{image}" '
             f'alt="{escape(view["alt"], quote=True)}" loading="lazy"><figcaption>{escape(view["caption"])}</figcaption>'
@@ -87,6 +93,8 @@ def include_canvas(bodies, folder: Path):
         )
     if {f["name"] for f in figures} != set(VIEWS):
         raise ValueError("missing required illustration")
+    if final_images_only:
+        return files
     files["canvas-audit.json"] = json.dumps(
         {"tool": provenance["silicon_canvas"], "figures": figures},
         ensure_ascii=False,

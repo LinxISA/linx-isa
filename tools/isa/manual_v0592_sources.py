@@ -59,7 +59,6 @@ def sources_v0592(
             "手册收录",
             f"{ACTIVE_FORM_COUNT} 个有效或预留形式，{ACTIVE_MNEMONIC_COUNT} 个目录助记符",
         ),
-        ("已从手册移除", f"{OBSOLETE_FORM_COUNT} 个 obsolete 形式"),
         ("Tile 操作", f"{TILE_OPERATION_COUNT} 个；VEC、SFU、TLSU、CUBE 均保留"),
         ("PTO 标签", str(lock["publication"]["tag"])),
         ("PTO 源提交", str(source["commit"])),
@@ -76,15 +75,8 @@ def sources_v0592(
     )
     body += (
         "<h2>手册范围</h2>"
-        "<p>本手册只列出 v0.59.2 仍可查阅的指令形式。193 个 obsolete 形式不生成详情页、"
-        "分类索引或编码表项，其编码继续按 PTO 预留。"
-        "Tile VEC 操作收录在 Tile 索引。</p>"
-        "<p>DMA.FREE.L、DMA.FREE.S、MCOPY.DL、MCOPY.DS 仅保留编码。"
-        "执行必须在读取操作数或产生架构效果之前拒绝。</p>"
-        "<h2>兼容性边界</h2>"
-        "<p>v0.59.2 没有改变既有机器编码或 PTO ELF ABI。发布版 Sail 仍可按 v0.59.1 的"
-        "语义解码并执行旧机器字；未来目标如何处理 obsolete 机器字属于独立架构决策。"
-        "本手册不把该兼容执行路径展示成可用指令。</p>"
+        "<p>按功能分类或助记符查找指令，从编码索引查看固定位和字段。Tile VEC、SFU、TLSU 和 CUBE 的操作在 Tile 索引中按引擎列出。</p>"
+        "<p>DMA.FREE.L、DMA.FREE.S、MCOPY.DL、MCOPY.DS 仅预留编码，执行须在读取操作数或产生架构效果之前拒绝。</p>"
         "<h2>如何使用编码图</h2>"
         "<p>从编号最小的片段开始取指，每段内左侧为高位。掩码为 1 的位必须与匹配值相同；"
         "其余位由操作数字段占用。字段域和形式约束共同决定合法取值。</p>"
@@ -92,11 +84,8 @@ def sources_v0592(
         + _link(repo + "docs/zh/releases/v0.59.2.md", "0.59.2 发行说明")
         + " · "
         + _link(
-            repo + "docs/zh/architecture/linx-two-level-block-obsolescence.md",
-            "架构决策",
+            repo + "isa/v0.59.2/release_manifest.json", "规范清单"
         )
-        + " · "
-        + _link("https://linxisa.github.io/", "灵犀指令集架构中文站")
         + "</p>"
     )
     body += '<h2>离线发布文件</h2><div class="table-scroll"><table><tr><th>文件</th><th>SHA-256</th></tr>'

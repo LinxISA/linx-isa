@@ -51,4 +51,4 @@ html-reference:
 
 check-html-reference:
 	python3 ../../../tools/isa/gen_html_reference.py --release v0.59.2 --check --out $(BUILD_DIR)/instruction-reference
-	python3 ../../../tools/isa/check_v0592_html.py --site $(BUILD_DIR)/instruction-reference
+	python3 ../../../tools/isa/check_golden_html.py --site $(BUILD_DIR)/instruction-reference

@@ -544,7 +544,7 @@ def _render_field_table(row: dict[str, Any]) -> str:
     )
 
 
-def _render_tepl_selectors(row: dict[str, Any]) -> str:
+def _render_tepl_selectors(row: dict[str, Any], version: str) -> str:
     if row.get("mnemonic") != "BSTART.TEPL":
         return ""
     operations = [
@@ -574,9 +574,10 @@ def _render_tepl_selectors(row: dict[str, Any]) -> str:
             f"{escape(op['name'])}</a></td><td>{escape(op['engine'])}</td></tr>"
         )
     reserved = 128 - len(used)
+    label = "已定义的操作" if version == "0.59.2" else "PTO 0.59.1 已发布操作"
     return (
         '<section class="tepl-selectors"><h4>已发布的 Mode / Function 选择器</h4>'
-        f"<p>PTO 0.59.1 已发布操作占用 128 个组合选择器中的 {len(used)} 个。"
+        f"<p>{label}占用 128 个组合选择器中的 {len(used)} 个。"
         f"其余 {reserved} 个未列出的 Mode / Function 组合均为保留编码。</p>"
         "<table><thead><tr><th>模式（Mode）</th><th>功能号（Function）</th><th>选择器</th><th>操作</th><th>执行引擎</th></tr></thead><tbody>"
         + "".join(rows)
@@ -645,7 +646,7 @@ def render_encoding(row: dict[str, Any], catalog: dict[str, Any]) -> str:
         + "".join(part_html)
         + _render_field_table(row)
         + _render_constraints(row, catalog)
-        + _render_tepl_selectors(row)
+        + _render_tepl_selectors(row, catalog["version"])
         + "</div>"
     )
 

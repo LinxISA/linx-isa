@@ -40,7 +40,40 @@ def projection(rows):
             "source_commit": COMMIT,
             "source_catalog_sha256": sha256(read(CATALOG)).hexdigest(),
             "instruction_count": len(rows),
-            "instructions": rows,
+            "instructions": [
+                {
+                    key: value
+                    for key, value in row.items()
+                    if key not in {"uop_class", "source"}
+                }
+                for row in rows
+            ],
+        },
+        ensure_ascii=False,
+        indent=2,
+    ).encode()
+
+
+def tile_projection(tiles):
+    fields = (
+        "name",
+        "engine",
+        "family",
+        "command_mnemonic",
+        "mode",
+        "function",
+        "selector",
+    )
+    return json.dumps(
+        {
+            "schema": "linxisa.manual.tile-selectors.v1",
+            "version": "0.59.2",
+            "source_commit": COMMIT,
+            "operation_count": len(tiles["operations"]),
+            "operations": [
+                {key: op[key] for key in fields if key in op}
+                for op in tiles["operations"]
+            ],
         },
         ensure_ascii=False,
         indent=2,

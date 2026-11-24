@@ -85,6 +85,7 @@ def _repository_paths() -> tuple[str, ...]:
     return tuple(output.splitlines())
 
 
+@lru_cache(maxsize=None)
 def _resolve_local(source: str, raw_path: str) -> str | None:
     target = posixpath.normpath(
         posixpath.join(posixpath.dirname(source), unquote(raw_path))

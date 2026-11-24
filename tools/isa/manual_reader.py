@@ -321,7 +321,7 @@ def reader_detail(asl_path: str) -> str:
     )
 
 
-def operation_detail(asl_path: str) -> str:
+def operation_detail(asl_path: str, *, code_only=False) -> str:
     """Render exact normative ASL operation blocks, or a pinned source fallback."""
     record = _record(asl_path)
     if record is None:
@@ -343,11 +343,18 @@ def operation_detail(asl_path: str) -> str:
         line_end = int(block["line_end"])
         label = f"第 {index} 段 · " if len(blocks) > 1 else ""
         source_url = f"{url}#L{line_start}-L{line_end}"
+        source_text = str(block["text"])
+        if code_only:
+            source_text = "\n".join(
+                line
+                for line in source_text.split("\n")
+                if not line.lstrip().startswith("//")
+            )
         rendered.append(
             f'<div class="asl-operation-block"><p>{label}'
             f'<a href="{escape(source_url, quote=True)}" rel="noopener noreferrer">'
             f"规范源文件第 {line_start}–{line_end} 行</a></p>"
-            f"<pre><code>{escape(str(block['text']))}</code></pre></div>"
+            f"<pre><code>{escape(source_text)}</code></pre></div>"
         )
     return (
         '<details class="asl-operation" data-content-role="normative-asl">'

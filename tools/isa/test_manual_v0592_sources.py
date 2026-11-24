@@ -21,10 +21,12 @@ class ManualV0592SourcesTest(unittest.TestCase):
             manifest,
             lock,
         )
-        for literal in ("1306", "561", "193", "119", "v0.59.1", "DMA.FREE.L", "PTO"):
+        for literal in ("1306", "561", "119", "v0.59.1", "DMA.FREE.L", "PTO"):
             self.assertIn(literal, html)
         self.assertIn("Tile VEC", html)
         self.assertNotIn("V.SH.BRG", html)
+        self.assertNotIn("旧机器字", html)
+        self.assertNotIn("obsolete", html)
         self.assertRegex(html, re.compile(r"spec/instruction-forms\.json"))
 
     def test_source_page_rejects_the_old_manifest(self):

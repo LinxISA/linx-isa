@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
-from dataclasses import replace
 from hashlib import sha256
 from html import escape
 from itertools import groupby
@@ -30,6 +29,13 @@ from manual_encoding import render_encoding, validate_catalog
 from manual_linx_sail import sail_detail
 from manual_reader import operation_detail
 from manual_architecture import architecture_routes, architecture_pages
+from manual_golden_architecture import (
+    golden_architecture_bodies,
+    golden_architecture_routes,
+    REGISTER_SOURCE,
+)
+from manual_golden_links import GLOSSARY, GLOSSARY_TEXT
+from manual_golden_prose import golden_markdown
 from manual_architecture_view import architecture_bodies
 from manual_canvas_site import include_canvas
 from manual_editorial import (
@@ -334,10 +340,13 @@ def scoped_record(row, source):
     )
 
 
-def form_provenance(row, commit, common_paths):
+def form_provenance(row, commit, common_paths, *, current_catalog=False):
     sid = row.get("pto_source_form_id")
     if sid:
         path = common_paths[sid]
+        line = ""
+    elif current_catalog:
+        path = edition592.CATALOG
         line = ""
     else:
         path = "isa/v0.58/" + row["source"]["file"]
@@ -364,6 +373,8 @@ def supplement_reader(path, url, library):
     source = Path(path)
     relative = source.relative_to(ROOT).as_posix()
     data = source.read_bytes()
+    if library.source_text:
+        data = golden_markdown(relative, data.decode()).encode()
     raw = "article-source/" + sha256(data).hexdigest() + ".md"
     library.files[raw] = data
     fragment = render_markdown_text(
@@ -374,9 +385,22 @@ def supplement_reader(path, url, library):
     )
     if fragment.documents or fragment.assets:
         raise ValueError(f"{relative}: package supplemental dependencies")
+    if library.source_text:
+        library.audit[url] = {
+            "source_path": relative,
+            "reader_sha256": sha256(data).hexdigest(),
+            "source_asset": raw,
+        }
+        return (
+            '<section class="authored-reader">'
+            + fragment.html
+            + '<p class="article-source">'
+            + link(raw, "本页中文稿")
+            + "</p></section>"
+        )
     return (
         f'<section class="supplement-reader" data-source-path="{escape(relative)}"><p class="article-source">'
-        + link(raw, "本地增补稿")
+        + link(raw, "本页中文稿" if library.source_text else "本地增补稿")
         + "</p>"
         + fragment.html
         + "</section>"
@@ -470,30 +494,32 @@ def build(release=TAG):
     for op in direct_ops:
         url = tile_page(op["name"])
         revisions[url] = operation_body(op, articles[url][1])
-    selected_chapters = None
+    link_routes = {}
     source_text = None
     chapter_routes = architecture_routes()
     if active:
         excluded = obsolete_mnemonics(catalog)
 
+        instruction_paths = {
+            article.source_path for _, article in articles.values() if article
+        }
+        chapter_routes = {}
+        link_routes = {
+            p.source_path: p.route
+            for p in architecture_pages()
+            if p.source_path and p.route in golden_architecture_routes()
+        }
+
         @lru_cache(maxsize=None)
         def source_text(path):
+            if path == GLOSSARY:
+                return GLOSSARY_TEXT
+            if path not in instruction_paths:
+                return None
             markdown = edit_markdown(path, read(path).decode())[0]
-            return active_markdown(path, markdown, excluded)
+            selected = active_markdown(path, markdown, excluded)
+            return golden_markdown(path, selected) if selected else None
 
-        summaries = {
-            "state-index": "查阅标量寄存器、Tile 资源、块控制状态和系统寄存器。",
-            "register-state": "查阅通用与局部标量寄存器、Tile 绑定及块控制寄存器。",
-            "ssr-index": "发布目录列出 100 项系统寄存器定义，按地址、权限和作用域查阅。",
-        }
-        selected_chapters = tuple(
-            replace(p, summary=summaries.get(p.key, p.summary))
-            for p in architecture_pages()
-            if not p.source_path or source_text(p.source_path) is not None
-        )
-        chapter_routes = {
-            p.source_path: p.route for p in selected_chapters if p.source_path
-        }
         revisions[op_page("BSTART.ICALL")] = (
             "## 说明\n\n先检查并保存上一块的 BARG.BPCN。上一块成功提交后，"
             "建立新的标准块并将独立的返回目标写入 ra。新块提交时才选择保存的间接调用目标。"
@@ -505,9 +531,15 @@ def build(release=TAG):
                 )
                 if revised is None:
                     raise ValueError(f"{url}: missing current reader text")
-                revisions[url] = revised
+                markdown = revised
+            if markdown:
+                revisions[url] = golden_markdown(articles[url][1].source_path, markdown)
     library = ArticleLibrary(
-        articles, chapter_routes, revisions=revisions, source_text=source_text
+        articles,
+        chapter_routes,
+        revisions=revisions,
+        source_text=source_text,
+        link_routes=link_routes,
     )
     zh_common = json.loads((ASSETS / "data/manual-semantics-zh.json").read_text())[
         "forms"
@@ -571,8 +603,10 @@ def build(release=TAG):
             + f'><summary>{release[1:]} 命令编码与核对资料</summary><div class="release-data-body">'
             + tile_header(op, forms[carrier][0], owner)
             + metadata
-            + release_constraints(zh_tile[name])
-            + operation_detail(owner["source_path"])
+            + release_constraints(
+                zh_tile[name], current_mnemonic=name if active else None
+            )
+            + operation_detail(owner["source_path"], code_only=active)
             + "</div></details>",
         )
     families = defaultdict(list)
@@ -616,6 +650,12 @@ def build(release=TAG):
         base_intro = revised_intro(revisions.get(op_page(base)))
         if base_intro:
             short = base_intro
+        if (
+            active
+            and first.get("architecture_status", {}).get("state")
+            == "reserved-unimplemented"
+        ):
+            short = "仅预留编码。执行须在读取操作数或产生架构效果前拒绝。"
         if scope:
             scope_label = {
                 "Private": "私有",
@@ -696,7 +736,11 @@ def build(release=TAG):
                 + render_encoding(row, catalog)
             )
             if source_id in zh_common:
-                body += release_constraints(zh_common[source_id], base=bool(scope))
+                body += release_constraints(
+                    zh_common[source_id],
+                    base=bool(scope),
+                    current_mnemonic=row["mnemonic"] if active else None,
+                )
             if scope:
                 base_row = base_by_id[source_id]
                 body += (
@@ -706,8 +750,12 @@ def build(release=TAG):
                 )
                 body += scoped_record(row, source_forms[row["pto_source_form_id"]])
             body += (
-                (operation_detail(owner) if owner else sail_detail(row))
-                + form_provenance(row, commit, common_paths)
+                (
+                    operation_detail(owner, code_only=active)
+                    if owner
+                    else sail_detail(row, release=release)
+                )
+                + form_provenance(row, commit, common_paths, current_catalog=active)
                 + "</div></details>"
             )
             body += "</article>"
@@ -810,7 +858,7 @@ def build(release=TAG):
 
         offline_inputs = {
             "instruction-forms.json": edition592.projection(rows),
-            "pto_tile_operations.json": inputs[TILES],
+            "tile-operations.json": edition592.tile_projection(tiles),
             "pto-spec.lock.json": inputs[LOCK],
         }
         bodies["sources.html"] = (
@@ -865,9 +913,16 @@ def build(release=TAG):
             + "</ul></details>"
             + source_body,
         )
-    chapters, chapter_audit = architecture_bodies(
-        library, selected_chapters, edition=release[1:]
-    )
+    if active:
+        chapters, chapter_audit = golden_architecture_bodies(
+            commit,
+            catalog,
+            json.loads(inputs[REGISTER_SOURCE]),
+            tiles,
+            {key: inputs[key] for key in (catalog_path, REGISTER_SOURCE, TILES)},
+        )
+    else:
+        chapters, chapter_audit = architecture_bodies(library)
     bodies.update(chapters)
     _, home_body = bodies["index.html"]
     bodies["index.html"] = (
@@ -882,7 +937,7 @@ def build(release=TAG):
         + "<h2>按指令类型查找</h2>"
         + home_body,
     )
-    canvas_files = include_canvas(bodies, ASSETS / "figures")
+    canvas_files = include_canvas(bodies, ASSETS / "figures", final_images_only=active)
     files = {
         name: page(
             title, body, commit, release=release, active_keys=active_keys
@@ -908,79 +963,81 @@ def build(release=TAG):
     files.update(library.files)
     files.update(diagram_assets)
     files.update(canvas_files)
-    reviewed_pages = {}
-    for filename, data in sorted(files.items()):
-        if not filename.endswith(".html"):
-            continue
-        source = (
-            library.audit.get(filename, {}).get("source_path")
-            or chapter_audit.get(filename, {}).get("source_path")
-            or library.support_sources.get(filename)
-        )
-        if library.revisions.get(filename) is not None:
-            edits = {}
-            origin = "release-reviewed-article"
-        elif source and active:
-            edited, applied = edit_markdown(source, read(source).decode())
-            edits = dict(applied)
-            origin = (
-                "tagged-chinese-source"
-                if source_text(source) == edited
-                else "release-reviewed-article"
+    if not active:
+        reviewed_pages = {}
+        for filename, data in sorted(files.items()):
+            if not filename.endswith(".html"):
+                continue
+            source = (
+                library.audit.get(filename, {}).get("source_path")
+                or chapter_audit.get(filename, {}).get("source_path")
+                or library.support_sources.get(filename)
             )
-        elif source:
-            edits = dict(edit_article(source)[1])
-            origin = "tagged-chinese-source"
-        elif filename in supplement_audit:
-            source = supplement_audit[filename]
-            edits = dict(edit_markdown(source, (ROOT / source).read_text())[1])
-            origin = "release-specific-supplement"
-        else:
-            edits = {}
-            origin = "navigation-and-reference"
-        reviewed_pages[filename] = {
-            "html_sha256": sha256(data).hexdigest(),
-            "origin": origin,
-            "source_path": source,
-            "applied_source_edits": edits,
-        }
-    files["editorial-audit.json"] = json.dumps(
-        {
-            "skill": SKILL_URL,
-            "skill_commit": SKILL_COMMIT,
-            "skill_sha256": SKILL_SHA256,
-            "renderer_versions": {
-                name: version(name)
-                for name in (
-                    "MkDocs",
-                    "mkdocs-material",
-                    "Markdown",
-                    "pymdown-extensions",
-                    "Pygments",
+            if library.revisions.get(filename) is not None:
+                edits = {}
+                origin = "release-reviewed-article"
+            elif source and active:
+                edited, applied = edit_markdown(source, read(source).decode())
+                edits = dict(applied)
+                origin = (
+                    "tagged-chinese-source"
+                    if source_text(source) == edited
+                    else "release-reviewed-article"
                 )
+            elif source:
+                edits = dict(edit_article(source)[1])
+                origin = "tagged-chinese-source"
+            elif filename in supplement_audit:
+                source = supplement_audit[filename]
+                edits = dict(edit_markdown(source, (ROOT / source).read_text())[1])
+                origin = "release-specific-supplement"
+            else:
+                edits = {}
+                origin = "navigation-and-reference"
+            reviewed_pages[filename] = {
+                "html_sha256": sha256(data).hexdigest(),
+                "origin": origin,
+                "source_path": source,
+                "applied_source_edits": edits,
+            }
+        files["editorial-audit.json"] = json.dumps(
+            {
+                "skill": SKILL_URL,
+                "skill_commit": SKILL_COMMIT,
+                "skill_sha256": SKILL_SHA256,
+                "renderer_versions": {
+                    name: version(name)
+                    for name in (
+                        "MkDocs",
+                        "mkdocs-material",
+                        "Markdown",
+                        "pymdown-extensions",
+                        "Pygments",
+                    )
+                },
+                "scope": (
+                    "正文按 0.59.2 收录范围校读。每页记录成品摘要及其来源。"
+                    if active
+                    else "正文采用原作者的表述，按上下文校读；代码、链接、表格数值和标题保持原样。空编辑记录表示保留源文字。"
+                ),
+                "pages": reviewed_pages,
             },
-            "scope": (
-                "正文按 0.59.2 收录范围校读。每页记录成品摘要及其来源。"
-                if active
-                else "正文采用原作者的表述，按上下文校读；代码、链接、表格数值和标题保持原样。空编辑记录表示保留源文字。"
-            ),
-            "pages": reviewed_pages,
-        },
-        ensure_ascii=False,
-        indent=2,
-    ).encode()
-    files["supplements.json"] = json.dumps(
-        supplement_audit, ensure_ascii=False, indent=2
-    ).encode()
+            ensure_ascii=False,
+            indent=2,
+        ).encode()
+        files["supplements.json"] = json.dumps(
+            supplement_audit, ensure_ascii=False, indent=2
+        ).encode()
     files["architecture-audit.json"] = json.dumps(
         chapter_audit, ensure_ascii=False, indent=2
     ).encode()
     files["diagram-audit.json"] = json.dumps(
         diagram_audit, ensure_ascii=False, indent=2
     ).encode()
-    files["authored-audit.json"] = json.dumps(
-        library.audit, ensure_ascii=False, indent=2
-    ).encode()
+    if not active:
+        files["authored-audit.json"] = json.dumps(
+            library.audit, ensure_ascii=False, indent=2
+        ).encode()
     files["PTO-SPEC-LICENSE.txt"] = (ASSETS / "data/PTO-SPEC-LICENSE.txt").read_bytes()
     files["LICENSE.txt"] = tagged_bytes("LICENSE")
     files["BITFIELD-LICENSE.txt"] = tagged_bytes("docs/figs/bitfield/LICENSE")
@@ -1015,8 +1072,13 @@ def build(release=TAG):
             "mnemonic": name,
             "forms": identifiers,
             "semantic_sources": owners,
-            "chinese_source": source_path,
-            "reader": record.get("reader", "release-supplement"),
+            "chinese_source": record["source_asset"] if active else source_path,
+            **({"reader_sha256": record["reader_sha256"]} if active else {}),
+            "reader": (
+                "release-definition"
+                if active
+                else record.get("reader", "release-supplement")
+            ),
         }
     files["detail-audit.json"] = json.dumps(
         detail_audit, ensure_ascii=False, indent=2

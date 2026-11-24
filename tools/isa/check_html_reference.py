@@ -478,6 +478,15 @@ class Audit:
         expected_snippets = [
             str(item["text"]) for item in record.get("operation_blocks", [])
         ]
+        if self.catalog.get("version") == "0.59.2":
+            expected_snippets = [
+                "\n".join(
+                    line
+                    for line in snippet.split("\n")
+                    if not line.lstrip().startswith("//")
+                )
+                for snippet in expected_snippets
+            ]
         if (
             snippets != expected_snippets
             or not snippets
@@ -638,7 +647,9 @@ class Audit:
             self.fail(where, "source trace omits exact PTO form ID")
         elif not row.get("pto_source_form_id"):
             expected_tail = (
-                f"isa/v0.58/{row['source']['file']}#L{row['source']['line']}"
+                "isa/v0.59.2/linxisa-v0.59.2.json"
+                if self.catalog.get("version") == "0.59.2"
+                else f"isa/v0.58/{row['source']['file']}#L{row['source']['line']}"
             )
             if expected_tail not in sources[0].find(tag="a")[0].attrs.get("href", ""):
                 self.fail(where, f"Linx source trace does not end in {expected_tail}")
