@@ -29,22 +29,6 @@
         "sail-package"
       ],
       "platform_qualified": false
-    },
-    "v0.59.2": {
-      "state": "published-explicit-profile",
-      "version": "0.59.2",
-      "catalog": "isa/v0.59.2/linxisa-v0.59.2.json",
-      "sail_exporter": "tools/isa/export_linxisa_v0592_sail.py",
-      "sail_entry": "model/linxisa_v0592.sail",
-      "release_manifest": "isa/v0.59.2/release_manifest.json",
-      "package": "isa/v0.59.2/release_package.json",
-      "release_qualified": true,
-      "qualification_scope": [
-        "architecture-specification",
-        "encoding",
-        "sail-package"
-      ],
-      "platform_qualified": false
     }
   }
 }

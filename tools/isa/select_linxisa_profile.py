@@ -39,7 +39,7 @@ def resolve_profile(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--profile", choices=("v0.58", "v0.59", "v0.59.2"))
+    parser.add_argument("--profile", choices=("v0.58", "v0.59"))
     parser.add_argument("--allow-prepublication", action="store_true")
     parser.add_argument("--require-release-qualified", action="store_true")
     args = parser.parse_args()

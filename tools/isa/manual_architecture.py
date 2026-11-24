@@ -586,13 +586,12 @@ def register_catalog_records() -> tuple[SystemRegisterRecord, ...]:
     return tuple(result)
 
 
-def register_catalog_html(allowed_routes=None) -> str:
+def register_catalog_html() -> str:
     rows = []
     for item in register_catalog_records():
         old = (
             f'<a href="{escape(item.historical_route)}">历史说明</a>'
             if item.historical_route
-            and (allowed_routes is None or item.historical_route in allowed_routes)
             else "—"
         )
         rows.append(

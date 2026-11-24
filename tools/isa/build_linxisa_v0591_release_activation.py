@@ -208,35 +208,21 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    from check_linxisa_v0591_release_compat import check as check_compatibility
-
-    compatibility_errors = check_compatibility()
-    if compatibility_errors:
-        raise SystemExit(
-            "v0.59.1 release compatibility failed: "
-            + "; ".join(compatibility_errors)
-        )
-    if args.check:
-        print("LinxISA v0.59.1 immutable release and registry slice are current")
-        return 0
-
-    current_selection = load(SELECTION)
-    frozen_selection, _package = build()
-    extra_profiles = set(current_selection.get("profiles", {})) - set(
-        frozen_selection["profiles"]
-    )
-    if extra_profiles:
-        print(
-            "preserved immutable v0.59.1 package and extended profile registry; "
-            f"newer profiles: {', '.join(sorted(extra_profiles))}"
-        )
-        return 0
-
     try:
         selection, package = build()
     except (KeyError, OSError, ValueError) as error:
         raise SystemExit(f"v0.59.1 release activation failed: {error}") from error
     outputs = ((SELECTION, render(selection)), (PACKAGE, render(package)))
+    if args.check:
+        stale = [
+            path
+            for path, expected in outputs
+            if not path.is_file() or path.read_text(encoding="utf-8") != expected
+        ]
+        if stale:
+            raise SystemExit(f"stale v0.59.1 release activation: {stale}")
+        print("LinxISA v0.59.1 release activation package is current")
+        return 0
     for path, content in outputs:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")

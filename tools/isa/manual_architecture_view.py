@@ -3,7 +3,6 @@
 from hashlib import sha256
 from html import escape
 
-from manual_active_articles import ACTIVE_REPLACEMENTS
 from manual_architecture import (
     architecture_pages,
     architecture_collections,
@@ -68,13 +67,9 @@ DIFFERENCES = {
 }
 
 
-def architecture_bodies(library, chapters=None, *, edition="0.59.1"):
-    chapters = architecture_pages() if chapters is None else chapters
-    by_collection = {
-        key: [p for p in chapters if p.collection == key]
-        for key in architecture_collections()
-    }
-    routes = {p.route for p in chapters}
+def architecture_bodies(library):
+    chapters = architecture_pages()
+    by_collection = architecture_collections()
     indexes = {
         p.key.removesuffix("-index"): p for p in chapters if p.key.endswith("-index")
     }
@@ -105,10 +100,10 @@ def architecture_bodies(library, chapters=None, *, edition="0.59.1"):
             )
             if collection == "ssr":
                 listing = (
-                    f'<h2 id="system-registers">{edition} 系统寄存器目录</h2>'
+                    '<h2 id="system-registers">0.59.1 系统寄存器目录</h2>'
                     "<p>下表保留发布目录中的地址或低位索引、读写权限和作用域。历史中文页用于查阅设计背景。</p>"
                     '<div class="table-scroll">'
-                    + register_catalog_html(routes)
+                    + register_catalog_html()
                     + "</div><h2>中文站各寄存器说明</h2>"
                     + listing
                 )
@@ -128,11 +123,7 @@ def architecture_bodies(library, chapters=None, *, edition="0.59.1"):
             continue
 
         path = chapter.source_path
-        source = (
-            library.source_text(path).encode()
-            if library.source_text
-            else tagged_bytes(path)
-        )
+        source = tagged_bytes(path)
         digest = sha256(source).hexdigest()
         raw_path = f"article-source/{digest}.md"
         library.files[raw_path] = source
@@ -150,14 +141,8 @@ def architecture_bodies(library, chapters=None, *, edition="0.59.1"):
             + anchor(group.route, group.title)
             + "</p>"
         )
-
-        rewritten = library.source_text and path in ACTIVE_REPLACEMENTS
-        status = "release-reviewed" if rewritten else chapter.status
-        if (
-            not rewritten
-            and chapter.key in DIFFERENCES
-            and not (library.source_text and chapter.key == "predicate")
-        ):
+        status = chapter.status
+        if chapter.key in DIFFERENCES:
             label, notes, links, historical = DIFFERENCES[chapter.key]
             body += (
                 f'<section class="edition-difference"><h2>{escape(label)}</h2>'
@@ -173,28 +158,19 @@ def architecture_bodies(library, chapters=None, *, edition="0.59.1"):
                     + original
                     + "</details>"
                 )
-        elif (
-            not rewritten
-            and chapter.version_note
-            and (
-                status != "tagged-original"
-                or chapter.key
-                in {"tlsu-block", "cube-block", "tepl-carrier", "exception-model"}
-            )
+        elif chapter.version_note and (
+            status != "tagged-original"
+            or chapter.key
+            in {"tlsu-block", "cube-block", "tepl-carrier", "exception-model"}
         ):
             body += (
-                '<p class="version-context">'
-                + escape(chapter.version_note.replace("0.59.1", edition))
-                + "</p>"
+                '<p class="version-context">' + escape(chapter.version_note) + "</p>"
             )
         body += original
         results[chapter.route] = (chapter.title, body)
         audit[chapter.route] = {
             "source_path": path,
-            "source_sha256": sha256(tagged_bytes(path)).hexdigest()
-            if not library.source_text
-            else sha256(library.original_source(path)).hexdigest(),
-            **({"reader_sha256": digest} if library.source_text else {}),
+            "source_sha256": digest,
             "rendered_sha256": sha256(content.encode()).hexdigest(),
             "status": status,
             "prose_edits": dict(edit_article(path)[1]),
