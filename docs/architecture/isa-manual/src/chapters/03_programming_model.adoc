@@ -293,3 +293,15 @@ For bring-up, Linx uses the following layout (32-bit):
 
 FCSR is part of the LXCPU architectural state and must be preserved across context switches. If not explicitly
 programmed, the initial state is `FCSR = 0` (RNE, flags clear).
+
+=== Four-PE runtime startup
+
+The common-entry single-leader software ABI is source-bound by
+`isa/v0.58/pto-runtime-startup.lock.json`; the compiled catalog's
+`state.pto_runtime_startup` projects its exact PTO NDF owners. PE0 owns shared
+initialization while workers perform private bootstrap and wait at the startup
+`SYNC.CORE`. The executing PE identity is read-only SSR `THREAD_ID` at `0x0026`.
+
+The canonical architecture contract records consumer adaptation and validation
+obligations. The current single-context Sail model does not execute this ABI;
+platform launch/stack/TLS bindings remain separate integration decisions.
