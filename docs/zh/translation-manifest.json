@@ -14,8 +14,8 @@
       "translation_sha256": "83434d0e8cc53d0bef8dabc2d0d24e6a0236e0d0a213681079fa37c2d26af684"
     },
     "architecture/linx-two-level-block-obsolescence.md": {
-      "source_sha256": "39b570ab9e9101343ffd9bddf15857f327b600ed7edbdd15a12683ebdb04269e",
-      "translation_sha256": "2c529f4b8d4697b9485b4d319d6520185e3196c58d9d7969b53918475f1ca2ff"
+      "source_sha256": "64ca54c40080c137801daeafd9ee46b64b4c08b163145e45639e30afeec9079c",
+      "translation_sha256": "bc3ab4588426243bfb8a02e9e960c25397edc2db58a17e008156e04c1c9b8ffc"
     },
     "architecture/linxcore-unified-ai-render-gpgpu.md": {
       "source_sha256": "9871dd404ded3b2c153658a87de91a2d87554116bb3087806ba253e3a7c11387",

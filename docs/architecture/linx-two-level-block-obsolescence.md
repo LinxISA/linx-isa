@@ -1,6 +1,6 @@
 # Architecture decision: obsolete two-level execution forms
 
-**Accepted 2026-11-24 for the next LinxISA architecture specification.** Using LinxISA `v0.59.1` as the inventory baseline, classify all 193 forms in groups A–E as `obsolete`. Keep their entire encoding spaces reserved as specified by PTO-SPEC. Future instructions must not reuse them.
+**Accepted 2026-11-24 for the LinxISA v0.59.2 architecture specification.** Using LinxISA `v0.59.1` as the inventory baseline, classify all 193 forms in groups A–E as `obsolete`. Keep their entire encoding spaces reserved as specified by PTO-SPEC. Future instructions must not reuse them.
 
 | Group | Forms | Count | Decision |
 | --- | --- | ---: | --- |
