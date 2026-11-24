@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from dataclasses import replace
 from hashlib import sha256
 from html import escape
 from itertools import groupby
@@ -480,8 +481,13 @@ def build(release=TAG):
             markdown = edit_markdown(path, read(path).decode())[0]
             return active_markdown(path, markdown, excluded)
 
+        summaries = {
+            "state-index": "查阅标量寄存器、Tile 资源、块控制状态和系统寄存器。",
+            "register-state": "查阅通用与局部标量寄存器、Tile 绑定及块控制寄存器。",
+            "ssr-index": "发布目录列出 100 项系统寄存器定义，按地址、权限和作用域查阅。",
+        }
         selected_chapters = tuple(
-            p
+            replace(p, summary=summaries.get(p.key, p.summary))
             for p in architecture_pages()
             if not p.source_path or source_text(p.source_path) is not None
         )

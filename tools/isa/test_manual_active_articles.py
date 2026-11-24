@@ -226,6 +226,50 @@ Tile 目的寄存器仍是显式状态。
         self.assertNotIn("vseq-flow.svg", revised)
         self.assertEqual(obsolete_mentions(revised, self.names), ())
 
+    def test_pure_two_level_state_and_execution_pages_are_removed(self):
+        for path in (
+            "docs/zh/isa/arch/executemode.md",
+            "docs/zh/isa/arch/corestate.md",
+            "docs/zh/isa/register/common/vgpr.md",
+            "docs/zh/isa/register/common/pred.md",
+            "docs/zh/isa/register/ssr/LCFR.md",
+            "docs/zh/isa/register/ssr/LCFR_EN.md",
+        ):
+            source = (ROOT / path).read_text()
+            self.assertIsNone(active_markdown(path, source, self.names), path)
+
+    def test_sgpr_keeps_shared_content_without_reserved_branch_example(self):
+        path = "docs/zh/isa/register/common/sgpr.md"
+        revised = active_markdown(path, (ROOT / path).read_text(), self.names)
+        self.assertIn("Relative-index.png", revised)
+        self.assertNotIn("b.eq", revised.lower())
+        self.assertEqual(obsolete_mentions(revised, self.names), ())
+
+    def test_unpublished_ssr_and_vector_queue_names_do_not_reenter(self):
+        registers = {
+            row["name"]
+            for row in json.loads(
+                (ROOT / "isa/v0.59/state/pto_system_registers.json").read_text()
+            )["registers"]
+        }
+        self.assertNotIn("LCFR", registers)
+        self.assertNotIn("LCFR_EN", registers)
+        common = "docs/zh/isa/register/ssr/common.md"
+        revised = active_markdown(common, (ROOT / common).read_text(), self.names)
+        self.assertNotIn("LCFR", revised)
+        self.assertEqual(obsolete_mentions(revised, self.names), ())
+        self.assertEqual(
+            obsolete_mentions("读取 VT#1、VU、VM 和 VN#4。", self.names),
+            ("VM", "VN#4", "VT#1", "VU"),
+        )
+        core_state = "docs/zh/isa/register/ssr/CSTATE.md"
+        revised_core_state = active_markdown(
+            core_state, (ROOT / core_state).read_text(), self.names
+        )
+        self.assertIsNotNone(revised_core_state)
+        self.assertIn("# CSTATE", revised_core_state)
+        self.assertIn("0x0020", revised_core_state)
+
 
 if __name__ == "__main__":
     unittest.main()

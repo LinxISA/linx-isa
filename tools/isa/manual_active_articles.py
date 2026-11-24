@@ -37,6 +37,12 @@ OBSOLETE_SOURCE_FILES = frozenset(
         "docs/zh/isa/header/C.BSTART.MSEQ.md",
         "docs/zh/isa/header/C.BSTART.VPAR.md",
         "docs/zh/isa/header/C.BSTART.VSEQ.md",
+        "docs/zh/isa/arch/executemode.md",
+        "docs/zh/isa/arch/corestate.md",
+        "docs/zh/isa/register/common/vgpr.md",
+        "docs/zh/isa/register/common/pred.md",
+        "docs/zh/isa/register/ssr/LCFR.md",
+        "docs/zh/isa/register/ssr/LCFR_EN.md",
     }
 )
 
@@ -45,7 +51,10 @@ OBSOLETE_SOURCE_FILES = frozenset(
 # words such as "vector", "lane" or "block", which remain valid for Tile VEC.
 OBSOLETE_CONCEPT = re.compile(
     r"分离块|向量数据块|访存数据块|(?:Decoupled|Memory|Vector)\s+Block|"
-    r"(?<![A-Za-z0-9_.])(?:MSEQ|MPAR|VSEQ|VPAR)(?![A-Za-z0-9_.])",
+    r"(?<![A-Za-z0-9_.])(?:MSEQ|MPAR|VSEQ|VPAR)(?![A-Za-z0-9_.])|"
+    r"(?<![A-Za-z0-9_.])B\.(?:EQ|NE|LT|GE|LTU|GEU|Z|NZ)(?![A-Za-z0-9_.])|"
+    r"(?<![A-Za-z0-9_.])LCFR(?:_EN)?(?![A-Za-z0-9_.])|"
+    r"(?<![A-Za-z0-9_.])V(?:T|U|M|N)(?:#[1-4])?(?![A-Za-z0-9_.])",
     re.I,
 )
 

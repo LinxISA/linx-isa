@@ -35,9 +35,41 @@ REVIEWED_TAG_OBJECT = "230c730b73ff4d22441411b52640458428279fd2"
 REVIEWED_COMMIT = "830fbdb53bccec889414b5673ffba31b0a08606d"
 CATALOG_PATH = "isa/v0.59.2/linxisa-v0.59.2.json"
 TILES_PATH = "isa/v0.59/state/pto_tile_operations.json"
+SYSTEM_REGISTERS_PATH = "isa/v0.59/state/pto_system_registers.json"
 READABLE_SUFFIXES = {".html", ".md", ".txt", ".adoc"}
 STATUS_STATES = {"retained", "reserved-unimplemented"}
 OBSOLETE_BLOCK_ALIASES = {"MSEQ", "MPAR", "VSEQ", "VPAR"}
+LEGACY_EXAMPLE_MNEMONICS = {"B.EQ"}
+RETIRED_PAGES = {
+    "arch-core-state.html",
+    "arch-execution-mode.html",
+    "arch-predicate.html",
+    "arch-ssr-lcfr-en.html",
+    "arch-ssr-lcfr.html",
+    "arch-vgpr.html",
+}
+RETIRED_ASSET_SUFFIXES = {
+    "docs--zh--figs--intro--group.png",
+    "docs--zh--figs--isa--arch--pred.png",
+    "docs--zh--figs--bitfield--svg--Sysregs--LCFR.svg",
+    "docs--zh--figs--bitfield--svg--Sysregs--LCFR_EN.svg",
+}
+LEGACY_MODEL_PATTERNS = {
+    "old Group/Lane execution model": re.compile(
+        r"执行组\s*[（(]Group[）)]|执行通道\s*[（(]Lane[）)]|GroupNumber|LaneNumber",
+        re.IGNORECASE,
+    ),
+    "old vector register queues": re.compile(
+        r"4\s*种向量寄存器队列|VT\s*[、,]\s*VU\s*[、,]\s*VM\s*[、,]\s*VN|V[TMUN]R[1-4]",
+        re.IGNORECASE,
+    ),
+    "old lane predicate register": re.compile(
+        r"Predicate\s+Mask|每一位掩码与\s*Lane\s*一一对应|每个\s*Group\s*最多包含\s*64\s*个\s*lane",
+        re.IGNORECASE,
+    ),
+    "retired LCFR state": re.compile(r"\bLCFR(?:_EN)?\b"),
+    "historical Janus core state": re.compile(r"Janus\s+Core|隐式\s*ACC"),
+}
 
 
 def _git(*args: str) -> bytes:
@@ -126,7 +158,11 @@ def _plain_html(value: str) -> str:
 def _check_no_obsolete_reader_material(
     site: Path, obsolete: list[dict], errors: list[str]
 ) -> None:
-    names = {spelling(row) for row in obsolete} | OBSOLETE_BLOCK_ALIASES
+    names = (
+        {spelling(row) for row in obsolete}
+        | OBSOLETE_BLOCK_ALIASES
+        | LEGACY_EXAMPLE_MNEMONICS
+    )
     pattern = _exact_token_pattern(names)
     obsolete_pages = {op_page(row) for row in obsolete}
     for name in sorted(obsolete_pages):
@@ -201,6 +237,65 @@ def _check_no_obsolete_reader_material(
                 errors.append(
                     f"{relative}: links to obsolete instruction page {href!r}"
                 )
+
+
+def _legacy_model_hits(text: str) -> list[str]:
+    return [
+        label
+        for label, pattern in LEGACY_MODEL_PATTERNS.items()
+        if pattern.search(text)
+    ]
+
+
+def _check_retired_execution_model(site: Path, errors: list[str]) -> None:
+    for filename in sorted(RETIRED_PAGES):
+        if (site / filename).exists():
+            errors.append(
+                f"{filename}: retired execution-model page remains in package"
+            )
+    for path in sorted(site.rglob("*")):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(site).as_posix()
+        if any(relative.endswith(suffix) for suffix in RETIRED_ASSET_SUFFIXES):
+            errors.append(
+                f"{relative}: retired execution-model figure remains in package"
+            )
+        if path.suffix.lower() not in READABLE_SUFFIXES:
+            continue
+        raw = path.read_text(encoding="utf-8", errors="replace")
+        text = _plain_html(raw) if path.suffix.lower() == ".html" else raw
+        for label in _legacy_model_hits(text):
+            errors.append(f"{relative}: contains {label}")
+
+
+def _check_current_system_state(site: Path, errors: list[str]) -> None:
+    path = site / "arch-ssr.html"
+    if not path.is_file():
+        errors.append("arch-ssr.html: missing current system-register table")
+        return
+    source = json.loads(_git("show", f"{RELEASE_TAG}:{SYSTEM_REGISTERS_PATH}"))
+    wanted = {
+        f"{row['scope']}:{row['name']}:{row['address']}" for row in source["registers"]
+    }
+    doc = parse(path)
+    actual = {
+        node.attrs["data-register-key"]
+        for node in doc.find()
+        if "data-register-key" in node.attrs
+    }
+    if len(actual) != 100 or actual != wanted:
+        errors.append(
+            f"arch-ssr.html: current register rows differ ({len(actual)} != 100)"
+        )
+    if not any(key.split(":")[1] == "CORE_STATE" for key in actual):
+        errors.append("arch-ssr.html: current CORE_STATE definition is missing")
+    for filename in ("tile-mgather-mask.html", "tile-mscatter-mask.html"):
+        target = site / filename
+        if not target.is_file() or "掩码" not in _plain_html(
+            target.read_text(encoding="utf-8", errors="replace")
+        ):
+            errors.append(f"{filename}: current predicated Tile operation is missing")
 
 
 def _check_status_pages(site: Path, active: list[dict], errors: list[str]) -> None:
@@ -411,6 +506,8 @@ def check_site(site: Path) -> list[str]:
     shared = Audit(site, _active_catalog(catalog, active), tiles).run()
     errors.extend(f"shared-reference/{error}" for error in shared)
     _check_no_obsolete_reader_material(site, obsolete, errors)
+    _check_retired_execution_model(site, errors)
+    _check_current_system_state(site, errors)
     _check_status_pages(site, active, errors)
     _check_audits_and_assets(site, catalog, active, obsolete, errors)
     return errors

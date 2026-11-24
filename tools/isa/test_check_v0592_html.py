@@ -16,6 +16,7 @@ from check_v0592_html import (
     _check_status_pages,
     _detail_record_has_removed_form,
     _exact_token_pattern,
+    _legacy_model_hits,
     inventories,
     release_inputs,
 )
@@ -66,12 +67,30 @@ class V0592HTMLCheckTest(unittest.TestCase):
         )
 
     def test_exact_mnemonic_matching_does_not_confuse_version_or_longer_name(self):
-        pattern = _exact_token_pattern({"V.ADD", "B.TEXT", "MPAR"})
+        pattern = _exact_token_pattern({"V.ADD", "B.TEXT", "MPAR", "B.EQ"})
         self.assertIsNone(pattern.search("LinxISA v0.59.2 and V.ADDI remain available"))
         self.assertIsNone(pattern.search("COMPARISON is not a block mnemonic"))
         self.assertIsNotNone(pattern.search("The old V.ADD example must be removed"))
         self.assertIsNotNone(pattern.search("B.TEXT <label>"))
         self.assertIsNotNone(pattern.search("MPAR并行分离块"))
+        self.assertIsNotNone(pattern.search("b.eq u#1, 0, 2f"))
+
+    def test_old_execution_model_is_distinct_from_current_tile_state(self):
+        current = "Tile VEC 引擎采用执行掩码；CORE_STATE 是当前 100 个 SSR 之一。"
+        self.assertEqual(_legacy_model_hits(current), [])
+        legacy = (
+            "执行组（Group）包含执行通道（Lane），LaneNumber 由 LCFR 给出；"
+            "VT、VU、VM、VN 是 4 种向量寄存器队列，P 是 Predicate Mask。"
+        )
+        self.assertEqual(
+            set(_legacy_model_hits(legacy)),
+            {
+                "old Group/Lane execution model",
+                "old vector register queues",
+                "old lane predicate register",
+                "retired LCFR state",
+            },
+        )
 
     def test_tile_detail_operation_name_is_not_mistaken_for_a_form_id(self):
         active_ids = {row["id"] for row in self.active}
